@@ -18,6 +18,9 @@ ssafy-web.log
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+/bin
+/build
+/.gradle
 
 ### IntelliJ IDEA ###
 .idea
