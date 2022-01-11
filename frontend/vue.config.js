@@ -1,4 +1,3 @@
-
 // Vue3 관련 설정 파일
 module.exports = {
   devServer: {
@@ -20,5 +19,5 @@ module.exports = {
     'element-plus'
   ],
   lintOnSave: false,
-  outputDir: '../backend/src/main/resources/dist'
+  outputDir: '../backend-java/src/main/resources/dist'
 }
