@@ -1,10 +1,12 @@
 package com.ssafy.api.controller;
 
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,5 +76,22 @@ public class UserController {
 		User user = userService.getUserByUserId(userId);
 		
 		return ResponseEntity.status(200).body(UserRes.of(user));
+	}
+	@GetMapping("/idcheck/{userId}")
+	@ApiOperation(value = "회원 아이디 중복 체크", notes = "회원가입 시 회원 아이디 중복 체크 검사") 
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "성공"),
+        @ApiResponse(code = 401, message = "인증 실패"),
+        @ApiResponse(code = 404, message = "사용자 없음"),
+        @ApiResponse(code = 500, message = "서버 오류")
+    })
+	public ResponseEntity<Boolean> idCheck(@PathVariable String userId) {
+		boolean temp = userService.checkUserId(userId);
+		System.out.println(temp);
+		if( temp == true ) {
+			System.out.println("id 중복이 없다");
+			return ResponseEntity.status(200).body(userService.checkUserId(userId));
+		}else System.out.println("id 중복이 있다.");
+		return ResponseEntity.status(401).body(userService.checkUserId(userId));
 	}
 }
