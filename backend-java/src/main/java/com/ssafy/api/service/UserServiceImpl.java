@@ -1,5 +1,7 @@
 package com.ssafy.api.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,12 +25,18 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
+	
 	@Override
 	public User createUser(UserRegisterPostReq userRegisterInfo) {
 		User user = new User();
-		user.setUserId(userRegisterInfo.getId());
+		user.setUserId(userRegisterInfo.getUserId());
+		user.setUserName(userRegisterInfo.getUserName());
+		user.setUserEmail(userRegisterInfo.getUserEmail());
+		user.setTotalTime(userRegisterInfo.getTotalTime());
+		user.setTotalAttendance(userRegisterInfo.getTotalAttendance());
+		user.setJoinDate(LocalDateTime.now());
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
+		user.setUserPassword(passwordEncoder.encode(userRegisterInfo.getUserPassword()));
 		return userRepository.save(user);
 	}
 

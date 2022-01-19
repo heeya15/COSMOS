@@ -1,5 +1,9 @@
 package com.ssafy.api.request;
 
+import java.sql.Timestamp;
+
+import javax.validation.constraints.Email;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -13,7 +17,15 @@ import lombok.Setter;
 @ApiModel("UserRegisterPostRequest")
 public class UserRegisterPostReq {
 	@ApiModelProperty(name="유저 ID", example="ssafy_web")
-	String id;
+	String userId;
+	String userName;
 	@ApiModelProperty(name="유저 Password", example="your_password")
-	String password;
+	String userPassword;
+	
+	
+	private String userEmail;
+	int totalTime;
+	int totalAttendance;
+	
+//	Timestamp joinDate;
 }
