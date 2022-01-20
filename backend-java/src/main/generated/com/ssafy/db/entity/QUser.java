@@ -6,6 +6,8 @@ import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
+
+import com.nsnt.cosmos.db.entity.User;
 import com.querydsl.core.types.Path;
 
 
