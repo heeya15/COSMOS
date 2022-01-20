@@ -13,10 +13,10 @@
       <a class="navbar-brand" tag="h1">
         <router-link :to="{ name:'MainPage' }" class="text-decoration-none">COSMOS</router-link>
       </a>
-      <ul class="navbar-nav m-auto">
-        <li class="nav-item fs-4"><router-link :to="{ name:'SignUp' }" class="text-decoration-none">회원가입</router-link></li>
-        <li class="nav-item fs-4"><router-link :to="{ name:'LogIn' }" class="text-decoration-none">로그인</router-link></li>
-      </ul>
+      <div class="nav ml-auto">
+        <router-link :to="{ name:'SignUp' }" class="text-decoration-none m-1">회원가입</router-link>
+        <router-link :to="{ name:'LogIn' }" class="text-decoration-none m-1">로그인</router-link>
+      </div>
     </nav>
   </div>
 </template>
