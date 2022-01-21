@@ -14,13 +14,15 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    singUp({commit}, credentials) {
+    signUp({commit}, credentials) {
+      // console.log(credentials)
       axios({
         method: 'POST',
         url: 'http://localhost:8080/api/signup',
         data: credentials
       })
       .then(res => {
+        // console.log(res)
         commit('SIGNUP', res.data)
       })
       .catch(err => {
