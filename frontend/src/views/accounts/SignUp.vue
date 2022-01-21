@@ -33,8 +33,13 @@ export default {
         password:'',
         passwordCheck:'',
         email:'',
-      }
-      
+      }  
+    }
+  },
+  method: {
+    signUp() {
+      this.$store.dispatch('credentials')
+      this.$router.push('LogIn')
     }
   }
 }
