@@ -13,10 +13,20 @@
       <a class="navbar-brand" tag="h1">
         <router-link :to="{ name:'MainPage' }" class="text-decoration-none">COSMOS</router-link>
       </a>
-      <div class="nav ml-auto">
+      <!-- <div class="nav ml-auto" v-if="!isLogin"> -->
+      <div class="nav ml-auto" v-if="!isLogin">
         <router-link :to="{ name:'SignUp' }" class="text-decoration-none m-1">회원가입</router-link>
         <router-link :to="{ name:'LogIn' }" class="text-decoration-none m-1">로그인</router-link>
       </div>
+      <!-- <div class="nav ml-auto" v-else>
+        <router-link :to="{ name:'SignUp' }" class="text-decoration-none m-1">회원가입</router-link>
+        <router-link :to="{ name:'LogIn' }" class="text-decoration-none m-1">로그인</router-link>
+        <a href="#" class="text-decoration-none m-1">스터디 모집</a>
+        <a href="#" class="text-decoration-none m-1">스터디 방 생성</a>
+        <a href="/mypage" class="text-decoration-none m-1">마이페이지</a>
+        <a href="#" class="text-decoration-none m-1">로그아웃</a>
+
+      </div> -->
     </nav>
   </div>
 </template>
