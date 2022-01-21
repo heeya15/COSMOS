@@ -19,6 +19,7 @@ export default new Vuex.Store({
       state.userInfo = credentials
     },
     LOGIN(state){
+      console.log('로그인됨!!!!')
       state.isLogin = true
     }
   },
