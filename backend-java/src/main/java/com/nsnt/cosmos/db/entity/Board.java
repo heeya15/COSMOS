@@ -1,13 +1,20 @@
 package com.nsnt.cosmos.db.entity;
 
 import java.sql.Blob;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+
 import javax.persistence.Column;
+import javax.persistence.Convert;
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,21 +23,27 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 유저 모델 정의.
+ * 자유 게시판 모델 정의.
  */
 @Entity
 @Getter
 @Setter
-public class Notice{
+
+
+//name=식별자 생성기 이름, sequenceName=DB에 등록될 시퀀스이름, initialValue=최초시작하는 수, allocationSize=증가하는수)
+public class Board{
+
 	@Id
-	@Column(name = "content_no", length= 20)
-	String contentNo;
+	@Column(name = "board_no")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	Long boardNo;
 	
 	@Column(name = "content_title", length= 60)
 	String contentTitle;
 	
 	@Column(name = "header", length= 30)
-	Boolean header;
+	@ColumnDefault("0")
+	boolean header;
 	
 	@Column(length = 200, nullable = false)
 	int recruitNumber;
@@ -39,16 +52,17 @@ public class Notice{
 	@Column(name = "content")
 	Blob content;
 	
-	@Column(name = "content_status", length= 30)
-	Boolean contentStatus;
+	@Column(name = "content_status") // 모집 상태
+	@ColumnDefault("0")
+	boolean contentStatus;
 	
 	@Column
 	@CreationTimestamp
 	LocalDateTime createdAt;
 	
 	@Column
-	@CreationTimestamp
-	LocalDateTime updateAt;
+	@CreationTimestamp  
+	LocalDateTime updateAt; // 수집일자
 	
 	
 	@Column(name = "study_name", length= 60)
@@ -58,4 +72,9 @@ public class Notice{
 	@Column(name = "studytype_name", length= 50)
 	String studytypeName;
 	
+	@ManyToOne
+	@JoinColumn(name = "user_id")	
+	private User user;
+	
 }
+
