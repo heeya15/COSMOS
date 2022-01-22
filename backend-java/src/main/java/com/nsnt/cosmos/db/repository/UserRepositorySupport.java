@@ -31,10 +31,4 @@ public class UserRepositorySupport {
     	 if(user == null ) return true; 
     	 return false;
     }
-    public void deleteByUserId(String userId) {
-    	Optional<User> user = userRepository.findById(userId);
-    	user.ifPresent(selectUser ->{
-    		userRepository.delete(selectUser);
-    	});
-    }
 }
