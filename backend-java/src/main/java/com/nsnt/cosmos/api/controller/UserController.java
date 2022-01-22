@@ -2,24 +2,23 @@ package com.nsnt.cosmos.api.controller;
 
 import java.util.NoSuchElementException;
 
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nsnt.cosmos.api.request.UserUpdateDto;
 import com.nsnt.cosmos.api.request.UserRegisterPostReq;
 import com.nsnt.cosmos.api.response.UserRes;
 import com.nsnt.cosmos.api.service.UserService;
@@ -100,6 +99,22 @@ public class UserController {
 			System.out.println("id 중복이 있다.");
 		return ResponseEntity.status(401).body(userService.checkUserId(userId));
 	}
+	
+	@ApiOperation(value = "회원 정보 수정", notes = "회원 정보 수정")
+	@PutMapping("/update")
+	public ResponseEntity<String> update(@RequestBody UserUpdateDto updateUserDto) throws Exception {
+		User user;
+		try {
+			user = userService.getUserByUserId(updateUserDto.getUser_id());
+		}catch(NoSuchElementException E) {
+			System.out.println("회원 수정 실패");
+			return  ResponseEntity.status(500).body("해당 회원 없어서 회원 수정 실패");
+		}
+		userService.updateUser(updateUserDto);
+		System.out.println("업데이트 됨");
+		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+	}
+
 
 	// 회원탈퇴.
 	@ApiOperation(value = "회원 탈퇴", notes = "회원 탈퇴")

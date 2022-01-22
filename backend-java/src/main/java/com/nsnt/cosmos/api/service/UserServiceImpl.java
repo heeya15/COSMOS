@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.nsnt.cosmos.api.request.UserUpdateDto;
 import com.nsnt.cosmos.api.request.UserRegisterPostReq;
 import com.nsnt.cosmos.db.entity.User;
 import com.nsnt.cosmos.db.repository.UserRepository;
@@ -25,7 +27,6 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	
 	
 	@Override
 	public User createUser(UserRegisterPostReq userRegisterInfo) {
@@ -58,5 +59,15 @@ public class UserServiceImpl implements UserService {
 	public boolean deleteByUserId(User user) {
 		userRepository.delete(user);
 		return true;
+	}
+
+	@Transactional
+	@Override
+	public void updateUser(UserUpdateDto userUpdateDto) {
+		System.out.println("수정 들어옴?");
+		User user = userRepositorySupport.findUserByUserId(userUpdateDto.getUser_id()).get();
+		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
+		String password = passwordEncoder.encode(userUpdateDto.getUser_password());
+		user.updateUser(userUpdateDto.getUser_name(),password);
 	}
 }

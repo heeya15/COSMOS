@@ -1,12 +1,14 @@
 package com.nsnt.cosmos.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.nsnt.cosmos.api.request.UserUpdateDto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -22,6 +24,7 @@ import org.hibernate.annotations.CreationTimestamp;
 /**
  * 유저 모델 정의.
  */
+
 @Entity
 @Getter
 @Setter
@@ -53,6 +56,12 @@ public class User {
     public String getUserId() {
         return userId;
     }
+    @Builder
+	public void updateUser(String user_name, String user_password) {
+		this.userName = user_name;
+		this.userPassword =user_password;	
+	}
+
 //    @JsonIgnore
 //    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 //    String password;
