@@ -95,7 +95,7 @@ public class BoardController {
 					@ApiResponse(code = 404, message = "사용자 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") })
 	@PutMapping("/board/update")
-	public ResponseEntity<String> update(@RequestBody SaveBoardDto saveBoardDto) throws Exception {
+	public ResponseEntity<String> boardupdate(@RequestBody SaveBoardDto saveBoardDto) throws Exception {
 		Board board;
 		try {
 			board = boardService.findByBoardId(saveBoardDto.getBoard_no());
@@ -115,7 +115,7 @@ public class BoardController {
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "해당 회원 없음")})
 	@DeleteMapping("/boaldremove/{board_no}")
-	public ResponseEntity<String> userdelete(@PathVariable("board_no") Long no) throws Exception {	
+	public ResponseEntity<String> boarddelete(@PathVariable("board_no") Long no) throws Exception {	
 		Board board;
 		try {
 			board = boardService.findByBoardId(no);
