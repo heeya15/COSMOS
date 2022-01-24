@@ -17,6 +17,8 @@ import javax.persistence.SequenceGenerator;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.nsnt.cosmos.api.request.CommentReq;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,24 +40,32 @@ public class Comment{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int commentNo; // 댓글 번호
 	
-	@Lob
 	@Column(name = "content")
 	private String content;  // 내용
 
 	@Column
 	@CreationTimestamp
-	private LocalDateTime createdAt; // 생성 일자
-	
-	@Column
-	@CreationTimestamp  
-	private LocalDateTime updateAt; // 수정 일자
-	
-	
+	private LocalDateTime createdAt; // 등록 일자 (최초 생성 및 수정)
+		
 	@ManyToOne
 	@JoinColumn(name = "user_id")	
 	private User user;
 	
 	@ManyToOne
-	@JoinColumn(name = "content_no")	
+	@JoinColumn(name = "board_no")	
 	private Board board;
+	
+	public void updateComment(CommentReq commentReq) {
+		this.commentNo = commentReq.getComment_no();
+		this.content = commentReq.getContent();
+		this.createdAt = commentReq.getCreated_at();
+	}
+
+	@Override
+	public String toString() {
+		return "Comment [commentNo=" + commentNo + ", content=" + content + ", createdAt=" + createdAt + ", user="
+				+ user + ", board=" + board + "]";
+	}
+	
+	
 }
