@@ -3,6 +3,7 @@ package com.nsnt.cosmos.api.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.hibernate.TransientPropertyValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,14 @@ public class BoardController {
 					@ApiResponse(code = 500, message = "서버 오류")})
 	public ResponseEntity Boardregister(@RequestBody SaveBoardDto saveBoardDto)
 	{
-		Board board = boardService.createBoard(saveBoardDto);
+		Board board;
+		try {
+			board = boardService.createBoard(saveBoardDto);
+		}catch(Exception E) {
+			E.printStackTrace();
+			System.out.println("게시글 생성 실패");
+			return  ResponseEntity.status(500).body("디비 트랜잭션 오류로 인한 생성 실패");
+		}
 		System.out.println("잘 됨?"+ board.toString());
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}

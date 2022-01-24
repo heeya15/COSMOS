@@ -40,15 +40,18 @@ public class SaveBoardDto {
 	
 	
 	@ApiModelProperty(name = "유저 id")
-//	private User user_id;
+	private String user_id;
 	
 //	public SaveBoardDto(User entity) {
 //		this.user_id = entity.getUserId();
 //		this.user_name = entity.getUserName();
 //		this.user_password = entity.getUserPassword();
 //	}
-//
-	public Board toEntity(){
+//	
+	
+	public Board toEntity(){	
+		User user = new User();
+		user.setUserId(user_id);	
         return Board.builder()
                .contentTitle(content_title)
                .header(header)
@@ -57,7 +60,7 @@ public class SaveBoardDto {
                .contentStatus(content_status)
                .studyName(study_name)
                .studytypeName(studytype_name)
-//               .user(user_id)
+               .user(user)
                .build();
     }
 }
