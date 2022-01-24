@@ -1,26 +1,21 @@
 package com.nsnt.cosmos.db.entity;
-import java.io.Serializable;
-import java.sql.Blob;
 import java.time.LocalDateTime;
 
-import javax.persistence.AttributeConverter;
 import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Converter;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.nsnt.cosmos.api.request.StudyPostReq;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -84,5 +79,20 @@ public class Study {
 	@ManyToOne
 	@JoinColumn(name = "privatestudyroom_id")	
 	private PrivateStudyRoom privateStudyRoom;
-
+	
+	@OneToOne
+	@JoinColumn(name = "studytype_no")
+	private StudyType studyType;
+	
+	public void updateStudy(StudyPostReq studyUpdateInfo) {
+		this.studyName = studyUpdateInfo.getStudyName();
+		this.url = studyUpdateInfo.getUrl();
+		this.image = studyUpdateInfo.getImage();
+		this.totalMember = studyUpdateInfo.getTotalMember();
+		this.studyType.studytypeNo = studyUpdateInfo.getStudytypeNo();
+		this.studyRule = studyUpdateInfo.getStudyRule();
+		this.studyPassword = studyUpdateInfo.getStudyPassword();
+		
+	}
 }
+
