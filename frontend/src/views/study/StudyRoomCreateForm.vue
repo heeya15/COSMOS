@@ -1,6 +1,7 @@
 <template>
   <center>
     <h1>스터디 방 생성</h1>
+    <hr>
     <div style="width:600px;" class="p-5">
       <b-row>
         <b-col cols="3">
@@ -60,8 +61,13 @@
         <hr class="mt-3">
         
         <b-col cols="3">초기 장치 설정</b-col>
-        <b-col>  
-          <b-form-checkbox-group v-model="selected" :options="options" value-field="item" text-field="name" disabled-field="notEnabled"></b-form-checkbox-group>
+        <b-col>
+          <input type="checkbox" id="mic" value="mic" v-model="settings.mic">
+          <label for="mic" class="ms-1 me-5">마이크</label>
+          <input type="checkbox" id="cam" value="cam" v-model="settings.cam">
+          <label for="mic" class="ms-1 me-5">카메라</label>
+          <input type="checkbox" id="speaker" value="speacker" v-model="settings.speaker">
+          <label for="mic" class="ms-1 me-5">스피커</label>
         </b-col>
         <hr class="mt-3">
 
@@ -89,12 +95,11 @@ export default {
       image: null,
       number_of_member: null,
       study_rule: null,
-      selected: [], // Must be an array reference!
-      options: [
-          { item: 'mic', name: '마이크' },
-          { item: 'cam', name: '카메라' },
-          { item: 'speaker', name: '스피커' },
-      ],
+      settings: {
+        mic: null,
+        cam: null,
+        speaker: null,
+      }
     }
   },
 }
@@ -169,7 +174,7 @@ export default {
 <style>
 button {
   border: none;
-  border-radius: 6px; 
+  border-radius: 8px; 
   background-color: #DAC7F9;
   height: 40px;
 }
