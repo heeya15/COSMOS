@@ -19,9 +19,13 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -39,6 +43,9 @@ import lombok.Setter;
 ) 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor /** Cannot construct instance of~ error를 해결해주었다.  파라미터가 없는 생성자 만들어줌* */ 
 public class Study {
 
 	@Id
@@ -56,9 +63,12 @@ public class Study {
 	@Column(name="image",length = 150, nullable = false)
 	String image;
 	
-	@Column(nullable = true)
+	@Column(nullable = false)
+	@ColumnDefault("0")
 	int totalMember; 	// 총 인원
-	@Column(nullable = true)
+	
+	@Column(nullable = false)
+	@ColumnDefault("0")
 	int numberOfMember; // 인원
 	
 	@Column(columnDefinition = "TIMESTAMP")
@@ -74,4 +84,5 @@ public class Study {
 	@ManyToOne
 	@JoinColumn(name = "privatestudyroom_id")	
 	private PrivateStudyRoom privateStudyRoom;
+
 }
