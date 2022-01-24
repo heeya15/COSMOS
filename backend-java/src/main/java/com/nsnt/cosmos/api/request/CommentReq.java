@@ -49,4 +49,12 @@ public class CommentReq {
 				.board(board)
 				.build();
 	}
+
+	public CommentReq(int comment_no, String content, LocalDateTime created_at, Long board_no) {
+		this.comment_no = comment_no;
+		this.content = content;
+		this.created_at = created_at;
+		this.board_no = board_no;
+	}
+	
 }
