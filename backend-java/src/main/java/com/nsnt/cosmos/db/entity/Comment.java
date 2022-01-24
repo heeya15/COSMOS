@@ -17,7 +17,10 @@ import javax.persistence.SequenceGenerator;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -26,23 +29,26 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Comment{
 	@Id
 	@Column(name = "comment_no")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	Long commentNo; // 댓글 번호
+	private int commentNo; // 댓글 번호
 	
 	@Lob
 	@Column(name = "content")
-	Blob content;  // 내용
+	private String content;  // 내용
 
 	@Column
 	@CreationTimestamp
-	LocalDateTime createdAt; // 생성 일자
+	private LocalDateTime createdAt; // 생성 일자
 	
 	@Column
 	@CreationTimestamp  
-	LocalDateTime updateAt; // 수정 일자
+	private LocalDateTime updateAt; // 수정 일자
 	
 	
 	@ManyToOne

@@ -43,7 +43,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @Api(value = "스터디 모집 게시판 API", tags = { "Board" })
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/board")
 public class BoardController {
 	public static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 	private static final String SUCCESS = "success";
@@ -52,7 +52,7 @@ public class BoardController {
 	@Autowired
 	BoardService boardService;
 
-	@PostMapping("/board")
+	@PostMapping("/register")
 	@ApiOperation(value="게시글 등록", notes="<strong>게시글을 등록</strong>시켜줍니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
@@ -77,14 +77,14 @@ public class BoardController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	@GetMapping("/board")
+	@GetMapping("/searchAll")
     public ResponseEntity<List<Board>> findAllBoard(){
         List<Board> boards = boardService.findAllBoard();
 
         return new ResponseEntity<List<Board>>(boards,HttpStatus.OK);
     }
 
-	@GetMapping("/board/{board_no}")
+	@GetMapping("/search/{board_no}")
 	
 	@ApiOperation(value ="게시글 상세  조회", notes ="해당 Board_no 게시판 정보 출력")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
@@ -102,7 +102,7 @@ public class BoardController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") })
-	@PutMapping("/board/update")
+	@PutMapping("/update")
 	public ResponseEntity<String> boardupdate(@RequestBody SaveBoardDto saveBoardDto) throws Exception {
 		Board board;
 		try {
@@ -122,7 +122,7 @@ public class BoardController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "해당 회원 없음")})
-	@DeleteMapping("/boaldremove/{board_no}")
+	@DeleteMapping("/remove/{board_no}")
 	public ResponseEntity<String> boarddelete(@PathVariable("board_no") Long no) throws Exception {	
 		Board board;
 		try {

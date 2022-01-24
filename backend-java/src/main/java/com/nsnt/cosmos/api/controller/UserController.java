@@ -38,7 +38,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @Api(value = "유저 API", tags = { "User" })
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
 	public static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	private static final String SUCCESS = "success";
@@ -82,7 +82,7 @@ public class UserController {
 		return ResponseEntity.status(200).body(UserRes.of(user));
 	}
 
-	@GetMapping("/idcheck/{userId}")
+	@GetMapping("/idcheck/{user_id}")
 	@ApiOperation(value = "회원 아이디 중복 체크", notes = "회원가입 시 회원 아이디 중복 체크 검사")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"),
 					@ApiResponse(code = 401, message = "인증 실패"),
