@@ -13,13 +13,15 @@ export default new Vuex.Store({
   state: {
     userInfo:null,
     isLogin:false,
+    user_ID: null,
   },
   mutations: {
     SIGNUP(state,credentials){
       state.userInfo = credentials
     },
-    LOGIN(state){
-      console.log('로그인됨!!!!')
+    LOGIN(state, user_ID){
+      console.log( '로그인됨!!!!')
+      state.user_ID = user_ID
       state.isLogin = true
     }
   },
@@ -42,18 +44,20 @@ export default new Vuex.Store({
     logIn({commit}, credentials) {
       axios({
         method: 'post',
-        url: 'http://localhost:8080/api/v1/auth/login',
+        url: 'http://localhost:8080/api/auth/login',
         data: credentials
       })
       .then(res => {
         localStorage.setItem('jwt', res.data.accessToken)
-        console.log(res)
-        commit('LOGIN')
+        const user_ID = JSON.parse(res.config.data)['id']
+        console.log(JSON.parse(res.config.data))
+        commit('LOGIN', user_ID)
       })
       .catch(err => {
         console.log(err)
       })
     },
+    
   },
   modules: {
   }
