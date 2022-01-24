@@ -6,6 +6,8 @@ import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
+
+import com.nsnt.cosmos.db.entity.User;
 import com.querydsl.core.types.Path;
 
 
@@ -19,21 +21,20 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
-    public final QBaseEntity _super = new QBaseEntity(this);
-
-    public final StringPath department = createString("department");
+//    public final QBaseEntity _super = new QBaseEntity(this);
 
     //inherited
-    public final NumberPath<Long> id = _super.id;
+//    public final NumberPath<Long> id = _super.id;
 
-    public final StringPath name = createString("name");
+    public final StringPath userName = createString("userName");
 
-    public final StringPath password = createString("password");
+    public final StringPath userPassword = createString("userPassword");
 
-    public final StringPath position = createString("position");
+    public final StringPath userEmail = createString("userEmail");
 
     public final StringPath userId = createString("userId");
-
+    public final NumberPath<Integer> totalTime = createNumber("totalTime", Integer.class);
+    public final NumberPath<Integer> totalAttendance = createNumber("totalAttendance", Integer.class);
     public QUser(String variable) {
         super(User.class, forVariable(variable));
     }
