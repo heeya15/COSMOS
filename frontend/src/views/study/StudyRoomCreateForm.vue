@@ -30,7 +30,7 @@
           <label for="studyImg" class="mt-2">대표 이미지</label>
         </b-col>
         <b-col>
-          <div class="preview">
+          <div class="preview" v-if="input.image">
            <p>업로드된 이미지가 없습니다.</p>
           </div>
           <input accept=".jpg .jpeg .png" type="file" id="studyImg" class="inputfile" />
