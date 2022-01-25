@@ -13,6 +13,7 @@ export default new Vuex.Store({
   state: {
     userInfo:null,
     isLogin:false,
+    boardNo: null,
   },
   mutations: {
     SIGNUP(state,credentials){
@@ -21,6 +22,15 @@ export default new Vuex.Store({
     LOGIN(state){
       console.log( '로그인됨!!!!')
       state.isLogin = true
+    },
+    GET_BOARD_NO(state){
+      console.log(state)
+      console.log('번호 확인')
+      // state.boardNo
+    },
+    LOGOUT(state){
+      state.isLogin=false
+      localStorage.removeItem('jwt')
     }
   },
   actions: {
@@ -28,7 +38,7 @@ export default new Vuex.Store({
       // console.log(credentials)
       axios({
         method: 'POST',
-        url: 'http://localhost:8080/api/signup',
+        url: 'http://localhost:8080/api/user/signup',
         data: credentials
       })
       .then(res => {
@@ -53,6 +63,23 @@ export default new Vuex.Store({
         console.log(err)
       })
     },
+    getBoardNo({commit}, ) {
+      axios({
+        method: 'get',
+        url: 'http://localhost:8080/api/board/searchAll',
+        // headers: this.
+      })
+      .then(res => {
+        console.log(res)
+        commit('GET_BOARD_NO')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    logOut({commit}) {
+      commit('LOGOUT')
+    }
     
   },
   modules: {

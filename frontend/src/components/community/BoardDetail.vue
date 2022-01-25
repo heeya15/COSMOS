@@ -4,6 +4,11 @@
     <hr>
     <h3>상세보기</h3>
     <div>
+      <!-- <span>{{ selectedPost.study_name }}</span>
+      <span>{{ selectedPost.recruit_number }}</span>
+      <span>{{ selectedPost.content }}</span> -->
+    </div>
+    <div>
       <!-- 작성자인 경우 수정을 보여주고 아니면 스터디 신청을 보여준다 -->
       <b-button style="background-color: #DAC7F9">스터디 신청</b-button>
       <b-button style="background-color: #DAC7F9" @click="boardFormEdit">수정</b-button>
@@ -20,9 +25,11 @@ export default {
   name: 'BoardDetail',
   data() {
     return {
-      // 번호 어디서 가져와...
-      board_no: 23,
+      board_no: this.$store.state.boardNo,
     }
+  },
+  props: {
+    boardItem: Object,
   },
   methods: {
     goBoardMain() {
@@ -31,10 +38,23 @@ export default {
     boardFormEdit() {
       this.$router.push({name: 'BoardFormUpdate'})
     },
+    getBoard() {
+      axios({
+        method: 'get',
+        url: `http://localhost:8080/api/board/search/${this.board_no}`,
+      })
+      .then(res => {
+        console.log(res)
+        this.board_no = res.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
     deleteBoardForm() {
       axios({
         method: 'delete',
-        url: `http://localhost:8080/api/board/remove/${this.board_no}/`,
+        url: `http://localhost:8080/api/board/remove/${this.board_no}`,
       })
       .then((res) => {
         console.log(res)
@@ -43,6 +63,11 @@ export default {
         console.log(err)
       })
     },
+  },
+  created() {
+    this.getBoard()
+    this.board_no = this.boardItem.boardNo
+    console.log(this.boardItem)
   },
 }
 </script>
