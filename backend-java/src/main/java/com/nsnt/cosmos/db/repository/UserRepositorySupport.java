@@ -1,8 +1,8 @@
 package com.nsnt.cosmos.db.repository;
 
+import com.nsnt.cosmos.db.entity.QUser;
 import com.nsnt.cosmos.db.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.db.entity.QUser;
 
 import java.util.Optional;
 

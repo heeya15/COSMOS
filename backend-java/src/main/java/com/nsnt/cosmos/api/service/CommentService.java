@@ -12,8 +12,11 @@ public interface CommentService {
 	/** 댓글을 생성하는 createComment 입니다. */
 	public Comment createComment(CommentReq commentReq);
 	
-	/** 모든 댓글 정보를 가져오는 finaAllComment 입니다. */
-	public List<Comment> findAllComment();
+	/** 댓글 정보를 댓글 번호로 가져오는 findByCommentNo 입니다. */
+	public Comment findByCommentNo(int comment_no);
+	
+	/** 모든 댓글 정보를 가져오는 findAllByBoardNo 입니다. */
+	public List<Comment> findAllByBoardNo(Long board_no);
 	
 	/** 댓글 수정을 위한 updateComment 입니다. */
 	public Comment updateComment(Comment comment, CommentReq commentReq);

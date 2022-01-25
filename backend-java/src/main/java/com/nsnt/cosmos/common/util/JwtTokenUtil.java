@@ -24,8 +24,9 @@ import static com.google.common.collect.Lists.newArrayList;
 public class JwtTokenUtil {
     private static String secretKey;
     private static Integer expirationTime;
-
-    public static final String TOKEN_PREFIX = "Bearer ";
+    // 토큰 앞에 Bearer을 붙이고 한칸 뛰우고 토큰을 붙여줘야 jwt 인증 가능. 
+    // ex) Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9Tg2fQ.R
+    public static final String TOKEN_PREFIX = "Bearer "; 
     public static final String HEADER_STRING = "Authorization";
     public static final String ISSUER = "ssafy.com";
     
