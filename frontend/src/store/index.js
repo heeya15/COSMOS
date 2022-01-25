@@ -27,6 +27,10 @@ export default new Vuex.Store({
       console.log(state)
       console.log('번호 확인')
       // state.boardNo
+    },
+    LOGOUT(state){
+      state.isLogin=false
+      localStorage.removeItem('jwt')
     }
   },
   actions: {
@@ -34,7 +38,7 @@ export default new Vuex.Store({
       // console.log(credentials)
       axios({
         method: 'POST',
-        url: 'http://localhost:8080/api/signup',
+        url: 'http://localhost:8080/api/user/signup',
         data: credentials
       })
       .then(res => {
@@ -72,7 +76,11 @@ export default new Vuex.Store({
       .catch(err => {
         console.log(err)
       })
+    },
+    logOut({commit}) {
+      commit('LOGOUT')
     }
+    
   },
   modules: {
   }

@@ -15,11 +15,9 @@
       </a>
       <!-- <div class="nav ml-auto" v-if="!isLogin"> -->
       <div class="nav ml-auto" v-if="this.$store.state.isLogin">
-        <!-- <router-link :to="{ name:'SignUp' }" class="text-decoration-none m-1">회원가입</router-link>
-        <router-link :to="{ name:'LogIn' }" class="text-decoration-none m-1">로그인</router-link> -->
         <router-link :to="{ name:'MainBoard' }" class="text-decoration-none m-1">스터디 모집</router-link>
-        <a href="#" class="text-decoration-none m-1">스터디 방 생성</a>
-        <a href="/mypage" class="text-decoration-none m-1">마이페이지</a>
+        <router-link :to="{ name:'StudyRoomCreateForm' }" class="text-decoration-none m-1">스터디 방 생성</router-link>
+        <router-link :to="{ name:'MyPage' }" class="text-decoration-none m-1">마이페이지</router-link>
         <b-button class="m-1" @click="logOut">로그아웃</b-button>
       </div>
       <div class="nav ml-auto" v-else>
@@ -35,8 +33,7 @@ export default {
     name:'NavBar',
     methods: {
       logOut() {
-        this.$store.state.isLogin=false
-        localStorage.removeItem('jwt')
+        this.$store.dispatch('logOut')
         this.$router.push({ name: 'LogIn' })
       }
     }
