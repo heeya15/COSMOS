@@ -13,15 +13,13 @@ export default new Vuex.Store({
   state: {
     userInfo:null,
     isLogin:false,
-    user_ID: null,
   },
   mutations: {
     SIGNUP(state,credentials){
       state.userInfo = credentials
     },
-    LOGIN(state, user_ID){
+    LOGIN(state){
       console.log( '로그인됨!!!!')
-      state.user_ID = user_ID
       state.isLogin = true
     }
   },
@@ -49,9 +47,7 @@ export default new Vuex.Store({
       })
       .then(res => {
         localStorage.setItem('jwt', res.data.accessToken)
-        const user_ID = JSON.parse(res.config.data)['id']
-        console.log(JSON.parse(res.config.data))
-        commit('LOGIN', user_ID)
+        commit('LOGIN')
       })
       .catch(err => {
         console.log(err)

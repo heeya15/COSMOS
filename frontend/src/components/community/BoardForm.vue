@@ -67,6 +67,7 @@
 
 <script>
 import axios from 'axios'
+import jwt_decode from 'jwt-decode'
 
 export default {
   name: 'BoardForm',
@@ -98,6 +99,12 @@ export default {
     goBoardDetail(){
       this.$router.push({name: 'BoardDetail'})
     },
+    getToken(){
+      var token = localStorage.getItem('jwt')
+      var decode = jwt_decode(token)
+      // console.log(decode)
+      this.input.user_id = decode['sub']
+    },
     createBoardForm() {
       const createBoardItem = {
         header: this.input.header,
@@ -107,7 +114,7 @@ export default {
         recruit_number: this.input.recruit_number,
         studytype_name: this.input.studytype_name,
         content: this.input.content,
-        user_id: this.$store.state.user_ID,
+        user_id: this.input.user_id
       }
       axios({
         method: 'post',
@@ -123,6 +130,9 @@ export default {
           console.log(err)
         })
     },
+  },
+  created(){
+    this.getToken()
   }
 }
 </script>
