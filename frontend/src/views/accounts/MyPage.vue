@@ -1,24 +1,79 @@
 <template>
-  <div>
+  <center>
     <h1>MY PAGE</h1>
     <div class="profile">
-      <b-button variant="danger">회원탈퇴</b-button>
-      <b-button variant="warning">수정</b-button>
+      <div>아이디: {{user_id}}</div>
+      <div>이름: {{user_name}}</div>
+      <div>이메일: {{user_email}}</div>
+      <b-button variant="danger" class="me-3" @click="signOut">회원탈퇴</b-button>
+      <b-button variant="warning" @click="modifyUserInfo">수정</b-button>
     </div>
-  </div>
+  </center>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'MyPage',
   data() {
     return {
-     
+    user_id : null,
+    user_name : null,
+    user_email : null,
+    passwordCheck: null,
     }
+  },
+  methods: {  
+    getToken(){
+      const token = localStorage.getItem('jwt')
+      const header = {
+        Authorization: `Bearer ${token}`
+      }
+      return header
+    },
+    getUserInfo(){
+      axios({
+        method: 'GET',
+        url: 'http://localhost:8080/api/user/me',
+        headers: this.getToken()
+      })
+      .then(res =>{
+        // console.log(res)
+        this.user_id=res.data['user_id']
+        this.user_name=res.data['user_name']
+        this.user_email=res.data['user_email']
+      })
+      .catch(err =>{
+        console.log(err)
+      })
+    },
+    signOut(){
+      axios({
+        method: 'DELETE',
+        url: `http://localhost:8080/api/user/remove/${this.user_id}`,
+        headers: this.getToken()
+      })
+      .then(res => {
+        console.log(res)
+        this.$store.dispatch('logOut')
+        this.$router.push({ name:'SignUp' })
+        alert('COSMOS에서 회원탈퇴완료')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
+  },
+  created(){
+    this.getUserInfo()
   }
 }
 </script>
 
 <style>
-
+.profile {
+  width: 1000px;
+  border: 1px solid rgb(204, 143, 143);
+}
 </style>
