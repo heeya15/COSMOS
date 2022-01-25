@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3>게시글</h3>
-    <div v-for="boardItem in boardItems" :key="boardItem.idx" :boardItem="boardItem">
+    <div v-for="boardItem in boardItems" :key="boardItem.idx">
       <span @click="goBoardDetail(boardItem.boardNo)">{{ boardItem.boardNo }}</span>
       <!-- 이거이거{{ boardItem.idx }} 확인 -->
     </div>
@@ -34,10 +34,11 @@ export default {
         console.log(err)
       })
     },
-    goBoardDetail: function (boardItemsIdx) {
+    goBoardDetail(boardItemsIdx) {
       console.log(boardItemsIdx)
+      this.$store.dispatch('getBoardNo', boardItemsIdx)
       this.$router.push({ name: 'BoardDetail'})
-      this.$store.state.boardNo = this.boardItem.boardNo
+      
     },
   },
   created() {

@@ -4,8 +4,9 @@
     <hr>
     <h3>상세보기</h3>
     <div>
-      <!-- <span>{{ selectedPost.study_name }}</span>
-      <span>{{ selectedPost.recruit_number }}</span>
+      <span>{{ boardInfo.boardNo }}</span>
+      {{user_id}}
+      <!-- <span>{{ selectedPost.recruit_number }}</span>
       <span>{{ selectedPost.content }}</span> -->
     </div>
     <div>
@@ -26,10 +27,19 @@ export default {
   data() {
     return {
       board_no: this.$store.state.boardNo,
+      boardInfo: {
+        boardNo: null,
+        content: null,
+        contentStatus: null,
+        contentTitle: null,
+        createdAt: null,
+        header: null,
+        recruitNumber: null,
+        studyName: null,
+        studytypeName: null,
+      },
+      user_id:null,
     }
-  },
-  props: {
-    boardItem: Object,
   },
   methods: {
     goBoardMain() {
@@ -45,7 +55,9 @@ export default {
       })
       .then(res => {
         console.log(res)
-        this.board_no = res.data
+        this.boardInfo.boardNo = res.data['boardNo']
+        this.user_id = res.data.user['userId']
+        console.log('작동확인')
       })
       .catch(err => {
         console.log(err)
@@ -66,8 +78,6 @@ export default {
   },
   created() {
     this.getBoard()
-    this.board_no = this.boardItem.boardNo
-    console.log(this.boardItem)
   },
 }
 </script>
