@@ -86,7 +86,7 @@ public class StudyMemberController {
 					@ApiResponse(code = 500, message = "서버 오류")})
 	@GetMapping("/search/{study_no}")
     public ResponseEntity<List<StudyMember>> findAllStudyMember(@PathVariable Long study_no){
-        List<StudyMember> studymember = studyMeberService.findStudyMmeber(study_no);
+        List<StudyMember> studymember = studyMeberService.findStudyMember(study_no);
 
         return new ResponseEntity<List<StudyMember>>(studymember,HttpStatus.OK);
     }
