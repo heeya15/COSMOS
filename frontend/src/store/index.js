@@ -23,10 +23,10 @@ export default new Vuex.Store({
       console.log( '로그인됨!!!!')
       state.isLogin = true
     },
-    GET_BOARD_NO(state){
+    GET_BOARD_NO(state, boardNumber){
       console.log(state)
       console.log('번호 확인')
-      // state.boardNo
+      state.boardNo = boardNumber
     },
     LOGOUT(state){
       state.isLogin=false
@@ -63,19 +63,8 @@ export default new Vuex.Store({
         console.log(err)
       })
     },
-    getBoardNo({commit}, ) {
-      axios({
-        method: 'get',
-        url: 'http://localhost:8080/api/board/searchAll',
-        // headers: this.
-      })
-      .then(res => {
-        console.log(res)
-        commit('GET_BOARD_NO')
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    getBoardNo({commit}, boardNumber) {
+      commit('GET_BOARD_NO',boardNumber)
     },
     logOut({commit}) {
       commit('LOGOUT')
