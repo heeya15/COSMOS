@@ -48,9 +48,6 @@ public class StudyController {
 	@Autowired
 	StudyService studyService;
 	
-	@Autowired
-	private final StudyRepository studyRepository;
-	
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -147,9 +144,7 @@ public class StudyController {
 		return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 	}
 	
-	
-	
-	// 스터디 수정
+	// 해당 멤버의 스터디 조회
 	@ApiOperation(value = "해당 멤버 스터디 조회", notes = "userId에 해당하는 멤버의 스터디들을 List로 반환")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
