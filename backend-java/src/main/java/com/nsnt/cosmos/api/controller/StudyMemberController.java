@@ -84,63 +84,49 @@ public class StudyMemberController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	@GetMapping("/searchAll/{study_no}")
+	@GetMapping("/search/{study_no}")
     public ResponseEntity<List<StudyMember>> findAllStudyMember(@PathVariable Long study_no){
         List<StudyMember> studymember = studyMeberService.findStudyMmeber(study_no);
 
         return new ResponseEntity<List<StudyMember>>(studymember,HttpStatus.OK);
     }
 
-//	@GetMapping("/search/{study_no}")
-//	
-//	@ApiOperation(value ="해당 스터디 멤버 회원들  조회", notes ="해당 스터디 멤버 회원들  정보 출력")
-//	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
-//					@ApiResponse(code = 401, message = "인증 실패"),
-//					@ApiResponse(code = 404, message = "사용자 없음"),
-//					@ApiResponse(code = 500, message = "서버 오류") })
-//	public ResponseEntity<StudyMember> findOneStudyMember(@PathVariable Long study_no) {
-//		StudyMember studymember = studyMeberService.findByBoardId(study_no);
-//		return new ResponseEntity<StudyMember>(studymember, HttpStatus.OK);
-//	}
-//
-//	
-//	@ApiOperation(value = "게시글 정보 수정", notes = "게시글 정보 수정")
-//	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
-//					@ApiResponse(code = 401, message = "인증 실패"),
-//					@ApiResponse(code = 404, message = "사용자 없음"),
-//					@ApiResponse(code = 500, message = "서버 오류") })
-//	@PutMapping("/update")
-//	public ResponseEntity<String> boardupdate(@RequestBody SaveBoardDto saveBoardDto) throws Exception {
-//		Board board;
-//		try {
-//			board = boardService.findByBoardId(saveBoardDto.getBoard_no());
-//		}catch(NoSuchElementException E) {
-//			System.out.println("게시글 수정 실패");
-//			return  ResponseEntity.status(500).body("해당 게시글이 없어서 게시글 수정 실패");
-//		}
-//		Board updateBoard = boardService.updateBoard(board, saveBoardDto);
-//		System.out.println("업데이트 됨");
-//		return new ResponseEntity<String>(SUCCESS+"\n"+updateBoard.toString(), HttpStatus.OK);
-//	}
-//	
-//	// 스터디 모집 게시판 게시글 삭제
-//	@ApiOperation(value = "스터디 모집 해당 게시글 삭제", notes = "스터디 모집 해당 게시글 삭제")
-//	@ApiResponses({ @ApiResponse(code = 200, message = "게시글 삭제 성공"), 
-//					@ApiResponse(code = 401, message = "인증 실패"),
-//					@ApiResponse(code = 404, message = "사용자 없음"), 
-//					@ApiResponse(code = 500, message = "해당 회원 없음")})
-//	@DeleteMapping("/remove/{board_no}")
-//	public ResponseEntity<String> boarddelete(@PathVariable("board_no") Long no) throws Exception {	
-//		Board board;
-//		try {
-//			board = boardService.findByBoardId(no);
-//			boardService.deleteBoard(board);
-//		}catch(Exception e ) {
-//			e.printStackTrace();
-//			System.out.println("게시글 삭제 실패");
-//			return  ResponseEntity.status(500).body("해당 게시글 없어서 삭제 "+FAIL);
-//		}
-//		logger.debug("스터디 모집 해당 게시글 삭제 성공");
-//		return ResponseEntity.status(200).body(board.getBoardNo()+"번 해당 게시글 삭제"+SUCCESS);
-//	}
+	@ApiOperation(value = "해당 스터디 멤버의 점수를 수정", notes = "해당 스터디 멤버의 점수를 수정")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 500, message = "서버 오류") })
+	@PutMapping("/update")
+	public ResponseEntity<String> boardupdate(@RequestBody SaveStudyMemberDto saveStudyMemberDto) throws Exception {
+		StudyMember studymember;
+		try {
+			studymember = studyMeberService.findOneStudyMember(saveStudyMemberDto.getStudymember_no());
+		}catch(NoSuchElementException E) {
+			return  ResponseEntity.status(500).body("스터디 멤버 점수 수정 실패");
+		}
+		StudyMember updateBoard = studyMeberService.updateStudyMemberScore(studymember,saveStudyMemberDto);
+		System.out.println("업데이트 됨");
+		return new ResponseEntity<String>(SUCCESS+"\n"+updateBoard.toString(), HttpStatus.OK);
+	}
+	
+	// 스터디 멤버 회원 삭제
+	@ApiOperation(value = "스터디 멤버 회원 삭제", notes = "스터디 멤버 회원 삭제")
+	@ApiResponses({ @ApiResponse(code = 200, message = "스터디 멤버 추방 성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"), 
+					@ApiResponse(code = 500, message = "해당 회원 없음")})
+	@DeleteMapping("/remove/{studymember_no}")
+	public ResponseEntity<String> boarddelete(@PathVariable("studymember_no") Long studymember_no) throws Exception {	
+		StudyMember studymember;
+		try {
+			studymember = studyMeberService.findOneStudyMember(studymember_no);
+			studyMeberService.deleteStudyMember(studymember);
+		}catch(Exception e ) {
+			e.printStackTrace();
+			System.out.println(">>>>>>>>>>>>>>>스터디 해당 멤버 삭제 실패");
+			return  ResponseEntity.status(500).body("스터디 해당 멤버 삭제 실패 "+FAIL);
+		}
+		logger.debug(">>>>>>>>>>>>>>>>>>스터디 해당 멤버 삭제 성공");
+		return ResponseEntity.status(200).body(studymember.getStudymemberNo()+"번 : 해당 "+studymember.getUser().getUserId() +" 라는 아이디인 멤버 삭제"+SUCCESS);
+	}
 }

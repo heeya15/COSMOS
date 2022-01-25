@@ -30,6 +30,9 @@ public class SaveStudyMemberDto {
 	@ApiModelProperty(name = "유저 id")
 	private String user_id;
 	
+	@ApiModelProperty(name = "스터디 해당 멤버 점수")
+	private int score;
+	
 //	public SaveBoardDto(User entity) {
 //		this.user_id = entity.getUserId();
 //		this.user_name = entity.getUserName();

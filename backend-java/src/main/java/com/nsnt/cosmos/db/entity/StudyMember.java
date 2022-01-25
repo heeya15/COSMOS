@@ -14,6 +14,9 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.nsnt.cosmos.api.request.SaveBoardDto;
+import com.nsnt.cosmos.api.request.SaveStudyMemberDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -62,4 +65,16 @@ public class StudyMember{
 	@ManyToOne
 	@JoinColumn(name = "study_no")	
 	private Study study;
+	
+	public void updateScore(SaveStudyMemberDto saveStudyMemberDto){  
+	    this.score = saveStudyMemberDto.getScore();
+	}
+
+	@Override
+	public String toString() {
+		return "StudyMember [studymemberNo=" + studymemberNo + ", score=" + score + ", attendance=" + attendance
+				+ ", studytime=" + studytime + "]";
+	}
+	
+	
 }

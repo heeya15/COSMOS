@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nsnt.cosmos.api.request.SaveBoardDto;
 import com.nsnt.cosmos.api.request.SaveStudyMemberDto;
-import com.nsnt.cosmos.db.entity.Board;
 import com.nsnt.cosmos.db.entity.StudyMember;
 import com.nsnt.cosmos.db.repository.StudyMemberRepository;
 @Service("StudyMemberService")
@@ -30,17 +30,22 @@ public class StudyMemberServiceImpl implements StudyMemberService {
 		List<StudyMember> studymember = studyMemberRepository.findStudyMember(study_no);	
 		return studymember;
 	}
-
+	
 	@Override
-	public void deleteStudyMember(StudyMember board) {
-		// TODO Auto-generated method stub
-
+	public StudyMember findOneStudyMember(Long studymember_no) {
+		StudyMember studymember = studyMemberRepository.findById(studymember_no).get();
+		return studymember;
 	}
 
-	@Override
-	public StudyMember updateStudyMemberScore(StudyMember studymember, SaveBoardDto saveBoardDto) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
+	@Override
+	public void deleteStudyMember(StudyMember studymember) {
+		studyMemberRepository.delete(studymember);
+	}
+	@Transactional
+	@Override
+	public StudyMember updateStudyMemberScore(StudyMember studymember, SaveStudyMemberDto saveStudyMemberDto) {
+		studymember.updateScore(saveStudyMemberDto);
+		return studymember;
+	}
 }
