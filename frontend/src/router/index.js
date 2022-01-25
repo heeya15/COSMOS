@@ -8,6 +8,7 @@ import MainBoard from '@/views/community/MainBoard.vue'
 import BoardForm from '@/components/community/BoardForm.vue'
 import BoardDetail from '@/components/community/BoardDetail.vue'
 import BoardFormUpdate from '@/components/community/BoardFormUpdate.vue'
+import BoardList from '@/components/community/BoardList.vue'
 import StudyRoomCreateForm from '@/views/study/StudyRoomCreateForm.vue'
 
 
@@ -53,6 +54,11 @@ const routes = [
     path: '/boardformupdate',
     name: 'BoardFormUpdate',
     component: BoardFormUpdate
+  },
+  {
+    path: '/boardlist',
+    name: 'BoardList',
+    component: BoardList
   },
   {
     path: '/studyroom',
