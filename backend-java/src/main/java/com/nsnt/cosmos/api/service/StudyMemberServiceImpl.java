@@ -25,7 +25,7 @@ public class StudyMemberServiceImpl implements StudyMemberService {
 	}
 
 	@Override
-	public List<StudyMember> findStudyMmeber(Long study_no) {
+	public List<StudyMember> findStudyMember(Long study_no) {
 		System.out.println("스터디 번호 : >>>>>>>>>>>>>>"+study_no);
 		List<StudyMember> studymember = studyMemberRepository.findStudyMember(study_no);	
 		return studymember;

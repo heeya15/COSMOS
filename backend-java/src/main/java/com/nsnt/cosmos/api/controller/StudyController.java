@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,8 +22,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nsnt.cosmos.api.request.StudyPostReq;
+import com.nsnt.cosmos.api.response.UserRes;
+import com.nsnt.cosmos.api.service.ApplyMemberService;
 import com.nsnt.cosmos.api.service.StudyService;
+import com.nsnt.cosmos.api.service.UserService;
+import com.nsnt.cosmos.common.auth.SsafyUserDetails;
 import com.nsnt.cosmos.common.model.response.BaseResponseBody;
+import com.nsnt.cosmos.db.entity.ApplyMember;
+import com.nsnt.cosmos.db.entity.Comment;
 import com.nsnt.cosmos.db.entity.Study;
 import com.nsnt.cosmos.db.repository.StudyRepository;
 
@@ -32,10 +39,13 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 스터디 관련 API 요청 처리를 위한 컨트롤러 정의.
  */
+@Slf4j
 @Api(value = "스터디 API", tags = { "Study" })
 @RestController
 @RequiredArgsConstructor
@@ -46,13 +56,24 @@ public class StudyController {
 	private static final String FAIL = "fail";
 
 	@Autowired
+	UserService userService;
+	
+	@Autowired
 	StudyService studyService;
+	
+	@Autowired
+	ApplyMemberService applyMemberService;
+	
+	@Autowired
+	private final StudyRepository studyRepository;
 	
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	
+	/** 스터디 관련 부분 **/
 	// 스터디 생성
-	@PostMapping("/create")
+	@PostMapping("/register")
 	@ApiOperation(value = "스터디 생성", notes = "만들 스터디에 대한 정보를 입력하고 생성한다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
@@ -156,5 +177,62 @@ public class StudyController {
 		
 		return new ResponseEntity<List<Study>>(study, HttpStatus.OK);
 	}
+	
+	
+	/** 스터디 신청 멤버관련 기능 **/
+	
+	// 스터디 멤버 신청
+	@PostMapping("/applyMemeber/register/{study_no}")
+	@ApiOperation(value = "스터디 멤버 신청 추가", notes = "스터디를 신청한 멤버를 추가한다.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 500, message = "서버 오류") })
+	public ResponseEntity<? extends BaseResponseBody> registerApplyMember(@ApiIgnore Authentication authentication
+												,@PathVariable Long study_no) {
+		/**
+		 * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저
+		 * 식별. 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access
+		 * Denied"}) 발생.
+		 */
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>> userDetails : {}", userDetails);
+		String userId = userDetails.getUsername();	// 현재 로그인 중인 유저 아이디 받아오기
+		log.debug(">>>>>>>>>>>>>>>>>>>>>>>>> userId : {}", userId);
 
+		ApplyMember applymember = applyMemberService.createMember(study_no, userId);
+
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+	}
+	
+	// 스터디 멤버 신청 유저 목록
+	@ApiOperation(value="스터디 멤버 신청 유저 조회", notes="<strong>해당 스터디 멤버를 신청한 유저를 전체 조회를</strong>시켜줍니다.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "댓글 없음"), 
+					@ApiResponse(code = 500, message = "서버 오류")})
+	@GetMapping("/applyMemeber/searchAll/{study_no}")
+    public ResponseEntity<List<ApplyMember>> findAllApplyMember(@PathVariable Long study_no){
+		List<ApplyMember> applyMember = applyMemberService.findAllByStudyNo(study_no);
+		return new ResponseEntity<List<ApplyMember>>(applyMember, HttpStatus.OK);
+	}
+	
+	// 스터디 멤버 신청 유저 삭제
+	@ApiOperation(value = "스터디 신청 유저 중 해당 유저 삭제", notes = "스터디 신청 유저 중 해당 유저 삭제")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "유저 없음"), 
+					@ApiResponse(code = 500, message = "서버 오류")})
+	@DeleteMapping("/applyMemeber/remove/{applymember_no}")
+	public ResponseEntity<String> deleteApplyMember(@PathVariable("applymember_no") int applymember_no) throws Exception {	
+		ApplyMember applyMember;
+		try {
+			applyMember = applyMemberService.findByApplyMemberNo(applymember_no);
+			applyMemberService.deleteApplyMemeber(applyMember);
+		}catch(Exception e ) {
+			e.printStackTrace();
+			return  ResponseEntity.status(500).body(FAIL);
+		}
+		return ResponseEntity.status(200).body(SUCCESS);
+	}
 }

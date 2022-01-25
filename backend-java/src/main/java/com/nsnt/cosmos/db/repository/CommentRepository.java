@@ -13,7 +13,9 @@ import com.nsnt.cosmos.db.entity.Comment;
 public interface CommentRepository extends JpaRepository<Comment, Integer>{
 	
 	// 해당 게시글의 모든 댓글 조회
-	@Query(value = "select * from Comment where board_no = :board_no "
+	@Query(value = "select * \r\n"
+			+ "from Comment \r\n"
+			+ "where board_no = :board_no "
 			, nativeQuery = true)
 	List<Comment> findAllByBoardNo(@Param("board_no") Long board_no);
 }

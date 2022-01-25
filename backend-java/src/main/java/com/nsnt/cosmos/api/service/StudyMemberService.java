@@ -19,7 +19,7 @@ public interface StudyMemberService {
     public StudyMember findOneStudyMember(Long studymember_no);
     
     /** 해당 회원들의 정보를 가져오는 findStudyMmeber 입니다. (목록 부분에 사용)*/
-    public List<StudyMember> findStudyMmeber(Long study_no);
+    public List<StudyMember> findStudyMember(Long study_no);
 
     /** 스터디 멤버 점수 수정하는 updateStudyMemberScore 입니다.*/
     public StudyMember updateStudyMemberScore(StudyMember studymember, SaveStudyMemberDto saveStudyMemberDto);
