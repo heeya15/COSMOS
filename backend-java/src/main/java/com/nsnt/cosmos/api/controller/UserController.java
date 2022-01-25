@@ -75,10 +75,10 @@ public class UserController {
 		 * Denied"}) 발생.
 		 */
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-		System.out.println("user디테일" + userDetails);
+		System.out.println("user디테일" + userDetails.toString());
 		String userId = userDetails.getUsername();
 		User user = userService.getUserByUserId(userId);
-		System.out.println("제발" + user);
+		System.out.println("제발" + user.toString());
 		return ResponseEntity.status(200).body(UserRes.of(user));
 	}
 
