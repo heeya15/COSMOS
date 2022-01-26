@@ -3,12 +3,56 @@
     <h1>스터디 모집 게시판</h1>
     <hr>
     <h3>상세보기</h3>
-    <div>
-      <span>{{ boardInfo.boardNo }}</span>
-      {{user_id}}
-      <!-- <span>{{ selectedPost.recruit_number }}</span>
-      <span>{{ selectedPost.content }}</span> -->
-    </div>
+    <center>
+      <div class="p-5" style="width: 600px">
+        <b-row>
+          <b-col cols="3" class="mt-2">
+            <p>스터디 이름</p>
+          </b-col>
+          <b-col cols="9" class="mt-2">
+            <p >{{ boardInfo.studyName }}</p>
+          </b-col>
+
+          <b-col cols="3" class="mt-2">
+            <p>스터디 인원</p>
+          </b-col>
+          <b-col cols="9" class="mt-2" >
+            <p>{{ boardInfo.recruitNumber }}</p>
+          </b-col>
+
+          <b-col cols="3" class="mt-2">
+            <p>스터디 분류</p>
+          </b-col>
+          <b-col cols="9" class="mt-2">
+            <p>{{ boardInfo.studytypeName }}</p>
+          </b-col>
+
+          <b-col cols="3" class="mt-2">
+            <p>작성자</p>
+          </b-col>
+          <b-col cols="9" class="mt-2">
+            <p>{{ userInfo.user_name}}</p>
+          </b-col>
+
+          <b-col cols="3" class="mt-2">
+            <p>내용</p>
+          </b-col>
+          <b-col cols="9" class="mt-2">
+            <p>{{ boardInfo.content }}</p>
+          </b-col>
+
+          <b-col cols="3" class="mt-2">
+            <p>댓글</p>
+          </b-col>
+          <b-col cols="6" class="mt-2">
+            <b-textarea></b-textarea>
+          </b-col>
+          <b-col cols="3" class="mt-2">
+            <b-button>작성</b-button>
+          </b-col>
+        </b-row>
+      </div>
+    </center> 
     <div>
       <!-- 작성자인 경우 수정을 보여주고 아니면 스터디 신청을 보여준다 -->
       <b-button style="background-color: #DAC7F9">스터디 신청</b-button>
@@ -38,7 +82,9 @@ export default {
         studyName: null,
         studytypeName: null,
       },
-      user_id:null,
+      userInfo: {
+        user_name: null,
+      }
     }
   },
   methods: {
@@ -56,7 +102,11 @@ export default {
       .then(res => {
         console.log(res)
         this.boardInfo.boardNo = res.data['boardNo']
-        this.user_id = res.data.user['userId']
+        this.boardInfo.studyName = res.data['studyName']
+        this.boardInfo.recruitNumber = res.data['recruitNumber']
+        this.boardInfo.studytypeName = res.data['studytypeName']
+        this.boardInfo.content = res.data['content']
+        this.userInfo.user_name = res.data.user['userName']
         console.log('작동확인')
       })
       .catch(err => {
@@ -70,6 +120,7 @@ export default {
       })
       .then((res) => {
         console.log(res)
+        this.$router.push({name: 'MainBoard'})
       })
       .catch(err => {
         console.log(err)
@@ -83,5 +134,8 @@ export default {
 </script>
 
 <style>
-
+p {
+  color: black !important;
+  font-size: 1rem !important;  
+}
 </style>
