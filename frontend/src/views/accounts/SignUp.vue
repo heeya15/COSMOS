@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <h1>SIGN UP</h1>
-    
+  <div>    
     <center>
       <div style="width:600px; background-color: #DAC7F9;" class="p-5">
-        <p>COSMOS</p>
+        <p>회원가입</p>
         <b-form style="width:400px;" @submit.stop.prevent>        
           <b-form-input class="mt-3" style="height:50px;" id="username" v-model="credentials.userName" required placeholder="이름"></b-form-input>
           <b-form-input class="mt-3" style="height:50px;" id="userId" v-model="credentials.userId" required placeholder="아이디"></b-form-input>
