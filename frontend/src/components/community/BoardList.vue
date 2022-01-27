@@ -101,7 +101,7 @@ export default {
     getBoardItems() {
       axios({
         method: 'get',
-        url: 'http://localhost:8080/api/board/searchAll',
+        url: 'http://i6e103.p.ssafy.io:8080/api/board/searchAll',
         // headers: this.
       })
       .then(res => {
