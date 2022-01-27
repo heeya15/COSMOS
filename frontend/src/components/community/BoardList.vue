@@ -6,6 +6,7 @@
         <div class="table_title">
           <p>번호</p>
           <p>상태</p>
+          <p>말머리</p>
           <p>제목</p>
           <p>분류</p>
           <p>작성자</p>
@@ -25,17 +26,35 @@
         </div>
       </b-col>
     </b-row>
+
     <b-pagination
-        v-model="currentPage"
-        :total-rows="rows"
-        :per-page="perPage"
-        first-text="First"
-        prev-text="Prev"
-        next-text="Next"
-        last-text="Last"
-        align="center"
-      ></b-pagination>
-  </div>  
+      v-model="currentPage"
+      :total-rows="rowws"
+      :per-page="perPage"
+      first-text="First"
+      prev-text="Prev"
+      next-text="Next"
+      last-text="Last"
+      align="center"
+    ></b-pagination>
+    
+    <!-- <b-pagination
+      v-model="currentPage"
+      :total-rows="rows"
+      :per-page="perPage"
+      aria-controls="my-table"
+    ></b-pagination> -->
+
+    <!-- <b-table
+    id="my-table"
+    :items="items"
+    :per-page="perPage"
+    :current-page="currentPage"
+    :fields="fields"
+    ></b-table> -->
+    </div>
+
+   
 </template>
 
 <script>
@@ -46,6 +65,36 @@ export default {
   data() {
     return {
       boardItems: null,
+      perPage: 10,
+      currentPage: 1,
+      rowws: null,
+      items: [],
+      // fields: [
+      //   {
+      //     key: "boardNo",
+      //     label: "번호",
+      //   },
+      //   {
+      //     key: "contentStatus",
+      //     label: "상태",
+      //   },
+      //   {
+      //     key: "header",
+      //     label: "말머리",
+      //   },
+      //   {
+      //     key: "contentTitle",
+      //     label: "제목",
+      //   },
+      //   {
+      //     key: "studyName",
+      //     label: "스터디 이름",
+      //   },
+      //   {
+      //     key: "studytypeName",
+      //     label: "분류",
+      //   },
+      // ],
     }
   },
   methods: {
@@ -56,8 +105,10 @@ export default {
         // headers: this.
       })
       .then(res => {
-        console.log(res)
+        console.log(res.data)
         this.boardItems = res.data
+        this.rowws = res.data.length
+        this.items = res.data
       })
       .catch(err => {
         console.log(err)
@@ -75,6 +126,11 @@ export default {
   },
   created() {
     this.getBoardItems()
+  },
+  computed: {
+    rows() {
+      return this.rowws
+    }
   }
 }
 </script>
