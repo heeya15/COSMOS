@@ -45,7 +45,7 @@ public class CommentController {
 	
 	/** 댓글 등록 입니다. */
 	@PostMapping("/register")
-	@ApiOperation(value="댓글 등록", notes="<strong>댓글을 등록</strong>시켜줍니다.")
+	@ApiOperation(value="댓글 등록", notes="<strong>댓글을 등록</strong>시켜줍니다. create_at은 빈 괄호(\"\")를 입력하여 주세요. ")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "댓글 없음"), 
