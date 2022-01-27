@@ -5,24 +5,25 @@
     <div style="width:600px;" class="p-5">
       <b-row>
         <b-col cols="3">
-          <label for="study_name" class="mt-2">스터디 이름</label>
+          <label for="studyName" class="mt-2">스터디 이름</label>
         </b-col>
         <b-col>
-          <b-form-input id="study_name" v-model="input.study_name"></b-form-input>
+          <b-form-input id="studyName" v-model="input.studyName"></b-form-input>
         </b-col>
         <hr class="mt-3">
         <b-col cols="3">
           <label for="url" class="mt-2">스터디 url</label>
         </b-col>
         <b-col>
-          <div id="url">{{input.url}}{{input.study_name}}</div>
+          <div id="url">{{input.url}}{{input.studyName}}</div>
         </b-col>
         <hr class="mt-3">
         <b-col cols="3">
-          <label for="studytype_name" class="mt-2">스터디 분류</label>
+          <label for="studytypeNo" class="mt-2">스터디 분류</label>
         </b-col>
         <b-col>
-          <b-form-input id="studytype_name" v-model="input.studytype_name"></b-form-input>
+          <b-form-select v-model="input.studytypeNo" :options="options" ></b-form-select>
+          <b-form-input id="studytypeNo" v-model="input.studytypeNo"></b-form-input>
         </b-col>
         <hr class="mt-3">
 
@@ -49,19 +50,19 @@
         </b-col>
         <hr class="mt-3">
         <b-col cols="3">
-          <label for="studyTotalMember" class="mt-2">인원 수</label>
+          <label for="totalMember" class="mt-2">인원 수</label>
         </b-col>
         <b-col cols="5">
-          <b-form-input id="studyTotalMember" placeholder="인원 수를 입력하세요."></b-form-input>
+          <b-form-input id="totalMember" placeholder="인원 수를 입력하세요."></b-form-input>
         </b-col>
         <b-col cols="1" class="mt-2">명</b-col>
         <hr class="mt-3">
         <b-col cols="3">
-          <label for="study_password" class="mt-1">비밀번호</label>
+          <label for="studyPassword" class="mt-1">비밀번호</label>
         </b-col>
         <b-col>
-          <b-form-input id="study_password" v-model="input.study_password" v-if="input.study_type==='private'" placeholder="4~10자리 숫자만 입력하세요."></b-form-input>
-          <div v-else class="study_password mt-1">공개스터디는 비밀번호가 필요하지 않습니다.</div>
+          <b-form-input id="studyPassword" v-model="input.studyPassword" v-if="input.study_type==='private'" placeholder="4~10자리 숫자만 입력하세요."></b-form-input>
+          <div v-else class="studyPassword mt-1">공개스터디는 비밀번호가 필요하지 않습니다.</div>
         </b-col>
         <hr class="mt-3">
         
@@ -77,10 +78,10 @@
         <hr class="mt-3">
 
         <b-col cols="3">
-          <label for="study_rule" class="mt-2">스터디 규칙</label>
+          <label for="studyRule" class="mt-2">스터디 규칙</label>
         </b-col>
         <b-col>
-          <b-form-textarea id="study_rule" v-model="input.study_rule" placeholder="스터디 규칙, 공지사항 등 입력" rows="3" max-rows="6"></b-form-textarea>
+          <b-form-textarea id="studyRule" v-model="input.studyRule" placeholder="스터디 규칙, 공지사항 등 입력" rows="3" max-rows="6"></b-form-textarea>
         </b-col>
         <button class="mt-4" type="button">스터디 생성</button>
       </b-row>
@@ -97,13 +98,22 @@ export default {
   data() {
     return {
       input: {
-        study_name: null,
+        studyName: null,
         url: 'http://www.cosmos.com/',
-        studytype_name: null,
+        studytypeNo: null,
+        // get 요청보내서 method만들어서 for문으로 options에 추가하기
+        options: [
+          { value: null, text: 'Please select some item' },
+          { value: 'a', text: 'This is First option' },
+          { value: 'b', text: 'Default Selected Option' },
+          { value: 'c', text: 'This is another option' },
+          { value: 'd', text: 'This one is disabled', disabled: true }
+        ],
         image: null,
-        study_type: null,
-        number_of_member: null,
-        study_rule: null,
+        study_type: null, // 공개스터디, 비공개스터디
+        totalMember: null,
+        studyRule: null,
+        studyPassword: null,
         settings: {
           mic: null,
           cam: null,

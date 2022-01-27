@@ -10,6 +10,8 @@ import BoardDetail from '@/components/community/BoardDetail.vue'
 import BoardFormUpdate from '@/components/community/BoardFormUpdate.vue'
 import BoardList from '@/components/community/BoardList.vue'
 import StudyRoomCreateForm from '@/views/study/StudyRoomCreateForm.vue'
+import ChangePasswordForm from '@/components/accounts/ChangePasswordForm.vue'
+import StudyDetail from '@/views/study/StudyDetail.vue'
 
 
 Vue.use(VueRouter)
@@ -34,6 +36,11 @@ const routes = [
     path: '/mypage',
     name: 'MyPage',
     component: MyPage
+  },
+  {
+    path: '/mypage/modifypassword',
+    name: 'ChangePasswordForm',
+    component: ChangePasswordForm
   },
   {
     path: '/mainboard',
@@ -65,6 +72,11 @@ const routes = [
     name: 'StudyRoomCreateForm',
     component: StudyRoomCreateForm
   },
+  {
+    path: '/study',
+    name: 'StudyDetail',
+    component: StudyDetail
+  }
 ]
 
 const router = new VueRouter({
