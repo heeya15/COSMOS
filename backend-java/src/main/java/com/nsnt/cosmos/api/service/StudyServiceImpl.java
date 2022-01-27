@@ -11,7 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nsnt.cosmos.api.request.StudyPostReq;
 import com.nsnt.cosmos.db.entity.Board;
 import com.nsnt.cosmos.db.entity.Study;
+import com.nsnt.cosmos.db.entity.StudyMember;
 import com.nsnt.cosmos.db.entity.StudyType;
+import com.nsnt.cosmos.db.entity.User;
+import com.nsnt.cosmos.db.repository.StudyMemberRepository;
 import com.nsnt.cosmos.db.repository.StudyRepository;
 import com.nsnt.cosmos.db.repository.StudyTypeRepository;
 
@@ -27,7 +30,11 @@ public class StudyServiceImpl implements StudyService {
 	@Autowired
 	StudyTypeRepository studyTypeRepository;
 	
+	@Autowired
+	StudyMemberRepository studyMemberRepository;
+	
 	/** 스터디를 생성하는 createStudy 메소드입니다. */
+	@Transactional
 	@Override
 	public Study createStudy(StudyPostReq studyRegisterInfo) {
 		Study study = new Study();
@@ -42,6 +49,18 @@ public class StudyServiceImpl implements StudyService {
 		StudyType studyType = new StudyType();
 		studyType.setStudytypeNo(studyRegisterInfo.getStudytypeNo());
 		study.setStudyType(studyType);
+		
+		StudyMember studyMember = new StudyMember();
+		
+		User user = new User();
+		user.setUserId(studyRegisterInfo.getUserId());
+		studyMember.setUser(user);
+		studyMember.setStudy(study);
+		studyMember.setAuthority(true);
+		studyMember.setLeader(true);
+		
+		studyMemberRepository.save(studyMember);
+		
 		
 		return studyRepository.save(study);
 	}
