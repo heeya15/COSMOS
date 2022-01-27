@@ -38,7 +38,7 @@ export default new Vuex.Store({
       // console.log(credentials)
       axios({
         method: 'POST',
-        url: 'http://localhost:8080/api/user/signup',
+        url: 'http://i6e103.p.ssafy.io:8080/api/user/signup',
         data: credentials
       })
       .then(res => {
@@ -52,7 +52,7 @@ export default new Vuex.Store({
     logIn({commit}, credentials) {
       axios({
         method: 'post',
-        url: 'http://localhost:8080/api/auth/login',
+        url: 'http://i6e103.p.ssafy.io:8080/api/auth/login',
         data: credentials
       })
       .then(res => {

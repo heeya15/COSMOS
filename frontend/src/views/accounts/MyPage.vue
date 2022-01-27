@@ -39,7 +39,7 @@ export default {
     getUserInfo(){
       axios({
         method: 'GET',
-        url: 'http://localhost:8080/api/user/me',
+        url: 'http://i6e103.p.ssafy.io:8080/api/user/me',
         headers: this.getToken()
       })
       .then(res =>{
@@ -56,7 +56,7 @@ export default {
     signOut(){
       axios({
         method: 'DELETE',
-        url: `http://localhost:8080/api/user/remove/${this.user_id}`,
+        url: `http://i6e103.p.ssafy.io:8080/api/user/remove/${this.user_id}`,
         headers: this.getToken()
       })
       .then(res => {
