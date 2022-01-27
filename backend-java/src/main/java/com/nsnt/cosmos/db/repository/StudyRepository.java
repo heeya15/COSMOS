@@ -15,7 +15,7 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 	boolean existsByUrl(String url);
 	
 	@Query(value="select * "
-			+ "from Study s "
+			+ "from study s "
 			+ "where s.study_no IN "
 			+ "(select sm.study_no "
 			+ "from user u join study_member sm "
