@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,10 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nsnt.cosmos.api.request.UserUpdateDto;
 import com.nsnt.cosmos.api.request.UserRegisterPostReq;
+import com.nsnt.cosmos.api.response.UserLoginPostRes;
 import com.nsnt.cosmos.api.response.UserRes;
 import com.nsnt.cosmos.api.service.UserService;
 import com.nsnt.cosmos.common.auth.SsafyUserDetails;
 import com.nsnt.cosmos.common.model.response.BaseResponseBody;
+import com.nsnt.cosmos.common.util.JwtTokenUtil;
 import com.nsnt.cosmos.db.entity.User;
 
 import io.swagger.annotations.Api;
@@ -47,6 +50,9 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
 	@PostMapping("/signup")
 	@ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
@@ -98,6 +104,7 @@ public class UserController {
 		return ResponseEntity.status(401).body(userService.checkUserId(userId));
 	}
 	
+	// 회원 정보 수정 (비밀번호 수정)
 	@ApiOperation(value = "회원 정보 수정", notes = "회원 정보 수정")
 	@PutMapping("/update")
 	public ResponseEntity<String> update(@RequestBody UserUpdateDto updateUserDto) throws Exception {
@@ -133,5 +140,29 @@ public class UserController {
 		}
 		logger.debug("회원 탈퇴 성공");
 		return ResponseEntity.status(200).body("회원 탈퇴 성공");
+	}
+	
+	// 회원 비밀번호 변경을 위한 비밀번호 체크
+	@GetMapping("/password/{user_password}")
+	@ApiOperation(value = "회원 비밀번호 체크", notes = "로그인한 회원 본인의 정보를 응답한다.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 500, message = "서버 오류") })
+	public ResponseEntity<String> checkUserPassword(@PathVariable String user_password, @ApiIgnore Authentication authentication) {
+		/**
+		 * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저
+		 * 식별. 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access
+		 * Denied"}) 발생.
+		 */
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		String userId = userDetails.getUsername();
+		User user = userService.getUserByUserId(userId);
+		
+		if(passwordEncoder.matches(user_password, user.getUserPassword())) {
+			// 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
+			return ResponseEntity.status(200).body("Success");
+		}
+		return ResponseEntity.status(401).body("Invalid Password");
 	}
 }
