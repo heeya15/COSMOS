@@ -29,8 +29,10 @@ import com.nsnt.cosmos.api.service.UserService;
 import com.nsnt.cosmos.common.auth.SsafyUserDetails;
 import com.nsnt.cosmos.common.model.response.BaseResponseBody;
 import com.nsnt.cosmos.db.entity.ApplyMember;
+import com.nsnt.cosmos.db.entity.Board;
 import com.nsnt.cosmos.db.entity.Comment;
 import com.nsnt.cosmos.db.entity.Study;
+import com.nsnt.cosmos.db.entity.StudyType;
 import com.nsnt.cosmos.db.repository.StudyRepository;
 
 import io.swagger.annotations.Api;
@@ -64,9 +66,6 @@ public class StudyController {
 	@Autowired
 	ApplyMemberService applyMemberService;
 	
-	@Autowired
-	private final StudyRepository studyRepository;
-	
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -77,7 +76,7 @@ public class StudyController {
 	@ApiOperation(value = "스터디 생성", notes = "만들 스터디에 대한 정보를 입력하고 생성한다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
-					@ApiResponse(code = 404, message = "사용자 없음"), 
+					@ApiResponse(code = 404, message = "스터디 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
 	public ResponseEntity<? extends BaseResponseBody> register(
 			@RequestBody @ApiParam(value = "스터디 정보", required = true) StudyPostReq registerInfo) {
@@ -93,7 +92,7 @@ public class StudyController {
 	@ApiOperation(value = "스터디 이름 중복 체크", notes = "스터디 생성 시 스터디 이름 중복 체크 검사(true면 중복, false면 중복아님)")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"),
 					@ApiResponse(code = 401, message = "인증 실패"),
-					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 404, message = "스터디 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") 
 					})
 	public ResponseEntity<Boolean> checkStudyNameDuplicate(@PathVariable String studyName) {
@@ -106,7 +105,7 @@ public class StudyController {
 	@ApiOperation(value = "스터디 url 중복 체크", notes = "스터디 생성 시 스터디 url 중복 체크 검사(true면 중복, false면 중복아님)")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"),
 					@ApiResponse(code = 401, message = "인증 실패"),
-					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 404, message = "url 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") 
 					})
 	public ResponseEntity<Boolean> checkUrlDuplicate(@PathVariable String url) {
@@ -119,7 +118,7 @@ public class StudyController {
 	@ApiOperation(value = "스터디 상세 정보 표시", notes = "스터디에 대한 상세 정보 표시")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
-					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 404, message = "스터디 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<Study> findOneStudy(@PathVariable Long studyNo) {
 		Study study = studyService.findByStudyNo(studyNo);
@@ -130,7 +129,7 @@ public class StudyController {
 	@ApiOperation(value = "스터디 모집 해당 게시글 삭제", notes = "스터디 모집 해당 게시글 삭제")
 	@ApiResponses({ @ApiResponse(code = 200, message = "게시글 삭제 성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
-					@ApiResponse(code = 404, message = "사용자 없음"), 
+					@ApiResponse(code = 404, message = "스터디 없음"), 
 					@ApiResponse(code = 500, message = "해당 회원 없음")})
 	@DeleteMapping("/remove/{studyNo}")
 	public ResponseEntity<String> userdelete(@PathVariable("studyNo") Long no) throws Exception {	
@@ -150,7 +149,7 @@ public class StudyController {
 	@ApiOperation(value = "스터디 정보 수정", notes = "스터디 정보 수정")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
-					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 404, message = "스터디 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") })
 	@PutMapping("/update")
 	public ResponseEntity<String> update(@RequestBody StudyPostReq studyDto) throws Exception {
@@ -169,7 +168,7 @@ public class StudyController {
 	@ApiOperation(value = "해당 멤버 스터디 조회", notes = "userId에 해당하는 멤버의 스터디들을 List로 반환")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
-					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 404, message = "스터디 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") })
 	@PutMapping("/memberStudy/{userId}")
 	public ResponseEntity<List<Study>> findMemberStudy(@PathVariable String userId) throws Exception {
@@ -186,7 +185,7 @@ public class StudyController {
 	@ApiOperation(value = "스터디 멤버 신청 추가", notes = "스터디를 신청한 멤버를 추가한다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
-					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 404, message = "유저 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") })
 	public ResponseEntity<? extends BaseResponseBody> registerApplyMember(@ApiIgnore Authentication authentication
 												,@PathVariable Long study_no) {
@@ -209,7 +208,7 @@ public class StudyController {
 	@ApiOperation(value="스터디 멤버 신청 유저 조회", notes="<strong>해당 스터디 멤버를 신청한 유저를 전체 조회를</strong>시켜줍니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
-					@ApiResponse(code = 404, message = "댓글 없음"), 
+					@ApiResponse(code = 404, message = "유저 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
 	@GetMapping("/applyMemeber/searchAll/{study_no}")
     public ResponseEntity<List<ApplyMember>> findAllApplyMember(@PathVariable Long study_no){
@@ -235,4 +234,18 @@ public class StudyController {
 		}
 		return ResponseEntity.status(200).body(SUCCESS);
 	}
+	
+	// 알고리즘 분류 전체 조회
+	@ApiOperation(value="알고리즘 분류 전체 조회", notes="알고리즘 분류 목록을 전체 불러옴")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "알고리즘 타입 없음"), 
+					@ApiResponse(code = 500, message = "서버 오류")})
+	@GetMapping("/studyType")
+    public ResponseEntity<List<StudyType>> findAllBoard(){
+        List<StudyType> studyType = studyService.findAllStudyType();
+
+        return new ResponseEntity<List<StudyType>>(studyType,HttpStatus.OK);
+    }
+	
 }

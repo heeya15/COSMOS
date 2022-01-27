@@ -4,13 +4,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nsnt.cosmos.api.request.StudyPostReq;
+import com.nsnt.cosmos.db.entity.Board;
 import com.nsnt.cosmos.db.entity.Study;
 import com.nsnt.cosmos.db.entity.StudyType;
 import com.nsnt.cosmos.db.repository.StudyRepository;
+import com.nsnt.cosmos.db.repository.StudyTypeRepository;
 
 /**
  *	스터디 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -20,6 +23,9 @@ public class StudyServiceImpl implements StudyService {
 	
 	@Autowired
 	StudyRepository studyRepository;
+	
+	@Autowired
+	StudyTypeRepository studyTypeRepository;
 	
 	/** 스터디를 생성하는 createStudy 메소드입니다. */
 	@Override
@@ -77,6 +83,12 @@ public class StudyServiceImpl implements StudyService {
 	@Override
 	public List<Study> findMemberStudy(String userId) {
 		return studyRepository.findMemberStudy(userId);
+	}
+
+	@Override
+	public List<StudyType> findAllStudyType() {
+		List<StudyType> studyType = studyTypeRepository.findAllStudyType();
+	    return studyType;
 	}
 
 }
