@@ -118,7 +118,7 @@ export default {
       }
       axios({
         method: 'post',
-        url: 'http://localhost:8080/api/board/register',
+        url: 'http://i6e103.p.ssafy.io:8080/api/board/register',
         data: createBoardItem,
       })
         .then(res => {

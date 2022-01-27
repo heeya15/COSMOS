@@ -112,7 +112,8 @@ export default {
     getBoard() {
       axios({
         method: 'get',
-        url: `http://localhost:8080/api/board/search/${this.board_no}`,
+        url: `http://i6e103.p.ssafy.io:8080/api/board/search/${this.board_no}`,
+        headers: this.getToken(),
       })
       .then(res => {
         console.log(res)
@@ -132,7 +133,7 @@ export default {
     deleteBoardForm() {
       axios({
         method: 'delete',
-        url: `http://localhost:8080/api/board/remove/${this.board_no}`,
+        url: `http://i6e103.p.ssafy.io:8080/api/board/remove/${this.board_no}`,
         headers: this.getToken()
       })
       .then((res) => {
@@ -146,7 +147,7 @@ export default {
     getUserInfo(){
       axios({
         method: 'GET',
-        url: 'http://localhost:8080/api/user/me',
+        url: 'http://i6e103.p.ssafy.io:8080/api/user/me',
         headers: this.getToken()
       })
       .then(res =>{
