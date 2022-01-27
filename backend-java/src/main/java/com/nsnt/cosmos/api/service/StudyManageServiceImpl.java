@@ -34,7 +34,7 @@ public class StudyManageServiceImpl implements StudyManageService {
 		study.setStudyNo(studyManageRegisterInfo.getStudyNo());
 		studyManageId.setStudyNo(study);
 		
-		studyManage.setStudymangeId(studyManageId);
+		studyManage.setStudymanageId(studyManageId);
 		studyManage.setStudymanageNotice(studyManageRegisterInfo.getStudymanageNotice());
 		studyManage.setCreatedAt(LocalDateTime.now());
 		
