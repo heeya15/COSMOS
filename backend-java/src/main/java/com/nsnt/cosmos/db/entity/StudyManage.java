@@ -32,7 +32,7 @@ import com.nsnt.cosmos.api.request.StudyPostReq;
 
 public class StudyManage {
 	@EmbeddedId
-	private StudyManageId studymangeId;
+	private StudyManageId studymanageId;
 	
 	@Column(length = 2000, name = "studymanage_notice")
 	String studymanageNotice;
