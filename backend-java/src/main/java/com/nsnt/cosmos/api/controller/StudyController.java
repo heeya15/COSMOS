@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nsnt.cosmos.api.request.StudyPostReq;
-import com.nsnt.cosmos.api.response.UserRes;
+import com.nsnt.cosmos.api.response.UserDtoRes;
 import com.nsnt.cosmos.api.service.ApplyMemberService;
 import com.nsnt.cosmos.api.service.StudyService;
 import com.nsnt.cosmos.api.service.UserService;

@@ -18,10 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nsnt.cosmos.api.request.CommentReq;
-import com.nsnt.cosmos.api.request.SaveBoardDto;
+import com.nsnt.cosmos.api.response.CommentSearchDtoRes;
 import com.nsnt.cosmos.api.service.CommentService;
 import com.nsnt.cosmos.common.model.response.BaseResponseBody;
-import com.nsnt.cosmos.db.entity.Board;
 import com.nsnt.cosmos.db.entity.Comment;
 
 import io.swagger.annotations.Api;
@@ -69,9 +68,9 @@ public class CommentController {
 					@ApiResponse(code = 404, message = "댓글 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
 	@GetMapping("/searchAll/{board_no}")
-    public ResponseEntity<List<Comment>> findAll(@PathVariable Long board_no){
-        List<Comment> comments = commentService.findAllByBoardNo(board_no);
-        return new ResponseEntity<List<Comment>>(comments,HttpStatus.OK);
+    public ResponseEntity<List<CommentSearchDtoRes>> findAll(@PathVariable Long board_no){
+        List<CommentSearchDtoRes> comments = commentService.findAllByBoardNo(board_no);
+        return new ResponseEntity<List<CommentSearchDtoRes>>(comments,HttpStatus.OK);
     }
 
 	/** 댓글 수정 입니다. */

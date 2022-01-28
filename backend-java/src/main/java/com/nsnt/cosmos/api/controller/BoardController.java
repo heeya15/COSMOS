@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nsnt.cosmos.api.request.UserUpdateDto;
 import com.nsnt.cosmos.api.request.SaveBoardDto;
 import com.nsnt.cosmos.api.request.UserRegisterPostReq;
-import com.nsnt.cosmos.api.response.UserRes;
+import com.nsnt.cosmos.api.response.UserDtoRes;
 import com.nsnt.cosmos.api.service.BoardService;
 import com.nsnt.cosmos.api.service.UserService;
 import com.nsnt.cosmos.common.auth.SsafyUserDetails;
