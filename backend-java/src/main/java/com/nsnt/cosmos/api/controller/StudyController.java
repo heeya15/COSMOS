@@ -210,7 +210,7 @@ public class StudyController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "유저 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	@GetMapping("/applyMemeber/searchAll/{study_no}")
+	@GetMapping("/applyMember/searchAll/{study_no}")
     public ResponseEntity<List<ApplyMember>> findAllApplyMember(@PathVariable Long study_no){
 		List<ApplyMember> applyMember = applyMemberService.findAllByStudyNo(study_no);
 		return new ResponseEntity<List<ApplyMember>>(applyMember, HttpStatus.OK);
@@ -222,12 +222,12 @@ public class StudyController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "유저 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	@DeleteMapping("/applyMemeber/remove/{applymember_no}")
+	@DeleteMapping("/applyMember/remove/{applymember_no}")
 	public ResponseEntity<String> deleteApplyMember(@PathVariable("applymember_no") int applymember_no) throws Exception {	
 		ApplyMember applyMember;
 		try {
 			applyMember = applyMemberService.findByApplyMemberNo(applymember_no);
-			applyMemberService.deleteApplyMemeber(applyMember);
+			applyMemberService.deleteApplyMember(applyMember);
 		}catch(Exception e ) {
 			e.printStackTrace();
 			return  ResponseEntity.status(500).body(FAIL);

@@ -49,7 +49,7 @@ public class ApplyMemberServiceImpl implements ApplyMemberService {
 	/** 스터디 멤버 신청한 유저를 삭제(거절)하는 deleteApplyMember 입니다 */
 	@Override
 	@Transactional
-	public void deleteApplyMemeber(ApplyMember applyMember) {
+	public void deleteApplyMember(ApplyMember applyMember) {
 		applyMemberRepository.delete(applyMember);
 	}
 
