@@ -9,7 +9,7 @@
       <b-button variant="warning" @click="changePassword">비밀번호 변경</b-button>
 
       <!-- 비밀번호 일치하면, 비밀번호 수정가능 -->
-      
+      <!-- My study는 해당멤버 스터디 조회 사용 -->
     </div>
   </center>
 </template>

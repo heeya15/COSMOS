@@ -1,0 +1,120 @@
+<template>
+  <!-- 공지사항 페이지 -->
+  <div class="notice" style="width:1000px;">
+    <h3>공지사항</h3>
+    <div v-if="notice.studyManageNo">
+      <div v-show="!notice.modify">
+        <p style="text-align:right;">변경일: {{notice.createdAt}}</p>
+        <div style="width:1000px; height:100px; padding:10px; background-color:lightgray;">
+          {{notice.studymanageNotice}}
+        </div>
+        <button @click="notice.modify=true">수정</button>
+      </div>
+        <div v-show="notice.modify">
+          <b-form-textarea id="textarea" v-model="notice.studymanageNotice" :placeholder=notice.studymanageNotice rows="3" max-rows="6"></b-form-textarea>
+          <button @click="modifyNotice">수정</button>
+        </div>
+    </div>
+    <div v-else>
+      <b-form-textarea id="textarea" v-model="notice.studymanageNotice" placeholder="스터디 공지사항을 입력해주세요." rows="3" max-rows="6"></b-form-textarea>
+      <button @click="registNotice">등록</button>
+    </div>        
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+
+export default {
+  name: 'StudyNotice',
+  data(){
+    return {
+      studyNo:null,
+      notice: {
+        toggleNotice: true,
+        studymanageNotice: null,
+        studyManageNo: null,
+        createdAt: '',
+        modify:false,
+      },
+    }
+  },
+  methods: {
+    getToken(){
+      const token = localStorage.getItem('jwt')
+      const header = {
+        Authorization: `Bearer ${token}`
+      }
+      return header
+    },
+    showStudyNotice() {
+      axios({
+        method: 'GET',
+        url: 'http://i6e103.p.ssafy.io:8080/api/studyManage/search/1',
+      })
+      .then(res => {
+        // console.log(res)
+        this.notice.studymanageNotice = res.data.studymanageNotice
+        this.notice.toggleNotice = true
+        this.notice.createdAt = res.data.createdAt.slice(0,10)
+        this.studyNo = res.data.studymangeId.studyNo.studyNo
+        // this.studyNo = res.data.studymanageId.studyNo.studyNo
+        this.notice.studyManageNo = res.data.studymangeId.studyManageNo
+        // this.studyManageNo = res.data.studymanageId.studyManageNo
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    modifyNotice() {
+      const updateFormdata = {
+        studyNo: this.studyNo,
+        studymanageNotice: this.notice.studymanageNotice
+      }
+      axios({
+        method: 'PUT',
+        url: 'http://i6e103.p.ssafy.io:8080/api/studyManage/update',
+        data: updateFormdata,
+        // headers: this.getToken()
+      })
+      .then(() => {
+        // console.log(res)
+        this.notice.modify = false
+        this.$router.go()
+      })
+      .catch(err =>{
+        console.log(err)
+      })
+    },
+    registNotice() {
+      const updateFormdata = {
+        studyNo: this.studyNo,
+        studymanageNotice: this.studymanageNotice
+      }
+      axios({
+        method: 'POST',
+        url: 'http://i6e103.p.ssafy.io:8080/api/studyManage/register',
+        data: updateFormdata,
+        // headers: this.getToken()
+      })
+      .then(res => {
+        console.log(res)
+        this.notice.modify = false
+        this.$router.go()
+      })
+      .catch(err =>{
+        console.log(err)
+      })
+    }
+  },
+  created() {
+    this.showStudyNotice()
+    this.getToken()
+  }
+  
+}
+</script>
+
+<style>
+
+</style>
