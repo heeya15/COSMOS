@@ -15,7 +15,7 @@ public interface ApplyMemberService {
 	public List<ApplyMember> findAllByStudyNo(Long study_no);
 
 	/** 스터디 멤버 신청한 유저를 삭제(거절)하는 deleteApplyMember 입니다 */
-	public void deleteApplyMemeber(ApplyMember applyMember);
+	public void deleteApplyMember(ApplyMember applyMember);
 
 	/** 신청 번호로 스터디 멤버 신청한 내용 조회하는 findByApplyMemberNo 입니다. */
 	public ApplyMember findByApplyMemberNo(int applymember_no);
