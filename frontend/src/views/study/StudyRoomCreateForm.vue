@@ -4,6 +4,7 @@
     <hr>
     <div style="width:600px;" class="p-5">
       <b-row>
+        <!-- 스터디 이름 중복체크 axios 요청 버튼 -->
         <b-col cols="3">
           <label for="studyName" class="mt-2">스터디 이름</label>
         </b-col>
@@ -11,6 +12,9 @@
           <b-form-input id="studyName" v-model="input.studyName"></b-form-input>
         </b-col>
         <hr class="mt-3">
+
+        <!-- url은 스터디만드는 사람에게 직접 입력받음 -->
+        <!-- url 중복체크 axios 요청 버튼-->
         <b-col cols="3">
           <label for="url" class="mt-2">스터디 url</label>
         </b-col>
@@ -18,6 +22,7 @@
           <div id="url">{{input.url}}{{input.studyName}}</div>
         </b-col>
         <hr class="mt-3">
+
         <b-col cols="3">
           <label for="studytypeNo" class="mt-2">스터디 분류</label>
         </b-col>
