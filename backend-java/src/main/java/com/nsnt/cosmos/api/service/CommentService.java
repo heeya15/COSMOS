@@ -3,6 +3,7 @@ package com.nsnt.cosmos.api.service;
 import java.util.List;
 
 import com.nsnt.cosmos.api.request.CommentReq;
+import com.nsnt.cosmos.api.response.CommentSearchDtoRes;
 import com.nsnt.cosmos.db.entity.Comment;
 
 /**
@@ -16,7 +17,7 @@ public interface CommentService {
 	public Comment findByCommentNo(int comment_no);
 	
 	/** 모든 댓글 정보를 가져오는 findAllByBoardNo 입니다. */
-	public List<Comment> findAllByBoardNo(Long board_no);
+	public List<CommentSearchDtoRes> findAllByBoardNo(Long board_no);
 	
 	/** 댓글 수정을 위한 updateComment 입니다. */
 	public Comment updateComment(Comment comment, CommentReq commentReq);
