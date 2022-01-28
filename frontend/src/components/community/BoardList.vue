@@ -12,7 +12,7 @@
           <p>작성자</p>
           <p>등록일</p>
         </div>
-        <div class="table_content" v-for="(boardItem, idx) in boardItems" :key="boardItem.idx"  @click="goBoardDetail(boardItem.boardNo)">
+        <div class="table_content" v-for="(boardItem, idx) in boardItems" :key="idx"  @click="goBoardDetail(boardItem.boardNo)">
           <p>{{ idx }}</p>
           <!-- <p class="boardnum_tag" >{{ boardItem.boardNo }}</p> -->
           <p v-if="boardItem.contentStatus === false" class="boardnum_tag">진행중</p>
@@ -43,9 +43,9 @@
       :total-rows="rows"
       :per-page="perPage"
       aria-controls="my-table"
-    ></b-pagination> -->
+    ></b-pagination>
 
-    <!-- <b-table
+    <b-table
     id="my-table"
     :items="items"
     :per-page="perPage"

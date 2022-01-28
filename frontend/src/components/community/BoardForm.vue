@@ -6,7 +6,6 @@
     <center>
       <div class="p-5" style="width: 600px">
         <b-row>
-          
           <b-col cols="3" class="mt-2">
             <label for="some-radios">말머리</label>
           </b-col>
@@ -72,25 +71,25 @@ import jwt_decode from 'jwt-decode'
 export default {
   name: 'BoardForm',
   data() {
-      return {
-        input: {
-          header: false,
-          content_title: null,
-          study_name: null,
-          content_status: false,
-          recruit_number: null,
-          studytype_name: null,
-          options: [
-            { value: 'JavaScript', text: 'JavaScript' },
-            { value: 'Spring', text: 'Spring' },
-            { value: 'Java', text: 'Java' },
-            { value: 'Python', text: 'Python' },
-            { value: '기타', text: '기타' },
-          ],
-          content: null,
-          user_id: null,
-        },
-      }
+    return {
+      input: {
+        header: false,
+        content_title: null,
+        study_name: null,
+        content_status: false,
+        recruit_number: null,
+        studytype_name: null,
+        options: [
+          { value: 'JavaScript', text: 'JavaScript' },
+          { value: 'Spring', text: 'Spring' },
+          { value: 'Java', text: 'Java' },
+          { value: 'Python', text: 'Python' },
+          { value: '기타', text: '기타' },
+        ],
+        content: null,
+        user_id: null,
+      },
+    }
   },
   methods: {
     backBoardMain() {
