@@ -146,12 +146,12 @@ public class StudyController {
 	}
 	
 	// 스터디 수정
+	@PutMapping("/update")
 	@ApiOperation(value = "스터디 정보 수정", notes = "스터디 정보 수정")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "스터디 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") })
-	@PutMapping("/update")
 	public ResponseEntity<String> update(@RequestBody StudyPostReq studyDto) throws Exception {
 		Study study;
 		try {
@@ -165,24 +165,26 @@ public class StudyController {
 	}
 	
 	// 해당 멤버의 스터디 조회
-	@ApiOperation(value = "해당 멤버 스터디 조회", notes = "userId에 해당하는 멤버의 스터디들을 List로 반환")
+	@GetMapping("/memberStudy")
+	@ApiOperation(value = "해당 멤버 스터디 조회 (token)", notes = "userId에 해당하는 멤버의 스터디들을 List로 반환")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "스터디 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") })
-	@GetMapping("/memberStudy/{userId}")
-	public ResponseEntity<List<Study>> findMemberStudy(@PathVariable String userId) throws Exception {
+	public ResponseEntity<List<Study>> findMemberStudy(@ApiIgnore Authentication authentication) throws Exception {
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		String userId = userDetails.getUsername();	// 현재 로그인 중인 유저 아이디 받아오기
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>> userId : " + userId);
 		List<Study> study = studyService.findMemberStudy(userId);
-		
+
 		return new ResponseEntity<List<Study>>(study, HttpStatus.OK);
 	}
-	
 	
 	/** 스터디 신청 멤버관련 기능 **/
 	
 	// 스터디 멤버 신청
 	@PostMapping("/applyMember/register/{study_no}")
-	@ApiOperation(value = "스터디 멤버 신청 추가", notes = "스터디를 신청한 멤버를 추가한다.")
+	@ApiOperation(value = "스터디 멤버 신청 추가 (token)", notes = "스터디를 신청한 멤버를 추가한다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "유저 없음"),
@@ -205,24 +207,24 @@ public class StudyController {
 	}
 	
 	// 스터디 멤버 신청 유저 목록
+	@GetMapping("/applyMember/searchAll/{study_no}")
 	@ApiOperation(value="스터디 멤버 신청 유저 조회", notes="<strong>해당 스터디 멤버를 신청한 유저를 전체 조회를</strong>시켜줍니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "유저 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	@GetMapping("/applyMember/searchAll/{study_no}")
     public ResponseEntity<List<ApplyMember>> findAllApplyMember(@PathVariable Long study_no){
 		List<ApplyMember> applyMember = applyMemberService.findAllByStudyNo(study_no);
 		return new ResponseEntity<List<ApplyMember>>(applyMember, HttpStatus.OK);
 	}
 	
 	// 스터디 멤버 신청 유저 삭제
+	@DeleteMapping("/applyMember/remove/{applymember_no}")
 	@ApiOperation(value = "스터디 신청 유저 중 해당 유저 삭제", notes = "스터디 신청 유저 중 해당 유저 삭제")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "유저 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	@DeleteMapping("/applyMember/remove/{applymember_no}")
 	public ResponseEntity<String> deleteApplyMember(@PathVariable("applymember_no") int applymember_no) throws Exception {	
 		ApplyMember applyMember;
 		try {
@@ -236,12 +238,12 @@ public class StudyController {
 	}
 	
 	// 알고리즘 분류 전체 조회
+	@GetMapping("/studyType")
 	@ApiOperation(value="알고리즘 분류 전체 조회", notes="알고리즘 분류 목록을 전체 불러옴")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "알고리즘 타입 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	@GetMapping("/studyType")
     public ResponseEntity<List<StudyType>> findAllBoard(){
         List<StudyType> studyType = studyService.findAllStudyType();
 
