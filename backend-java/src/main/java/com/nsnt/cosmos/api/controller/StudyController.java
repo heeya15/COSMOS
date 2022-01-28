@@ -181,7 +181,7 @@ public class StudyController {
 	/** 스터디 신청 멤버관련 기능 **/
 	
 	// 스터디 멤버 신청
-	@PostMapping("/applyMemeber/register/{study_no}")
+	@PostMapping("/applyMember/register/{study_no}")
 	@ApiOperation(value = "스터디 멤버 신청 추가", notes = "스터디를 신청한 멤버를 추가한다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
