@@ -4,15 +4,14 @@
     <hr>
     <h3>상세보기</h3>
     <center>
-      <!-- 수정 버튼 수정 모디파이 -->
-      <div class="p-5" style="width: 600px" v-if="editButton === false">
+      <div class="p-5" style="width: 600px">
         <b-row>
           <b-col cols="3" class="mt-2">
             <p>제목</p>
           </b-col>
           <b-col cols="9" class="mt-2" >
             <input v-if="editButton === true" type="text" v-model="boardInfo.contentTitle">
-            <!-- <p>{{ boardInfo.contentTitle }}</p> -->
+            <p v-else>{{ boardInfo.contentTitle }}</p>
           </b-col>
 
           <b-col cols="3" class="mt-2">
@@ -20,21 +19,23 @@
           </b-col>
           <b-col cols="9" class="mt-2">
             <input v-if="editButton === true" type="text" v-model="boardInfo.studyName">
-            <p v-else id="studyName_tag">{{ boardInfo.studyName }}</p>
+            <p v-else >{{ boardInfo.studyName }}</p>
           </b-col>
 
           <b-col cols="3" class="mt-2">
             <p>스터디 인원</p>
           </b-col>
           <b-col cols="9" class="mt-2" >
-            <p>{{ boardInfo.recruitNumber }}</p>
+            <input v-if="editButton === true" type="text" v-model="boardInfo.recruitNumber">
+            <p v-else>{{ boardInfo.recruitNumber }}</p>
           </b-col>
 
           <b-col cols="3" class="mt-2">
             <p>스터디 분류</p>
           </b-col>
           <b-col cols="9" class="mt-2">
-            <p>{{ boardInfo.studytypeName }}</p>
+            <b-form-select v-if="editButton === true" type="text" v-model="boardInfo.studytypeName" :options="options"></b-form-select>
+            <p v-else>{{ boardInfo.studytypeName }}</p>
           </b-col>
 
           <b-col cols="3" class="mt-2">
@@ -48,19 +49,26 @@
             <p>내용</p>
           </b-col>
           <b-col cols="9" class="mt-2">
-            <p>{{ boardInfo.content }}</p>
+            <b-textarea v-if="editButton === true" type="text" v-model="boardInfo.content"></b-textarea>
+            <p v-else>{{ boardInfo.content }}</p>
           </b-col>
         </b-row>
+      <!-- </div> -->
       </div>
     </center> 
     <div>
       <!-- 작성자인 경우 수정을 보여주고 아니면 스터디 신청을 보여준다 -->
-      <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정</b-button>
-      <b-button v-else style="background-color: #DAC7F9">스터디 신청</b-button>
-      <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
-      <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
-      <!-- <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="updateForm">저장</b-button> -->
-      <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="updateForm">수정</b-button>
+      <div v-show="editButton === false">
+        <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정</b-button>
+        <b-button v-else style="background-color: #DAC7F9">스터디 신청</b-button>
+        <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
+        <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+      </div>
+      <div v-show="editButton === true">
+        <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="updateForm">수정</b-button>
+        <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
+        <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+      </div>
     </div>
     <center>
       <b-row style="width: 600px;">
@@ -108,10 +116,18 @@ export default {
         content: null,
         created_at: null,
         // user_id: null,
-      }
+      },
+      options: [
+          { value: 'JavaScript', text: 'JavaScript' },
+          { value: 'Spring', text: 'Spring' },
+          { value: 'Java', text: 'Java' },
+          { value: 'Python', text: 'Python' },
+          { value: '기타', text: '기타' },
+        ],
     }
   },
   methods: {
+    // 토큰 가져오기
     getToken(){
       const token = localStorage.getItem('jwt')
       const header = {
@@ -123,9 +139,10 @@ export default {
       this.$router.push({name: 'MainBoard'})
     },
     boardFormEdit() {
-      // this.$router.push({name: 'BoardFormUpdate'})
       this.editButton = true
     },
+
+    // 게시글 가져오기
     getBoard() {
       axios({
         method: 'get',
@@ -135,6 +152,7 @@ export default {
       .then(res => {
         console.log(res)
         this.boardInfo.boardNo = res.data['boardNo']
+        this.boardInfo.contentTitle = res.data['contentTitle']
         this.boardInfo.studyName = res.data['studyName']
         this.boardInfo.recruitNumber = res.data['recruitNumber']
         this.boardInfo.studytypeName = res.data['studytypeName']
@@ -147,6 +165,8 @@ export default {
         console.log(err)
       })
     },
+
+    // 게시글 삭제
     deleteBoardForm() {
       axios({
         method: 'delete',
@@ -161,6 +181,8 @@ export default {
         console.log(err)
       })
     },
+
+    // 유저 정보 가져오기
     getUserInfo(){
       axios({
         method: 'GET',
@@ -187,6 +209,7 @@ export default {
         study_name: this.boardInfo.studyName,
         studytype_name: this.boardInfo.studytypeName,
         user_id: this.userInfo.user_id,
+        
       }
       axios({
         method: 'put',
@@ -197,6 +220,7 @@ export default {
       .then(() => {
         this.getBoard()
         this.study_name = this.boardInfo.studyName
+        this.content_title = this.boardInfo.contentTitle
         this.editButton = false
         // console.log(this.boardInfo)
         // 500 에러 발생
@@ -206,6 +230,8 @@ export default {
       })
       this.boardInfo.studyName = null
     },
+
+    // 댓글 생성
     createComment() {
       const createCommentItem = {
         board_no: this.boardInfo.boardNo,

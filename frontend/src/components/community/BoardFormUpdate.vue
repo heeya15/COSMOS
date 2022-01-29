@@ -7,10 +7,10 @@
         <div style="width: 800px;">
           <b-row>
             <b-col class="title_label" cols="3" >
-              <label class="mt-2" for="content_title">제목</label>
+              <label class="mt-2" for="contentTtitle">제목</label>
             </b-col>
             <b-col cols="9">
-              <b-form-input class="mt-2" id="content_title" v-model="boardInfo.content_title"></b-form-input>
+              <b-form-input class="mt-2" id="content_title" v-model="boardInfo.contentTitle"></b-form-input>
             </b-col>
           
             <b-col cols="3" class="mt-2">
