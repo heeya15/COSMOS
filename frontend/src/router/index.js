@@ -76,7 +76,7 @@ const routes = [
     path: '/study/:studyNo',
     name: 'StudyDetail',
     component: StudyDetail
-  }
+  },
 ]
 
 const router = new VueRouter({

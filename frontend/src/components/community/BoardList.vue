@@ -83,7 +83,7 @@ export default {
     return {
       items: [],
       board_no: this.$store.state.boardNo,
-      boardNum: null,
+      boardNum: this.$store.state.boardNo,
       saveHeader: null,
       boardItems: null,
       perPage: 10,
@@ -160,7 +160,7 @@ export default {
     goBoardDetail(boardItemsIdx) {
       console.log(boardItemsIdx)
       this.$store.dispatch('getBoardNo', boardItemsIdx)
-      this.$router.push({ name: 'BoardDetail', params: {id: boardItemsIdx}})
+      this.$router.push({ name: 'BoardDetail'})
     },
     makeDate(datetime) {
       const old = ''+datetime

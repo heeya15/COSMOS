@@ -15,6 +15,8 @@ export default new Vuex.Store({
     userInfo:null,
     isLogin:false,
     boardNo: null,
+    commentInfo: null,
+    comments: [],
   },
   mutations: {
     SIGNUP(state,credentials){
@@ -32,6 +34,14 @@ export default new Vuex.Store({
     LOGOUT(state){
       state.isLogin=false
       localStorage.removeItem('jwt')
+    },
+    CREATE_COMMENT(state, commentInput) {
+      console.log(state)
+      console.log(commentInput)
+      state.commentInfo = commentInput
+    },
+    GET_COMMENT(state, commentData) {
+      state.comments = commentData
     }
   },
   actions: {
@@ -70,8 +80,46 @@ export default new Vuex.Store({
     },
     logOut({commit}) {
       commit('LOGOUT')
-    }
-    
+    },
+    createComment({commit}, commentInput) {
+      const createCommentItem = {
+        board_no: this.state.boardNo,
+        // comment_no: this.commentInput.comment_no,
+        content: commentInput.content,
+        user_id: 'test2',
+      }
+      axios({
+        method: 'post',
+        url: 'http://i6e103.p.ssafy.io:8080/api/comment/register',
+        data: createCommentItem,
+        // headers: this.getToken()
+
+      })
+      .then(res => {
+        var commentInput = JSON.parse(res.config.data)
+        commit('CREATE_COMMENT', commentInput)
+        console.log('댓글부분')
+        console.log(res)
+        console.log('댓글')
+        
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    getComment({commit}) {
+      axios({
+        method: 'get',
+        url: `http://i6e103.p.ssafy.io:8080/api/comment/searchAll/${this.state.boardNo}`,
+        // headers: this.getToken(),
+      })
+      .then(res => {
+        commit('GET_COMMENT', res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
   },
   modules: {
   }
