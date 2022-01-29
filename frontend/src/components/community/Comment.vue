@@ -1,9 +1,8 @@
 <template>
   <div>
-    <h1>댓글자리</h1>  
     <CommentForm/>
     <CommentItem v-for="comment in comments" :key="comment.idx" :comment="comment"/>
-    <button @click="getComment">확인</button>
+    <!-- <button @click="getComment">확인</button> -->
   </div>
 </template>
 
@@ -26,17 +25,18 @@ export default {
   methods: {
     getComment() {
       this.$store.dispatch('getComment')
+      // this.$router.go()
     },
   },
   created() {
     this.getComment()
-    },
+  },
   computed: {
     ...mapState([
       'comments',
     ]),
-  }
-    
+  },
+  
 }
 </script>
 
