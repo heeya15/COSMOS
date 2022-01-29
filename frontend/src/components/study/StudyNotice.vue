@@ -8,7 +8,11 @@
         <div style="width:1000px; height:100px; padding:10px; background-color:lightgray;">
           {{notice.studymanageNotice}}
         </div>
-        <button @click="notice.modify=true">수정</button>
+        <!-- 스터디장만 수정,삭제 보이게 -->
+        <div>
+          <button @click="notice.modify=true">수정</button>
+          <button @click="deleteNotice(studyNo)">삭제</button>
+        </div>
       </div>
         <div v-show="notice.modify">
           <b-form-textarea id="textarea" v-model="notice.studymanageNotice" :placeholder=notice.studymanageNotice rows="3" max-rows="6"></b-form-textarea>
@@ -47,10 +51,12 @@ export default {
       }
       return header
     },
+    // 공지사항 조회
     showStudyNotice() {
       axios({
         method: 'GET',
         url: 'http://i6e103.p.ssafy.io:8080/api/studyManage/search/1',
+        // url: `http://i6e103.p.ssafy.io:8080/api/studyManage/search/${studyNo}`,
       })
       .then(res => {
         // console.log(res)
@@ -66,6 +72,7 @@ export default {
         console.log(err)
       })
     },
+    // 공지사항 수정
     modifyNotice() {
       const updateFormdata = {
         studyNo: this.studyNo,
@@ -86,6 +93,7 @@ export default {
         console.log(err)
       })
     },
+    // 공지사항 등록
     registNotice() {
       const updateFormdata = {
         studyNo: this.studyNo,
@@ -97,9 +105,22 @@ export default {
         data: updateFormdata,
         // headers: this.getToken()
       })
-      .then(res => {
-        console.log(res)
+      .then(() => {
+        // console.log(res)
         this.notice.modify = false
+        this.$router.go()
+      })
+      .catch(err =>{
+        console.log(err)
+      })
+    },
+    // 공지사항 삭제
+    deleteNotice(studyno) {
+      axios({
+        method: 'DELETE',
+        url: `http://i6e103.p.ssafy.io:8080/api/studyManage/remove/${studyno}`
+      })
+      .then(() => {
         this.$router.go()
       })
       .catch(err =>{
