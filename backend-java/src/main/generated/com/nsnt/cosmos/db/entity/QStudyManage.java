@@ -24,9 +24,9 @@ public class QStudyManage extends EntityPathBase<StudyManage> {
 
     public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
-    public final StringPath studymanageNotice = createString("studymanageNotice");
+    public final QStudyManageId studymanageId;
 
-    public final QStudyManageId studymangeId;
+    public final StringPath studymanageNotice = createString("studymanageNotice");
 
     public QStudyManage(String variable) {
         this(StudyManage.class, forVariable(variable), INITS);
@@ -46,7 +46,7 @@ public class QStudyManage extends EntityPathBase<StudyManage> {
 
     public QStudyManage(Class<? extends StudyManage> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.studymangeId = inits.isInitialized("studymangeId") ? new QStudyManageId(forProperty("studymangeId"), inits.get("studymangeId")) : null;
+        this.studymanageId = inits.isInitialized("studymanageId") ? new QStudyManageId(forProperty("studymanageId"), inits.get("studymanageId")) : null;
     }
 
 }
