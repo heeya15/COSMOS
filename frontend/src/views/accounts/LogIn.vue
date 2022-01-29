@@ -65,7 +65,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 /* .card-body {
 }
 
@@ -75,7 +75,7 @@ export default {
 
 /* .card {
   width: 400px;
-} */ */
+} */ 
 p {
   font-size: 40px;
   color: white;
