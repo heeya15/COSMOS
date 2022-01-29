@@ -71,37 +71,17 @@
       </div>
     </div>
 
-    <!-- 댓글 부분 -->
-    <!-- <center>
-      <b-row style="width: 600px;">
-        <b-col cols="3" class="mt-3">
-          <p>댓글</p>
-        </b-col>
-        <b-col cols="6" class="mt-3">
-          <b-input v-model="commentInput.content"></b-input>
-        </b-col>
-        <b-col cols="3" class="mt-3">
-          <b-button @click="createComment">작성</b-button>
-        </b-col>
-      </b-row> -->
-      <!-- <comment-form></comment-form> -->
-    <!-- </center> -->
-    <!-- <ul v-for="(comment, idx) in comments" :key="idx">
-      <li>{{ comment }}</li>
-    </ul> -->
     <comment></comment>
   </div>  
 </template>
 
 <script>
 import axios from 'axios'
-// import CommentItem from '@/components/community/CommentItem.vue'
 import Comment from '@/components/community/Comment.vue'
 
 export default {
   name: 'BoardDetail',
   components: {
-    // CommentItem,
     Comment,
   },
   data() {
@@ -236,8 +216,6 @@ export default {
         this.study_name = this.boardInfo.studyName
         this.content_title = this.boardInfo.contentTitle
         this.editButton = false
-        // console.log(this.boardInfo)
-        // 500 에러 발생
       })
       .catch(err => {
         console.log(err)

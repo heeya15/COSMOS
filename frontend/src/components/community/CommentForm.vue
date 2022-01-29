@@ -31,6 +31,7 @@ export default {
   methods: {
     createComment() {
       this.$store.dispatch('createComment', this.commentInput)
+      // this.$router.go(this.$router.currentRoute);
     },
   },
 }
