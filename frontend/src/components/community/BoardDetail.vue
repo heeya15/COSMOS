@@ -70,7 +70,9 @@
         <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
       </div>
     </div>
-    <center>
+
+    <!-- 댓글 부분 -->
+    <!-- <center>
       <b-row style="width: 600px;">
         <b-col cols="3" class="mt-3">
           <p>댓글</p>
@@ -81,16 +83,27 @@
         <b-col cols="3" class="mt-3">
           <b-button @click="createComment">작성</b-button>
         </b-col>
-      </b-row>
-    </center>
+      </b-row> -->
+      <!-- <comment-form></comment-form> -->
+    <!-- </center> -->
+    <!-- <ul v-for="(comment, idx) in comments" :key="idx">
+      <li>{{ comment }}</li>
+    </ul> -->
+    <comment></comment>
   </div>  
 </template>
 
 <script>
 import axios from 'axios'
+// import CommentItem from '@/components/community/CommentItem.vue'
+import Comment from '@/components/community/Comment.vue'
 
 export default {
   name: 'BoardDetail',
+  components: {
+    // CommentItem,
+    Comment,
+  },
   data() {
     return {
       editButton: false,
@@ -124,6 +137,7 @@ export default {
           { value: 'Python', text: 'Python' },
           { value: '기타', text: '기타' },
         ],
+      // comments: null,
     }
   },
   methods: {
@@ -230,49 +244,17 @@ export default {
       })
       this.boardInfo.studyName = null
     },
-
-    // 댓글 생성
-    createComment() {
-      const createCommentItem = {
-        board_no: this.boardInfo.boardNo,
-        // comment_no: this.commentInput.comment_no,
-        content: this.commentInput.content,
-        user_id: this.userInfo.user_id,
-      }
-      axios({
-        method: 'post',
-        url: 'http://i6e103.p.ssafy.io:8080/api/comment/register',
-        data: createCommentItem,
-        // headers: this.getToken()
-
-      })
-      .then(res => {
-        console.log('댓글부분')
-        console.log(res.config)
-        console.log(this.boardInfo.boardNo)
-        // console.log(this.commentInput.comment_no)
-        console.log(this.userInfo.user_id)
-        console.log(this.commentInput.content)
-        // this.$router.push({name: "MainBoard"})
-        console.log('댓글')
-        
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    }
   },
   created() {
     this.getBoard()
     this.getUserInfo()
-    // this.createComment()
   },
 }
 </script>
 
-<style>
+<style scoped>
 p {
-  color: black !important;
-  font-size: 1rem !important;  
+  color: black ;
+  font-size: 1rem ;  
 }
 </style>
