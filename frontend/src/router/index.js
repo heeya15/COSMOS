@@ -73,7 +73,7 @@ const routes = [
     component: StudyRoomCreateForm
   },
   {
-    path: '/study',
+    path: '/study/:studyNo',
     name: 'StudyDetail',
     component: StudyDetail
   }

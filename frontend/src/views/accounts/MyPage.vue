@@ -9,7 +9,7 @@
       <b-button variant="warning" @click="changePassword">비밀번호 변경</b-button>
 
       <!-- 비밀번호 일치하면, 비밀번호 수정가능 -->
-      <!-- My study는 해당멤버 스터디 조회 사용 -->
+      <!-- My study는 해당멤버 스터디 조회 사용(token 실어서 보내기) -->
     </div>
   </center>
 </template>
@@ -25,7 +25,6 @@ export default {
     user_name : null,
     user_email : null,
     user_password : null,
-    
     }
   },
   methods: {  
@@ -72,6 +71,8 @@ export default {
     changePassword(){
       this.$router.push({name:'ChangePasswordForm'})
     },
+    // router 파라미터 넣어서 보내기
+    // router.push({name:'StudyDetail', params:{studyNo: this.studyNo}})
   },
   created(){
     this.getUserInfo()
