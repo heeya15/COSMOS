@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from "vuex-persistedstate";
 import axios from 'axios'
+import router from '@/router'
 
 
 Vue.use(Vuex)
@@ -44,6 +45,7 @@ export default new Vuex.Store({
       .then(res => {
         // console.log(res)
         commit('SIGNUP', res.data)
+        router.push({name:'LogIn'})
       })
       .catch(err => {
         console.log(err)
