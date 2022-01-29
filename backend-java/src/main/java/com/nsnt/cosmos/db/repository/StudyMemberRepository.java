@@ -15,7 +15,7 @@ public interface StudyMemberRepository extends JpaRepository<StudyMember, Long>{
 	@Query(value="SELECT sm.studymember_no, u.user_name, u.user_email, sm.attendance, sm.studytime, sm.score\r\n" + 
 			"FROM (SELECT user_id, studymember_no,attendance, studytime, score\r\n" + 
 			"	  FROM study_member\r\n" + 
-			"      where study_no = 1) sm join user u ON (sm.user_id = u.user_id)\r\n" + 
+			"      where study_no = :study_no) sm join user u ON (sm.user_id = u.user_id)\r\n" + 
 			"      order by studymember_no; "        
             ,nativeQuery = true)
     List<StudyMemberSearchDtoRes> findStudyMember(@Param("study_no") Long study_no);
