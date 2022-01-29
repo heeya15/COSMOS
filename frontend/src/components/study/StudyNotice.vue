@@ -11,7 +11,7 @@
         <!-- 스터디장만 수정,삭제 보이게 -->
         <div>
           <button @click="notice.modify=true">수정</button>
-          <button @click="deleteNotice(studyNo)">삭제</button>
+          <button @click="deleteNotice">삭제</button>
         </div>
       </div>
         <div v-show="notice.modify">
@@ -33,7 +33,7 @@ export default {
   name: 'StudyNotice',
   data(){
     return {
-      studyNo:null,
+      studyNo:this.$route.params.studyNo,
       notice: {
         toggleNotice: true,
         studymanageNotice: null,
@@ -55,18 +55,14 @@ export default {
     showStudyNotice() {
       axios({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/studyManage/search/1',
-        // url: `http://i6e103.p.ssafy.io:8080/api/studyManage/search/${studyNo}`,
+        url: `http://i6e103.p.ssafy.io:8080/api/studyManage/search/${this.studyNo}`,
       })
       .then(res => {
         // console.log(res)
         this.notice.studymanageNotice = res.data.studymanageNotice
         this.notice.toggleNotice = true
         this.notice.createdAt = res.data.createdAt.slice(0,10)
-        this.studyNo = res.data.studymangeId.studyNo.studyNo
-        // this.studyNo = res.data.studymanageId.studyNo.studyNo
-        this.notice.studyManageNo = res.data.studymangeId.studyManageNo
-        // this.studyManageNo = res.data.studymanageId.studyManageNo
+        this.notice.studyManageNo = res.data.studymanageId.studyManageNo
       })
       .catch(err => {
         console.log(err)
@@ -97,7 +93,7 @@ export default {
     registNotice() {
       const updateFormdata = {
         studyNo: this.studyNo,
-        studymanageNotice: this.studymanageNotice
+        studymanageNotice: this.notice.studymanageNotice
       }
       axios({
         method: 'POST',
@@ -115,10 +111,10 @@ export default {
       })
     },
     // 공지사항 삭제
-    deleteNotice(studyno) {
+    deleteNotice() {
       axios({
         method: 'DELETE',
-        url: `http://i6e103.p.ssafy.io:8080/api/studyManage/remove/${studyno}`
+        url: `http://i6e103.p.ssafy.io:8080/api/studyManage/remove/${this.studyNo}`
       })
       .then(() => {
         this.$router.go()
