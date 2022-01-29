@@ -10,6 +10,11 @@
 
       <!-- 비밀번호 일치하면, 비밀번호 수정가능 -->
       <!-- My study는 해당멤버 스터디 조회 사용(token 실어서 보내기) -->
+      <div>MY STUDY</div>
+      <div v-if="user_study">
+        <div v-for="study in user_study" :key="study.id" @click="goStudyManage(study.studyNo)">{{study.studyName}}</div>
+      </div>
+      <div v-else>아직 가입한 스터디가 없습니다.</div>
     </div>
   </center>
 </template>
@@ -25,6 +30,7 @@ export default {
     user_name : null,
     user_email : null,
     user_password : null,
+    user_study: null,
     }
   },
   methods: {  
@@ -47,6 +53,7 @@ export default {
         this.user_name=res.data['user_name']
         this.user_email=res.data['user_email']
         this.user_password=res.data['user_password']
+        this.getMyStudy()
       })
       .catch(err =>{
         console.log(err)
@@ -73,14 +80,32 @@ export default {
     },
     // router 파라미터 넣어서 보내기
     // router.push({name:'StudyDetail', params:{studyNo: this.studyNo}})
+    
+    // header에 토큰넣어서 보내는건가??? 
+    getMyStudy() {
+      axios({
+        method: 'GET',
+        url: `http://i6e103.p.ssafy.io:8080/api/study/memberStudy/${this.user_id}`
+      })
+      .then(res => {
+        // console.log(res.data)
+        this.user_study = res.data        
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    goStudyManage(study){
+      this.$router.push({name:'StudyDetail', params:{studyNo: study}})
+    }
   },
   created(){
     this.getUserInfo()
-  }
+  },
 }
 </script>
 
-<style>
+<style scoped>
 .profile {
   width: 1000px;
   border: 1px solid rgb(204, 143, 143);
