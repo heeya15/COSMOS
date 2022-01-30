@@ -9,7 +9,7 @@
 <script>
 import CommentForm from '@/components/community/CommentForm.vue'
 import CommentItem from '@/components/community/CommentItem.vue'
-import { mapState} from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Comment',

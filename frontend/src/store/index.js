@@ -101,7 +101,6 @@ export default new Vuex.Store({
         console.log('댓글부분')
         console.log(res)
         console.log('댓글')
-        // this.$router.go(this.$router.currentRoute);
         
       })
       .catch(err => {

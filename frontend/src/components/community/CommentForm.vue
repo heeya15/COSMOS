@@ -25,13 +25,14 @@ export default {
       commentInput: {
         content: null,
         user_id: null,
+        created_at: null,
       },
     }
   },
   methods: {
     createComment() {
       this.$store.dispatch('createComment', this.commentInput)
-      // this.$router.go(this.$router.currentRoute);
+      this.$router.go(this.$router.currentRoute);
     },
   },
 }

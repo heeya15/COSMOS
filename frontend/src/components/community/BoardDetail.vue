@@ -136,6 +136,11 @@ export default {
       this.editButton = true
     },
 
+    // 스터디 신청
+    applyStudy() {
+      
+    },
+
     // 게시글 가져오기
     getBoard() {
       axios({
@@ -203,7 +208,7 @@ export default {
         study_name: this.boardInfo.studyName,
         studytype_name: this.boardInfo.studytypeName,
         user_id: this.userInfo.user_id,
-        
+        header: this.boardInfo.header,
       }
       axios({
         method: 'put',
