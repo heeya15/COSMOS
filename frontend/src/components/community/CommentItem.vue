@@ -3,16 +3,17 @@
     <input v-if="editButton === true" type="text" v-model="comment.content">
     <p v-else>내용 : {{ comment.content }}</p>
 
-    <p >작성자 : {{ comment.user_id }}</p>
+    <p>작성자 : {{ comment.user_id }}</p>
     <p >작성 시간 : {{ comment.created_at }}</p>
     <p >{{ comment.comment_no }}</p>
 
     <div v-show="editButton === false">
-      <button @click="editButtonChange">수정</button>
+      <button v-if="userId === loginUserId" @click="editButtonChange">수정</button>
       <button v-if="userId === loginUserId" @click="deleteComment">삭제</button>
     </div>
     <div v-show="editButton === true">
-      <button @click="updateComment">수정</button>
+      <button v-if="userId === loginUserId" @click="updateComment">수정</button>
+      <button v-if="userId === loginUserId" @click="deleteComment">삭제</button>
     </div>
   </div>
 
@@ -35,7 +36,7 @@ export default {
       comment_no: this.comment.comment_no,
       userId: this.comment.user_id,
       loginUserId: null,
-      created_at: this.comment.created_at
+      // createdAt: '',
     }
   },
   methods: {
@@ -47,6 +48,12 @@ export default {
       return header
     },
     deleteComment() {
+      // 댓글 인덱스에 맞게 삭제
+      // delete_todo: funcion (state, todoItem){} 이게 store에 있을 때
+      // todoItem이 첫 번째로 만나는 요소의 index를 가져옴
+      // const commentIdx = state.todos.indexOf(todoItem)
+      // 해당 index 1개만 삭제하고 나머지 요소를 토대로 새로운 배열 생성
+      // state.todos.splice(index, 1)
       axios({
         method: 'delete',
         url: `http://i6e103.p.ssafy.io:8080/api/comment/remove/${this.comment_no}`,
@@ -54,8 +61,8 @@ export default {
       })
       .then((res) => {
         console.log('댓글 부분')
-        console.log(res.data)
-        this.$router.go(this.$router.currentRoute)
+        console.log(res)
+        // this.$router.go(this.$router.currentRoute)
       })
       .catch(err => {
         console.log(err)
@@ -69,26 +76,30 @@ export default {
       this.editButton = true
       // this.commentContent = this.comment.content
     },
+    // 수정 수정<<<<<<<<<<<<<  createAt 값이 null로 계속 들어 옴 >>>>>>>>>>>>>>>>>>>>
     updateComment() {
       const updateCommentItem = {
         board_no: this.comment.boardNo,
         comment_no: this.comment.comment_no,
         content: this.comment.content,
-        created_at: this.comment.created_at,
+        // created_at: this.comment.createdAt,
         // user_id: this.comment.user_id,
       }
       axios({
         method: 'put',
         url: 'http://i6e103.p.ssafy.io:8080/api/comment/update',
         data: updateCommentItem,
-        headers: this.getToken()
+        headers: this.getToken(),
       })
       .then(res => {
-        this.getComment()
+        // this.getComment()
         console.log('수정부분')
         console.log(res)
+        // console.log(this.createdAt)
+        this.content = this.comment.content
+        // this.created_at = this.comment.created_at
         this.editButton = false
-        // this.created_at = 
+        
       })
       .catch(err => {
         console.log(err)
@@ -113,7 +124,7 @@ export default {
   },
   created() {
     this.getUserInfo()
-    this.getComment()
+    // this.getComment()
   },
   computed: {
     ...mapState([
