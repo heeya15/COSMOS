@@ -18,6 +18,8 @@ import javax.validation.constraints.Email;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -57,6 +59,7 @@ public class UserHistory implements Serializable{
 //	private UserHistoryId userHistoryID;
 	
 	@Column(name = "user_start_time", columnDefinition = "TIMESTAMP")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
 	@CreationTimestamp
 	private LocalDateTime userStartTime;
 	

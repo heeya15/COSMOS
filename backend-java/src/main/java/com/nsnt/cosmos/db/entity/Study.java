@@ -15,6 +15,7 @@ import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nsnt.cosmos.api.request.StudyPostReq;
 
 import lombok.AllArgsConstructor;
@@ -67,6 +68,7 @@ public class Study {
 	int numberOfMember; // 인원
 	
 	@Column(columnDefinition = "TIMESTAMP")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
 	@CreationTimestamp
 	private LocalDateTime createdAt;
 	
