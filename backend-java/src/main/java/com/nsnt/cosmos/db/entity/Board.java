@@ -19,6 +19,8 @@ import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.nsnt.cosmos.api.request.SaveBoardDto;
@@ -76,8 +78,8 @@ public class Board{
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")	
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
-
 	
 	public void updateBoard(SaveBoardDto saveBoardDto){
 	    this.contentTitle = saveBoardDto.getContent_title();
