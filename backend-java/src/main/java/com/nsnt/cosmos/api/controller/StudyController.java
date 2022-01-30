@@ -73,14 +73,18 @@ public class StudyController {
 	/** 스터디 관련 부분 **/
 	// 스터디 생성
 	@PostMapping("/register")
-	@ApiOperation(value = "스터디 생성", notes = "만들 스터디에 대한 정보를 입력하고 생성한다.")
+	@ApiOperation(value = "스터디 생성 (token)", notes = "만들 스터디에 대한 정보를 입력하고 생성한다. user_id는 빈 괄호(\"\")를 입력하여 주세요.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "스터디 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
 	public ResponseEntity<? extends BaseResponseBody> register(
-			@RequestBody @ApiParam(value = "스터디 정보", required = true) StudyPostReq registerInfo) {
-
+			@RequestBody @ApiParam(value = "스터디 정보", required = true) StudyPostReq registerInfo, @ApiIgnore Authentication authentication) {
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		String user_id = userDetails.getUsername();
+		
+		registerInfo.setUserId(user_id);
+		
 		// 임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 		studyService.createStudy(registerInfo);
 
@@ -88,14 +92,14 @@ public class StudyController {
 	}
 
 	// 스터디 이름 중복 검사
-	@GetMapping("/namecheck/{studyName}")
+	@GetMapping("/namecheck/{study_name}")
 	@ApiOperation(value = "스터디 이름 중복 체크", notes = "스터디 생성 시 스터디 이름 중복 체크 검사(true면 중복, false면 중복아님)")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"),
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "스터디 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") 
 					})
-	public ResponseEntity<Boolean> checkStudyNameDuplicate(@PathVariable String studyName) {
+	public ResponseEntity<Boolean> checkStudyNameDuplicate(@PathVariable("study_name") String studyName) {
 		return ResponseEntity.ok(studyService.checkStudyNameDuplicate(studyName));
 		
 	}
@@ -114,13 +118,13 @@ public class StudyController {
 	}
 	
 	// 스터디 상세 조회
-	@GetMapping("/search/{studyNo}")
+	@GetMapping("/search/{study_no}")
 	@ApiOperation(value = "스터디 상세 정보 표시", notes = "스터디에 대한 상세 정보 표시")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "스터디 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") })
-	public ResponseEntity<Study> findOneStudy(@PathVariable Long studyNo) {
+	public ResponseEntity<Study> findOneStudy(@PathVariable("study_no") Long studyNo) {
 		Study study = studyService.findByStudyNo(studyNo);
 		return new ResponseEntity<Study>(study, HttpStatus.OK);
 	}
@@ -131,8 +135,8 @@ public class StudyController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "스터디 없음"), 
 					@ApiResponse(code = 500, message = "해당 회원 없음")})
-	@DeleteMapping("/remove/{studyNo}")
-	public ResponseEntity<String> userdelete(@PathVariable("studyNo") Long no) throws Exception {	
+	@DeleteMapping("/remove/{study_no}")
+	public ResponseEntity<String> userdelete(@PathVariable("study_no") Long no) throws Exception {	
 		Study study;
 		try {
 			study = studyService.findByStudyNo(no);

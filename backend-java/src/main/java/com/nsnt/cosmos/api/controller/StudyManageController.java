@@ -67,13 +67,13 @@ public class StudyManageController {
 	}
 
 	// 스터디 공지사항 상세 조회
-	@GetMapping("/search/{studyNo}")
+	@GetMapping("/search/{study_no}")
 	@ApiOperation(value = "스터디 공지사항 상세 정보 표시", notes = "스터디에 공지사항 대한 상세 정보 표시")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") })
-	public ResponseEntity<StudyManage> findOneStudy(@PathVariable Long studyNo) {
+	public ResponseEntity<StudyManage> findOneStudy(@PathVariable("study_no") Long studyNo) {
 		StudyManage studyManage = studyManageService.findByStudyNo(studyNo);
 		
 		return new ResponseEntity<StudyManage>(studyManage, HttpStatus.OK);
@@ -104,8 +104,8 @@ public class StudyManageController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "해당 회원 없음")})
-	@DeleteMapping("/remove/{studyNo}")
-	public ResponseEntity<String> userdelete(@PathVariable("studyNo") Long no) throws Exception {	
+	@DeleteMapping("/remove/{study_no}")
+	public ResponseEntity<String> userdelete(@PathVariable("study_no") Long no) throws Exception {	
 		StudyManage studyManage;
 		try {
 			studyManage = studyManageService.findByStudyNo(no);
