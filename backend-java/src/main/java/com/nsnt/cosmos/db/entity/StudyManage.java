@@ -16,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.nsnt.cosmos.api.request.StudyManagePostReq;
 import com.nsnt.cosmos.api.request.StudyPostReq;
@@ -38,7 +39,7 @@ public class StudyManage {
 	String studymanageNotice;
 
 	@Column(columnDefinition = "TIMESTAMP")
-	@CreationTimestamp
+	@UpdateTimestamp 
 	private LocalDateTime createdAt; // 생성일자
 	
 	public void updateStudyManage(StudyManagePostReq studyManageUpdateInfo) {

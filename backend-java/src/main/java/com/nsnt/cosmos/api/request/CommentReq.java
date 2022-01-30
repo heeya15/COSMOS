@@ -20,7 +20,7 @@ public class CommentReq {
 	@ApiModelProperty(name = "댓글 번호")
 	private int comment_no;
 	
-	@ApiModelProperty(name = "댓글 내용")
+	@ApiModelProperty(name = "댓글 내용", example="insert comment content.....")
 	private String content;
 	
 	@ApiModelProperty(name = "등록일")
