@@ -13,6 +13,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nsnt.cosmos.api.request.CommentReq;
 
 import lombok.AllArgsConstructor;
@@ -39,7 +40,8 @@ public class Comment{
 	@Column(name = "content")
 	private String content;  // 내용
 
-	@Column
+	@Column(columnDefinition = "TIMESTAMP")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
 	@UpdateTimestamp 
 	private LocalDateTime createdAt; // 등록 일자 (최초 생성 및 수정)
 		

@@ -13,6 +13,8 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,10 +31,12 @@ public class PublicStudyRoomHistory {
 	int publicstudyroomhistoryNo;
 	
 	@Column(columnDefinition = "TIMESTAMP")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
 	@CreationTimestamp
 	private LocalDateTime publicroomOpenTime;
 	
 	@Column(columnDefinition = "TIMESTAMP")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
 	@CreationTimestamp
 	private LocalDateTime publicroomCloseTime;
 	

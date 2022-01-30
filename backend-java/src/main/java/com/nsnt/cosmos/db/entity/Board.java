@@ -1,28 +1,21 @@
 package com.nsnt.cosmos.db.entity;
 
-import java.sql.Blob;
-import java.sql.Clob;
 import java.time.LocalDateTime;
 
-
 import javax.persistence.Column;
-import javax.persistence.Convert;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nsnt.cosmos.api.request.SaveBoardDto;
 
 import lombok.AllArgsConstructor;
@@ -66,7 +59,8 @@ public class Board{
 	@ColumnDefault("0")
 	boolean contentStatus;
 	
-	@Column
+	@Column(columnDefinition = "TIMESTAMP")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
 	@UpdateTimestamp 
 	LocalDateTime createdAt;
 	
