@@ -45,9 +45,10 @@ public class Comment{
 	private LocalDateTime createdAt; // 등록 일자 (최초 생성 및 수정)
 		
 	@ManyToOne
-	@JoinColumn(name = "user_id")	
+	@JoinColumn(name = "user_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "board_no")	
 	@OnDelete(action = OnDeleteAction.CASCADE)

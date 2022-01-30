@@ -19,6 +19,8 @@ import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.nsnt.cosmos.api.request.SaveBoardDto;
 
@@ -74,10 +76,11 @@ public class Board{
 	String studytypeName; // 스터디분류명
 	
 	@ManyToOne
-	@JoinColumn(name = "user_id")	
+	@JoinColumn(name = "user_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 
-	
+
 	public void updateBoard(SaveBoardDto saveBoardDto){
 	    this.contentTitle = saveBoardDto.getContent_title();
 	    this.studyName = saveBoardDto.getStudy_name();
