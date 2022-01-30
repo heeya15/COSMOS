@@ -53,15 +53,19 @@ public class BoardController {
 	BoardService boardService;
 
 	@PostMapping("/register")
-	@ApiOperation(value="게시글 등록", notes="<strong>게시글을 등록</strong>시켜줍니다.")
+	@ApiOperation(value="게시글 등록 (token)", notes="<strong>게시글을 등록</strong>시켜줍니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	public ResponseEntity Boardregister(@RequestBody SaveBoardDto saveBoardDto)
+	public ResponseEntity Boardregister(@RequestBody SaveBoardDto saveBoardDto, @ApiIgnore Authentication authentication)
 	{
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		String user_id = userDetails.getUsername();
+		
 		Board board;
 		try {
+			saveBoardDto.setUser_id(user_id);
 			board = boardService.createBoard(saveBoardDto);
 		}catch(Exception E) {
 			E.printStackTrace();
