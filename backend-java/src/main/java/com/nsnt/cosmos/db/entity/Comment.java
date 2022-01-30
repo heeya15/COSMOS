@@ -1,7 +1,5 @@
 package com.nsnt.cosmos.db.entity;
 
-import java.sql.Blob;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -10,12 +8,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.nsnt.cosmos.api.request.CommentReq;
 
@@ -53,6 +50,7 @@ public class Comment{
 	
 	@ManyToOne
 	@JoinColumn(name = "board_no")	
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Board board;
 	
 	public void updateComment(CommentReq commentReq) {
@@ -65,7 +63,5 @@ public class Comment{
 	public String toString() {
 		return "Comment [commentNo=" + commentNo + ", content=" + content + ", createdAt=" + createdAt + ", user="
 				+ user + ", board=" + board + "]";
-	}
-	
-	
+	}	
 }
