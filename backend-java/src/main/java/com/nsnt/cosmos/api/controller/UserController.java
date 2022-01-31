@@ -91,7 +91,7 @@ public class UserController {
 					@ApiResponse(code = 404, message = "사용자 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") 
 					})
-	public ResponseEntity<Boolean> idCheck(@PathVariable String userId) {
+	public ResponseEntity<Boolean> idCheck(@PathVariable("user_id") String userId) {
 		boolean temp = userService.checkUserId(userId);
 		System.out.println(temp);
 		if (temp == true) {
@@ -121,7 +121,7 @@ public class UserController {
 
 	// 회원탈퇴.
 	@ApiOperation(value = "회원 탈퇴", notes = "회원 탈퇴")
-	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"),
 				@ApiResponse(code = 401, message = "인증 실패"),
 				@ApiResponse(code = 404, message = "사용자 없음"), 
 				@ApiResponse(code = 500, message = "해당 회원 없음")})

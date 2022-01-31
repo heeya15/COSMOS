@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nsnt.cosmos.api.request.ApplyMemberReq;
+import com.nsnt.cosmos.api.response.ApplyMemberDtoRes;
 import com.nsnt.cosmos.db.entity.ApplyMember;
 import com.nsnt.cosmos.db.repository.ApplyMemberRepository;
 
@@ -40,9 +41,9 @@ public class ApplyMemberServiceImpl implements ApplyMemberService {
 	/** 스터디 멤버 신청한 유저 정보를 가져오는 findAllByUserId 입니다 */
 	@Override
 	@Transactional
-	public List<ApplyMember> findAllByStudyNo(Long study_no) {
+	public List<ApplyMemberDtoRes> findAllByStudyNo(Long study_no) {
 		log.debug(">>>>>>>>>>>>>>>>>> findAllByStudyNo");
-		List<ApplyMember> applyMembers = applyMemberRepository.findAllByStudyNo(study_no);
+		List<ApplyMemberDtoRes> applyMembers = applyMemberRepository.findAllByStudyNo(study_no);
 		return applyMembers;
 	}
 	
