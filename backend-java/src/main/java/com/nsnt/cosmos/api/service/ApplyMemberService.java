@@ -2,6 +2,7 @@ package com.nsnt.cosmos.api.service;
 
 import java.util.List;
 
+import com.nsnt.cosmos.api.response.ApplyMemberDtoRes;
 import com.nsnt.cosmos.db.entity.ApplyMember;
 
 /**
@@ -12,7 +13,7 @@ public interface ApplyMemberService {
 	public ApplyMember createMember(Long studyNo, String userId);
 	
 	/** 스터디 멤버 신청한 유저 정보를 가져오는 findAllByUserId 입니다 */
-	public List<ApplyMember> findAllByStudyNo(Long study_no);
+	public List<ApplyMemberDtoRes> findAllByStudyNo(Long study_no);
 
 	/** 스터디 멤버 신청한 유저를 삭제(거절)하는 deleteApplyMember 입니다 */
 	public void deleteApplyMember(ApplyMember applyMember);

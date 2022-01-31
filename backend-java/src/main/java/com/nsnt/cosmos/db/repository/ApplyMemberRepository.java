@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.nsnt.cosmos.api.response.ApplyMemberDtoRes;
 import com.nsnt.cosmos.db.entity.ApplyMember;
 
 /**
@@ -15,10 +16,10 @@ import com.nsnt.cosmos.db.entity.ApplyMember;
 @Repository
 public interface ApplyMemberRepository extends JpaRepository<ApplyMember, Integer> { // 제네릭 안에 해당 엔티티, 엔티티 PK 자료형을 적어줌
 	// 해당 스터디 멤버를 신청한 유저들을 조회
-	@Query(value = "select * \r\n"
-			+ "from apply_member am join User u \r\n"
+	@Query(value = "select am.applymember_no, am.study_no, am.user_id, u.user_name \r\n"
+			+ "from apply_member am join user u \r\n"
 			+ "on am.user_id = u.user_id \r\n"
 			+ "where study_no = :study_no "
 			, nativeQuery = true)
-	List<ApplyMember> findAllByStudyNo(@Param("study_no") Long study_no);
+	List<ApplyMemberDtoRes> findAllByStudyNo(@Param("study_no") Long study_no);
 }

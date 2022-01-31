@@ -22,18 +22,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nsnt.cosmos.api.request.StudyPostReq;
-import com.nsnt.cosmos.api.response.UserDtoRes;
+import com.nsnt.cosmos.api.response.ApplyMemberDtoRes;
 import com.nsnt.cosmos.api.service.ApplyMemberService;
 import com.nsnt.cosmos.api.service.StudyService;
 import com.nsnt.cosmos.api.service.UserService;
 import com.nsnt.cosmos.common.auth.SsafyUserDetails;
 import com.nsnt.cosmos.common.model.response.BaseResponseBody;
 import com.nsnt.cosmos.db.entity.ApplyMember;
-import com.nsnt.cosmos.db.entity.Board;
-import com.nsnt.cosmos.db.entity.Comment;
 import com.nsnt.cosmos.db.entity.Study;
 import com.nsnt.cosmos.db.entity.StudyType;
-import com.nsnt.cosmos.db.repository.StudyRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -217,9 +214,9 @@ public class StudyController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "유저 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-    public ResponseEntity<List<ApplyMember>> findAllApplyMember(@PathVariable Long study_no){
-		List<ApplyMember> applyMember = applyMemberService.findAllByStudyNo(study_no);
-		return new ResponseEntity<List<ApplyMember>>(applyMember, HttpStatus.OK);
+    public ResponseEntity<List<ApplyMemberDtoRes>> findAllApplyMember(@PathVariable Long study_no){
+		List<ApplyMemberDtoRes> applyMember = applyMemberService.findAllByStudyNo(study_no);
+		return new ResponseEntity<List<ApplyMemberDtoRes>>(applyMember, HttpStatus.OK);
 	}
 	
 	// 스터디 멤버 신청 유저 삭제
