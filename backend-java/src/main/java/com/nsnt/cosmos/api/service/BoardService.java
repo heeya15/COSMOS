@@ -3,6 +3,7 @@ package com.nsnt.cosmos.api.service;
 import java.util.List;
 
 import com.nsnt.cosmos.api.request.SaveBoardDto;
+import com.nsnt.cosmos.api.response.StudyNameSearchDtoRes;
 import com.nsnt.cosmos.db.entity.Board;
 
 
@@ -25,4 +26,6 @@ public interface BoardService {
 
     /** 게시글을 삭제하는 deleteBoard 입니다. */
     public void deleteBoard(Board board);
+    /** 해당 스터디 장이  만든 스터디 이름 조회하는 findSearchStudyName 입니다. **/
+    public List<StudyNameSearchDtoRes> findSearchStudyName(String user_id);
 }

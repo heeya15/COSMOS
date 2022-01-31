@@ -1,8 +1,13 @@
 package com.nsnt.cosmos.db.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.nsnt.cosmos.api.response.StudyNameSearchDtoRes;
 import com.nsnt.cosmos.db.entity.Board;
 
 // Optional<T>는 null이 올수 있는 값을 감싸는 Wrapper클래스로, 참조하더라도 NPE가 발생하지 않도록 도와준다
@@ -14,5 +19,12 @@ import com.nsnt.cosmos.db.entity.Board;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> { // 제네릭 안에 해당 엔티티, 엔티티 PK 자료형을 적어줌
 	// 아래와 같이, Query Method 인터페이스(반환값, 메소드명, 인자) 정의를 하면 자동으로 Query Method 구현됨.
-  
+	@Query(value="select t.study_name, t.study_no\r\n" + 
+			"from (select distinct(user_id) as user_id,leader, authority, s.study_no, s.study_name\r\n" + 
+			"	  from study_member sm join study s on (sm.study_no = s.study_no)\r\n" + 
+			"	  where user_id = :user_id and leader=true and authority = true) as t\r\n" + 
+			"order by study_no"        
+            ,nativeQuery = true)
+    List<StudyNameSearchDtoRes> findStudyName(@Param("user_id") String user_id);
+	
 }
