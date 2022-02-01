@@ -52,6 +52,7 @@
             <b-textarea v-if="editButton === true" type="text" v-model="boardInfo.content"></b-textarea>
             <p v-else>{{ boardInfo.content }}</p>
           </b-col>
+          <p>여기 번호 : {{ study_no }}</p>
         </b-row>
       <!-- </div> -->
       </div>
@@ -60,7 +61,7 @@
       <!-- 작성자인 경우 수정을 보여주고 아니면 스터디 신청을 보여준다 -->
       <div v-show="editButton === false">
         <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정</b-button>
-        <b-button v-else style="background-color: #DAC7F9">스터디 신청</b-button>
+        <b-button v-else style="background-color: #DAC7F9" @click="applyStudy">스터디 신청</b-button>
         <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
         <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
       </div>
@@ -71,7 +72,7 @@
       </div>
     </div>
 
-    <comment></comment>
+    <comment/>
   </div>  
 </template>
 
@@ -118,6 +119,8 @@ export default {
           { value: '기타', text: '기타' },
         ],
       // comments: null,
+      // 스터디 방 번호 값 받아와야 함
+      study_no: 4,
     }
   },
   methods: {
@@ -138,7 +141,23 @@ export default {
 
     // 스터디 신청
     applyStudy() {
-      
+      axios({
+        method: 'post',
+        url: `http://i6e103.p.ssafy.io:8080/api/study/applyMember/register/${this.study_no}`,
+        headers: this.getToken(),
+      })
+      .then((res) => {
+        console.log(res)
+        // this.study_no = 4
+        // 스터디장이 만든 스터디 이름 조회
+        // this.boardInfo.studyName = res.data['studyName']
+        alert('신청이 완료되었습니다.')
+        // this.$router.push({name: 'BoardDetail'})
+        
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     },
 
     // 게시글 가져오기
@@ -146,7 +165,7 @@ export default {
       axios({
         method: 'get',
         url: `http://i6e103.p.ssafy.io:8080/api/board/search/${this.board_no}`,
-        headers: this.getToken(),
+        // headers: this.getToken(),
       })
       .then(res => {
         console.log(res)
@@ -189,6 +208,7 @@ export default {
         headers: this.getToken()
       })
       .then(res =>{
+        console.log('유저정보 확인')
         console.log(res)
         this.loginUserId=res.data['user_id']
       })

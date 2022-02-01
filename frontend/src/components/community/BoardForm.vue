@@ -38,8 +38,10 @@
           <b-col cols="3" class="mt-2">
             <label for="studytype_name">스터디분류</label>
           </b-col>
+            <!-- <b-form-select v-for="option in input.options" :key="option.idx">{{ option.studytypeName }}</b-form-select> -->
           <b-col class="selectag mt-2" cols="9">
             <b-form-select v-model="input.studytype_name" :options="input.options" id="studytype_name"></b-form-select>
+            <!-- <option value="">123</option> -->
           </b-col>
         
           <b-col cols="3" class="mt-2">
@@ -66,7 +68,6 @@
 
 <script>
 import axios from 'axios'
-import jwt_decode from 'jwt-decode'
 
 export default {
   name: 'BoardForm',
@@ -80,12 +81,39 @@ export default {
         recruit_number: null,
         studytype_name: null,
         options: [
-          { value: 'JavaScript', text: 'JavaScript' },
-          { value: 'Spring', text: 'Spring' },
-          { value: 'Java', text: 'Java' },
-          { value: 'Python', text: 'Python' },
-          { value: '기타', text: '기타' },
-        ],
+          // {value: '1', text:'Java'},
+          // {value: '2', text:'C'},
+          // {value: '3', text:'C++'},
+          // {value: '4', text:'Python'},
+          // {value: '5', text:'C#'},
+          // {value: '6', text:'PHP'},
+          // {value: '7', text:'Javascript'},
+          // {value: '8', text:'RUBY'},
+          // {value: '9', text:'HTML'},
+          // {value: '10', text:'CSS'},
+          // {value: '11', text:'Kotlin'},
+          // {value: '12', text:'Swift'},
+          // {value: '13', text:'Spring'},
+          // {value: '14', text:'React'},
+          // {value: '15', text:'Vuejs'},
+          // {value: '16', text:'Angular JS'},
+          // {value: '17', text:'Django'},
+          // {value: '18', text:'CS'},
+          // {value: '19', text:'Database'},
+          // {value: '20', text:'Frontend'},
+          // {value: '21', text:'Backend'},
+          // {value: '22', text:'Android'},
+          // {value: '23', text:'IOS'},
+          // {value: '24', text:'Mobile'},
+          // {value: '25', text:'AI'},
+          // {value: '26', text:'BlockChain'},
+          // {value: '27', text:'BigData'},
+          // {value: '28', text:'IoT'},
+          // {value: '29', text:'Arduino'},
+          // {value: '30', text:'RaspberryPi'},
+          // {value: '31', text:'Study With Me'},
+          // {value: '32', text:'기타'},
+          ],
         content: null,
         user_id: null,
       },
@@ -99,10 +127,11 @@ export default {
       this.$router.push({name: 'BoardDetail'})
     },
     getToken(){
-      var token = localStorage.getItem('jwt')
-      var decode = jwt_decode(token)
-      // console.log(decode)
-      this.input.user_id = decode['sub']
+      const token = localStorage.getItem('jwt')
+      const header = {
+        Authorization: `Bearer ${token}`
+      }
+      return header
     },
     createBoardForm() {
       const createBoardItem = {
@@ -113,25 +142,36 @@ export default {
         recruit_number: this.input.recruit_number,
         studytype_name: this.input.studytype_name,
         content: this.input.content,
-        user_id: this.input.user_id
+        // options: this.$store.state.studyOptions
       }
       axios({
         method: 'post',
         url: 'http://i6e103.p.ssafy.io:8080/api/board/register',
         data: createBoardItem,
+        headers: this.getToken()
       })
-        .then(res => {
-          console.log(res.data)
-          this.$router.push({name: "MainBoard"})
-          
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      .then(res => {
+        console.log(res.data)
+        this.$router.push({name: "MainBoard"})
+        console.log('스터디옵션 확인')
+        // this.input.options = this.$store.state.studyOptions
+        console.log(this.input.options)
+        // this.options = 
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    getStudyType() {
+      this.$store.dispatch('getStudyType')
+      console.log('스터디 정보 가져오는지 확인')
+      this.input.options = this.$store.state.studyOptions
+      console.log(this.input.options)
     },
   },
   created(){
     this.getToken()
+    this.getStudyType()
   }
 }
 </script>
@@ -169,7 +209,6 @@ export default {
 .titel_label {
   display: flex;
   justify-content: center;
-  /* align-content: center; */
 }
 
 button{

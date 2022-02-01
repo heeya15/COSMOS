@@ -1,7 +1,7 @@
 <template>
   <div>
     <CommentForm/>
-    <CommentItem v-for="comment in comments" :key="comment.idx" :comment="comment"/>
+    <CommentItem v-for="(comment, idx) in comments" :key="idx" :comment="comment"/>
     <!-- <button @click="getComment">확인</button> -->
   </div>
 </template>
@@ -26,6 +26,7 @@ export default {
     getComment() {
       this.$store.dispatch('getComment')
       // this.$router.go()
+      console.log('댓글 가져오기')
     },
   },
   created() {
