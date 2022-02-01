@@ -27,8 +27,8 @@
           <label for="studytypeNo" class="mt-2">스터디 분류</label>
         </b-col>
         <b-col>
-          <b-form-select v-model="input.studytypeNo" :options="options" ></b-form-select>
-          <b-form-input id="studytypeNo" v-model="input.studytypeNo"></b-form-input>
+          <b-form-select v-model="input.studytypeNo" :options="input.options" ></b-form-select>
+          <!-- <b-form-input id="studytypeNo" v-model="input.studytypeNo"></b-form-input> -->
         </b-col>
         <hr class="mt-3">
 
@@ -88,7 +88,8 @@
         <b-col>
           <b-form-textarea id="studyRule" v-model="input.studyRule" placeholder="스터디 규칙, 공지사항 등 입력" rows="3" max-rows="6"></b-form-textarea>
         </b-col>
-        <button class="mt-4" type="button">스터디 생성</button>
+        <button v-if="input.study_type==='public'" class="mt-4" type="button" @click="createPublicStudy">스터디 생성</button>
+        <button v-else class="mt-4" type="button" @click="createPrivateStudy">스터디 생성</button>
       </b-row>
     </div>
 
@@ -98,6 +99,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'StudyRoomCreateForm',
   data() {
@@ -106,13 +109,8 @@ export default {
         studyName: null,
         url: 'http://www.cosmos.com/',
         studytypeNo: null,
-        // get 요청보내서 method만들어서 for문으로 options에 추가하기
         options: [
-          { value: null, text: 'Please select some item' },
-          { value: 'a', text: 'This is First option' },
-          { value: 'b', text: 'Default Selected Option' },
-          { value: 'c', text: 'This is another option' },
-          { value: 'd', text: 'This one is disabled', disabled: true }
+          { value: null, text: '스터디 분류' },
         ],
         image: null,
         study_type: null, // 공개스터디, 비공개스터디
@@ -128,11 +126,64 @@ export default {
     }
   },
   methods: {
+    getHeader(){
+      const token = localStorage.getItem('jwt')
+      const header = {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+      }
+      return header
+    },
     uploadImage() {
       var image = this.$refs.studyImg.files[0]
       const url = URL.createObjectURL(image)
       this.input.image = url
+    },
+    getStudyType() {
+      axios({
+        method: 'GET',
+        url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+      })
+      .then(res => {
+        // console.log(res)
+        res.data.forEach(element => {
+          this.input.options.push({value: element.studytypeNo, text:element.studytypeName})
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    createPrivateStudy() {
+      const studyInfo = new FormData()
+      studyInfo.append('image',this.$refs.studyImg.files[0])
+      studyInfo.append('studyName',this.input.studyName)
+      studyInfo.append('studyNo',this.input.studyNo)
+      studyInfo.append('studyPassword',this.input.studyPassword)
+      studyInfo.append('studyRule',this.input.studyRule)
+      studyInfo.append('studytypeNo',this.input.studytypeNo)
+      studyInfo.append('totalMember',this.input.totalMember)
+      studyInfo.append('url',this.input.url)
+      console.log(this.$refs.studyImg.files[0])
+      axios({
+        method: 'POST',
+        url: 'http://i6e103.p.ssafy.io:8080/api/study/register',
+        headers: this.getHeader(),
+        data: studyInfo
+      })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    createPublicStudy(){
+      console.log('공개 스터디생성')
     }
+  },
+  created() {
+    this.getStudyType()
   }
 }
 </script>

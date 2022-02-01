@@ -29,7 +29,7 @@
       <b-col>{{member.studytime}}</b-col>
       <b-col>{{member.score}}</b-col>
       <!-- 스터디장이면 강퇴가능 -->
-      <b-col><b-button variant="danger" @click="deleteMember">강퇴</b-button></b-col>
+      <b-col><b-button variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button></b-col>
     </b-row>
   </div>  
 </template>
@@ -63,6 +63,9 @@ export default {
     // store로 보내는거 생각해보자(add,delete)
     addMember() {
       const memberInfo = {
+        authority: true,
+        leader: true,
+        score: 0,
         study_no: this.$route.params.studyNo,
         user_id: this.newMemberId
       }
@@ -73,21 +76,22 @@ export default {
       })
       .then(res => {
         console.log(res)
-        alert(`${this.memberInfo.userName}님이 스터디 멤버로 추가되었습니다.`)
+        alert(`${memberInfo.user_id}님이 스터디 멤버로 추가되었습니다.`)
+        this.newMemberId = ''
+        this.getStudyMembers()
       })
       .catch(err => {
         console.log(err)
       })
     },
-    deleteMember() {
+    deleteMember(studymember_no) {
       axios({
         method: 'DELETE',
-        url: `http://i6e103.p.ssafy.io:8080/api/studymember/remove/${this.member.studymember_no}`
+        url: `http://i6e103.p.ssafy.io:8080/api/studymember/remove/${studymember_no}`
       })
       .then(res => {
         console.log(res)
-        // alert(`${this.memberInfo.userName}님이 스터디 멤버에서 삭제되었습니다.`)
-        this.$router.go()
+        this.getStudyMembers()
       })
     }
   },
