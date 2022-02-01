@@ -1,22 +1,24 @@
 <template>
-  <div>
-    <input v-if="editButton === true" type="text" v-model="comment.content">
-    <p v-else>내용 : {{ comment.content }}</p>
+  <center>
+    <div class="comment_position" style="width: 600px">
+      <p>{{ comment.comment_no }}</p>
+      <input v-if="editButton === true" type="text" v-model="comment.content" @keyup.enter="updateComment">
+      <p v-else style="text-align: left;">내용 : {{ comment.content }}</p>
+      <p>작성자 : {{ comment.user_id }}</p>
+      <p>작성 시간 : {{ comment.created_at }}</p>
+      <p>인덱스 확인 >> {{ comment.idx }} // 뜨나?</p>
 
-    <p>작성자 : {{ comment.user_id }}</p>
-    <p >작성 시간 : {{ comment.created_at }}</p>
-    <p >{{ comment.comment_no }}</p>
+      <div v-show="editButton === false">
+        <button v-if="userId === loginUserId" @click="editButtonChange">수정</button>
+        <button v-if="userId === loginUserId" @click="deleteComment">삭제</button>
+      </div>
+      <div v-show="editButton === true">
+        <button v-if="userId === loginUserId" @click="updateComment">수정</button>
+        <button v-if="userId === loginUserId" @click="deleteComment">삭제</button>
+      </div>
 
-    <div v-show="editButton === false">
-      <button v-if="userId === loginUserId" @click="editButtonChange">수정</button>
-      <button v-if="userId === loginUserId" @click="deleteComment">삭제</button>
     </div>
-    <div v-show="editButton === true">
-      <button v-if="userId === loginUserId" @click="updateComment">수정</button>
-      <button v-if="userId === loginUserId" @click="deleteComment">삭제</button>
-    </div>
-  </div>
-
+  </center>
 </template>
 
 <script>
@@ -36,7 +38,8 @@ export default {
       comment_no: this.comment.comment_no,
       userId: this.comment.user_id,
       loginUserId: null,
-      // createdAt: '',
+      created_at: null,
+      idx: null,
     }
   },
   methods: {
@@ -60,30 +63,23 @@ export default {
         headers: this.getToken()
       })
       .then((res) => {
-        console.log('댓글 부분')
+        console.log('댓글 삭제')
         console.log(res)
-        // this.$router.go(this.$router.currentRoute)
+        this.$router.go(this.$router.currentRoute)
+        // this.comment.splice(this.comment.comment_no, 1)
       })
       .catch(err => {
         console.log(err)
       })
     },
-    getComment() {
-      this.$store.dispatch('getComment')
-      // this.$router.go()
-    },
     editButtonChange() {
       this.editButton = true
-      // this.commentContent = this.comment.content
     },
-    // 수정 수정<<<<<<<<<<<<<  createAt 값이 null로 계속 들어 옴 >>>>>>>>>>>>>>>>>>>>
     updateComment() {
       const updateCommentItem = {
         board_no: this.comment.boardNo,
         comment_no: this.comment.comment_no,
         content: this.comment.content,
-        // created_at: this.comment.createdAt,
-        // user_id: this.comment.user_id,
       }
       axios({
         method: 'put',
@@ -92,14 +88,10 @@ export default {
         headers: this.getToken(),
       })
       .then(res => {
-        // this.getComment()
         console.log('수정부분')
-        console.log(res)
-        // console.log(this.createdAt)
-        this.content = this.comment.content
-        // this.created_at = this.comment.created_at
+        console.log(res.data)
         this.editButton = false
-        
+        this.$router.go(this.$router.currentRoute)
       })
       .catch(err => {
         console.log(err)
@@ -112,7 +104,7 @@ export default {
         headers: this.getToken()
       })
       .then(res =>{
-        console.log(res.data)
+        // console.log(res.data)
         this.loginUserId=res.data['user_id']
         // console.log('유저 확인')
         // console.log(this.loginUserId)
@@ -124,7 +116,6 @@ export default {
   },
   created() {
     this.getUserInfo()
-    // this.getComment()
   },
   computed: {
     ...mapState([
@@ -136,9 +127,11 @@ export default {
 </script>
 
 <style scoped>
-.comment_tag {
+.comment_position {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: left;
+  justify-content: space-evenly;
 }
+
 </style>

@@ -15,11 +15,11 @@ export default new Vuex.Store({
     userInfo:null,
     isLogin:false,
     boardNo: null,
-    commentInfo: null,
     comments: [],
+    studyOptions: [],
   },
   mutations: {
-    SIGNUP(state,credentials){
+    SIGNUP(state, credentials){
       state.userInfo = credentials
     },
     LOGIN(state){
@@ -35,14 +35,16 @@ export default new Vuex.Store({
       state.isLogin=false
       localStorage.removeItem('jwt')
     },
-    CREATE_COMMENT(state, commentInput) {
-      console.log(state)
-      console.log(commentInput)
-      state.commentInfo = commentInput
-    },
     GET_COMMENT(state, commentData) {
       state.comments = commentData
-    }
+    },
+    GET_STUDY_TYPE(state, studyTypeData) {
+      console.log('스터디타입확인')
+      console.log(state.studyOptions)
+      console.log('여기까지 확인')
+      state.studyOptions = studyTypeData
+    },
+
   },
   actions: {
     signUp({commit}, credentials) {
@@ -81,33 +83,6 @@ export default new Vuex.Store({
     logOut({commit}) {
       commit('LOGOUT')
     },
-    createComment({commit}, commentInput) {
-      const createCommentItem = {
-        board_no: this.state.boardNo,
-        // comment_no: this.commentInput.comment_no,
-        content: commentInput.content,
-        user_id: 'test2',
-      }
-      axios({
-        method: 'post',
-        url: 'http://i6e103.p.ssafy.io:8080/api/comment/register',
-        data: createCommentItem,
-        // headers: this.getToken()
-
-      })
-      .then(res => {
-        var commentInput = JSON.parse(res.config.data)
-        commit('CREATE_COMMENT', commentInput)
-        console.log('댓글부분')
-        console.log(res)
-        console.log('댓글')
-        
-      })
-      .catch(err => {
-        console.log(err)
-      })
-
-    },
     getComment({commit}) {
       axios({
         method: 'get',
@@ -116,6 +91,20 @@ export default new Vuex.Store({
       })
       .then(res => {
         commit('GET_COMMENT', res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    getStudyType({commit}) {
+      axios({
+        method: 'get',
+        url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+      })
+      .then(res => {
+        // console.log('res 확인')
+        // console.log(res.data)
+        commit('GET_STUDY_TYPE', res.data)
       })
       .catch(err => {
         console.log(err)
