@@ -165,6 +165,7 @@ export default {
     getStudyType() {
       this.$store.dispatch('getStudyType')
       console.log('스터디 정보 가져오는지 확인')
+      
       this.input.options = this.$store.state.studyOptions
       console.log(this.input.options)
     },

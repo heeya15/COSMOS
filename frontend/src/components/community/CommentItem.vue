@@ -50,23 +50,22 @@ export default {
       }
       return header
     },
+    getComment() {
+      this.$store.dispatch('getComment')
+      // this.$router.go()
+      console.log('댓글 가져오기')
+    },
     deleteComment() {
-      // 댓글 인덱스에 맞게 삭제
-      // delete_todo: funcion (state, todoItem){} 이게 store에 있을 때
-      // todoItem이 첫 번째로 만나는 요소의 index를 가져옴
-      // const commentIdx = state.todos.indexOf(todoItem)
-      // 해당 index 1개만 삭제하고 나머지 요소를 토대로 새로운 배열 생성
-      // state.todos.splice(index, 1)
+      const commentIdx = this.$store.state.comments.indexOf(this.comment)
+      this.$store.state.comments.splice(commentIdx, 1)
       axios({
         method: 'delete',
         url: `http://i6e103.p.ssafy.io:8080/api/comment/remove/${this.comment_no}`,
         headers: this.getToken()
       })
       .then((res) => {
-        console.log('댓글 삭제')
         console.log(res)
-        this.$router.go(this.$router.currentRoute)
-        // this.comment.splice(this.comment.comment_no, 1)
+        this.comment_no = this.comment.comment_no
       })
       .catch(err => {
         console.log(err)
@@ -116,6 +115,7 @@ export default {
   },
   created() {
     this.getUserInfo()
+    this.getComment()
   },
   computed: {
     ...mapState([
