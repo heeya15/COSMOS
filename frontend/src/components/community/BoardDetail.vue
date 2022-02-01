@@ -2,7 +2,8 @@
   <div>
     <h1>스터디 모집 게시판</h1>
     <hr>
-    <h3>상세보기</h3>
+    <h3 v-if="editButton === true">글 수정</h3>
+    <h3 v-else>상세보기</h3>
     <center>
       <div class="p-5" style="width: 600px">
         <b-row>
@@ -18,8 +19,7 @@
             <p>스터디 이름</p>
           </b-col>
           <b-col cols="9" class="mt-2">
-            <input v-if="editButton === true" type="text" v-model="boardInfo.studyName">
-            <p v-else >{{ boardInfo.studyName }}</p>
+            <p>"이름 불러 오는 곳" {{ boardInfo.studyName }}</p>
           </b-col>
 
           <b-col cols="3" class="mt-2">
@@ -34,15 +34,15 @@
             <p>스터디 분류</p>
           </b-col>
           <b-col cols="9" class="mt-2">
-            <b-form-select v-if="editButton === true" type="text" v-model="boardInfo.studytypeName" :options="options"></b-form-select>
-            <p v-else>{{ boardInfo.studytypeName }}</p>
+            <p>"분류 불러 오는 곳 스프링이나 자바 등"{{ boardInfo.studytypeName }}</p>
           </b-col>
 
           <b-col cols="3" class="mt-2">
-            <p>작성자</p>
+            <p v-if="editButton === true" for="some-radios">상태</p>
           </b-col>
-          <b-col cols="9" class="mt-2">
-            <p>{{ userInfo.user_name}}</p>
+          <b-col cols="9">
+            <label v-if="editButton === true" class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus" value="false">진행중</label>
+            <label v-if="editButton === true" class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus" value="true">완료</label>
           </b-col>
 
           <b-col cols="3" class="mt-2">
@@ -69,6 +69,7 @@
         <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="updateForm">수정</b-button>
         <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
         <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+        <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
       </div>
     </div>
 
@@ -111,13 +112,13 @@ export default {
         created_at: null,
         // user_id: null,
       },
-      options: [
-          { value: 'JavaScript', text: 'JavaScript' },
-          { value: 'Spring', text: 'Spring' },
-          { value: 'Java', text: 'Java' },
-          { value: 'Python', text: 'Python' },
-          { value: '기타', text: '기타' },
-        ],
+      // options: [
+      //     { value: 'JavaScript', text: 'JavaScript' },
+      //     { value: 'Spring', text: 'Spring' },
+      //     { value: 'Java', text: 'Java' },
+      //     { value: 'Python', text: 'Python' },
+      //     { value: '기타', text: '기타' },
+      //   ],
       // comments: null,
       // 스터디 방 번호 값 받아와야 함
       study_no: 4,
@@ -132,6 +133,7 @@ export default {
       }
       return header
     },
+
     goBoardMain() {
       this.$router.push({name: 'MainBoard'})
     },
@@ -170,6 +172,7 @@ export default {
       .then(res => {
         console.log(res)
         this.boardInfo.boardNo = res.data['boardNo']
+        this.boardInfo.contentStatus = res.data['contentStatus']
         this.boardInfo.contentTitle = res.data['contentTitle']
         this.boardInfo.studyName = res.data['studyName']
         this.boardInfo.recruitNumber = res.data['recruitNumber']
@@ -222,7 +225,7 @@ export default {
       const updateItem = {
         board_no: this.boardInfo.boardNo,
         content: this.boardInfo.content,
-        content_status: this.boardInfo.contentStatus,
+        contentStatus: this.boardInfo.contentStatus,
         content_title: this.boardInfo.contentTitle,
         recruit_number: this.boardInfo.recruitNumber,
         study_name: this.boardInfo.studyName,
@@ -240,6 +243,9 @@ export default {
         this.getBoard()
         this.study_name = this.boardInfo.studyName
         this.content_title = this.boardInfo.contentTitle
+        this.contentStatus = this.boardInfo.contentStatus
+        console.log('상태 확인')
+        console.log(this.boardInfo.contentStatus)
         this.editButton = false
       })
       .catch(err => {
