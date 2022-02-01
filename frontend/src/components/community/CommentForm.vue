@@ -54,7 +54,7 @@ export default {
         console.log(res)
         console.log('댓글')
         // 작성하고 바로 뜨게 새로고침
-        // this.$router.go(this.$router.currentRoute)
+        this.$router.go(this.$router.currentRoute)
       })
       .catch(err => {
         console.log(err)
