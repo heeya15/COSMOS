@@ -13,15 +13,15 @@
         <b-form-input class="mt-3" type="password" style="height:50px;" id="userpw" v-model="user_pw" required placeholder="현재 비밀번호를 입력하세요."></b-form-input>
         <button @click="checkPassword">확인</button>
         <div v-show="userpwCheck">
-          <b-form-input class="mt-3" style="height:50px;" id="userpw1" v-model="user_password" required placeholder="변경할 비밀번호를 입력하세요."></b-form-input>
-          <b-form-input class="mt-3" style="height:50px;" id="userpw2" v-model="user_password2" required placeholder="변경할 비밀번호 확인" :state="pwState"></b-form-input>
+          <b-form-input class="mt-3" style="height:50px;" type="password" id="userpw1" v-model="user_password" required placeholder="변경할 비밀번호를 입력하세요."></b-form-input>
+          <b-form-input class="mt-3" style="height:50px;" type="password" id="userpw2" v-model="user_password2" required placeholder="변경할 비밀번호 확인" :state="pwState"></b-form-input>
           <b-button variant="primary" class="mt-5" @click="changePassword">변경</b-button>
           <b-button class="ms-3 mt-5">취소</b-button>
         </div>
       </div>
       <!-- My study는 해당멤버 스터디 조회 사용(token 실어서 보내기) -->
       <div>MY STUDY</div>
-      <div v-if="user_study">
+      <div v-if="user_study.length >= 1">
         <div v-for="study in user_study" :key="study.id" @click="goStudyManage(study.studyNo)">{{study.studyName}}</div>
       </div>
       <div v-else>아직 가입한 스터디가 없습니다.</div>
@@ -39,7 +39,7 @@ export default {
       user_id : null,
       user_name : null,
       user_email : null,
-      user_study: null,
+      user_study: [],
       togglePassword: false,
       userpwCheck: false,
       user_pw: null,
@@ -99,8 +99,10 @@ export default {
         url: 'http://i6e103.p.ssafy.io:8080/api/user/update',
         data: userInfo
       })
-      .then(res => {
-        console.log(res)
+      .then(() => {
+        // console.log(res)
+        alert('비밀번호가 변경되었습니다.')
+        this.$router.go()
       })
       .catch(err => {
         console.log(err)
@@ -109,7 +111,7 @@ export default {
     getMyStudy() {
       axios({
         method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/study/memberStudy/`,
+        url: 'http://i6e103.p.ssafy.io:8080/api/study/memberStudy',
         headers: this.getToken()
       })
       .then(res => {
@@ -124,14 +126,11 @@ export default {
       this.$router.push({name:'StudyDetail', params:{studyNo: study}})
     },
     checkPassword() {
-      const header = {
-        Authorization: `Bearer ${this.token}`
-      }
       axios({
         method: 'GET',
         url: 'http://i6e103.p.ssafy.io:8080/api/user/password',
         params: {user_password:this.user_pw},
-        headers: header,
+        headers: this.getToken()
       })
       .then(() => {
         // console.log(res)
@@ -139,6 +138,7 @@ export default {
       })
       .catch(err => {
         console.log(err)
+        console.log(this.token)
         alert('현재 비밀번호와 입력하신 비밀번호가 다릅니다.')
       })
     }
