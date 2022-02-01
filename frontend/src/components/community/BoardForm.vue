@@ -25,7 +25,7 @@
             <label for="study_name">스터디이름</label>
           </b-col>
           <b-col cols="9" class="mt-2">
-            <b-form-input v-model="input.study_name" id="study_name"></b-form-input>
+            <b-form-select :options="titleOptions" id="study_name">"스터디 이름 불러 오는 곳"</b-form-select>
           </b-col>
         
           <b-col cols="3" class="mt-2">
@@ -40,7 +40,7 @@
           </b-col>
             <!-- <b-form-select v-for="option in input.options" :key="option.idx">{{ option.studytypeName }}</b-form-select> -->
           <b-col class="selectag mt-2" cols="9">
-            <b-form-select v-model="input.studytype_name" :options="input.options" id="studytype_name"></b-form-select>
+            <p id="studytype_name"> "스터디 분류 불러 오는 곳" {{ input.studytype_name }}</p>
             <!-- <option value="">123</option> -->
           </b-col>
         
@@ -80,8 +80,8 @@ export default {
         content_status: false,
         recruit_number: null,
         studytype_name: null,
-        options: [
-          // {value: '1', text:'Java'},
+        // options: [
+          // {value: null, text: '스터디분류'},
           // {value: '2', text:'C'},
           // {value: '3', text:'C++'},
           // {value: '4', text:'Python'},
@@ -113,10 +113,13 @@ export default {
           // {value: '30', text:'RaspberryPi'},
           // {value: '31', text:'Study With Me'},
           // {value: '32', text:'기타'},
-          ],
+          // ],
         content: null,
         user_id: null,
       },
+      titleOptions: [
+        {value: '제목', text: '제목 불러와야해'},
+      ],
     }
   },
   methods: {
@@ -162,18 +165,26 @@ export default {
         console.log(err)
       })
     },
-    getStudyType() {
-      this.$store.dispatch('getStudyType')
-      console.log('스터디 정보 가져오는지 확인')
-      
-      this.input.options = this.$store.state.studyOptions
-      console.log(this.input.options)
-    },
-  },
+    // getStudyType() {
+    //   axios({
+    //     method: 'GET',
+    //     url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+    //   })
+    //   .then(res => {
+    //     // console.log(res)
+    //     res.data.forEach(element => {
+    //       this.input.options.push({value: element.studytypeName, text:element.studytypeName})
+    //     })
+    //   })
+    //   .catch(err => {
+    //     console.log(err)
+    //   })
+    // },
   created(){
     this.getToken()
-    this.getStudyType()
-  }
+    // this.getStudyType()
+    }
+  },
 }
 </script>
 

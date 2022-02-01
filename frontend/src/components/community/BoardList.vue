@@ -23,7 +23,7 @@
             <tbody id="test-table" v-for="(boardItem, idx) in boardItems" :key="idx"  @click="goBoardDetail(boardItem.boardNo)">
               <tr>
               <td>{{ idx }}</td>
-            <td v-if="boardItem.contentStatus === false"><p class="boardnum_tag">[진행중]</p></td>
+            <td v-if="boardItem.contentStatus === true"><p class="boardnum_tag">[진행중]</p></td>
             <td v-else><p class="boardnum_tag">[완료]</p></td>
             <td><span v-if="boardItem.header === false" class="boardnum_tag">[스터디원 구함]</span>
             <span v-else class="boardnum_tag">[스터디 구함]</span></td>
