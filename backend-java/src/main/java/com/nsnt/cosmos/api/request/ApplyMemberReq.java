@@ -1,5 +1,6 @@
 package com.nsnt.cosmos.api.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nsnt.cosmos.db.entity.ApplyMember;
 import com.nsnt.cosmos.db.entity.Study;
 import com.nsnt.cosmos.db.entity.User;

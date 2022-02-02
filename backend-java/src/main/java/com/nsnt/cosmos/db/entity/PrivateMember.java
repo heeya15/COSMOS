@@ -30,8 +30,6 @@ public class PrivateMember {
 	
 	
 	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name = "privatestudyroom_id", referencedColumnName = "privatestudyroom_id"),
-	})
+	@JoinColumn(name = "privatestudyroom_id", referencedColumnName = "privatestudyroom_id")
 	private PrivateStudyRoom privateStudyRoom;
 }

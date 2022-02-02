@@ -8,6 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,11 +34,13 @@ public class ApplyMember {
 	
 	@ManyToOne
 	@JoinColumn(name = "study_no")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	Study study_no;
 
 	// FK
 	@ManyToOne
 	@JoinColumn(name = "user_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	User userId;
 		
 }

@@ -79,7 +79,8 @@ public class Study {
 	String studyPassword;
 	
 	@ManyToOne
-	@JoinColumn(name = "privatestudyroom_id")	
+	@JoinColumn(name = "privatestudyroom_id")
+	
 	private PrivateStudyRoom privateStudyRoom;
 	
 	@OneToOne
