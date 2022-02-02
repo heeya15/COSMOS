@@ -29,7 +29,7 @@ import lombok.Setter;
  */
 @Entity
 @Table(
-		name="Study",
+		name="study",
 		uniqueConstraints={
 			@UniqueConstraint(
 				name ="STUDYNAME_URL_UNIQUE",

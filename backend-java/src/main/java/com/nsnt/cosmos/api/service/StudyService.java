@@ -18,4 +18,5 @@ public interface StudyService {
 	public Study updateStudy(Study study, StudyPostReq studyUpdateInfo);
 	public List<Study> findMemberStudy(String userId);
 	List<StudyType> findAllStudyType();
+	public void updateNumberOfStudyMember(Long studyNo);
 }
