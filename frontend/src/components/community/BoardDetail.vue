@@ -52,7 +52,7 @@
             <b-textarea v-if="editButton === true" type="text" v-model="boardInfo.content"></b-textarea>
             <p v-else>{{ boardInfo.content }}</p>
           </b-col>
-          <p>여기 번호 : {{ study_no }}</p>
+          <p>여기 번호 : {{ studyInfo.studyNo }}</p>
         </b-row>
       <!-- </div> -->
       </div>
@@ -121,7 +121,11 @@ export default {
       //   ],
       // comments: null,
       // 스터디 방 번호 값 받아와야 함
-      study_no: 4,
+      studyInfo: {
+        studyName: null,
+        studyNo: null,
+        studyType: null,
+      }
     }
   },
   methods: {
@@ -253,10 +257,31 @@ export default {
       })
       this.boardInfo.studyName = null
     },
+
+    // 스터디정보 불러오기(번호)
+    getStudyInfo() {
+      axios({
+        method: 'GET',
+        url: `http://i6e103.p.ssafy.io:8080/api/study/search/${this.studyNo}`
+      })
+      .then(res => {
+        console.log('스터디 데이터 확인')
+        console.log(res)
+        // this.studyInfo.studyName = res.data.studyName
+        this.studyInfo.studyNo = 5
+        // this.studyInfo.url = res.data.url
+      })
+      .catch(err => {
+        console.log(err)
+        console.log('스터디정보 오류 확인')
+        console.log(this.studyInfo.studyNo)
+      })
+    },
   },
   created() {
     this.getBoard()
     this.getUserInfo()
+    this.getStudyInfo()
   },
 }
 </script>
