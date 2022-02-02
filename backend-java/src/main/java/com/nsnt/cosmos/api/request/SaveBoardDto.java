@@ -1,6 +1,7 @@
 package com.nsnt.cosmos.api.request;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nsnt.cosmos.db.entity.Board;
 import com.nsnt.cosmos.db.entity.User;
 
@@ -15,6 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor /** Cannot construct instance of~ error를 해결해주었다.  파라미터가 없는 생성자 만들어줌* */ 
 public class SaveBoardDto {
+	@JsonIgnore
 	@ApiModelProperty(name = "게시글 id")
 	private Long board_no;
 	
@@ -38,7 +40,7 @@ public class SaveBoardDto {
 	@ApiModelProperty(name = "스터디 분류명")
 	private String studytype_name;
 	
-	
+	@JsonIgnore
 	@ApiModelProperty(name = "유저 id")
 	private String user_id;
 	

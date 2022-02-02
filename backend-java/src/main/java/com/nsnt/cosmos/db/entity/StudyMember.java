@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.nsnt.cosmos.api.request.SaveBoardDto;
 import com.nsnt.cosmos.api.request.SaveStudyMemberDto;
@@ -59,11 +61,13 @@ public class StudyMember{
 	int studytime; // 공부 시간
 	
 	@ManyToOne
-	@JoinColumn(name = "user_id")	
+	@JoinColumn(name = "user_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 	
 	@ManyToOne
-	@JoinColumn(name = "study_no")	
+	@JoinColumn(name = "study_no")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Study study;
 	
 	public void updateScore(SaveStudyMemberDto saveStudyMemberDto){  
