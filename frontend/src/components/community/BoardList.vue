@@ -1,12 +1,17 @@
 <template>
   <div>
     <!-- <h3>게시글</h3> -->
+    <div class="searchbar">
+      셀렉 부분 >> {{ selected }} 진행 = 0, 완료 = 1
+      <b-form-select class="mx-5" v-model="selected" :options="options" style="width: 150px;" ></b-form-select>
+      <b-form-input style="width: 300px;" placeholder="검색어 입력"></b-form-input>
+      <b-button style="background-color: #DAC7F9">검색</b-button>
+    </div>
       <b-row>
         <b-col>
           <table  
           class="table table-boarded table-hover"
           width="100%"
-          
           >
             <thead>
               <tr>
@@ -22,8 +27,12 @@
             <tbody id="test-table" v-for="(boardItem, idx) in paginatedItems" :key="idx"  @click="goBoardDetail(boardItem.boardNo)">
               <tr>
               <td>{{ 10*(currentPage-1)+(idx+1) }}</td>
-            <td v-if="boardItem.contentStatus === true"><p class="boardnum_tag">[진행중]</p></td>
-            <td v-else><p class="boardnum_tag">[완료]</p></td>
+
+            <div>
+              <td v-if="boardItem.contentStatus === false"><p class="boardnum_tag">[진행중]</p></td>
+              <td v-else><p class="boardnum_tag">[완료]</p></td>
+            </div>
+
             <td><span v-if="boardItem.header === false" class="boardnum_tag">[스터디원 구함]</span>
             <span v-else class="boardnum_tag">[스터디 구함]</span></td>
             <td><p class="boardnum_tag">{{ boardItem.contentTitle }}</p></td>
@@ -58,12 +67,17 @@ export default {
       perPage: 10,
       currentPage: 1,
       paginatedItems: '',
-      items: [],
       board_no: this.$store.state.boardNo,
       boardNum: this.$store.state.boardNo,
       saveHeader: null,
       boardItems: null,
       rowws: null,
+      selected: null,
+      options: [
+        { value: null, text: '키워드 선택' },
+        { value: 0, text: '진행중' },
+        { value: 1, text: '완료' },
+      ]
     }
   },
   
@@ -74,14 +88,11 @@ export default {
     console.log(itemsToParse.slice(0, 5))
     console.log(page_number * page_size, (page_number + 1) * page_size)
     this.paginatedItems = itemsToParse.slice(page_number * page_size, (page_number + 1) * page_size);
- 
     },
     onPageChanged() {
       console.log(this.currentPage)
       this.paginate(10, this.currentPage - 1)
     },
-
-
 
     getBoardItems() {
       axios({
@@ -90,21 +101,6 @@ export default {
         // headers: this.
       })
       .then(res => {
-        // console.log(res.data)
-        const saveResData = res.data
-        saveResData.forEach(item => {
-        if (item.header === false) {
-          item.header = '[스터디원 구함]'
-          } else { 
-            item.header = '[스터디 구함]'
-          }
-        if (item.contentStatus === true) {
-          item.contentStatus = '[진행중]'
-        } else {
-          item.contentStatus = '[완료]'
-        }
-        })
-        this.saveHeader = saveResData
         this.boardItems = res.data
         this.rowws = res.data.length
         this.items = res.data
@@ -112,8 +108,7 @@ export default {
         console.log(res.data)
         if (this.boardItems) {
             this.paginate(10, 0)
-
-    }
+        }
       })
       .catch(err => {
         console.log(err)
@@ -129,10 +124,13 @@ export default {
       const old = ''+datetime
       return old.substring(0, 10)
     },
+    // pickSelect(event) {
+    //   console.log(event.target.value)
+    // }
   },
   created() {
     this.getBoardItems()
- 
+
   },
   computed: {
     rows() {
