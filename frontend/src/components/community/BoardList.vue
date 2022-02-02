@@ -6,9 +6,8 @@
           <table  
           class="table table-boarded table-hover"
           width="100%"
-          :per-page="perPage"
-          :current-page="currentPage"
-          :fields="fields">
+          
+          >
             <thead>
               <tr>
                 <th>번호</th>
@@ -20,9 +19,9 @@
                 <th>등록일</th>
               </tr>
             </thead>
-            <tbody id="test-table" v-for="(boardItem, idx) in boardItems" :key="idx"  @click="goBoardDetail(boardItem.boardNo)">
+            <tbody id="test-table" v-for="(boardItem, idx) in paginatedItems" :key="idx"  @click="goBoardDetail(boardItem.boardNo)">
               <tr>
-              <td>{{ idx }}</td>
+              <td>{{ 10*(currentPage-1)+(idx+1) }}</td>
             <td v-if="boardItem.contentStatus === true"><p class="boardnum_tag">[진행중]</p></td>
             <td v-else><p class="boardnum_tag">[완료]</p></td>
             <td><span v-if="boardItem.header === false" class="boardnum_tag">[스터디원 구함]</span>
@@ -37,35 +36,10 @@
         </b-col>
       </b-row>
 
-
-    <!-- <b-pagination
+    <b-pagination
+      @click="onPageChanged"
       v-model="currentPage"
       :total-rows="rowws"
-      :per-page="perPage"
-      first-text="First"
-      prev-text="Prev"
-      next-text="Next"
-      last-text="Last"
-      align="center"
-    ></b-pagination> -->
-
-
-
-    <b-table
-    id="my-table"
-    :items="boardItems"
-    :per-page="perPage"
-    :current-page="currentPage"
-    :fields="fields"
-    @row-clicked="goBoardDetail()"
-    ></b-table>
-
-    출력 출력>> {{ this.boardNum }} //출력 확인 <br>
-    <!-- {{ items[0]['boardNo'] }} 번째만 나옴 -->
-
-    <b-pagination
-      v-model="currentPage"
-      :total-rows="rows"
       :per-page="perPage"
       aria-controls="test-table"
       align="center"
@@ -81,51 +55,34 @@ export default {
   name: 'BoardList',
   data() {
     return {
+      perPage: 10,
+      currentPage: 1,
+      paginatedItems: '',
       items: [],
       board_no: this.$store.state.boardNo,
       boardNum: this.$store.state.boardNo,
       saveHeader: null,
       boardItems: null,
-      perPage: 5,
-      currentPage: 1,
       rowws: null,
-      fields: [
-        {
-          key: "boardNo",
-          label: "번호",
-        },
-        {
-          key: "contentStatus",
-          label: "상태",
-        },
-        {
-          key: "header",
-          label: "말머리",
-        },
-        {
-          key: "contentTitle",
-          label: "제목",
-        },
-        {
-          key: "studyName",
-          label: "스터디 이름",
-        },
-        {
-          key: "studytypeName",
-          label: "분류",
-        },
-        {
-          key: "user.userName",
-          label: "작성자",
-        },
-        {
-          key: "createdAt",
-          label: "등록일",
-        },
-      ],
     }
   },
+  
   methods: {
+    paginate (page_size, page_number) {
+    
+    let itemsToParse = this.boardItems
+    console.log(itemsToParse.slice(0, 5))
+    console.log(page_number * page_size, (page_number + 1) * page_size)
+    this.paginatedItems = itemsToParse.slice(page_number * page_size, (page_number + 1) * page_size);
+ 
+    },
+    onPageChanged() {
+      console.log(this.currentPage)
+      this.paginate(10, this.currentPage - 1)
+    },
+
+
+
     getBoardItems() {
       axios({
         method: 'get',
@@ -153,6 +110,10 @@ export default {
         this.items = res.data
         console.log('번호 확인용')
         console.log(res.data)
+        if (this.boardItems) {
+            this.paginate(10, 0)
+
+    }
       })
       .catch(err => {
         console.log(err)
@@ -171,10 +132,22 @@ export default {
   },
   created() {
     this.getBoardItems()
+ 
   },
   computed: {
     rows() {
       return this.rowws
+    }
+  },
+  watch : {
+    boardItems : {
+      handler() {
+        this.paginate(10, 0)
+      },
+      deep : true
+    },
+    currentPage(neww) { 
+      this.paginate(10, neww - 1)
     }
   }
 }

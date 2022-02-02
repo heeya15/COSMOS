@@ -158,7 +158,7 @@ export default {
         this.$router.push({name: "MainBoard"})
         console.log('스터디옵션 확인')
         // this.input.options = this.$store.state.studyOptions
-        console.log(this.input.options)
+        // console.log(this.input.options)
         // this.options = 
       })
       .catch(err => {
@@ -182,6 +182,7 @@ export default {
     // },
   created(){
     this.getToken()
+    this.getStudyInfo()
     // this.getStudyType()
     }
   },
