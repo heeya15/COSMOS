@@ -8,6 +8,9 @@ import javax.persistence.JoinColumns;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,8 +26,7 @@ public class PrivateStudyRoom {
 	private String privatestudyroomId;
 	
 	@OneToOne
-	@JoinColumns({
-		@JoinColumn(name = "study_no", referencedColumnName = "study_no")
-	})
+	@JoinColumn(name = "study_no", referencedColumnName = "study_no")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Study study;
 }

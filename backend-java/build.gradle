@@ -7,7 +7,7 @@ buildscript{
         querydslPluginVer = '1.0.10'
         springDependencyMgmtVer = '1.0.11'
         springLoadedVer = '1.2.8'
-        nodePluginVer = '1.3.1'
+        nodePluginVer = '16.13.1'
     }
     repositories {
         mavenCentral()

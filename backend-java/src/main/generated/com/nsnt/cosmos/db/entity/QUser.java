@@ -6,8 +6,6 @@ import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
-
-import com.nsnt.cosmos.db.entity.User;
 import com.querydsl.core.types.Path;
 
 
@@ -17,24 +15,24 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QUser extends EntityPathBase<User> {
 
-    private static final long serialVersionUID = 846542477L;
+    private static final long serialVersionUID = 1311572244L;
 
     public static final QUser user = new QUser("user");
 
-//    public final QBaseEntity _super = new QBaseEntity(this);
+    public final DateTimePath<java.time.LocalDateTime> joinDate = createDateTime("joinDate", java.time.LocalDateTime.class);
 
-    //inherited
-//    public final NumberPath<Long> id = _super.id;
+    public final NumberPath<Integer> totalAttendance = createNumber("totalAttendance", Integer.class);
+
+    public final NumberPath<Integer> totalTime = createNumber("totalTime", Integer.class);
+
+    public final StringPath userEmail = createString("userEmail");
+
+    public final StringPath userId = createString("userId");
 
     public final StringPath userName = createString("userName");
 
     public final StringPath userPassword = createString("userPassword");
 
-    public final StringPath userEmail = createString("userEmail");
-
-    public final StringPath userId = createString("userId");
-    public final NumberPath<Integer> totalTime = createNumber("totalTime", Integer.class);
-    public final NumberPath<Integer> totalAttendance = createNumber("totalAttendance", Integer.class);
     public QUser(String variable) {
         super(User.class, forVariable(variable));
     }

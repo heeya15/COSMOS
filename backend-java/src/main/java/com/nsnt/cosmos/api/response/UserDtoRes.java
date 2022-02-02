@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("UserResponse")
-public class UserRes{
+public class UserDtoRes{
 	
 	
 	@ApiModelProperty(name="User ID")
@@ -32,8 +32,8 @@ public class UserRes{
 	@ApiModelProperty(name="User pw")
 	String user_password;
 	
-	public static UserRes of(User user) {
-		UserRes res = new UserRes();
+	public static UserDtoRes of(User user) {
+		UserDtoRes res = new UserDtoRes();
 		res.setUser_id(user.getUserId());
 		res.setUser_name(user.getUserName());
 		res.setUser_email(user.getUserEmail());

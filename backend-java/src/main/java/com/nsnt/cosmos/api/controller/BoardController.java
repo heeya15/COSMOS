@@ -23,8 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nsnt.cosmos.api.request.UserUpdateDto;
 import com.nsnt.cosmos.api.request.SaveBoardDto;
 import com.nsnt.cosmos.api.request.UserRegisterPostReq;
-import com.nsnt.cosmos.api.response.UserRes;
+import com.nsnt.cosmos.api.response.StudyNameSearchDtoRes;
+import com.nsnt.cosmos.api.response.UserDtoRes;
 import com.nsnt.cosmos.api.service.BoardService;
+import com.nsnt.cosmos.api.service.StudyService;
 import com.nsnt.cosmos.api.service.UserService;
 import com.nsnt.cosmos.common.auth.SsafyUserDetails;
 import com.nsnt.cosmos.common.model.response.BaseResponseBody;
@@ -51,17 +53,22 @@ public class BoardController {
 
 	@Autowired
 	BoardService boardService;
-
+	@Autowired
+	StudyService studyService;
 	@PostMapping("/register")
-	@ApiOperation(value="게시글 등록", notes="<strong>게시글을 등록</strong>시켜줍니다.")
+	@ApiOperation(value="게시글 등록 (token)", notes="<strong>게시글을 등록</strong>시켜줍니다. user_id는 빈 괄호(\"\")를 입력하여 주세요.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	public ResponseEntity Boardregister(@RequestBody SaveBoardDto saveBoardDto)
+	public ResponseEntity Boardregister(@RequestBody SaveBoardDto saveBoardDto, @ApiIgnore Authentication authentication)
 	{
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		String user_id = userDetails.getUsername();
+		
 		Board board;
 		try {
+			saveBoardDto.setUser_id(user_id);
 			board = boardService.createBoard(saveBoardDto);
 		}catch(Exception E) {
 			E.printStackTrace();
@@ -71,6 +78,8 @@ public class BoardController {
 		System.out.println("잘 됨?"+ board.toString());
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
+	
+	
 	 /** 게시글 전체 조회 입니다. */
 	@ApiOperation(value="게시글 전체 조회", notes="<strong>게시글을 전체 조회를</strong>시켜줍니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
@@ -83,9 +92,25 @@ public class BoardController {
 
         return new ResponseEntity<List<Board>>(boards,HttpStatus.OK);
     }
+	
+	/** 게시글 생성 시  스터디 이름 조회 */
+	@GetMapping("/searchStudyName/{header}")
+	@ApiOperation(value="게시글 생성 시  스터디 이름조회(token)", notes="<strong>게시글을 전체 조회를</strong>시켜줍니다.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"), 
+					@ApiResponse(code = 500, message = "서버 오류")})
+    public ResponseEntity<List<StudyNameSearchDtoRes>> findSearchStudyName(@PathVariable("header") boolean header,@ApiIgnore Authentication authentication){
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		String user_id = userDetails.getUsername();
+		System.out.println(">>>>>>>>>>>>>>>log: "+header +" "+ user_id);
+		List<StudyNameSearchDtoRes> result = null;
+		if(header == false) result = boardService.findSearchStudyName(user_id);
+		
+        return new ResponseEntity<List<StudyNameSearchDtoRes>>(result,HttpStatus.OK);
+    }
 
 	@GetMapping("/search/{board_no}")
-	
 	@ApiOperation(value ="게시글 상세  조회", notes ="해당 Board_no 게시판 정보 출력")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),

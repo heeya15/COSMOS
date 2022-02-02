@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,5 +30,6 @@ public class StudyManageId implements Serializable {
 	
 	@OneToOne
 	@JoinColumn(name = "study_no")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	Study studyNo;
 }

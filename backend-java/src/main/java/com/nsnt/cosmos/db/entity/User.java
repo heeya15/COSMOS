@@ -1,6 +1,7 @@
 package com.nsnt.cosmos.db.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nsnt.cosmos.api.request.UserUpdateDto;
 
 import lombok.Builder;
@@ -45,6 +46,7 @@ public class User {
 	int totalAttendance;
 
 	@Column(columnDefinition = "TIMESTAMP")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
 	@CreationTimestamp
 	private LocalDateTime joinDate;
 	

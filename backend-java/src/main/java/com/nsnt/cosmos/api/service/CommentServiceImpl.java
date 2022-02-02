@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nsnt.cosmos.api.request.CommentReq;
+import com.nsnt.cosmos.api.response.CommentSearchDtoRes;
 import com.nsnt.cosmos.db.entity.Comment;
 import com.nsnt.cosmos.db.repository.CommentRepository;
 
@@ -39,9 +40,9 @@ public class CommentServiceImpl implements CommentService {
 	/** 모든 댓글 정보를 가져오는 findAllByBoardNo 입니다. */
 	@Override
 	@Transactional
-	public List<Comment> findAllByBoardNo(Long board_no) {
+	public List<CommentSearchDtoRes> findAllByBoardNo(Long board_no) {
 		log.debug(">>>>>>>>>>>>>>>>>>>>> findById");
-		List<Comment> comments = commentRepository.findAllByBoardNo(board_no);
+		List<CommentSearchDtoRes> comments = commentRepository.findAllByBoardNo(board_no);
 		return comments;
 	}
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nsnt.cosmos.api.request.SaveBoardDto;
+import com.nsnt.cosmos.api.response.StudyNameSearchDtoRes;
 import com.nsnt.cosmos.db.entity.Board;
 import com.nsnt.cosmos.db.repository.BoardRepository;
 @Service("boardService")
@@ -49,5 +50,11 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public void deleteBoard(Board board) {
 		boardRepository.delete(board);
+	}
+    /** 해당 스터디 장이  만든 스터디 이름 조회하는 findSearchStudyName 입니다. **/
+	@Override
+	public List<StudyNameSearchDtoRes> findSearchStudyName(String user_id) {
+		List<StudyNameSearchDtoRes> list = boardRepository.findStudyName(user_id);
+	    return list;
 	}
 }
