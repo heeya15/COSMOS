@@ -109,5 +109,10 @@ public class StudyServiceImpl implements StudyService {
 		List<StudyType> studyType = studyTypeRepository.findAllStudyType();
 	    return studyType;
 	}
+	
+	@Override
+	public void updateNumberOfStudyMember(Long studyNo) {
+		studyRepository.updateNumberOfStudyMembers(studyNo);
+	}
 
 }

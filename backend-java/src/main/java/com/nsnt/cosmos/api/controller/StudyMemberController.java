@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,18 +18,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nsnt.cosmos.api.request.SaveStudyMemberDto;
-
 import com.nsnt.cosmos.api.response.StudyMemberSearchDtoRes;
-
 import com.nsnt.cosmos.api.service.StudyMemberService;
-
+import com.nsnt.cosmos.api.service.StudyService;
 import com.nsnt.cosmos.common.model.response.BaseResponseBody;
-
+import com.nsnt.cosmos.db.entity.Study;
 import com.nsnt.cosmos.db.entity.StudyMember;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -47,6 +43,9 @@ public class StudyMemberController {
 
 	@Autowired
 	StudyMemberService studyMeberService;
+	
+	@Autowired
+	StudyService studyService;
 
 	@PostMapping("/register")
 	@ApiOperation(value = "스터디원 등록", notes = "<strong>스터디원을 등록</strong>시켜줍니다.")
@@ -65,7 +64,14 @@ public class StudyMemberController {
 			System.out.println("스터디원 등록 실패");
 			return ResponseEntity.status(500).body("디비 트랜잭션 오류로 인한 생성 실패");
 		}
-		System.out.println("잘 됨?" + studymember.toString());
+		
+		try {
+			studyService.updateNumberOfStudyMember(saveStudyMemberDto.getStudy_no());
+		} catch (Exception E) {
+			E.printStackTrace();
+			System.out.println("스터디 현재 인원 갱신 실패");
+			return ResponseEntity.status(500).body("디비 트랜잭션 오류로 인한 갱신 실패");
+		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
@@ -103,6 +109,7 @@ public class StudyMemberController {
 	@DeleteMapping("/remove/{studymember_no}")
 	public ResponseEntity<String> boarddelete(@PathVariable("studymember_no") Long studymember_no) throws Exception {
 		StudyMember studymember;
+		
 		try {
 			studymember = studyMeberService.findOneStudyMember(studymember_no);
 			studyMeberService.deleteStudyMember(studymember);
@@ -111,8 +118,18 @@ public class StudyMemberController {
 			System.out.println(">>>>>>>>>>>>>>>스터디 해당 멤버 삭제 실패");
 			return ResponseEntity.status(500).body("스터디 해당 멤버 삭제 실패 " + FAIL);
 		}
+		
+		try {
+			System.out.println("갱신할 스터디 번호 : " + studymember.getStudy().getStudyNo());
+			studyService.updateNumberOfStudyMember(studymember.getStudy().getStudyNo());
+		} catch (Exception E) {
+			E.printStackTrace();
+			System.out.println("스터디 현재 인원 갱신 실패");
+			return ResponseEntity.status(500).body("디비 트랜잭션 오류로 인한 갱신 실패");
+		}
+		
 		logger.debug(">>>>>>>>>>>>>>>>>>스터디 해당 멤버 삭제 성공");
 		return ResponseEntity.status(200).body(studymember.getStudymemberNo() + "번 : 해당 "
-				+ studymember.getUser().getUserId() + " 라는 아이디인 멤버 삭제" + SUCCESS);
+				+ studymember.getUser().getUserId() + " 라는 아이디인 멤버 삭제 " + SUCCESS);
 	}
 }

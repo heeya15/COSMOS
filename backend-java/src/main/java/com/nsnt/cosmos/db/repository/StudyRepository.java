@@ -2,7 +2,10 @@ package com.nsnt.cosmos.db.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -24,5 +27,15 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
 			,nativeQuery = true)
 	List<Study> findMemberStudy(@Param("userId") String userId);
 //	List<Study> findMemberStudy(String user_id); // @Param 어노테이션 x
+	
+	@Transactional
+	@Modifying
+	@Query(value="update study s set number_of_member = (\r\n" + 
+			"	select count(*)\r\n" + 
+			"    from study_member sm\r\n" + 
+			"    where sm.study_no = :studyNo\r\n"
+			+ ")\r\n" + 
+			"where s.study_no = :studyNo", nativeQuery = true)
+	void updateNumberOfStudyMembers(@Param("studyNo") Long studyNo);
 
 }
