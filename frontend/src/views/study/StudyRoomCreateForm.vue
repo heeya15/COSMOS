@@ -4,25 +4,31 @@
     <hr>
     <div style="width:600px;" class="p-5">
       <b-row>
+        <!-- 스터디 이름 중복체크 axios 요청 버튼 -->
         <b-col cols="3">
           <label for="studyName" class="mt-2">스터디 이름</label>
         </b-col>
         <b-col>
-          <b-form-input id="studyName"></b-form-input>
+          <b-form-input id="studyName" v-model="input.studyName"></b-form-input>
         </b-col>
         <hr class="mt-3">
+
+        <!-- url은 스터디만드는 사람에게 직접 입력받음 -->
+        <!-- url 중복체크 axios 요청 버튼-->
         <b-col cols="3">
           <label for="url" class="mt-2">스터디 url</label>
         </b-col>
         <b-col>
-          <b-form-input id="url" v-model="url"></b-form-input>
+          <div id="url">{{input.url}}{{input.studyName}}</div>
         </b-col>
         <hr class="mt-3">
+
         <b-col cols="3">
-          <label for="studyCategory" class="mt-2">스터디 분류</label>
+          <label for="studytypeNo" class="mt-2">스터디 분류</label>
         </b-col>
         <b-col>
-          <b-form-input id="studyCategory"></b-form-input>
+          <b-form-select v-model="input.studytypeNo" :options="input.options" ></b-form-select>
+          <!-- <b-form-input id="studytypeNo" v-model="input.studytypeNo"></b-form-input> -->
         </b-col>
         <hr class="mt-3">
 
@@ -31,43 +37,48 @@
         </b-col>
         <b-col>
           <div class="preview" v-if="input.image">
-           <p>업로드된 이미지가 없습니다.</p>
+            <img :src="input.image" alt="대표이미지">
           </div>
-          <input accept=".jpg .jpeg .png" type="file" id="studyImg" class="inputfile" />
+          <div v-else>업로드된 이미지가 없습니다.</div>
+          <input ref="studyImg" accept="image/*" type="file" id="studyImg" class="mt-3" @change="uploadImage"/>
         </b-col>
         <hr class="mt-3">
 
         <b-col cols="3">
-          <label for="studyType" class="mt-2">스터디 종류</label>
+          <label for="study_type" class="mt-1">스터디 종류</label>
         </b-col>
-        <b-col>
-          <b-form-input id="studyType"></b-form-input>
+        <b-col class="mt-1">
+          <input type="radio" id="public" value="public" v-model="input.study_type" default>
+          <label for="public" class="ms-1 me-5">공개</label>
+          <input type="radio" id="private" value="private" v-model="input.study_type">
+          <label for="private" class="ms-1 me-5">비공개</label>
         </b-col>
         <hr class="mt-3">
         <b-col cols="3">
-          <label for="studyTotalMember" class="mt-2">인원 수</label>
+          <label for="totalMember" class="mt-2">인원 수</label>
         </b-col>
         <b-col cols="5">
-          <b-form-input id="studyTotalMember" placeholder="인원 수를 입력하세요."></b-form-input>
+          <b-form-input id="totalMember" placeholder="인원 수를 입력하세요."></b-form-input>
         </b-col>
         <b-col cols="1" class="mt-2">명</b-col>
         <hr class="mt-3">
         <b-col cols="3">
-          <label for="studyPassword" class="mt-2">비밀번호</label>
+          <label for="studyPassword" class="mt-1">비밀번호</label>
         </b-col>
         <b-col>
-          <b-form-input id="studyPassword"></b-form-input>
+          <b-form-input id="studyPassword" v-model="input.studyPassword" v-if="input.study_type==='private'" placeholder="4~10자리 숫자만 입력하세요."></b-form-input>
+          <div v-else class="studyPassword mt-1">공개스터디는 비밀번호가 필요하지 않습니다.</div>
         </b-col>
         <hr class="mt-3">
         
         <b-col cols="3">초기 장치 설정</b-col>
         <b-col>
-          <input type="checkbox" id="mic" value="mic" v-model="settings.mic">
+          <input type="checkbox" id="mic" value="mic" v-model="input.settings.mic">
           <label for="mic" class="ms-1 me-5">마이크</label>
-          <input type="checkbox" id="cam" value="cam" v-model="settings.cam">
-          <label for="mic" class="ms-1 me-5">카메라</label>
-          <input type="checkbox" id="speaker" value="speacker" v-model="settings.speaker">
-          <label for="mic" class="ms-1 me-5">스피커</label>
+          <input type="checkbox" id="cam" value="cam" v-model="input.settings.cam">
+          <label for="cam" class="ms-1 me-5">카메라</label>
+          <input type="checkbox" id="speaker" value="speaker" v-model="input.settings.speaker">
+          <label for="speaker" class="ms-1 me-5">스피커</label>
         </b-col>
         <hr class="mt-3">
 
@@ -75,9 +86,10 @@
           <label for="studyRule" class="mt-2">스터디 규칙</label>
         </b-col>
         <b-col>
-          <b-form-textarea id="studyRule" v-model="study_rule" placeholder="스터디 규칙, 공지사항 등 입력" rows="3" max-rows="6"></b-form-textarea>
+          <b-form-textarea id="studyRule" v-model="input.studyRule" placeholder="스터디 규칙, 공지사항 등 입력" rows="3" max-rows="6"></b-form-textarea>
         </b-col>
-        <button class="mt-4" type="button">스터디 생성</button>
+        <button v-if="input.study_type==='public'" class="mt-4" type="button" @click="createPublicStudy">스터디 생성</button>
+        <button v-else class="mt-4" type="button" @click="createPrivateStudy">스터디 생성</button>
       </b-row>
     </div>
 
@@ -87,99 +99,111 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'StudyRoomCreateForm',
   data() {
     return {
-      url: null,
-      image: null,
-      number_of_member: null,
-      study_rule: null,
-      settings: {
-        mic: null,
-        cam: null,
-        speaker: null,
+      input: {
+        studyName: null,
+        url: 'http://www.cosmos.com/',
+        studytypeNo: null,
+        options: [
+          { value: null, text: '스터디 분류' },
+        ],
+        image: null,
+        study_type: null, // 공개스터디, 비공개스터디
+        totalMember: null,
+        studyRule: null,
+        studyPassword: null,
+        settings: {
+          mic: null,
+          cam: null,
+          speaker: null,
+        }
       }
     }
   },
+  methods: {
+    getHeader(){
+      const token = localStorage.getItem('jwt')
+      const header = {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+      }
+      return header
+    },
+    uploadImage() {
+      var image = this.$refs.studyImg.files[0]
+      const url = URL.createObjectURL(image)
+      this.input.image = url
+    },
+    getStudyType() {
+      axios({
+        method: 'GET',
+        url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+      })
+      .then(res => {
+        // console.log(res)
+        res.data.forEach(element => {
+          this.input.options.push({value: element.studytypeNo, text:element.studytypeName})
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    createPrivateStudy() {
+      const studyInfo = new FormData()
+      studyInfo.append('image',this.$refs.studyImg.files[0])
+      studyInfo.append('studyName',this.input.studyName)
+      studyInfo.append('studyNo',this.input.studyNo)
+      studyInfo.append('studyPassword',this.input.studyPassword)
+      studyInfo.append('studyRule',this.input.studyRule)
+      studyInfo.append('studytypeNo',this.input.studytypeNo)
+      studyInfo.append('totalMember',this.input.totalMember)
+      studyInfo.append('url',this.input.url)
+      console.log(this.$refs.studyImg.files[0])
+      axios({
+        method: 'POST',
+        url: 'http://i6e103.p.ssafy.io:8080/api/study/register',
+        headers: this.getHeader(),
+        data: studyInfo
+      })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    createPublicStudy(){
+      console.log('공개 스터디생성')
+    }
+  },
+  created() {
+    this.getStudyType()
+  }
 }
-// 이미지 업로드 자바스크립트
-// var input = document.querySelector('input');
-// var preview = document.querySelector('.preview');
-// input.style.opacity = 0;
-// input.addEventListener('change', updateImageDisplay);
-// function updateImageDisplay() {
-//   while(preview.firstChild) {
-//     preview.removeChild(preview.firstChild);
-//   }
-
-//   const curFiles = input.files;
-//   if(curFiles.length === 0) {
-//     const para = document.createElement('p');
-//     para.textContent = 'No files currently selected for upload';
-//     preview.appendChild(para);
-//   } else {
-//     const list = document.createElement('ol');
-//     preview.appendChild(list);
-
-//     for(const file of curFiles) {
-//       const listItem = document.createElement('li');
-//       const para = document.createElement('p');
-//       if(validFileType(file)) {
-//         para.textContent = `File name ${file.name}, file size ${returnFileSize(file.size)}.`;
-//         const image = document.createElement('img');
-//         image.src = URL.createObjectURL(file);
-
-//         listItem.appendChild(image);
-//         listItem.appendChild(para);
-//       } else {
-//         para.textContent = `File name ${file.name}: Not a valid file type. Update your selection.`;
-//         listItem.appendChild(para);
-//       }
-
-//       list.appendChild(listItem);
-//     }
-//   }
-// }
-// const fileTypes = [
-//   "image/apng",
-//   "image/bmp",
-//   "image/gif",
-//   "image/jpeg",
-//   "image/pjpeg",
-//   "image/png",
-//   "image/svg+xml",
-//   "image/tiff",
-//   "image/webp",
-//   "image/x-icon"
-// ];
-
-// function validFileType(file) {
-//   return fileTypes.includes(file.type);
-// }
-// function returnFileSize(number) {
-//   if(number < 1024) {
-//     return number + 'bytes';
-//   } else if(number >= 1024 && number < 1048576) {
-//     return (number/1024).toFixed(1) + 'KB';
-//   } else if(number >= 1048576) {
-//     return (number/1048576).toFixed(1) + 'MB';
-//   }
-// }
-
-
-
 </script>
 
 <style>
 button {
   border: none;
-  border-radius: 8px; 
+  border-radius: 8px !important;
   background-color: #DAC7F9;
   height: 40px;
 }
 button:hover {
   background-color: #b488fc;
+}
+img {
+  height: 150px;
+  width: 200px;
+}
+.study_password {
+  height:34px;
 }
 
 </style>

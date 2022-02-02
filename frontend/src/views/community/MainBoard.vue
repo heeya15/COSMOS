@@ -8,6 +8,9 @@
       <b-form-input style="width: 300px;" placeholder="검색어 입력"></b-form-input>
       <b-button style="background-color: #DAC7F9">검색</b-button>
     </div>
+    <div>
+      <board-list></board-list>
+    </div>
     <div class="create_boardform mx-5">
       <b-button style="background-color: #DAC7F9" @click="goCreateForm">글생성</b-button>
     </div>
@@ -17,13 +20,13 @@
 </template>
 
 <script>
-// import BoardForm from '@/components/community/BoardForm.vue'
+import BoardList from '@/components/community/BoardList.vue'
 
 export default {
   name: 'MainBoard',
-  // components: {
-  //   BoardForm,
-  // },
+  components: {
+    BoardList,
+  },
   data() {
       return {
         selected: null,

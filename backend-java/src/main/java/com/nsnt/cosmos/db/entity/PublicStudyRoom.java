@@ -31,6 +31,9 @@ public class PublicStudyRoom {
 	@Column(name = "publicstudyroom_id", nullable = false)
 	String publicstudyroomId;
 	
+	@Column(name = "study_name", nullable = false)
+	String studyName;
+	
 	@Column(name = "url", length = 100, nullable = false)
 	String url;
 	

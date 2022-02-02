@@ -6,52 +6,53 @@
     <center>
       <div class="p-5" style="width: 600px">
         <b-row>
-          
-          <b-col cols="3">
+          <b-col cols="3" class="mt-2">
             <label for="some-radios">말머리</label>
           </b-col>
           <b-col cols="9">
-            <label class="mx-3"><input type="radio" name="some-radios" value="A">스터디원 구함</label>
-            <label class="mx-3"><input type="radio" name="some-radios" value="B">스터디 구함</label>
+            <label class="mx-3 mt-2"><input v-model="input.header" type="radio" name="header" value="false">스터디원 구함</label>
+            <label class="mx-3 mt-2"><input v-model="input.header" type="radio" name="header" value="true">스터디 구함</label>
           </b-col>
         
-          <b-col cols="3">
-            <label class="mt-3" for="input-study-title">제목</label>
+          <b-col class="title_label" cols="3" >
+            <label class="mt-2" for="content_title">제목</label>
           </b-col>
           <b-col cols="9">
-            <b-form-input id="input-study-title"></b-form-input>
+            <b-form-input class="mt-2" id="content_title" v-model="input.content_title"></b-form-input>
           </b-col>
         
-          <b-col cols="3">
-            <label for="input-study-name">스터디이름</label>
+          <b-col cols="3" class="mt-2">
+            <label for="study_name">스터디이름</label>
           </b-col>
-          <b-col cols="9">
-            <b-form-input id="input-study-name"></b-form-input>
-          </b-col>
-        
-          <b-col cols="3">
-            <label for="input-study-recruit-people">모집인원</label>
-          </b-col>
-          <b-col cols="9">
-            <b-form-spinbutton id="input-study-recruit-people" v-model="value" inline style="padding: 6px;"></b-form-spinbutton> 명
+          <b-col cols="9" class="mt-2">
+            <b-form-select :options="titleOptions" id="study_name">"스터디 이름 불러 오는 곳"</b-form-select>
           </b-col>
         
-          <b-col cols="3">
-            <label for="input-study-type">스터디분류</label>
+          <b-col cols="3" class="mt-2">
+            <label for="recruit_number">모집인원</label>
           </b-col>
-          <b-col cols="9">
-            <b-form-select v-model="selected" :options="options" id="input-study-type"></b-form-select>
+          <b-col class="spinbuttontag mt-2" cols="9">
+            <b-form-input id="recruit_number" v-model="input.recruit_number"></b-form-input> 명
           </b-col>
         
-          <b-col cols="3">
-            <label for="textarea-rows">내용</label>
+          <b-col cols="3" class="mt-2">
+            <label for="studytype_name">스터디분류</label>
           </b-col>
-          <b-col cols="9">
-            <b-form-textarea id="textarea-rows" row="8" max-rows="10"></b-form-textarea>
+            <!-- <b-form-select v-for="option in input.options" :key="option.idx">{{ option.studytypeName }}</b-form-select> -->
+          <b-col class="selectag mt-2" cols="9">
+            <p id="studytype_name"> "스터디 분류 불러 오는 곳" {{ input.studytype_name }}</p>
+            <!-- <option value="">123</option> -->
+          </b-col>
+        
+          <b-col cols="3" class="mt-2">
+            <label for="content">내용</label>
+          </b-col>
+          <b-col cols="9" class="mt-2">
+            <b-form-textarea v-model="input.content" id="content" row="8" max-rows="10"></b-form-textarea>
           </b-col>
           <b-col>
-            <b-button class="mx-3 mt-5" style="background-color: #DAC7F9" @click="goBoardDetail">게시글 생성</b-button>
-            <b-button class="mx-3 mt-5" style="background-color: #DAC7F9" @click="backBoardMain">취소</b-button>
+            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="createBoardForm">게시글 생성</b-button>
+            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="backBoardMain">취소</b-button>
           </b-col>
         </b-row>
       </div>
@@ -66,28 +67,125 @@
 
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'BoardForm',
   data() {
-      return {
-        value: 4,
-        selected: null,
-        options: [
-          { value: null, text: 'JavaScript' },
-          { value: 'a', text: 'Spring' },
-          { value: 'b', text: 'Java' },
-          { value: { C: '3PO' }, text: 'python' },
-        ]
-      }
-    },
+    return {
+      input: {
+        header: false,
+        content_title: null,
+        study_name: null,
+        content_status: false,
+        recruit_number: null,
+        studytype_name: null,
+        // options: [
+          // {value: null, text: '스터디분류'},
+          // {value: '2', text:'C'},
+          // {value: '3', text:'C++'},
+          // {value: '4', text:'Python'},
+          // {value: '5', text:'C#'},
+          // {value: '6', text:'PHP'},
+          // {value: '7', text:'Javascript'},
+          // {value: '8', text:'RUBY'},
+          // {value: '9', text:'HTML'},
+          // {value: '10', text:'CSS'},
+          // {value: '11', text:'Kotlin'},
+          // {value: '12', text:'Swift'},
+          // {value: '13', text:'Spring'},
+          // {value: '14', text:'React'},
+          // {value: '15', text:'Vuejs'},
+          // {value: '16', text:'Angular JS'},
+          // {value: '17', text:'Django'},
+          // {value: '18', text:'CS'},
+          // {value: '19', text:'Database'},
+          // {value: '20', text:'Frontend'},
+          // {value: '21', text:'Backend'},
+          // {value: '22', text:'Android'},
+          // {value: '23', text:'IOS'},
+          // {value: '24', text:'Mobile'},
+          // {value: '25', text:'AI'},
+          // {value: '26', text:'BlockChain'},
+          // {value: '27', text:'BigData'},
+          // {value: '28', text:'IoT'},
+          // {value: '29', text:'Arduino'},
+          // {value: '30', text:'RaspberryPi'},
+          // {value: '31', text:'Study With Me'},
+          // {value: '32', text:'기타'},
+          // ],
+        content: null,
+        user_id: null,
+      },
+      titleOptions: [
+        {value: '제목', text: '제목 불러와야해'},
+      ],
+    }
+  },
   methods: {
     backBoardMain() {
       this.$router.push({name: 'MainBoard'})
     },
     goBoardDetail(){
       this.$router.push({name: 'BoardDetail'})
+    },
+    getToken(){
+      const token = localStorage.getItem('jwt')
+      const header = {
+        Authorization: `Bearer ${token}`
+      }
+      return header
+    },
+    createBoardForm() {
+      const createBoardItem = {
+        header: this.input.header,
+        content_title: this.input.content_title,
+        study_name: this.input.study_name,
+        content_status: this.input.content_status,
+        recruit_number: this.input.recruit_number,
+        studytype_name: this.input.studytype_name,
+        content: this.input.content,
+        // options: this.$store.state.studyOptions
+      }
+      axios({
+        method: 'post',
+        url: 'http://i6e103.p.ssafy.io:8080/api/board/register',
+        data: createBoardItem,
+        headers: this.getToken()
+      })
+      .then(res => {
+        console.log(res.data)
+        this.$router.push({name: "MainBoard"})
+        console.log('스터디옵션 확인')
+        // this.input.options = this.$store.state.studyOptions
+        // console.log(this.input.options)
+        // this.options = 
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    // getStudyType() {
+    //   axios({
+    //     method: 'GET',
+    //     url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+    //   })
+    //   .then(res => {
+    //     // console.log(res)
+    //     res.data.forEach(element => {
+    //       this.input.options.push({value: element.studytypeName, text:element.studytypeName})
+    //     })
+    //   })
+    //   .catch(err => {
+    //     console.log(err)
+    //   })
+    // },
+  created(){
+    this.getToken()
+    this.getStudyInfo()
+    // this.getStudyType()
     }
-  }
+  },
 }
 </script>
 
@@ -107,7 +205,26 @@ export default {
   font-size: 1rem;
 }
 
-#input-study-type {
+#studytype_name {
   padding: 6px;
+}
+
+.selectag {
+  display: flex;
+  justify-content: left;
+}
+
+.spinbuttontag {
+  display: flex;
+  justify-content: left;
+}
+
+.titel_label {
+  display: flex;
+  justify-content: center;
+}
+
+button{
+  size: 40px;
 }
 </style>
