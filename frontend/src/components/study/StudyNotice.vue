@@ -9,12 +9,12 @@
           {{notice.studymanageNotice}}
         </div>
         <!-- 스터디장만 수정,삭제 보이게 -->
-        <div>
+        <div v-show="power.leader">
           <button @click="notice.modify=true">수정</button>
           <button @click="deleteNotice">삭제</button>
         </div>
       </div>
-        <div v-show="notice.modify">
+        <div v-show="power.leader && notice.modify">
           <b-form-textarea id="textarea" v-model="notice.studymanageNotice" :placeholder=notice.studymanageNotice rows="3" max-rows="6"></b-form-textarea>
           <button @click="modifyNotice">수정</button>
         </div>
@@ -28,6 +28,7 @@
 
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
 
 export default {
   name: 'StudyNotice',
@@ -123,6 +124,11 @@ export default {
         console.log(err)
       })
     }
+  },
+  computed:{
+    ...mapState([
+      'power',
+    ])
   },
   created() {
     this.showStudyNotice()

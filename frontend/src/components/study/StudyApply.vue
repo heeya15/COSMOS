@@ -5,7 +5,7 @@
     <b-row v-for="member in applyMembers" :key="member.id">    
       <b-col style="background-color:lightgray;">{{ member.user_name }}</b-col>
       <b-col style="background-color:lightgray;">{{ member.user_id }}</b-col>
-      <b-col>
+      <b-col v-if="power.leader">
         <button @click="addApplyMember(member)">승인</button>
         <button @click="deleteApplyMember(member.applymember_no)">거절</button>
       </b-col>
@@ -15,6 +15,7 @@
 
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
 
 export default {
   name: 'StudyApply',
@@ -79,7 +80,11 @@ export default {
       })
     },
   },
-  
+  computed:{
+    ...mapState([
+      'power',
+    ])
+  },
   created() {
     this.showApplyMember()
   }

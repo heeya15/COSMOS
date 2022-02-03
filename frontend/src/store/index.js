@@ -18,6 +18,10 @@ export default new Vuex.Store({
     comments: [],
     studyOptions: [],
     studyMembers: [],
+    power: {
+      authority: null,
+      leader: null
+    }
   },
   mutations: {
     SIGNUP(state, credentials){
@@ -47,6 +51,10 @@ export default new Vuex.Store({
     },
     GET_STUDY_MEMBERS(state, memberInfo) {
       state.studyMembers = memberInfo
+    },
+    IS_LEADER(state, leaderInfo){
+      state.power.leader = leaderInfo.leader
+      state.power.authority = leaderInfo.authority
     }
   },
   actions: {
@@ -126,6 +134,27 @@ export default new Vuex.Store({
         console.log(err)
       })
     },
+    isLeader({commit}, studyNo){
+      const token = localStorage.getItem('jwt')
+      const header = {
+        Authorization: `Bearer ${token}`,
+      }
+      axios({
+        method: 'GET',
+        url: 'http://i6e103.p.ssafy.io:8080/api/user/leader',
+        headers: header,
+        // data: studyNo
+        params: {study_no: studyNo},
+      })
+      .then(res => {
+        // console.log(res)
+        commit('IS_LEADER', res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+    }
   },
   // getters: {
   //   studyMembers(state){

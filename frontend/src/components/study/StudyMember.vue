@@ -2,7 +2,7 @@
   <div class="notice" style="width:1000px;">
     <h3>스터디원 정보</h3>
     <!-- 스터디장만 회원 추가 가능 -->
-    <b-row class="m-3">
+    <b-row v-if="power.leader" class="m-3">
       <b-col cols="2" offset="2"><label for="apply-member-form">회원 추가</label></b-col>
       <b-col cols="5"><b-form-input
         id="apply-member-form"
@@ -22,14 +22,14 @@
     </b-row>
     <hr>
 
-    <b-row v-for="member in studyMembers" :key="member.id" class="my-2">
-      <b-col>{{member.user_name}}</b-col>
-      <b-col>{{member.user_email}}</b-col>
-      <b-col>{{member.attendance}}</b-col>
-      <b-col>{{member.studytime}}</b-col>
-      <b-col>{{member.score}}</b-col>
+    <b-row v-for="member in studyMembers" :key="member.id" class="my-2 info">
+      <b-col cols="2">{{member.user_name}}</b-col>
+      <b-col cols="2">{{member.user_email}}</b-col>
+      <b-col cols="2">{{member.attendance}}</b-col>
+      <b-col cols="2">{{member.studytime}}</b-col>
+      <b-col cols="2">{{member.score}}</b-col>
       <!-- 스터디장이면 강퇴가능 -->
-      <b-col><b-button variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button></b-col>
+      <b-col v-if="power.leader&&member.studymember_no!==1"><b-button variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button></b-col>
     </b-row>
   </div>  
 </template>
@@ -50,11 +50,11 @@ export default {
     getStudyMembers() {
       this.$store.dispatch('getStudyMembers', this.studyNo)
     },
-    // store로 보내는거 생각해보자(add,delete)
+    
     addMember() {
       const memberInfo = {
-        authority: true,
-        leader: true,
+        authority: this.$store.state.power.leader,
+        leader: this.$store.state.power.leader,
         study_no: this.$route.params.studyNo,
         user_id: this.newMemberId
       }
@@ -78,8 +78,8 @@ export default {
         method: 'DELETE',
         url: `http://i6e103.p.ssafy.io:8080/api/studymember/remove/${studymember_no}`
       })
-      .then(res => {
-        console.log(res)
+      .then(() => {
+        // console.log(res)
         this.getStudyMembers()
       })
       .catch(err => {
@@ -90,6 +90,7 @@ export default {
   computed: {
     ...mapState([
       'studyMembers',
+      'power'
     ])
   },
   created() {
@@ -99,5 +100,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .info {
+    height:50px;
+  }
 </style>

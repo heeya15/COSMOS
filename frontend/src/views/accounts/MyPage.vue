@@ -122,8 +122,10 @@ export default {
         console.log(err)
       })
     },
+    // 스터디 상세페이지 가면서, 로그인한 유저가 클릭한 스터디의 리더인지 아닌지 판별
     goStudyManage(study){
       this.$router.push({name:'StudyDetail', params:{studyNo: study}})
+      this.$store.dispatch('isLeader', study)
     },
     checkPassword() {
       axios({
