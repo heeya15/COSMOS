@@ -17,6 +17,7 @@ export default new Vuex.Store({
     boardNo: null,
     comments: [],
     studyOptions: [],
+    studyMembers: [],
   },
   mutations: {
     SIGNUP(state, credentials){
@@ -44,7 +45,9 @@ export default new Vuex.Store({
       console.log('여기까지 확인')
       state.studyOptions = studyTypeData
     },
-
+    GET_STUDY_MEMBERS(state, memberInfo) {
+      state.studyMembers = memberInfo
+    }
   },
   actions: {
     signUp({commit}, credentials) {
@@ -110,7 +113,25 @@ export default new Vuex.Store({
         console.log(err)
       })
     },
+    getStudyMembers({commit},studyNo) {
+      axios({
+        method: 'GET',
+        url: `http://i6e103.p.ssafy.io:8080/api/studymember/search/${studyNo}`,
+      })
+      .then(res => {
+        // console.log(res.data)
+        commit('GET_STUDY_MEMBERS', res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
   },
+  // getters: {
+  //   studyMembers(state){
+  //     return state.studyMembers
+  //   }
+  // },
   modules: {
   }
 })

@@ -9,7 +9,7 @@
         class="mb-2 mr-sm-2 mb-sm-0"
         placeholder="추가할 회원의 아이디를 입력하세요." v-model="newMemberId"
       ></b-form-input></b-col>
-      <b-col cols="1"><button @click="addMember">추가</button></b-col>
+      <b-col cols="1"><button @click="addMember"><b-icon icon="person-plus"></b-icon></button></b-col>
     </b-row>
 
     <b-row>
@@ -36,36 +36,25 @@
 
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
 
 export default {
   name: 'StudyMember',
   data() {
     return {
       studyNo: this.$route.params.studyNo,
-      studyMembers: [],
       newMemberId: null,
     }
   },
   methods: {
     getStudyMembers() {
-      axios({
-        method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/studymember/search/${this.studyNo}`,
-      })
-      .then(res => {
-        // console.log(res.data)
-        this.studyMembers = res.data
-      })
-      .catch(err => {
-        console.log(err)
-      })
+      this.$store.dispatch('getStudyMembers', this.studyNo)
     },
     // store로 보내는거 생각해보자(add,delete)
     addMember() {
       const memberInfo = {
         authority: true,
         leader: true,
-        score: 0,
         study_no: this.$route.params.studyNo,
         user_id: this.newMemberId
       }
@@ -93,7 +82,15 @@ export default {
         console.log(res)
         this.getStudyMembers()
       })
+      .catch(err => {
+        console.log(err)
+      })
     }
+  },
+  computed: {
+    ...mapState([
+      'studyMembers',
+    ])
   },
   created() {
     this.getStudyMembers()
