@@ -111,7 +111,7 @@ public class BoardController {
 	}
 
 	
-	@ApiOperation(value = "게시글 정보 수정", notes = "게시글 정보 수정")
+	@ApiOperation(value = "게시글 정보 수정(token)", notes = "게시글 정보 수정")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"),
