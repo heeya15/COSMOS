@@ -18,15 +18,15 @@
 						</p>
 						<!-- 방 입장 버튼 -->
 						<p class="text-center">
-							<button class="btn btn-lg btn-success" @click="joinSession()">Join!</button>
+							<button class="btn bftn-lg btn-success" @click="joinSession()">Join!</button>
 						</p>
 					</div>
 				</div>
 			</div>
 			<div id="session-aside-left" v-if="session">
-				<p><img src="../assets/img/openvidu/asideimg01.png" alt=""></p>
-				<p><img src="../assets/img/openvidu/asideimg02.png" alt=""></p>
-				<p><img src="../assets/img/openvidu/asideimg03.png" alt=""></p>
+				<p><img src="../assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
+				<p><img src="../assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score"></p>
+				<p><img src="../assets/img/openvidu/asideimg03.png" class="sideMenuImg" alt="calendar"></p>
 			</div>
 			<div id="session-aside-right" v-if="session">
 				<div class="participant">
@@ -58,17 +58,37 @@
 			</div>
 			<div id="session-footer" v-if="session">
 				<div class="session-footer_btn d-flex justify-content-center">
-					<div>
-						<img src="../assets/img/openvidu/micimg.png" alt="">
-						<input class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" value="마이크 켜기/끄기"> <!-- 마이크 on/off 버튼 -->
+					<!-- microphone 버튼 설정 -->
+					<div v-if="audio === true" class="buttomMenu">
+						
+						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteAudio()">
+							<b-icon icon="mic-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>{{ audioMsg }}
+						</button> <!-- 마이크 on/off 버튼 -->
 					</div>
-					<div>
-						<img src="../assets/img/openvidu/videoimg.png" alt="">
-						<input class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" value="비디오 켜기/끄기"> <!-- 비디오 on/off 버튼 -->
+					<div v-else class="roomFun">
+						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteAudio()">
+							<b-icon icon="mic-mute-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>{{ audioMsg }}
+						</button><!-- 마이크 on/off 버튼 -->
+					</div>	
+
+					<!-- video 버튼 설정 -->
+					<div v-if="video === true" class="buttomMenu">
+						<!-- <input class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" :value="video" @click="muteVideo()"> 비디오 on/off 버튼 -->
+						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteVideo()"> 
+							<b-icon icon="camera-video-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>{{ videoMsg }}
+						</button>
 					</div>
-					<div>
-						<img src="../assets/img/openvidu/exitimg.png" alt="">
-						<input class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSession" value="나가기"> <!-- 나가기 버튼 -->
+					<div v-else class="roomFun">
+						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteVideo()"> 
+							<b-icon icon="camera-video-off-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>{{ videoMsg }}
+						</button>
+					</div>
+
+					<!-- 나가기 버튼 설정 -->
+					<div class="buttomMenu">
+						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSession">
+							<b-icon icon="door-open-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>나가기
+						</button> <!-- 나가기 버튼 -->
 					</div>
 				</div>
 			</div>
@@ -150,23 +170,38 @@ height: 50%;
 
 
 
+.footerBtn{
+	margin: 0 10px
+}
+
+/* 채팅방 좌측 사이드 메뉴바 */
+.sideMenuImg {
+	width: 30px;
+	height: 30px;
+}
+
+/* 채팅방 하단 메뉴바 */
 #session-footer{
 width: 40%;
+height: 50px;
+line-height: 50px;
 position: absolute;
 bottom: 0px;
 left: 15%;
+border-radius: 10px;
+background-color: #F0F0F0;
 /* transform: translate(-50%,0%); */
 /* background-color: #ccc; */
 }
 
-
-#session-footer img{
-width: 25px;
-height: 25px;
+.buttomMenuIcon {
+	width: 15px;
+	height: 15px;
+	margin-right: 5px;
 }
 
-.footerBtn{
-	margin: 0 10px
+.buttomMenu {
+	margin: 0px 10px;
 }
 
 </style>
@@ -194,9 +229,14 @@ export default {
 			mainStreamManager: undefined,
 			publisher: undefined,
 			subscribers: [],
-
 			mySessionId: 'SessionA',
 			myUserName: 'Participant' + Math.floor(Math.random() * 100),
+			audioEnabled: true,
+			videoEnabled: true,
+			audio: true,
+			video: true,
+			audioMsg: "마이크 ON",
+			videoMsg: "비디오 ON",
 		}
 	},
 
@@ -247,7 +287,7 @@ export default {
 							resolution: '640x480',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
-							mirror: false       	// Whether to mirror your local video or not
+							mirror: false,       	// Whether to mirror your local video or not
 						});
 
 						this.mainStreamManager = publisher;
@@ -277,6 +317,29 @@ export default {
 
 			window.removeEventListener('beforeunload', this.leaveSession);
 		},
+
+		muteVideo() {
+			this.videoEnabled = !this.videoEnabled;
+			this.video = !this.video;
+			if(this.video === "ture") this.videoMsg = "비디오 OFF";
+			else this.videoMsg = "비디오 ON";
+			// if(this.video == '비디오 ON') this.video = '비디오 OFF';
+			// else this.video = '비디오 ON';
+			this.publisher.publishVideo(this.videoEnabled);
+		},
+
+		muteAudio() {
+			this.audioEnabled = !this.audioEnabled;
+			this.audio = !this.audio;
+			if(this.audio === "ture") this.audioMsg = "마이크 OFF";
+			else this.audioMsg = "마이크 ON";
+			// if(this.audio == '마이크 ON') this.audio = '마이크 OFF';
+			// else this.audio = '마이크 ON';
+			// if(this.mic == 'mic-fill') this.mic = 'mic-mute-fill';
+			// else this.mic = 'mic-fill';
+			this.publisher.publishAudio(this.audioEnabled);
+		},
+
 
 		updateMainVideoStreamManager (stream) {
 			if (this.mainStreamManager === stream) return;
