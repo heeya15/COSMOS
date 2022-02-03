@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nsnt.cosmos.api.request.UserRegisterPostReq;
 import com.nsnt.cosmos.api.request.UserUpdateDto;
 import com.nsnt.cosmos.api.response.UserDtoRes;
+import com.nsnt.cosmos.api.response.UserLeaderDtoRes;
 import com.nsnt.cosmos.api.service.UserService;
 import com.nsnt.cosmos.common.auth.SsafyUserDetails;
 import com.nsnt.cosmos.common.model.response.BaseResponseBody;
@@ -163,4 +164,22 @@ public class UserController {
 		}
 		return ResponseEntity.status(401).body("Invalid Password");
 	}
+	@GetMapping("/leader")
+	@ApiOperation(value = "회원이 leader인지 조회.(token)", notes = "로그인한 회원이 해당 스터디에서 스터디 장인지 조회.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 500, message = "서버 오류") })
+	public ResponseEntity<UserLeaderDtoRes> getUserleader(@RequestParam String study_no,@ApiIgnore Authentication authentication) {
+		/**
+		 * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저
+		 * 식별. 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access
+		 * Denied"}) 발생.
+		 */
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		String user_id = userDetails.getUsername();
+		UserLeaderDtoRes result = userService.isLeader(user_id, study_no);
+		return ResponseEntity.status(200).body(result);
+	}
+
 }
