@@ -15,6 +15,7 @@
         <img src="@/assets/cosmos_logo2.png" alt="cosmos" width="30" height="24">
         <!-- <router-link :to="{ name:'MainPage' }" class="text-decoration-none">COSMOS</router-link> -->
       </a>
+       <router-link :to="{ name:'Openvidu' }" class="text-decoration-none">openviduTest</router-link>
       <!-- <div class="nav ml-auto" v-if="!isLogin"> -->
       <div class="nav ml-auto align-items-center" v-if="this.$store.state.isLogin">
         <router-link :to="{ name:'MainBoard' }" class="text-decoration-none mx-1">스터디 모집</router-link>
