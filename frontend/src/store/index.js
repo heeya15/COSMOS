@@ -17,6 +17,11 @@ export default new Vuex.Store({
     boardNo: null,
     comments: [],
     studyOptions: [],
+    studyMembers: [],
+    power: {
+      authority: null,
+      leader: null
+    }
   },
   mutations: {
     SIGNUP(state, credentials){
@@ -44,7 +49,13 @@ export default new Vuex.Store({
       console.log('여기까지 확인')
       state.studyOptions = studyTypeData
     },
-
+    GET_STUDY_MEMBERS(state, memberInfo) {
+      state.studyMembers = memberInfo
+    },
+    IS_LEADER(state, leaderInfo){
+      state.power.leader = leaderInfo.leader
+      state.power.authority = leaderInfo.authority
+    }
   },
   actions: {
     signUp({commit}, credentials) {
@@ -110,7 +121,46 @@ export default new Vuex.Store({
         console.log(err)
       })
     },
+    getStudyMembers({commit},studyNo) {
+      axios({
+        method: 'GET',
+        url: `http://i6e103.p.ssafy.io:8080/api/studymember/search/${studyNo}`,
+      })
+      .then(res => {
+        // console.log(res.data)
+        commit('GET_STUDY_MEMBERS', res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    isLeader({commit}, studyNo){
+      const token = localStorage.getItem('jwt')
+      const header = {
+        Authorization: `Bearer ${token}`,
+      }
+      axios({
+        method: 'GET',
+        url: 'http://i6e103.p.ssafy.io:8080/api/user/leader',
+        headers: header,
+        // data: studyNo
+        params: {study_no: studyNo},
+      })
+      .then(res => {
+        // console.log(res)
+        commit('IS_LEADER', res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+    }
   },
+  // getters: {
+  //   studyMembers(state){
+  //     return state.studyMembers
+  //   }
+  // },
   modules: {
   }
 })

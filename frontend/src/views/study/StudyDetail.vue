@@ -6,9 +6,9 @@
       <h2>스터디 이름: {{studyInfo.studyName}}</h2> 
       <span>스터디 방 URL : {{studyInfo.url}}</span>
       <!-- 스터디 정보 수정 추가 -->
-      <b-button variant="danger">스터디 수정</b-button>
-      <b-button variant="danger" @click="deleteStudy">스터디 삭제</b-button>
-      <b-button variant="danger">스터디 탈퇴</b-button>
+      <b-button v-if="power.leader" variant="danger">스터디 수정</b-button>
+      <b-button v-if="power.leader" variant="danger" @click="deleteStudy">스터디 삭제</b-button>
+      <b-button v-else variant="danger">스터디 탈퇴</b-button>
       <div class="buttongroup d-flex justify-content-between" style="width:800px;">
         <b-button @click="togglenotice">공지사항</b-button>
         <!-- 스터디장만 가입요청확인 가능 -->
@@ -31,6 +31,7 @@ import StudyApply from '@/components/study/StudyApply.vue'
 import StudyMember from '@/components/study/StudyMember.vue'
 
 import axios from 'axios'
+import { mapState } from 'vuex'
 
 export default {
   name: 'StudyDetail',
@@ -96,6 +97,11 @@ export default {
         console.log(err)
       })
     }
+  },
+  computed:{
+    ...mapState([
+      'power',
+    ])
   },
   created() {
     this.getStudyInfo()
