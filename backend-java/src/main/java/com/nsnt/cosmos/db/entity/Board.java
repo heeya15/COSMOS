@@ -78,6 +78,7 @@ public class Board{
 	public void updateBoard(SaveBoardDto saveBoardDto){
 	    this.contentTitle = saveBoardDto.getContent_title();
 	    this.studyName = saveBoardDto.getStudy_name();
+	    this.contentStatus = saveBoardDto.isContent_status();
 	    this.recruitNumber = saveBoardDto.getRecruit_number();
 	    this.studytypeName = saveBoardDto.getStudytype_name();
 	    this.content = saveBoardDto.getContent();
