@@ -10,4 +10,6 @@ import io.swagger.annotations.ApiModel;
 public interface StudyNameSearchDtoRes{
 	String getStudy_name(); // get을 써줘야 한다.
 	int getStudy_no();
+	int getStudytype_no();
+	String getStudytype_name();
 }
