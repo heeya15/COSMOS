@@ -2,7 +2,6 @@
   <div>
     <!-- <h3>게시글</h3> -->
     <div class="searchbar">
-      셀렉 부분 >> {{ selected }} 진행 = 0, 완료 = 1
       <b-form-select class="mx-5" v-model="selected" :options="options" style="width: 150px;" ></b-form-select>
       <b-form-input style="width: 300px;" placeholder="검색어 입력"></b-form-input>
       <b-button style="background-color: #DAC7F9">검색</b-button>
@@ -109,6 +108,10 @@ export default {
         if (this.boardItems) {
             this.paginate(10, 0)
         }
+        this.boardItems = res.data.sort(function(a, b) {
+          return b.boardNo - a.boardNo;
+        })
+        
       })
       .catch(err => {
         console.log(err)
