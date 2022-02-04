@@ -65,7 +65,7 @@
           </b-col>
           <!-- 스터디 구함 -->
           <b-col v-show="this.input.header !== false">
-            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="studywoncreateBoardForm">게시글 생성ss</b-button>
+            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="studyWantCreateBoardForm">게시글 생성ss</b-button>
             <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="backBoardMain">취소</b-button>
           </b-col>
         </b-row>
@@ -154,7 +154,7 @@ export default {
     },
 
     // 스터디 구함일 때
-    studywoncreateBoardForm () {
+    studyWantCreateBoardForm () {
       const createBoardItem = {
         header: this.input.header,
         content_title: this.input.content_title,
@@ -200,6 +200,7 @@ export default {
           this.studyno.push(element.study_no)
         });
         console.log(res.data)
+        console.log(res)
       })
       .catch(err => {
         console.log(err)
