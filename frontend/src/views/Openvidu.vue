@@ -339,7 +339,19 @@ export default {
 	components: {
 		UserVideo,
 	},
-
+	metaInfo: {
+		// title 입력하기
+		title: '페이지 타이틀',
+		// link tag 입력하기
+		link: [{rel: "stylesheet", href: 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'}],
+		// meta tag 입력하기
+		meta: [
+		{ charset: 'utf-8' },
+		{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
+		{ vmid: "description", name: "description", content: 'description' }
+		//vmid ↑ 메타 태그를 고유하게 만들어준다.
+		]
+  	},
 	data () {
 		return {
 			// 화면 공유
