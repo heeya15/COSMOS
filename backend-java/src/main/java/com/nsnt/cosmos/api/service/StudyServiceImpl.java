@@ -10,10 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nsnt.cosmos.api.request.StudyPostReq;
 import com.nsnt.cosmos.db.entity.Board;
+import com.nsnt.cosmos.db.entity.PrivateStudyRoom;
 import com.nsnt.cosmos.db.entity.Study;
 import com.nsnt.cosmos.db.entity.StudyMember;
 import com.nsnt.cosmos.db.entity.StudyType;
 import com.nsnt.cosmos.db.entity.User;
+import com.nsnt.cosmos.db.repository.PrivateStudyRoomRepository;
 import com.nsnt.cosmos.db.repository.StudyMemberRepository;
 import com.nsnt.cosmos.db.repository.StudyRepository;
 import com.nsnt.cosmos.db.repository.StudyTypeRepository;
@@ -33,22 +35,29 @@ public class StudyServiceImpl implements StudyService {
 	@Autowired
 	StudyMemberRepository studyMemberRepository;
 	
+	@Autowired
+	PrivateStudyRoomRepository privateStudyRoomRepository;
+	
 	/** 스터디를 생성하는 createStudy 메소드입니다. */
 	@Transactional
 	@Override
 	public Study createStudy(StudyPostReq studyRegisterInfo) {
+		String url = studyRegisterInfo.getUrl();
+		String ptroom_id = url.substring(url.lastIndexOf("/")+1); // 특정 문자 이후의 문자열 저장.
+		
 		Study study = new Study();
 		study.setStudyName(studyRegisterInfo.getStudyName());
 		study.setUrl(studyRegisterInfo.getUrl());
 		study.setImage(studyRegisterInfo.getImage());
 		study.setTotalMember(studyRegisterInfo.getTotalMember());
-		study.setNumberOfMember(1);
+		study.setNumberOfMember(1); // 처음에 스터디장 포함 인원은 1명이여서 1로 셋팅.
 		study.setCreatedAt(LocalDateTime.now());
 		study.setStudyRule(studyRegisterInfo.getStudyRule());
 		study.setStudyPassword(studyRegisterInfo.getStudyPassword());
 		StudyType studyType = new StudyType();
 		studyType.setStudytypeNo(studyRegisterInfo.getStudytypeNo());
 		study.setStudyType(studyType);
+		studyRepository.save(study); // 1. 스터디 생성
 		
 		StudyMember studyMember = new StudyMember();
 		
@@ -59,10 +68,18 @@ public class StudyServiceImpl implements StudyService {
 		studyMember.setAuthority(true);
 		studyMember.setLeader(true);
 		
-		studyMemberRepository.save(studyMember);
+		studyMemberRepository.save(studyMember); // 2. 스터디 멤버 생성
 		
+		// 3. 되자마자 비공개 스터디 룸에, 데이터 셋팅 해줌
 		
-		return studyRepository.save(study);
+		PrivateStudyRoom psroom = new PrivateStudyRoom();
+		System.out.println("서브 스트링 결과 "+ ptroom_id);
+		psroom.setPrivatestudyroomId(ptroom_id);
+		psroom.setStudy(study);
+		System.out.println("비공개 스터디룸 데이터 들감?"+ psroom.toString());
+		privateStudyRoomRepository.save(psroom);
+		
+		return study;
 	}
 
 	/** 스터디 이름을 중복검사하는 checkStudyNameDuplicate 메소드입니다. */
