@@ -21,7 +21,13 @@ export default new Vuex.Store({
     power: {
       authority: null,
       leader: null
-    }
+    },
+
+    // 비공개 스터디룸 state
+    roomName: "",
+    roomUrl: "",
+    participant: "",
+    roomStudyNo: 0,
   },
   mutations: {
     SIGNUP(state, credentials){

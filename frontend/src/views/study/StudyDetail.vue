@@ -5,6 +5,9 @@
       <!-- 스터디 정보 받아오기 -->
       <h2>스터디 이름: {{studyInfo.studyName}}</h2> 
       <span>스터디 방 URL : {{studyInfo.url}}</span>
+
+      <button @click="enterRoom">방 입장</button>
+
       <!-- 스터디 정보 수정 추가 -->
       <b-button v-if="power.leader" variant="danger">스터디 수정</b-button>
       <b-button v-if="power.leader" variant="danger" @click="deleteStudy">스터디 삭제</b-button>
@@ -29,6 +32,8 @@
 import StudyNotice from '@/components/study/StudyNotice.vue'
 import StudyApply from '@/components/study/StudyApply.vue'
 import StudyMember from '@/components/study/StudyMember.vue'
+
+import JwtDecode from 'jwt-decode'
 
 import axios from 'axios'
 import { mapState } from 'vuex'
@@ -96,11 +101,38 @@ export default {
       .catch(err => {
         console.log(err)
       })
-    }
+    },
+    enterRoom(){
+      var token = localStorage.getItem('jwt')
+      var decoded = JwtDecode(token);
+      var myId = decoded.sub;
+
+      this.$store.state.roomName = this.studyInfo.studyName;
+
+      var str = this.studyInfo.url;
+      var urlLen = this.studyInfo.url.length;
+      var url = str.substr(22,urlLen);
+      
+
+      // console.log(str);
+      // console.log(urlLen);
+      // console.log(url);
+
+      this.$store.state.roomUrl = url;
+      this.$store.state.roomStudyNo = this.studyNo;
+      this.$store.state.participant = myId;
+
+      // console.log(this.roomName);
+      // console.log(this.roomUrl);
+      // console.log(this.roomStudyNo);
+      // console.log(this.participant);
+
+      this.$router.push({name: "Openvidu"})
+    },
   },
   computed:{
     ...mapState([
-      'power',
+      'power', 'roomName', 'roomUrl', 'participant', 'roomStudyNo'
     ])
   },
   created() {
