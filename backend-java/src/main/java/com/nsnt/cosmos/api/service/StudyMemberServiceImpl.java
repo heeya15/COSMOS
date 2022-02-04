@@ -38,7 +38,6 @@ public class StudyMemberServiceImpl implements StudyMemberService {
         return studymember;
     }
 
-
     @Override
     public void deleteStudyMember(StudyMember studymember) {
         studyMemberRepository.delete(studymember);
@@ -49,4 +48,11 @@ public class StudyMemberServiceImpl implements StudyMemberService {
         studymember.updateScore(saveStudyMemberDto);
         return studymember;
     }
+    
+    @Transactional
+	@Override
+	public StudyMember updateStudyMemberAuthority(StudyMember studymember, SaveStudyMemberDto saveStudyMemberDto) {
+		 studymember.updateAuthority(saveStudyMemberDto);
+	     return studymember;
+	}
 }

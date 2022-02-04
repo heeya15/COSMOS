@@ -23,6 +23,8 @@ public interface StudyMemberService {
     /** 스터디 멤버 점수 수정하는 updateStudyMemberScore 입니다.*/
     public StudyMember updateStudyMemberScore(StudyMember studymember, SaveStudyMemberDto saveStudyMemberDto);
            
+    /** 스터디 멤버중 스터디 장의 임시 역할을 하게 하거나 회수하는 Authority를 수정하는 updateStudyMemberAuthority 입니다.*/
+    public StudyMember updateStudyMemberAuthority(StudyMember studymember, SaveStudyMemberDto saveStudyMemberDto);
     
     /** 스터디 멤버 회원을삭제하는 deleteStudyMember 입니다. */
     public void deleteStudyMember(StudyMember studymember);
