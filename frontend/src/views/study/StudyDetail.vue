@@ -9,12 +9,70 @@
       <button @click="enterRoom">방 입장</button>
 
       <!-- 스터디 정보 수정 추가 -->
-      <b-button v-if="power.leader" variant="danger">스터디 수정</b-button>
+      <button type="button" v-if="power.leader" @click="$bvModal.show('bv-modal-example')">스터디 수정</button>
+
+        <b-modal id="bv-modal-example" hide-footer>
+          <template #modal-title>
+            스터디 정보 수정
+          </template>
+          <div class="d-block text-center">
+            <b-col cols="3">
+              <label for="studyName" class="mt-2">스터디 이름</label>
+            </b-col>
+            <b-col>
+              <b-form-input id="studyName" v-model="studyInfo.studyName"></b-form-input>
+            </b-col>
+            <hr class="mt-3">
+
+            <b-col cols="3">
+              <label for="studyImg" class="mt-2">스터디 이미지</label>
+            </b-col>
+            <b-col>
+              <b-form-input id="studyImg" v-model="studyInfo.image"></b-form-input>
+            </b-col>
+            <hr class="mt-3">
+
+            <b-col cols="">
+              <label for="studyPassword" class="mt-2">스터디 비밀번호</label>
+            </b-col>
+            <b-col>
+              <b-form-input id="studyPassword" v-model="studyInfo.studyPassword"></b-form-input>
+            </b-col>
+            <hr class="mt-3">
+
+            <b-col cols="3">
+              <label for="studyRule" class="mt-2">스터디 규칙</label>
+            </b-col>
+            <b-col>
+              <b-form-input id="studyRule" v-model="studyInfo.studyRule"></b-form-input>
+            </b-col>
+            <hr class="mt-3">
+
+            <b-col cols="3">
+              <label for="studytypeNo" class="mt-2">스터디 타입</label>
+            </b-col>
+            <b-col>
+              <b-form-input id="studytypeNo" v-model="studyInfo.studyType.studytypeNo"></b-form-input>
+            </b-col>
+            <hr class="mt-3">
+
+            <b-col cols="3">
+              <label for="totalMember" class="mt-2">스터디 총 인원</label>
+            </b-col>
+            <b-col>
+              <b-form-input id="totalMember" v-model="studyInfo.totalMember"></b-form-input>
+            </b-col>
+            <hr class="mt-3">
+          </div>
+          <b-button class="mt-3" block @click="updateStudy">수정</b-button>
+          <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">취소</b-button>
+        </b-modal>
+
+
       <b-button v-if="power.leader" variant="danger" @click="deleteStudy">스터디 삭제</b-button>
       <b-button v-else variant="danger">스터디 탈퇴</b-button>
       <div class="buttongroup d-flex justify-content-between" style="width:800px;">
         <b-button @click="togglenotice">공지사항</b-button>
-        <!-- 스터디장만 가입요청확인 가능 -->
         <b-button @click="toggleapply">가입 요청 확인 </b-button>
 
         <!-- 스터디장만 회원추가가능 -->
@@ -52,11 +110,11 @@ export default {
       toggleMember: false,
       studyNo: this.$route.params.studyNo,
       studyInfo: {
-        studyName: null,
-        url: null,
-        image: null,
-        totalMember: null,
-        numberOfMember: null, //현재 참여중인 스터디 인원
+        // studyName: null,
+        // url: null,
+        // image: null,
+        // totalMember: null,
+        // numberOfMember: null, //현재 참여중인 스터디 인원
       }
     }
   },
@@ -82,9 +140,10 @@ export default {
         url: `http://i6e103.p.ssafy.io:8080/api/study/search/${this.studyNo}`
       })
       .then(res => {
-        // console.log(res)
-        this.studyInfo.studyName = res.data.studyName
-        this.studyInfo.url = res.data.url
+        console.log(res)
+        // this.studyInfo.studyName = res.data.studyName
+        // this.studyInfo.url = res.data.url
+        this.studyInfo = res.data
       })
       .catch(err => {
         console.log(err)
@@ -129,6 +188,31 @@ export default {
 
       this.$router.push({name: "Openvidu"})
     },
+    updateStudy() {
+      const modifyInfo = {
+        studyNo: this.$route.params.studyNo,
+        studyName: this.studyInfo.studyName,
+        image: this.studyInfo.image,
+        studyPassword: this.studyInfo.studyPassword,
+        studyRule: this.studyInfo.studyRule,
+        studytypeNo: this.studyInfo.studyType.studytypeNo,
+        totalMember: this.studyInfo.totalMember,
+        url: this.studyInfo.url,
+      }
+      axios({
+        method: 'PUT',
+        url: 'http://i6e103.p.ssafy.io:8080/api/study/update',
+        data: modifyInfo
+      })
+      .then(res => {
+        console.log(res)
+        this.$bvModal.hide('bv-modal-example')
+      })
+      .catch(err => {
+        console.log(modifyInfo)
+        console.log(err)
+      })
+    }
   },
   computed:{
     ...mapState([
