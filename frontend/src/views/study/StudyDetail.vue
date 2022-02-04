@@ -134,6 +134,13 @@ export default {
     }
   },
   methods: {
+    getToken(){
+      const token = localStorage.getItem('jwt')
+      const header = {
+        Authorization: `Bearer ${token}`
+      }
+      return header
+    },
     togglenotice(){
       this.toggleNotice=true
       this.toggleApply=false
@@ -198,11 +205,23 @@ export default {
         this.$store.state.participant = myId;
 
         // console.log(this.roomName);
-        // console.log(this.roomUrl);
+        console.log(this.roomUrl);
         // console.log(this.roomStudyNo);
         // console.log(this.participant);
-
-        this.$router.push({name: "Openvidu"})
+        console.log("😃");
+       // 비밀번호 치고 방 입장 성공 시 비공개 스터디 참가자 등록 시킴
+        axios({
+            method: 'POST',
+            url: `http://i6e103.p.ssafy.io:8080/api/privateroom/register`,
+            headers: this.getToken(),
+            params: {privatestudyroom_id: this.roomUrl},
+          })
+        .then(() => {
+            this.$router.push({name: "Openvidu"})
+          })
+          .catch(err => {
+            console.log(err)
+          });  
       }else{
         alert("비밀번호가 틀렸습니다.")
       }
