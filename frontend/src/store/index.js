@@ -73,8 +73,10 @@ export default new Vuex.Store({
       })
       .then(res => {
         // console.log(res)
-        commit('SIGNUP', res.data)
-        router.push({name:'LogIn'})
+        if(res.status === 200) {
+          commit('SIGNUP', res.data)
+          router.push({name:'LogIn'})
+        }
       })
       .catch(err => {
         console.log(err)
@@ -87,8 +89,11 @@ export default new Vuex.Store({
         data: credentials
       })
       .then(res => {
-        localStorage.setItem('jwt', res.data.accessToken)
-        commit('LOGIN')
+        if(res.status === 200) {
+          localStorage.setItem('jwt', res.data.accessToken)
+          commit('LOGIN')
+          router.push({name:'MainPage'})
+        }
       })
       .catch(err => {
         console.log(err)

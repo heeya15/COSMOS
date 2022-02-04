@@ -26,8 +26,9 @@ export default {
 }
 
 #nav {
-  padding: 30px;
+  /* padding: 30px; */
   position: sticky;
+  height: 10%;
 }
 
 #nav a {
@@ -36,6 +37,6 @@ export default {
 }
 
 #nav a.router-link-exact-active {
-  color: #F3467B;
+  color: #9255AD;
 }
 </style>
