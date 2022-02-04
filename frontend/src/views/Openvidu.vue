@@ -33,11 +33,24 @@
 					<p>참가자</p>
 					<p class="participant_list"></p>
 				</div>
+
+				<!-- 채팅 기능 시작 -->
 				<div class="chat">
 					<p>채팅</p>
-					<p class="chat_content"></p>
-					<input class="chat_input" type="text" placeholder="메세지를 입력하세요.">
+					<div class="messages" ref="messages">
+						<div class="messageLoop" v-for="(message, idx) in messages" :key="idx">
+							<div class="text-left" >{{ userId }} 님의 메시지:</div>
+							<p class="text-left message__bubble">{{ message }}</p>
+						</div>
+					</div>	
+
+					<form class="chatFooter" onsubmit="return false">
+						<input class="chat_input" id="msg" type="text" placeholder="메세지를 입력하세요.">
+						<button id="submitBtn" type="submit" @click="sendMessage()">Enter</button>
+					</form>
 				</div>
+				<!-- 채팅 기능 끝 -->
+
 			</div>
 			<div id="session" v-if="session">
 				<div id="session-header">
@@ -155,9 +168,10 @@ height: 50%;
 	background-color: #ccc;
 }
 
-
 #session-aside-right .chat{
 	height: 40%;
+	display: flex;
+	flex-direction: column;
 }
 #session-aside-right .chat .chat_content{
 	width: 100%;
@@ -167,15 +181,18 @@ height: 50%;
 
 #session-aside-right .chat .chat_input{
 	width: 100%;
+	flex-grow: 1;
 	border: 1px solid #ccc;
 	padding: 5px;
 	border-radius: 5px;
+	background: transparent;
+	padding: 0 30px;
+	font-size: 10px;
 }
+
 #session-aside-right .chat input:focus{
 	outline: none;
 }
-
-
 
 .footerBtn{
 	margin: 0 10px
@@ -211,11 +228,70 @@ background-color: #F0F0F0;
 	margin: 0px 10px;
 }
 
+
+/* 채팅창 */
+.messages {
+	flex-grow: 1;
+	padding: 10px 20px;
+	overflow: auto;
+	height: auto;
+	background-color: #ccc;
+	font-size: 15px;
+}
+
+.messageLoop {
+	margin-bottom: 10px;
+}
+
+.messages::-webkit-scrollbar {
+	width: 5px;
+	height: 1px;
+}
+
+.messages::-webkit-scrollbar-track {
+	background-color: rgb(255, 255, 255);
+}
+
+.messages::-webkit-scrollbar-thumb {
+	background-color: rgb(126, 125, 125);
+}
+
+.messages::-webkit-scrollbar-button {
+	display: none;
+}
+
+.message__bubble {
+	margin: 5px;
+	text-align: left;
+}
+.chatFooter {
+	height: 30px;
+	line-height: 30px;
+	border-top: 1px solid rgba(156, 172, 172, 0.2);
+	display: flex;
+	flex-shrink: 0;
+}
+
+#submitBtn {
+	height: 30px;
+	border: none;
+	background: transparent;
+	padding: 0 30px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+#submitBtn:hover {
+	background-color: #6363bf;
+	color: #FFF;
+}
+
 </style>
 <script>
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from '../components/openvidu/UserVideo';
+import jwt_decode from "jwt-decode";
 
 import { mapState } from "vuex";
 
@@ -250,8 +326,10 @@ export default {
 			videoEnabled: true,
 			audio: true,
 			video: true,
-			audioMsg: "마이크 ON",
-			videoMsg: "비디오 ON",
+			audioMsg: '마이크 ON',
+			videoMsg: '비디오 ON',
+			messages: [],
+			userId: '',
 		}
 	},
 	computed:{
@@ -261,6 +339,10 @@ export default {
 		this.mySessionId = this.roomUrl;
 		this.myUserName = this.participant;
 		this.joinSession();
+		
+		// 텍스트 채팅에서 사용하기위한 유저 아이디(임시)
+		this.userId = jwt_decode(localStorage.getItem("jwt")).sub;
+		console.log(">>>>>>>>>>>>>>>>>>>> userId : ", this.userId);
 	},
 	methods: {
 		joinSession () {
@@ -289,6 +371,12 @@ export default {
 			// On every asynchronous exception...
 			this.session.on('exception', ({ exception }) => {
 				console.warn(exception);
+			});
+
+			// 같은 session 내에서 텍스트 채팅을 위한 signal
+			this.session.on('signal', (event) => {
+				var message = event.data.split(".././././.");
+				this.messages.push(message[0]);
 			});
 		
 			// --- Connect to the session with a valid user token ---
@@ -343,10 +431,28 @@ export default {
 			this.$router.push({name:'StudyDetail', params:{studyNo: this.roomStudyNo}})
 		},
 
+		// 텍스트 채팅을 위한 메세지 전송하기
+		sendMessage() {
+			var message = document.getElementById("msg").value;
+			document.getElementById("msg").value = "";
+			
+			this.session.signal({
+				data: message,
+				to: [],
+				type: 'my-chat',
+			})
+			.then(() => {
+				console.log("message sent successfully!!");
+			})
+			.catch(error => {
+				console.error(error);
+			})
+		},
+
 		muteVideo() {
 			this.videoEnabled = !this.videoEnabled;
 			this.video = !this.video;
-			if(this.video === "ture") this.videoMsg = "비디오 OFF";
+			if(this.video == true) this.videoMsg = "비디오 OFF";
 			else this.videoMsg = "비디오 ON";
 			// if(this.video == '비디오 ON') this.video = '비디오 OFF';
 			// else this.video = '비디오 ON';
@@ -356,15 +462,14 @@ export default {
 		muteAudio() {
 			this.audioEnabled = !this.audioEnabled;
 			this.audio = !this.audio;
-			if(this.audio === "ture") this.audioMsg = "마이크 OFF";
+			if(this.audio == true) this.audioMsg = "마이크 OFF";
 			else this.audioMsg = "마이크 ON";
-			// if(this.audio == '마이크 ON') this.audio = '마이크 OFF';
-			// else this.audio = '마이크 ON';
+			// if(this.audioMsg == '마이크 ON') this.audioMsg = '마이크 OFF';
+			// else this.audioMsg = '마이크 ON';
 			// if(this.mic == 'mic-fill') this.mic = 'mic-mute-fill';
 			// else this.mic = 'mic-fill';
 			this.publisher.publishAudio(this.audioEnabled);
 		},
-
 
 		updateMainVideoStreamManager (stream) {
 			if (this.mainStreamManager === stream) return;
@@ -491,6 +596,16 @@ export default {
             this.OVForScreenShare = undefined;
             window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
 		},
-	}
+	},
+
+	watch: {
+		messages() {
+			this.$nextTick(() => {
+                let msg = this.$refs.messages;
+
+                msg.scrollTo({ top: msg.scrollHeight, behavior: 'smooth' });
+            });
+		},
+	},
 }
 </script>
