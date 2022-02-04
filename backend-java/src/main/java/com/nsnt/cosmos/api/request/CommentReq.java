@@ -2,6 +2,7 @@ package com.nsnt.cosmos.api.request;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nsnt.cosmos.db.entity.Board;
 import com.nsnt.cosmos.db.entity.Comment;
 import com.nsnt.cosmos.db.entity.User;
@@ -17,15 +18,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommentReq {
+	
+	@JsonIgnore
 	@ApiModelProperty(name = "댓글 번호")
 	private int comment_no;
 	
-	@ApiModelProperty(name = "댓글 내용")
+	@ApiModelProperty(name = "댓글 내용", example="insert comment content.....")
 	private String content;
 	
+	@JsonIgnore
 	@ApiModelProperty(name = "등록일")
 	private LocalDateTime created_at;
 	
+	@JsonIgnore
 	// User 테이블과의 관계에서의 참조키 (Foreign Key)
 	@ApiModelProperty(name = "유저 id")
 	private String user_id;

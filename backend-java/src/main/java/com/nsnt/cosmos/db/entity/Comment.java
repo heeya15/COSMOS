@@ -1,7 +1,5 @@
 package com.nsnt.cosmos.db.entity;
 
-import java.sql.Blob;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -10,13 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nsnt.cosmos.api.request.CommentReq;
 
 import lombok.AllArgsConstructor;
@@ -43,16 +40,21 @@ public class Comment{
 	@Column(name = "content")
 	private String content;  // 내용
 
-	@Column
-	@CreationTimestamp
+	@Column(columnDefinition = "TIMESTAMP")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
+	@UpdateTimestamp 
 	private LocalDateTime createdAt; // 등록 일자 (최초 생성 및 수정)
 		
-	@ManyToOne
-	@JoinColumn(name = "user_id")	
-	private User user;
 	
 	@ManyToOne
+	@JoinColumn(name = "user_id")	
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private User user;
+	
+
+	@ManyToOne
 	@JoinColumn(name = "board_no")	
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Board board;
 	
 	public void updateComment(CommentReq commentReq) {
@@ -65,7 +67,5 @@ public class Comment{
 	public String toString() {
 		return "Comment [commentNo=" + commentNo + ", content=" + content + ", createdAt=" + createdAt + ", user="
 				+ user + ", board=" + board + "]";
-	}
-	
-	
+	}	
 }

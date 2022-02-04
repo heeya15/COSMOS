@@ -1,9 +1,10 @@
 package com.nsnt.cosmos.db.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
+import com.nsnt.cosmos.api.response.UserLeaderDtoRes;
 import com.nsnt.cosmos.db.entity.User;
 
 import java.util.Optional;
@@ -18,4 +19,11 @@ public interface UserRepository extends JpaRepository<User, String> { // 제네�
 	// 아래와 같이, Query Method 인터페이스(반환값, 메소드명, 인자) 정의를 하면 자동으로 Query Method 구현됨.
     Optional<User> findByUserId(String userId);
     boolean findByUserIdEquals(String userId);
+    
+ // 아래와 같이, Query Method 인터페이스(반환값, 메소드명, 인자) 정의를 하면 자동으로 Query Method 구현됨.
+ 	@Query(value="select leader, authority\r\n" + 
+ 			"from study_member\r\n" + 
+ 			"where user_id = :user_id and study_no = :study_no"        
+             ,nativeQuery = true)
+    UserLeaderDtoRes isLeader(@Param("user_id") String user_id, @Param("study_no") String study_no);
 }
