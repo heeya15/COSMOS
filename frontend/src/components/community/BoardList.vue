@@ -1,10 +1,13 @@
 <template>
-  <div>
+  <div class="container">
     <!-- <h3>게시글</h3> -->
-    <div class="searchbar">
-      <b-form-select class="mx-5" v-model="selected" :options="options" style="width: 150px;" ></b-form-select>
-      <b-form-input style="width: 300px;" placeholder="검색어 입력"></b-form-input>
-      <b-button style="background-color: #DAC7F9">검색</b-button>
+    <div class="searchbar mb-4">
+      <b-form-select class="mx-1" v-model="stateSelected" :options="stateOpt" style="width: 75px; height: 30px;" @change="stateSel()" ></b-form-select>
+      <b-form-select class="mr-3" v-model="headerSelected" :options="headerOpt" style="width: 100px; height: 30px;" @change="headerSel()" ></b-form-select>
+      <b-form-select class="mx-1" v-model="searchSelected" :options="searchOpt" style="width: 50px; height: 30px;" @change="headerSel()" ></b-form-select>
+      <b-form-input class="mr-2" style="width: 300px; height: 30px;" placeholder="검색할 제목,분류를 입력하세요." v-model="word"></b-form-input>
+      <b-button class="mr-1" style="background-color: #DAC7F9; width: 40px padding: 0; height: 30px;" @click="searchTitle()">검색</b-button>
+      <b-button variant="primary" style="padding: 0; width: 40px; height: 30px;" @click="searchInit()">초기화</b-button>
     </div>
       <b-row>
         <b-col>
@@ -51,7 +54,10 @@
       :per-page="perPage"
       aria-controls="test-table"
       align="center"
-    ></b-pagination>
+    >
+    
+    </b-pagination>
+
   </div>
 
 </template>
@@ -71,12 +77,29 @@ export default {
       saveHeader: null,
       boardItems: null,
       rowws: null,
-      selected: null,
-      options: [
-        { value: null, text: '키워드 선택' },
-        { value: 0, text: '진행중' },
-        { value: 1, text: '완료' },
-      ]
+      stateSelected: null,
+      headerSelected: null,
+      searchSelected: "title",
+      
+      // filter 사용될 데이터들
+      stateOpt: [
+        { value: null, text: '상태 선택' },
+        { value: false, text: '진행중' },
+        { value: true, text: '완료' },
+      ],
+      headerOpt: [
+        { value: null, text: '말머리 선택' },
+        { value: false, text: '스터디원 구함' },
+        { value: true, text: '스터디 구함' },
+      ],
+      searchOpt: [
+        { value: "title", text: '제목' },
+        { value: "type", text: '분류' },
+      ],
+
+      src: [], // 초기 boardlist를 저장할 배열
+      word: "",
+      str: null,
     }
   },
   
@@ -101,6 +124,7 @@ export default {
       })
       .then(res => {
         this.boardItems = res.data
+        this.src = res.data
         this.rowws = res.data.length
         this.items = res.data
         console.log('번호 확인용')
@@ -130,6 +154,138 @@ export default {
     // pickSelect(event) {
     //   console.log(event.target.value)
     // }
+    searchPaging(){
+      this.rowws = this.boardItems.length;
+      this.currentPage = 1;
+    },
+    searchInit(){
+      this.headerSelected = null;
+      this.stateSelected = null;
+      this.word = "";
+      this.boardItems = this.src;
+      this.searchPaging();
+    },
+    searchAll(){
+      this.boardItems = this.src;
+      this.searchPaging();
+    },
+    headerSel(){
+      this.word ="";
+
+      if(this.headerSelected == null){ // 말머리 선택을 안했을 때
+        if(this.stateSelected == null){ // 상태 선택을 안했을 때
+          this.searchAll(); // 전체 목록 불러오기
+        } else{ // 상태 선택을 했을 때
+            this.boardItems = this.src.filter((boardItem) => { // 상태에 해당하는 게시글 불러오기
+            return boardItem.contentStatus == this.stateSelected;
+          });
+          this.searchPaging();
+        }
+      } else{ // 말머리 선택을 했을 때
+        if(this.stateSelected == null){ // 상태 선택이 안 되어 있을 때
+          this.boardItems = this.src.filter((boardItem) => { // 말머리에 해당하는 게시글 불러오기
+            return boardItem.header == this.headerSelected;
+          });
+          this.searchPaging();
+        } else{ // 상태 선택이 되어 있을 때
+          this.boardItems = this.src.filter((boardItem) => { // 말머리와 상태에 해당하는 게시글 불러오기
+            return boardItem.header == this.headerSelected && boardItem.contentStatus == this.stateSelected;
+          });
+          this.searchPaging();
+        }
+      }
+
+    },
+
+    stateSel(){
+      this.word ="";
+
+      if(this.stateSelected == null){ // 상태 선택을 안했을 때
+        if(this.headerSelected == null){ // 말머리 선택을 안했을 때
+          this.searchAll(); // 전체 목록 불러오기
+        } else{ // 말머리 선택을 했을 때
+          this.boardItems = this.src.filter((boardItem) => { // 말머리에 해당하는 게시글 불러오기
+            return boardItem.header == this.headerSelected;
+          });
+          this.searchPaging();
+        }
+      } else{ // 상태 선택을 했을 때
+        if(this.headerSelected == null){ // 말머리 선택이 안 되어 있을 때
+          this.boardItems = this.src.filter((boardItem) => { // 상태에 해당하는 게시글 불러오기
+            return boardItem.contentStatus == this.stateSelected;
+          });
+          this.searchPaging();
+        } else{ // 말머리 선택이 되어 있을 때
+          this.boardItems = this.src.filter((boardItem) => {  // 말머리와 상태에 해당하는 게시글 불러오기
+            return boardItem.header == this.headerSelected && boardItem.contentStatus == this.stateSelected;
+          });
+          this.searchPaging();
+        }
+      }
+
+    },
+    searchTitle(){
+      if(this.searchSelected == "title"){ // 제목이 선택 되었을 때
+        if (this.word == "") { // 아무 것도 입력 되지 않았을 때
+          alert("제목을 입력해주세요.")
+        } else {
+          if(this.headerSelected == null && this.stateSelected == null){
+              this.boardItems = this.src.filter((boardItem) => {
+                if(boardItem.contentTitle.toLowerCase().includes(this.word.toLowerCase())){
+                  return boardItem
+                }
+              });
+              this.searchPaging();
+          }else{
+            this.boardItems = this.src.filter((boardItem) => {
+              if(boardItem.contentTitle.toLowerCase().includes(this.word.toLowerCase())){
+                if(this.headerSelected != null && this.stateSelected != null){ 
+                  return (boardItem.header == this.headerSelected && boardItem.contentStatus == this.stateSelected)
+                }
+                else if(this.headerSelected != null){
+                  return boardItem.header == this.headerSelected
+                }
+                else if(this.stateSelected != null){
+                  return boardItem.contentStatus == this.stateSelected
+                }
+              }
+            });
+            this.searchPaging();
+          }
+        }
+      }else if(this.searchSelected == "type"){ // 분류가 선택 되었을 때
+        if (this.word == "") { // 아무 것도 입력 되지 않았을 때
+          alert("분류를 입력해주세요.")
+        } else {
+          if(this.headerSelected == null && this.stateSelected == null){
+            this.boardItems = this.src.filter((boardItem) => {
+              if(boardItem.studytypeName!=null && boardItem.studytypeName.toLowerCase().includes(this.word.toLowerCase())){
+                console.log(boardItem.studytypeName)
+                return boardItem
+              }
+            });
+            this.searchPaging();  
+          }else{
+            this.boardItems = this.src.filter((boardItem) => {
+              if(boardItem.studytypeName!=null && boardItem.studytypeName.toLowerCase().includes(this.word.toLowerCase())){
+                if(this.headerSelected != null && this.stateSelected != null) 
+                  return (boardItem.header == this.headerSelected && boardItem.contentStatus == this.stateSelected)
+                else if(this.headerSelected != null)
+                  return boardItem.header == this.headerSelected
+                else if(this.stateSelected != null)
+                  return boardItem.contentStatus == this.stateSelected
+              }
+            });
+            this.searchPaging();
+          }
+        }
+      }
+
+
+      
+    },
+
+
   },
   created() {
     this.getBoardItems()
@@ -155,6 +311,9 @@ export default {
 </script>
 
 <style scoped>
+ul .page-item{
+  width: 1100px;
+}
 
 .table_content {
   display: flex;
