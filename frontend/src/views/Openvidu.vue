@@ -41,7 +41,7 @@
 			</div>
 			<div id="session" v-if="session">
 				<div id="session-header">
-					<h1 id="session-title">{{ mySessionId }}</h1> <!-- 방 제목 -->
+					<h1 id="session-title">{{ this.roomName }}</h1> <!-- 방 제목 -->
 				</div>
 				
 				<div>
@@ -217,6 +217,8 @@ import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from '../components/openvidu/UserVideo';
 
+import { mapState } from "vuex";
+
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
@@ -252,7 +254,14 @@ export default {
 			videoMsg: "비디오 ON",
 		}
 	},
-
+	computed:{
+	...mapState(["roomName", "roomUrl", "participant", "roomStudyNo"]),
+	},
+	created(){
+		this.mySessionId = this.roomUrl;
+		this.myUserName = this.participant;
+		this.joinSession();
+	},
 	methods: {
 		joinSession () {
 			// --- Get an OpenVidu object ---
@@ -330,6 +339,8 @@ export default {
 			this.OVForScreenShare = undefined;
 			this.sharingPublisher = undefined;
 			window.removeEventListener('beforeunload', this.leaveSession);
+
+			this.$router.push({name:'StudyDetail', params:{studyNo: this.roomStudyNo}})
 		},
 
 		muteVideo() {
