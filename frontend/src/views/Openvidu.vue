@@ -395,10 +395,18 @@ export default {
 		this.getStudyMembers()
 	},
 	methods: {
+		getToken_info(){
+             const token = localStorage.getItem('jwt')
+             const header = {
+                   Authorization: `Bearer ${token}`
+              }
+            return header
+        }
+		,
 		// 상벌점 기능 관련 methods
 		getStudyMembers() {
-      this.$store.dispatch('getStudyMembers', this.studyNo)
-    },
+          this.$store.dispatch('getStudyMembers', this.studyNo)
+        },
 		updateScore(score, studymember_no) {
 			const updateInfo = {
 				authority: this.$store.state.power.authority,
@@ -427,15 +435,6 @@ export default {
 			this.updateScore(score, studymember_no)
 		},
 		
-
-
-
-
-
-
-
-
-
 		joinSession () {
 			// --- Get an OpenVidu object ---
 			this.OV = new OpenVidu();
@@ -518,8 +517,18 @@ export default {
 			this.OVForScreenShare = undefined;
 			this.sharingPublisher = undefined;
 			window.removeEventListener('beforeunload', this.leaveSession);
-
-			this.$router.push({name:'StudyDetail', params:{studyNo: this.roomStudyNo}})
+			axios({
+				method: 'DELETE',
+				url: `http://i6e103.p.ssafy.io:8080/api/privateroom/removePrivateMember`,
+				headers: this.getToken_info(),
+				params: {privatestudyroom_id: this.mySessionId},
+			})
+			.then(() => {
+				this.$router.push({name:'StudyDetail', params:{studyNo: this.roomStudyNo}})
+			})
+			.catch(err => {
+				console.log(err)
+			});  	
 		},
 
 		// 텍스트 채팅을 위한 메세지 전송하기
@@ -561,7 +570,7 @@ export default {
 			// else this.mic = 'mic-fill';
 			this.publisher.publishAudio(this.audioEnabled);
 		},
-
+		
 		updateMainVideoStreamManager (stream) {
 			if (this.mainStreamManager === stream) return;
 			this.mainStreamManager = stream;
