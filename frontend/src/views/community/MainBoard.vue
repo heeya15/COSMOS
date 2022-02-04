@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <h1>스터디 모집 게시판</h1>
+  <div class="container">
+    <h1 class="text-center">스터디 모집 게시판</h1>
     <hr>
-    <h3>게시글 목록</h3>
+    <h3 class="mb-4">게시글 목록</h3>
     <!-- <div class="searchbar">
       <b-form-select class="mx-5" v-model="selected" :options="options" style="width: 150px;"></b-form-select>
       <b-form-input style="width: 300px;" placeholder="검색어 입력"></b-form-input>
