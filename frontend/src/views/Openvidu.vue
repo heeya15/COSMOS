@@ -26,31 +26,33 @@
 			<div id="session-aside-left" v-if="session">
 				<p><img src="../assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
 				<p><img src="../assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="$bvModal.show('bv-modal-score')"></p>
+				
 				<!-- 상벌점기능 모달 -->
-
 					<b-modal id="bv-modal-score" centered title="멤버(점수는 즉시 반영됩니다.)" size="lg">
-						<b-row>
-						<hr>
-							<b-col cols="2">이름</b-col>
-							<b-col cols="3">Email</b-col>
-							<b-col cols="2">출석여부</b-col>
-							<b-col cols="3">공부시간</b-col>
-							<b-col cols="2">점수</b-col>
-						</b-row>
-						<hr>
-						<b-row v-for="member in studyMembers" :key="member.id" class="my-2 info">
-							<b-col cols="2">{{member.user_name}}</b-col>
-							<b-col cols="3">{{member.user_email}}</b-col>
-							<b-col cols="2">{{member.attendance}}</b-col>
-							<b-col cols="3">{{member.studytime}}</b-col>
-							<b-col cols="2"><b-button size="sm" variant="outline-secondary" @click="minusScore(member.score, member.studymember_no)">-</b-button>{{member.score}}<b-button size="sm" variant="outline-secondary" @click="plusScore(member.score, member.studymember_no)">+</b-button></b-col>
-						</b-row>
+						<table class="table table-bordered table-hover align-middle">
+							<thead class="table-danger">
+								<tr>
+									<th>이름</th>
+									<th>Email</th>
+									<th>출석여부</th>
+									<th>공부시간</th>
+									<th>점수</th>
+								</tr>
+							</thead>
+							<tbody v-for="member in studyMembers" :key="member.id" class="info">
+								<tr>
+								<td>{{member.user_name}}</td>
+								<td>{{member.user_email}}</td>
+								<td>{{member.attendance}}</td>
+								<td>{{member.studytime}}</td>
+								<td><button class="score-btn" @click="minusScore(member.score, member.studymember_no)">-</button>{{member.score}}<button class="score-btn" @click="plusScore(member.score, member.studymember_no)">+</button></td>
+								</tr>
+							</tbody>
+						</table>
 						<template #modal-footer="{ok}">
 							<b-button @click="ok">닫기</b-button>
 						</template>
 					</b-modal>
-
-
 
 				<p><img src="../assets/img/openvidu/asideimg03.png" class="sideMenuImg" alt="calendar"></p>
 			</div>
@@ -143,6 +145,11 @@
 	</div>
 </template>
 <style scoped>
+/* 상벌점 기능 스타일 */
+.score-btn {
+	border: none;
+}
+
 #main{
 	height: 100%;
 }
