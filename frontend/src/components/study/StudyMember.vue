@@ -11,6 +11,35 @@
       ></b-form-input></b-col>
       <b-col cols="1"><button @click="addMember"><b-icon icon="person-plus"></b-icon></button></b-col>
     </b-row>
+    
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-danger">
+        <tr>
+          <th>이름</th>
+          <th>Email</th>
+          <th>출석여부</th>
+          <th>공부시간</th>
+          <th>점수</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody v-for="member in studyMembers" :key="member.id" class="info">
+        <tr>
+        <td>{{member.user_name}}</td>
+        <td>{{member.user_email}}</td>
+        <td>{{member.attendance}}</td>
+        <td>{{member.studytime}}</td>
+        <td>{{member.score}}</td>
+        <td v-if="power.leader&&member.studymember_no!==1">
+          <b-button class="me-3" variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button>
+          <b-button variant="success" @click="giveAuthority(member.studymember_no)">권한</b-button>
+        </td>
+        <td v-else></td>
+        </tr>
+			</tbody>
+    </table>
+
+
 
     <b-row>
       <hr>
@@ -81,6 +110,19 @@ export default {
       .then(() => {
         // console.log(res)
         this.getStudyMembers()
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    giveAuthority(studymember_no) {
+      axios({
+        method: 'PUT',
+        url: 'http://i6e103.p.ssafy.io:8080/api/studymember/updateAuthority',
+        data: {studymember_no: studymember_no, authority: true}
+      })
+      .then(res => {
+        console.log(res)
       })
       .catch(err => {
         console.log(err)

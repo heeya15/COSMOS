@@ -6,6 +6,7 @@
       <h2>스터디 이름: {{studyInfo.studyName}}</h2> 
       <span>스터디 방 URL : {{studyInfo.url}}</span>
 
+      <!-- 권한있는 사람만 방입장 가능(세션생성 가능) -->
       <button @click="enterRoom">방 입장</button>
 
       <!-- 스터디 정보 수정 추가 -->

@@ -25,7 +25,35 @@
 			</div>
 			<div id="session-aside-left" v-if="session">
 				<p><img src="../assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
-				<p><img src="../assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score"></p>
+				<p><img src="../assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="$bvModal.show('bv-modal-score')"></p>
+				
+				<!-- 상벌점기능 모달 -->
+					<b-modal id="bv-modal-score" centered title="멤버(점수는 즉시 반영됩니다.)" size="lg">
+						<table class="table table-bordered table-hover align-middle">
+							<thead class="table-danger">
+								<tr>
+									<th>이름</th>
+									<th>Email</th>
+									<th>출석여부</th>
+									<th>공부시간</th>
+									<th>점수</th>
+								</tr>
+							</thead>
+							<tbody v-for="member in studyMembers" :key="member.id" class="info">
+								<tr>
+								<td>{{member.user_name}}</td>
+								<td>{{member.user_email}}</td>
+								<td>{{member.attendance}}</td>
+								<td>{{member.studytime}}</td>
+								<td><button class="score-btn" @click="minusScore(member.score, member.studymember_no)">-</button>{{member.score}}<button class="score-btn" @click="plusScore(member.score, member.studymember_no)">+</button></td>
+								</tr>
+							</tbody>
+						</table>
+						<template #modal-footer="{ok}">
+							<b-button @click="ok">닫기</b-button>
+						</template>
+					</b-modal>
+
 				<p><img src="../assets/img/openvidu/asideimg03.png" class="sideMenuImg" alt="calendar"></p>
 			</div>
 			<div id="session-aside-right" v-if="session">
@@ -117,6 +145,11 @@
 	</div>
 </template>
 <style scoped>
+/* 상벌점 기능 스타일 */
+.score-btn {
+	border: none;
+}
+
 #main{
 	height: 100%;
 }
@@ -330,10 +363,12 @@ export default {
 			videoMsg: '비디오 ON',
 			messages: [],
 			userId: '',
+
+			// 상벌점 기능
 		}
 	},
 	computed:{
-	...mapState(["roomName", "roomUrl", "participant", "roomStudyNo"]),
+	...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers"]),
 	},
 	created(){
 		this.mySessionId = this.roomUrl;
@@ -343,8 +378,52 @@ export default {
 		// 텍스트 채팅에서 사용하기위한 유저 아이디(임시)
 		this.userId = jwt_decode(localStorage.getItem("jwt")).sub;
 		console.log(">>>>>>>>>>>>>>>>>>>> userId : ", this.userId);
+
+		// 상벌점 위한 스터디멤버 불러오기
+		this.getStudyMembers()
 	},
 	methods: {
+		// 상벌점 기능 관련 methods
+		getStudyMembers() {
+      this.$store.dispatch('getStudyMembers', this.studyNo)
+    },
+		updateScore(score, studymember_no) {
+			const updateInfo = {
+				authority: this.$store.state.power.authority,
+				leader: this.$store.state.power.leader,
+				score: score,
+				studymember_no: studymember_no
+			}
+			axios({
+				method: 'PUT',
+				url: 'http://i6e103.p.ssafy.io:8080/api/studymember/updatescore',
+				data: updateInfo
+			})
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		plusScore(score, studymember_no) {
+			score += 1
+			this.updateScore(score, studymember_no)
+		},
+		minusScore(score, studymember_no) {
+			score -= 1
+			this.updateScore(score, studymember_no)
+		},
+		
+
+
+
+
+
+
+
+
+
 		joinSession () {
 			// --- Get an OpenVidu object ---
 			this.OV = new OpenVidu();
