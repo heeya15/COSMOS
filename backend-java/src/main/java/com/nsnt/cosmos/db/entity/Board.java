@@ -70,6 +70,9 @@ public class Board{
 	@Column(name = "studytype_name", length= 50)
 	String studytypeName; // 스터디분류명
 	
+	@Column(name = "study_no")
+	Long studyNo; // 스터디 넘버 번호
+	
 	@ManyToOne
 	@JoinColumn(name = "user_id")	
 	@OnDelete(action = OnDeleteAction.CASCADE)

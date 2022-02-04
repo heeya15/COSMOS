@@ -39,11 +39,13 @@ public class SaveBoardDto {
 
     @ApiModelProperty(name = "스터디 분류명")
     private String studytype_name;
-
+    
     @JsonIgnore
     @ApiModelProperty(name = "유저 id")
     private String user_id;
 
+    @ApiModelProperty(name = "스터디 번호")
+    private Long study_no;
 //    public SaveBoardDto(User entity) {
 //        this.user_id = entity.getUserId();
 //        this.user_name = entity.getUserName();
@@ -63,6 +65,7 @@ public class SaveBoardDto {
                .studyName(study_name)
                .studytypeName(studytype_name)
                .user(user)
+               .studyNo(study_no)
                .build();
     }
 }
