@@ -1,13 +1,25 @@
 <template>
   <center>
-    <div style="width:1200px;">
+    <div class="container">
+
+      <div class="black-bg" v-if="modal">
+        <div class="white-bg">
+          <h4>비밀번호 입력</h4>
+          <b-form-input class="mb-3" style="width: 40%;" type="text" v-model="pwd"></b-form-input>
+          <div>
+            <button class="mx-1" style="width:40px; height: 30px" @click="pwdCheck()">입장</button>
+            <button class="mx-1" style="width:40px; height: 30px" @click="modal=false">취소</button>
+          </div>
+        </div>
+      </div>
+
       <h1>Study Detail</h1>
       <!-- 스터디 정보 받아오기 -->
       <h2>스터디 이름: {{studyInfo.studyName}}</h2> 
       <span>스터디 방 URL : {{studyInfo.url}}</span>
 
       <!-- 권한있는 사람만 방입장 가능(세션생성 가능) -->
-      <button @click="enterRoom">방 입장</button>
+      <button @click="modal=true">방 입장</button>
 
       <!-- 스터디 정보 수정 추가 -->
       <button type="button" v-if="power.leader" @click="$bvModal.show('bv-modal-example')">스터디 수정</button>
@@ -116,7 +128,9 @@ export default {
         // image: null,
         // totalMember: null,
         // numberOfMember: null, //현재 참여중인 스터디 인원
-      }
+      },
+      modal: false,
+      pwd: "",
     }
   },
   methods: {
@@ -162,32 +176,36 @@ export default {
         console.log(err)
       })
     },
-    enterRoom(){
-      var token = localStorage.getItem('jwt')
-      var decoded = JwtDecode(token);
-      var myId = decoded.sub;
+    pwdCheck(){
+      if(this.pwd == this.studyInfo.studyPassword){
+        var token = localStorage.getItem('jwt')
+        var decoded = JwtDecode(token);
+        var myId = decoded.sub;
 
-      this.$store.state.roomName = this.studyInfo.studyName;
+        this.$store.state.roomName = this.studyInfo.studyName;
 
-      var str = this.studyInfo.url;
-      var urlLen = this.studyInfo.url.length;
-      var url = str.substr(22,urlLen);
-      
+        var str = this.studyInfo.url;
+        var urlLen = this.studyInfo.url.length;
+        var url = str.substr(22,urlLen);
+        
 
-      // console.log(str);
-      // console.log(urlLen);
-      // console.log(url);
+        // console.log(str);
+        // console.log(urlLen);
+        // console.log(url);
 
-      this.$store.state.roomUrl = url;
-      this.$store.state.roomStudyNo = this.studyNo;
-      this.$store.state.participant = myId;
+        this.$store.state.roomUrl = url;
+        this.$store.state.roomStudyNo = this.studyNo;
+        this.$store.state.participant = myId;
 
-      // console.log(this.roomName);
-      // console.log(this.roomUrl);
-      // console.log(this.roomStudyNo);
-      // console.log(this.participant);
+        // console.log(this.roomName);
+        // console.log(this.roomUrl);
+        // console.log(this.roomStudyNo);
+        // console.log(this.participant);
 
-      this.$router.push({name: "Openvidu"})
+        this.$router.push({name: "Openvidu"})
+      }else{
+        alert("비밀번호가 틀렸습니다.")
+      }
     },
     updateStudy() {
       const modifyInfo = {
@@ -226,6 +244,23 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+
+.black-bg{
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  height: 100vw;
+  background: rgba(0,0,0,0.5);
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 20px;
+}
+.white-bg{
+  width: 30%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+}
 
 </style>
