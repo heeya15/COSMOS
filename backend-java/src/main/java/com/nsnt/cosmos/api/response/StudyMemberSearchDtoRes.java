@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 
 @ApiModel("StudyMemberSearchDtoRes")
 public interface StudyMemberSearchDtoRes{
+	String getUser_id();
 	int getStudymember_no();
 	String getUser_name(); // get을 써줘야 한다.
 	String getUser_email();
@@ -15,4 +16,5 @@ public interface StudyMemberSearchDtoRes{
 	
 	int getStudytime(); // 공부 시간
 	int getScore(); // 숫자
+	boolean getAuthority();
 }
