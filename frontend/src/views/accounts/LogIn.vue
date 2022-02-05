@@ -50,10 +50,6 @@ export default {
 </script>
 
 <style scoped>
-p {
-  font-size: 40px;
-  color: #fff;
-}
 
 #loginPage {
   height: 90%;
@@ -82,6 +78,7 @@ p {
 }
 
 #login {
+  font-size: 40px;
   color: #3d3d3d;
   margin-top: 80px;
 }
@@ -93,7 +90,7 @@ p {
 #loginBtn {
   width: 100%;
   height: 50px;
-  font-size: 20px;
+  font-size: 20pt;
   background-color: #3d3d3d;
   margin-top: 100px;
 }
@@ -108,7 +105,7 @@ p {
   border: none;
   border-bottom: solid 1px #ccc;
   padding: 20px 0px 5px 0px;
-  font-size: 14pt;
+  font-size: 15pt;
   width: 100%;
   color: #302f2f;
 }
@@ -119,7 +116,7 @@ input::placeholder{
 
 input:placeholder-shown + label{
   color: #ccc; 
-  font-size: 14pt;
+  font-size: 15pt;
   top: 15px;
 }
 
