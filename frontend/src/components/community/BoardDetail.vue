@@ -2,9 +2,9 @@
   <div>
     <h1>스터디 모집 게시판</h1>
     <hr>
+    <center>
     <h3 v-if="editButton === true">글 수정</h3>
     <h3 v-else>상세보기</h3>
-    <center>
       <div class="p-5" style="width: 600px">
         <b-row>
           <b-col cols="3" class="mt-2">
@@ -56,10 +56,9 @@
             <b-textarea v-if="editButton === true" type="text" v-model="boardInfo.content"></b-textarea>
             <p v-else>{{ boardInfo.content }}</p>
           </b-col>
-          <p>여기 번호 : {{ studyInfo.studyNo }}</p>
+          <!-- <p>여기 번호 : {{ studyInfo.studyNo }}</p> -->
         </b-row>
       </div>
-    </center> 
       <!-- 작성자인 경우 수정을 보여주고 아니면 스터디 신청을 보여준다 -->
       <div v-show="this.boardInfo.header === false">
         <div v-show="editButton === false">
@@ -80,19 +79,19 @@
       <!-- 스터디 구할 때 수정 부분 -->
       <div v-show="this.boardInfo.header !== false">
         <div v-show="editButton === false">
-          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정ss</b-button>
+          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정</b-button>
           <b-button v-else style="background-color: #DAC7F9" @click="applyStudy">스터디 신청</b-button>
           <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
-          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제ss</b-button>
+          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
         </div>
         <div v-show="editButton === true">
-          <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="studyWantBoardFormEdit">수정ss</b-button>
+          <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="studyWantBoardFormEdit">수정</b-button>
           <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
-          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제ss</b-button>
+          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
           <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
         </div>
       </div>
-
+    </center> 
     <comment/>
   </div>  
 </template>
@@ -164,20 +163,21 @@ export default {
     applyStudy() {
       axios({
         method: 'post',
-        url: `http://i6e103.p.ssafy.io:8080/api/study/applyMember/register/${this.study_no}`,
+        url: `http://i6e103.p.ssafy.io:8080/api/study/applyMember/register/${this.studyInfo.studyNo}`,
         headers: this.getToken(),
       })
       .then((res) => {
-        console.log(res)
-        // this.study_no = 4
+        console.log(res, '신청부분 데이터')
+        // this.studyInfo.studyNo = res.data.studyNo
         // 스터디장이 만든 스터디 이름 조회
+        console.log(this.studyInfo.studyNo)
         // this.boardInfo.studyName = res.data['studyName']
         alert('신청이 완료되었습니다.')
-        // this.$router.push({name: 'BoardDetail'})
         
       })
       .catch((err) => {
         console.log(err)
+        console.log(this.studyInfo.studyNo)
       })
     },
 
@@ -205,6 +205,7 @@ export default {
         this.boardInfo.header = res.data['header']
         this.userInfo.user_name = res.data.user['userName']
         this.userInfo.user_id = res.data.user['userId']
+        this.studyInfo.studyNo = res.data['studyNo']
         console.log('get board 작동확인')
         console.log(this.boardInfo.contentStatus)
         console.log(this.boardInfo.header, '모집 상태 여기 확인')
@@ -309,26 +310,6 @@ export default {
       this.boardInfo.studyName = null
     },
 
-    // 스터디정보 불러오기(번호)
-    getStudyInfo() {
-      axios({
-        method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/study/search/${this.studyNo}`
-      })
-      .then(res => {
-        console.log('스터디 데이터 확인')
-        console.log(res)
-        // this.studyInfo.studyName = res.data.studyName
-        this.studyInfo.studyNo = 5
-        // this.studyInfo.url = res.data.url
-      })
-      .catch(err => {
-        console.log(err)
-        console.log('스터디정보 오류 확인')
-        console.log(this.studyInfo.studyNo)
-      })
-    },
-
     // 스터디 분류 가져오기
     getStudyType() {
       axios({
@@ -349,7 +330,7 @@ export default {
   created() {
     this.getBoard()
     this.getUserInfo()
-    this.getStudyInfo()
+
     this.getStudyType()
   },
 }

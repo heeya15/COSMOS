@@ -1,38 +1,40 @@
 <template>
-  <div>
-    <h1>스터디 모집 게시판</h1>
-    <hr>
-    <h3>글생성</h3>
+  <div class="total">
     <center>
-      <div class="p-5" style="width: 600px">
-        <b-row>
-          <b-col cols="3" class="mt-2">
-            <label for="some-radios">말머리</label>
+    <h1>스터디 모집 게시판</h1>
+    <hr style="width: 80%">
+    <h3>글생성</h3>
+    <marquee style="font-size: 50px; color: #E0BFE6;" scrolldelay="50">스터디를 모집해 보세요</marquee>
+    <img src="사람2.png" style="width: 200px; height: 200px;">
+      <div class="form_body_tag p-5" style="width: 600px;">
+        <b-row style="height: 600px; background-color: white;">
+          <b-col cols="3" class="header_label mt-2">
+            <p for="some-radios">말머리</p>
           </b-col>
-          <b-col cols="9">
-            <label class="mx-3 mt-2"><input v-model="input.header" type="radio" name="header" value="false" @click="falseHearder">스터디원 구함</label>
-            <label class="mx-3 mt-2"><input v-model="input.header" type="radio" name="header" value="true" @click="trueHearder">스터디 구함</label>
+          <b-col class="radio_position" cols="9">
+            <label class="hearder_radio_tag mx-3 mt-2"><input class="header_radio" v-model="input.header" type="radio" name="header" value="false" @click="falseHearder">스터디원 구함</label>
+            <label class="hearder_radio_tag mx-3 mt-2"><input class="header_radio" v-model="input.header" type="radio" name="header" value="true" @click="trueHearder">스터디 구함</label>
           </b-col>
         
           <b-col class="title_label" cols="3" >
             <label class="mt-2" for="content_title">제목</label>
           </b-col>
           <b-col cols="9">
-            <b-form-input class="mt-2" id="content_title" v-model="input.content_title"></b-form-input>
+            <b-form-input class="mt-2" id="content_title" v-model="input.content_title" style="height: 30px;"></b-form-input>
           </b-col>
         
-          <b-col cols="3" class="mt-2">
+          <b-col v-show="this.input.header === false" cols="3" class="mt-2">
             <label v-show="this.input.header === false" for="study_name">스터디이름</label>
           </b-col>
-          <b-col cols="9" class="mt-2">
-            <b-form-select v-show="this.input.header === false" v-model="nameSelected" :options="titleOptions" id="study_name">"스터디 이름 불러 오는 곳"</b-form-select>
+          <b-col v-show="this.input.header === false" cols="9" class="mt-2">
+            <b-form-select style="width: 100%; height: 30px; font-size: 15px; " v-show="this.input.header === false" v-model="nameSelected" :options="titleOptions" id="study_name"></b-form-select>
           </b-col>
 
-          <b-col cols="3" class="mt-2">
+          <b-col v-show="this.input.header === false" cols="3" class="mt-2">
             <label v-show="this.input.header === false" for="recruit_number">모집인원</label>
           </b-col>
-          <b-col class="spinbuttontag mt-2" cols="9">
-            <b-form-input v-show="this.input.header === false" id="recruit_number" v-model="input.recruit_number"> 명</b-form-input>
+          <b-col v-show="this.input.header === false" class="spinbuttontag mt-2" cols="9">
+            <b-form-input v-show="this.input.header === false" id="recruit_number" v-model="input.recruit_number" style="height: 30px;"> 명</b-form-input>
           </b-col>
         
           <b-col cols="3" class="mt-2">
@@ -41,22 +43,20 @@
           
           <!-- 스터디원일 때 -->
           <b-col v-show="this.input.header !== false" cols="9" class="mt-2">
-            <b-form-select v-model="studyTypeSelected" :options="options" id="studytype_name"></b-form-select>
+            <b-form-select v-model="studyTypeSelected" :options="options" style="width: 100%; height: 30px; font-size: 15px;" id="studytype_name"></b-form-select>
           </b-col>
 
-          <!-- 폰트 사이즈 조절 -->
           <b-col v-show="this.input.header === false" class="selectag mt-2" cols="9">
             <div v-for="temp in temps" :key="temp.idx">
-              <p v-if="nameSelected === temp.value">{{ temp.text }}</p>
+              <p v-if="nameSelected === temp.value" style="background-color: #FDD8E4;">{{ temp.text }}</p>
             </div>
           </b-col>
-
         
           <b-col cols="3" class="mt-2">
             <label for="content">내용</label>
           </b-col>
           <b-col cols="9" class="mt-2">
-            <b-form-textarea v-model="input.content" id="content" row="8" max-rows="10"></b-form-textarea>
+            <b-form-textarea v-model="input.content" id="content" row="8" max-rows="10" style="height: 100px;"></b-form-textarea>
           </b-col>
           <!-- 스터디원 구함 -->
           <b-col v-show="this.input.header == false">
@@ -65,7 +65,7 @@
           </b-col>
           <!-- 스터디 구함 -->
           <b-col v-show="this.input.header !== false">
-            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="studyWantCreateBoardForm">게시글 생성ss</b-button>
+            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="studyWantCreateBoardForm">게시글 생성</b-button>
             <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="backBoardMain">취소</b-button>
           </b-col>
         </b-row>
@@ -102,6 +102,7 @@ export default {
         studytype_name: null,
         content: null,
         user_id: null,
+        // study_no: null,
       },
       temps: [],
       titleOptions: [],
@@ -146,7 +147,7 @@ export default {
         console.log(res.data)
         this.$router.push({name: "MainBoard"})
         console.log('스터디옵션 확인')
-        console.log(this.index)
+        // console.log(this.studyno[this.studyNameInfo.indexOf(this.nameSelected)], '여기 확인')
       })
       .catch(err => {
         console.log(err)
@@ -194,7 +195,7 @@ export default {
         console.log(this.studyNameInfo)
         res.data.forEach(element => {
           this.titleOptions.push({value: element.study_name, text: element.study_name})
-          this.temps.push({value: element.study_name, text: element.studytype_name})
+          this.temps.push({value: element.study_name, text: element.studytype_name, num: element.study_no})
           this.studyNameInfo.push(element.study_name)
           this.typeInfo.push(element.studytype_name)
           this.studyno.push(element.study_no)
@@ -240,7 +241,26 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.header_label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.total {
+  font-size: 15px;
+}
+.form_body_tag {
+  background: repeating-linear-gradient(-45deg, #F3467B, #F3467B 20px, #FDD8E4 20px, #FDD8E4 80px);
+}
+
+.radio_position {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .form {
   display: flex;
   justify-content: center;
@@ -249,6 +269,7 @@ export default {
 .radio_hearder {
   display: flex;
   justify-content: center;
+  /* color: #DAC7F9; */
 }
 
 .study_title {
@@ -275,7 +296,4 @@ export default {
   justify-content: center;
 }
 
-button{
-  size: 40px;
-}
 </style>
