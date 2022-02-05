@@ -354,7 +354,7 @@ import { mapState } from "vuex";
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-const OPENVIDU_SERVER_URL = "https://i6e103.p.ssafy.io";
+const OPENVIDU_SERVER_URL = "https://i6e103.p.ssafy.io:8084";
 const OPENVIDU_SERVER_SECRET = "ssafy1234";
 
 export default {
@@ -381,7 +381,6 @@ export default {
 			// 화면 공유
 			OVForScreenShare: undefined,
 			sessionForScreenShare: undefined,
-			mainStreamManager2: undefined,
 			sharingPublisher: undefined,
 
 			OV: undefined,
@@ -467,7 +466,7 @@ export default {
 
 			// --- Init a session ---
 			this.session = this.OV.initSession();
-
+		
 			// --- Specify the actions when events take place in the session ---
 
 			// On every new Stream received...
@@ -504,7 +503,8 @@ export default {
 					.then(() => {
 
 						// --- Get your own camera stream with the desired properties ---
-
+						// console.log("Dasdasdasdasdasdasdasdasdasdasdasdasdqwrqwrqw");
+						// console.log(this.session)
 						let publisher = this.OV.initPublisher(undefined, {
 							audioSource: undefined, // The source of audio. If undefined default microphone
 							videoSource: undefined, // The source of video. If undefined default webcam
@@ -522,6 +522,8 @@ export default {
 						// --- Publish your stream ---
 
 						this.session.publish(this.publisher);
+						console.log("Dasdasdasdasdasdasdasdasdasdasdasdasdqwrqwrqw");
+						console.log(this.session)
 					})
 					.catch(error => {
 						console.log('There was an error connecting to the session:', error.code, error.message);
@@ -705,7 +707,7 @@ export default {
 					publisher.once('accessDenied', () => { 
 						console.warn('ScreenShare: Access Denied');
 					});
-					this.mainStreamManager2 = publisher;
+					this.mainStreamManager = publisher;
                     this.sharingPublisher = publisher;
                     this.sessionForScreenShare.publish(this.sharingPublisher);
 				}).catch((error => {
@@ -717,7 +719,7 @@ export default {
 			leaveSessionForScreenSharing () {
 			if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
             this.sessionForScreenShare = undefined;
-            this.mainStreamManager2 = undefined;
+            this.mainStreamManager = undefined;
             this.sharingPublisher = undefined;
             this.OVForScreenShare = undefined;
             window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
