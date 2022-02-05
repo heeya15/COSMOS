@@ -38,7 +38,6 @@ public class StudyPostReq {
 	@ApiModelProperty(name="스터디 분류", example="1")
 	int studytypeNo;
 	
-	@JsonIgnore
 	@ApiModelProperty(name="유저 아이디", example="")
 	String userId;
 	

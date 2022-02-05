@@ -40,7 +40,6 @@ public class SaveBoardDto {
     @ApiModelProperty(name = "스터디 분류명")
     private String studytype_name;
     
-    @JsonIgnore
     @ApiModelProperty(name = "유저 id")
     private String user_id;
 
