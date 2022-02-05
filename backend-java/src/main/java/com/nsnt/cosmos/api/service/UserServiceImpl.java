@@ -55,6 +55,11 @@ public class UserServiceImpl implements UserService {
 		boolean result = userRepositorySupport.findByUserIdEquals(userId);
 		return result;
 	}
+	
+	@Override
+	public boolean checkUserEmail(String userEmail) {
+		return userRepositorySupport.findByUserEmailEquals(userEmail);
+	}
 
 	@Override
 	public boolean deleteByUserId(User user) {

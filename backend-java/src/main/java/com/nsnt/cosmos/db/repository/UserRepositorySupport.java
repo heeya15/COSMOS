@@ -28,7 +28,13 @@ public class UserRepositorySupport {
     public boolean findByUserIdEquals(String userId) {
     	 User user = jpaQueryFactory.select(qUser).from(qUser)
                  .where(qUser.userId.eq(userId)).fetchOne();
-    	 if(user == null ) return true; 
+    	 if(user == null) return true; 
     	 return false;
+    }
+    public boolean findByUserEmailEquals(String userEmail) {
+    	User user = jpaQueryFactory.select(qUser).from(qUser)
+                .where(qUser.userId.eq(userEmail)).fetchOne();
+	   	 if(user == null) return true; 
+	   	 return false;
     }
 }

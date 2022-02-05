@@ -12,6 +12,7 @@ public interface UserService {
 	User createUser(UserRegisterPostReq userRegisterInfo);
 	User getUserByUserId(String userId);
 	boolean checkUserId(String userid);
+	boolean checkUserEmail(String userEmail);
 	boolean deleteByUserId(User user);
 	void updateUser(UserUpdateDto updateUserDto);
 	

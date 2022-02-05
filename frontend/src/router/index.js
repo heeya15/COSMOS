@@ -11,6 +11,8 @@ import BoardList from '@/components/community/BoardList.vue'
 import StudyRoomCreateForm from '@/views/study/StudyRoomCreateForm.vue'
 import StudyDetail from '@/views/study/StudyDetail.vue'
 
+import Openvidu from '@/views/Openvidu.vue'
+
 
 Vue.use(VueRouter)
 
@@ -19,6 +21,11 @@ const routes = [
     path: '/',
     name: 'MainPage',
     component: MainPage
+  },
+  {
+    path: '/openvidu',
+    name: 'Openvidu',
+    component: Openvidu
   },
   {
     path: '/signup',
