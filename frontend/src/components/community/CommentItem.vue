@@ -5,8 +5,8 @@
       <input v-if="editButton === true" type="text" v-model="comment.content" @keyup.enter="updateComment">
       <p v-else style="text-align: left;">내용 : {{ comment.content }}</p>
       <p>작성자 : {{ comment.user_id }}</p>
-      <p>작성 시간 : {{ comment.created_at }}</p>
-      <p>인덱스 확인 >> {{ comment.idx }} // 뜨나?</p>
+      <p>작성 시간 : {{ makeDate(comment.created_at) }}</p>
+      <p>인덱스 확인 >> {{ idx }} // 뜨나?</p>
 
       <div v-show="editButton === false">
         <button v-if="userId === loginUserId" @click="editButtonChange">수정</button>
@@ -111,6 +111,10 @@ export default {
       .catch(err =>{
         console.log(err)
       })
+    },
+    makeDate(datetime) {
+      const old = ''+datetime
+      return old.substring(0, 10)
     },
   },
   created() {
