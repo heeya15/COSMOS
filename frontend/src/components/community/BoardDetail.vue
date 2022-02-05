@@ -15,34 +15,38 @@
             <p v-else>{{ boardInfo.contentTitle }}</p>
           </b-col>
 
-          <b-col cols="3" class="mt-2">
-            <p>스터디 이름</p>
-          </b-col>
-          <b-col cols="9" class="mt-2">
-            <p>"이름 불러 오는 곳" {{ boardInfo.studyName }}</p>
-          </b-col>
+            <b-col cols="3" class="mt-2">
+              <p v-show="this.boardInfo.header === false" >스터디 이름</p>
+            </b-col>
+            <b-col cols="9" class="mt-2">
+              <p>{{ boardInfo.studyName }}</p>
+            </b-col>
 
-          <b-col cols="3" class="mt-2">
-            <p>스터디 인원</p>
-          </b-col>
-          <b-col cols="9" class="mt-2" >
-            <input v-if="editButton === true" type="text" v-model="boardInfo.recruitNumber">
-            <p v-else>{{ boardInfo.recruitNumber }}</p>
-          </b-col>
+            <b-col cols="3" class="mt-2">
+              <p v-show="this.boardInfo.header === false">스터디 인원</p>
+            </b-col>
+            <b-col cols="9" class="mt-2" >
+              <input v-show="this.boardInfo.header === false" v-if="editButton === true" type="text" v-model="boardInfo.recruitNumber">
+              <p v-else v-show="this.boardInfo.header === false">{{ boardInfo.recruitNumber }}</p>
+            </b-col>
 
           <b-col cols="3" class="mt-2">
             <p>스터디 분류</p>
           </b-col>
           <b-col cols="9" class="mt-2">
-            <p>"분류 불러 오는 곳 스프링이나 자바 등"{{ boardInfo.studytypeName }}</p>
+            <p >{{ boardInfo.studytypeName }}</p>
+            <!-- 수정을 눌렀을 때 값 타입 가져오고 원래는 생성될때의 값 불러와야 함 -->
+            <b-form-select v-if="editButton === true" v-show="this.boardInfo.header === true" v-model="studyTypeSelected" :options="options" id="studytype_name"></b-form-select>
           </b-col>
 
           <b-col cols="3" class="mt-2">
             <p v-if="editButton === true" for="some-radios">상태</p>
           </b-col>
           <b-col cols="9">
-            <label v-if="editButton === true" class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus" value="false">진행중</label>
-            <label v-if="editButton === true" class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus" value="true">완료</label>
+            <div v-if="editButton === true">
+              <label class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus_0" value="false">진행중</label>
+              <label class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus_1" value="true">완료</label>
+            </div>
           </b-col>
 
           <b-col cols="3" class="mt-2">
@@ -54,24 +58,40 @@
           </b-col>
           <p>여기 번호 : {{ studyInfo.studyNo }}</p>
         </b-row>
-      <!-- </div> -->
       </div>
     </center> 
-    <div>
       <!-- 작성자인 경우 수정을 보여주고 아니면 스터디 신청을 보여준다 -->
-      <div v-show="editButton === false">
-        <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정</b-button>
-        <b-button v-else style="background-color: #DAC7F9" @click="applyStudy">스터디 신청</b-button>
-        <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
-        <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+      <div v-show="this.boardInfo.header === false">
+        <div v-show="editButton === false">
+          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정</b-button>
+          <b-button v-else style="background-color: #DAC7F9" @click="applyStudy">스터디 신청</b-button>
+          <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
+          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+        </div>
+        <div v-show="editButton === true">
+          <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="updateForm">수정</b-button>
+          <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
+          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+          <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
+        </div>
       </div>
-      <div v-show="editButton === true">
-        <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="updateForm">수정</b-button>
-        <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
-        <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
-        <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
+
+
+      <!-- 스터디 구할 때 수정 부분 -->
+      <div v-show="this.boardInfo.header !== false">
+        <div v-show="editButton === false">
+          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정ss</b-button>
+          <b-button v-else style="background-color: #DAC7F9" @click="applyStudy">스터디 신청</b-button>
+          <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
+          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제ss</b-button>
+        </div>
+        <div v-show="editButton === true">
+          <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="studyWantBoardFormEdit">수정ss</b-button>
+          <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
+          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제ss</b-button>
+          <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
+        </div>
       </div>
-    </div>
 
     <comment/>
   </div>  
@@ -88,6 +108,7 @@ export default {
   },
   data() {
     return {
+      studyTypeSelected: null,
       editButton: false,
       loginUserId: null,
       board_no: this.$store.state.boardNo,
@@ -112,13 +133,7 @@ export default {
         created_at: null,
         // user_id: null,
       },
-      // options: [
-      //     { value: 'JavaScript', text: 'JavaScript' },
-      //     { value: 'Spring', text: 'Spring' },
-      //     { value: 'Java', text: 'Java' },
-      //     { value: 'Python', text: 'Python' },
-      //     { value: '기타', text: '기타' },
-      //   ],
+      options: [],
       // comments: null,
       // 스터디 방 번호 값 받아와야 함
       studyInfo: {
@@ -181,10 +196,18 @@ export default {
         this.boardInfo.studyName = res.data['studyName']
         this.boardInfo.recruitNumber = res.data['recruitNumber']
         this.boardInfo.studytypeName = res.data['studytypeName']
+        // if (this.boardInfo.header === false) {
+        //   this.boardInfo.studytypeName = res.data['studytypeName']
+        // } else {
+        //   this.boardInfo.studytypeName = this.studyTypeSelected
+        // }
         this.boardInfo.content = res.data['content']
+        this.boardInfo.header = res.data['header']
         this.userInfo.user_name = res.data.user['userName']
         this.userInfo.user_id = res.data.user['userId']
-        console.log('작동확인')
+        console.log('get board 작동확인')
+        console.log(this.boardInfo.contentStatus)
+        console.log(this.boardInfo.header, '모집 상태 여기 확인')
       })
       .catch(err => {
         console.log(err)
@@ -229,7 +252,7 @@ export default {
       const updateItem = {
         board_no: this.boardInfo.boardNo,
         content: this.boardInfo.content,
-        contentStatus: this.boardInfo.contentStatus,
+        content_status: this.boardInfo.contentStatus,
         content_title: this.boardInfo.contentTitle,
         recruit_number: this.boardInfo.recruitNumber,
         study_name: this.boardInfo.studyName,
@@ -245,9 +268,37 @@ export default {
       })
       .then(() => {
         this.getBoard()
-        this.study_name = this.boardInfo.studyName
-        this.content_title = this.boardInfo.contentTitle
-        this.contentStatus = this.boardInfo.contentStatus
+        console.log('상태 확인')
+        console.log(this.boardInfo.contentStatus)
+        this.editButton = false
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      this.boardInfo.studyName = null
+    },
+
+    // 스터디 구할 때 수정
+    studyWantBoardFormEdit() {
+      const updateItem = {
+        board_no: this.boardInfo.boardNo,
+        content: this.boardInfo.content,
+        content_status: this.boardInfo.contentStatus,
+        content_title: this.boardInfo.contentTitle,
+        recruit_number: this.boardInfo.recruitNumber,
+        study_name: this.boardInfo.studyName,
+        studytype_name: this.studyTypeSelected,
+        user_id: this.userInfo.user_id,
+        header: this.boardInfo.header,
+      }
+      axios({
+        method: 'put',
+        url: 'http://i6e103.p.ssafy.io:8080/api/board/update',
+        data: updateItem,
+        headers: this.getToken(),
+      })
+      .then(() => {
+        this.getBoard()
         console.log('상태 확인')
         console.log(this.boardInfo.contentStatus)
         this.editButton = false
@@ -277,11 +328,29 @@ export default {
         console.log(this.studyInfo.studyNo)
       })
     },
+
+    // 스터디 분류 가져오기
+    getStudyType() {
+      axios({
+        method: 'GET',
+        url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+      })
+      .then(res => {
+        // console.log(res)
+        res.data.forEach(element => {
+          this.options.push({value: element.studytypeName, text:element.studytypeName})
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
   },
   created() {
     this.getBoard()
     this.getUserInfo()
     this.getStudyInfo()
+    this.getStudyType()
   },
 }
 </script>

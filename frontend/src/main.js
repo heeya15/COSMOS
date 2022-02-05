@@ -13,6 +13,10 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.config.productionTip = false
 
+// VueMeta
+import Meta from 'vue-meta'
+Vue.use(Meta)
+
 new Vue({
   router,
   store,
