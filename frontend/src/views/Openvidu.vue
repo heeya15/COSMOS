@@ -25,10 +25,13 @@
 			</div>
 			<div id="session-aside-left" v-if="session">
 				<p><img src="../assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
-				<p><img src="../assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="$bvModal.show('bv-modal-score')"></p>
+				<p><img src="../assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="scoreModal=true"></p>
 				
 				<!-- 상벌점기능 모달 -->
-					<b-modal id="bv-modal-score" centered title="멤버(점수는 즉시 반영됩니다.)" size="lg">
+				<div v-if="scoreModal" class="black-bg">
+					<div class="white-bg">
+						<h2>멤버 (점수는 즉시 반영됩니다.)</h2>
+						<hr>						
 						<table class="table table-bordered table-hover align-middle">
 							<thead class="table-danger">
 								<tr>
@@ -39,7 +42,7 @@
 									<th>점수</th>
 								</tr>
 							</thead>
-							<tbody v-for="member in studyMembers" :key="member.id" class="info">
+							<tbody v-for="member in studyMembers" :key="member.id">
 								<tr>
 								<td>{{member.user_name}}</td>
 								<td>{{member.user_email}}</td>
@@ -49,10 +52,11 @@
 								</tr>
 							</tbody>
 						</table>
-						<template #modal-footer="{ok}">
-							<b-button @click="ok">닫기</b-button>
-						</template>
-					</b-modal>
+						<div class="d-flex justify-content-end">
+							<button @click="scoreModal=false" class="btn btn-secondary">닫기</button>
+						</div>
+					</div>
+				</div>
 
 				<p><img src="../assets/img/openvidu/asideimg03.png" class="sideMenuImg" alt="calendar"></p>
 			</div>
@@ -149,7 +153,27 @@
 .score-btn {
 	border: none;
 }
-
+.black-bg{
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+	z-index: 2;
+  height: 100vw;
+  background: rgba(0,0,0,0.5);
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 20px;
+}
+.white-bg{
+	margin-left:35%;
+	margin-top: 10%;
+	z-index: 3;
+  width: 30%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+}
+/* 상벌점 스타일 끝 */
 #main{
 	height: 100%;
 }
@@ -351,7 +375,7 @@ export default {
 		{ vmid: "description", name: "description", content: 'description' }
 		//vmid ↑ 메타 태그를 고유하게 만들어준다.
 		]
-  	},
+  },
 	data () {
 		return {
 			// 화면 공유
@@ -377,6 +401,7 @@ export default {
 			userId: '',
 
 			// 상벌점 기능
+			scoreModal: false,
 		}
 	},
 	computed:{
@@ -396,17 +421,16 @@ export default {
 	},
 	methods: {
 		getToken_info(){
-             const token = localStorage.getItem('jwt')
-             const header = {
-                   Authorization: `Bearer ${token}`
-              }
-            return header
-        }
-		,
+      const token = localStorage.getItem('jwt')
+      const header = {
+				Authorization: `Bearer ${token}`
+			}
+      return header
+    },
 		// 상벌점 기능 관련 methods
 		getStudyMembers() {
-          this.$store.dispatch('getStudyMembers', this.studyNo)
-        },
+      this.$store.dispatch('getStudyMembers', this.$store.state.roomStudyNo)
+    },
 		updateScore(score, studymember_no) {
 			const updateInfo = {
 				authority: this.$store.state.power.authority,
@@ -434,6 +458,7 @@ export default {
 			score -= 1
 			this.updateScore(score, studymember_no)
 		},
+		
 		
 		joinSession () {
 			// --- Get an OpenVidu object ---
@@ -701,10 +726,10 @@ export default {
 	watch: {
 		messages() {
 			this.$nextTick(() => {
-                let msg = this.$refs.messages;
+        let msg = this.$refs.messages;
 
-                msg.scrollTo({ top: msg.scrollHeight, behavior: 'smooth' });
-            });
+        msg.scrollTo({ top: msg.scrollHeight, behavior: 'smooth' });
+      });
 		},
 	},
 }
