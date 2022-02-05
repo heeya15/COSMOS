@@ -443,8 +443,9 @@ export default {
 				url: 'http://i6e103.p.ssafy.io:8080/api/studymember/updatescore',
 				data: updateInfo
 			})
-			.then(res => {
-				console.log(res)
+			.then(() => {
+				// console.log(res)
+				this.getStudyMembers()
 			})
 			.catch(err => {
 				console.log(err)
