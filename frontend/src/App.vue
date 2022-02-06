@@ -42,18 +42,7 @@ export default {
   font-family: 'yg-jalnan';
 }
 
-#nav {
-  /* padding: 30px; */
-  position: sticky;
-  height: 10%;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #9255AD;
+body {
+  padding-top: 80px;
 }
 </style>

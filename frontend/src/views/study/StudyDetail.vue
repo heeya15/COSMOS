@@ -1,5 +1,5 @@
 <template>
-  <center>
+  <center @keydown="doNotReload">
     <div class="container">
 
       <div class="black-bg" v-if="modal">
@@ -305,7 +305,26 @@ export default {
         console.log(err)
       })
     },
+    // preventNav(event) {
+    //   event.preventDefault()
+    //   event.returnValue = ""
+    // },
+    doNotReload(event){
+      if( (event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) //ctrl+N , ctrl+R
+      || (event.keyCode == 116)) // function F5
+      {
+        event.keyCode = 0;
+        event.cancelBubble = true;
+        event.returnValue = false;
+      }
+    }
   },
+  // beforeMount() {
+  //   window.addEventListener("beforeunload", this.preventNav)
+  // },
+  // beforeDestroy() {
+  //   window.removeEventListener("beforeunload", this.preventNav);
+  // },
   computed:{
     ...mapState([
       'power', 'roomName', 'roomUrl', 'participant', 'roomStudyNo', 'studyMembers'

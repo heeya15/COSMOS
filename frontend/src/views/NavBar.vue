@@ -66,7 +66,8 @@ export default {
       logOut() {
         this.$store.dispatch('logOut')
         this.$router.push({ name: 'LogIn' })
-      }
+        this.$router.go()
+      },
     }
 }
 
@@ -97,7 +98,14 @@ export default {
     /* background-color: #aaa; */
     z-index: 99;
   }
+  #nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
 
+  #nav a.router-link-exact-active {
+    color: #9255AD;
+  }
   #nav {
     height: 100%;
     /* background-color: #fff; */

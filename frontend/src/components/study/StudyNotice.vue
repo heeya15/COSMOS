@@ -86,7 +86,7 @@ export default {
       .then(() => {
         // console.log(res)
         this.notice.modify = false
-        this.$router.go()
+        this.showStudyNotice()
       })
       .catch(err =>{
         console.log(err)
@@ -107,7 +107,7 @@ export default {
       .then(() => {
         // console.log(res)
         this.notice.modify = false
-        this.$router.go()
+        this.showStudyNotice()
       })
       .catch(err =>{
         console.log(err)
@@ -120,7 +120,7 @@ export default {
         url: `/studyManage/remove/${this.studyNo}`
       })
       .then(() => {
-        this.$router.go()
+        this.showStudyNotice()
       })
       .catch(err =>{
         console.log(err)
