@@ -1,0 +1,93 @@
+management:
+  health:
+    diskspace:
+      enabled: 'true'
+    default:
+      enabled: 'true'
+    db:
+      enabled: 'true'
+  servlet:
+    context-path: /manage
+spa:
+  default-file: /dist/index.html
+logging:
+  level:
+    org:
+      sringframework:
+        boot: DEBUG
+        security: DEBUG
+      apache:
+        tiles: INFO
+      springframework:
+        web: DEBUG
+    root: INFO
+    com:
+      samsung:
+        security: DEBUG
+  file:
+    name: ./ssafy-web.log
+server:
+  servlet:
+    encoding:
+      enabled: 'true'
+      force: 'true'
+      charset: UTF-8
+    contextPath: /
+  address: 0.0.0.0
+  port: '8080'
+  compression:
+    enabled: 'true'
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
+spring:
+  mail:
+    username: noreply.nsnt.cosmos@gmail.com
+    port: '587'
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          auth: 'true'
+          timeout: '5000'
+    host: smtp.gmail.com
+    password: hpndeyhvhmgigtga
+  jpa:
+    hibernate:
+      naming:
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      password: ssafy1234
+      username: ssafy
+    url: jdbc:mysql://i6e103.p.ssafy.io:3306/ssafy_web_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: 'true'
+  mvc:
+    throw-exception-if-no-handler-found: 'true'
+  devtools:
+    livereload:
+      enabled: 'true'
+  resources:
+    static-locations: classpath:/dist/
+    add-mappings: 'false'
+build:
+  date: '@build.date@'
+jwt:
+  expiration: '1296000000'
+  secret: dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa
+springfox:
+  documentation:
+    swagger:
+      use-model-v3: 'false'
+ssl:
+  key-store: classpath:keystore.p12
+  key-store-type: PKCS12
+  key-store-password: password
