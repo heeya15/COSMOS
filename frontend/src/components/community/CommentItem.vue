@@ -173,7 +173,7 @@ export default {
 /* 테스트 부분 */
 .comment_body {
   border: 3px solid transparent;
-  /* background-color: #fff; */
+  background-color: #e4c3f1;
   box-shadow: 5px 6px 6px 2px #dcdcdd;
   width: 70%;
   height: 100px;
