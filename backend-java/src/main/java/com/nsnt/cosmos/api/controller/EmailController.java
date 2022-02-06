@@ -47,12 +47,14 @@ public class EmailController {
 					@ApiResponse(code = 500, message = "서버 오류") 
 					})
 	public ResponseEntity<Boolean> emailCheck(@PathVariable String user_email) {
-		boolean emailChk = userService.checkUserEmail(user_email);
+		int emailChk = userService.checkUserEmail(user_email);
 		
-		if (emailChk) {
-			return ResponseEntity.status(200).body(emailChk);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>> emailChk : " + emailChk);
+		
+		if (emailChk==0) {
+			return ResponseEntity.status(200).body(true);
 		} else
-		return ResponseEntity.status(401).body(emailChk);
+		return ResponseEntity.status(401).body(false);
 	}
 	
 	@GetMapping("/send/{user_email}")
@@ -62,8 +64,6 @@ public class EmailController {
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
 	public ResponseEntity<String> sendMail(@PathVariable String user_email) throws MessagingException {
-		return ResponseEntity.status(401).body(emailService.sendMail(user_email));
-	}
-	
-	
+		return ResponseEntity.status(200).body(emailService.sendMail(user_email));
+	}	
 }

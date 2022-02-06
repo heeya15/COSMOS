@@ -57,8 +57,8 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public boolean checkUserEmail(String userEmail) {
-		return userRepositorySupport.findByUserEmailEquals(userEmail);
+	public int checkUserEmail(String userEmail) {
+		return userRepository.findByUserEmail(userEmail);
 	}
 
 	@Override
