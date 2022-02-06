@@ -7,7 +7,7 @@ management:
     db:
       enabled: 'true'
   servlet:
-    context-path: /manage
+    context-path: /api
 spa:
   default-file: /dist/index.html
 logging:
@@ -38,6 +38,10 @@ server:
   compression:
     enabled: 'true'
     mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+    key-store-password: ssafy1234
 spring:
   mail:
     username: noreply.nsnt.cosmos@gmail.com
@@ -87,7 +91,3 @@ springfox:
   documentation:
     swagger:
       use-model-v3: 'false'
-ssl:
-  key-store: classpath:keystore.p12
-  key-store-type: PKCS12
-  key-store-password: password
