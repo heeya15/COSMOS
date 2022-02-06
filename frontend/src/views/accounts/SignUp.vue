@@ -44,7 +44,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 
 export default {
   name:'SignUp',
@@ -89,9 +90,9 @@ export default {
     },
     
     idConfirm() {
-      axios({
+      http({
         method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/user/idcheck/${this.credentials.userId}`,
+        url: `/user/idcheck/${this.credentials.userId}`,
       })
       .then(res => {
         console.log(res);

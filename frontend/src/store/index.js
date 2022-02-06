@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from "vuex-persistedstate";
-import axios from 'axios'
+// import http from 'http'
 import router from '@/router'
+import http from "@/util/http-common.js";
 
 
 Vue.use(Vuex)
@@ -66,9 +67,9 @@ export default new Vuex.Store({
   actions: {
     signUp({commit}, credentials) {
       // console.log(credentials)
-      axios({
+      http({
         method: 'POST',
-        url: 'http://i6e103.p.ssafy.io:8080/api/user/signup',
+        url: '/user/signup',
         data: credentials
       })
       .then(res => {
@@ -83,9 +84,9 @@ export default new Vuex.Store({
       })
     },
     logIn({commit}, credentials) {
-      axios({
+      http({
         method: 'post',
-        url: 'http://i6e103.p.ssafy.io:8080/api/auth/login',
+        url: '/auth/login',
         data: credentials
       })
       .then(res => {
@@ -106,9 +107,9 @@ export default new Vuex.Store({
       commit('LOGOUT')
     },
     getComment({commit}) {
-      axios({
+      http({
         method: 'get',
-        url: `http://i6e103.p.ssafy.io:8080/api/comment/searchAll/${this.state.boardNo}`,
+        url: `/comment/searchAll/${this.state.boardNo}`,
         // headers: this.getToken(),
       })
       .then(res => {
@@ -119,9 +120,9 @@ export default new Vuex.Store({
       })
     },
     getStudyType({commit}) {
-      axios({
+      http({
         method: 'get',
-        url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+        url: '/study/studyType'
       })
       .then(res => {
         // console.log('res 확인')
@@ -133,9 +134,9 @@ export default new Vuex.Store({
       })
     },
     getStudyMembers({commit},studyNo) {
-      axios({
+      http({
         method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/studymember/search/${studyNo}`,
+        url: `/studymember/search/${studyNo}`,
       })
       .then(res => {
         // console.log(res.data)
@@ -150,9 +151,9 @@ export default new Vuex.Store({
       const header = {
         Authorization: `Bearer ${token}`,
       }
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/user/leader',
+        url: '/user/leader',
         headers: header,
         // data: studyNo
         params: {study_no: studyNo},

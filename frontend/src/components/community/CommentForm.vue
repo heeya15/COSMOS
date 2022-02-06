@@ -17,7 +17,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 
 export default {
   name: 'CommentForm',
@@ -42,9 +43,9 @@ export default {
         board_no: this.$store.state.boardNo,
         content: this.commentInput.content
       }
-      axios({
+      http({
         method: 'post',
-        url: 'http://i6e103.p.ssafy.io:8080/api/comment/register',
+        url: '/comment/register',
         data: createCommentItem,
         headers: this.getToken()
 

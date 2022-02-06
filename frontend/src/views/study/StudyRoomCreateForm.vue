@@ -4,7 +4,7 @@
     <hr>
     <div style="width:600px;" class="p-4">
       <b-row>
-        <!-- 스터디 이름 중복체크 axios 요청 버튼 -->
+        <!-- 스터디 이름 중복체크 http 요청 버튼 -->
         <b-col cols="3">
           <label for="studyName" class="mt-2">스터디 이름</label>
         </b-col>
@@ -14,7 +14,7 @@
       </b-row>
       <hr class="mt-3">
         <!-- url은 스터디만드는 사람에게 직접 입력받음 -->
-        <!-- url 중복체크 axios 요청 버튼-->
+        <!-- url 중복체크 http 요청 버튼-->
       <b-row>        
         <b-col cols="3">
           <label for="url" class="mt-2">스터디 url</label>
@@ -119,7 +119,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 
 export default {
   name: 'StudyRoomCreateForm',
@@ -160,9 +161,9 @@ export default {
       this.input.image = url
     },
     getStudyType() {
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+        url: '/study/studyType'
       })
       .then(res => {
         // console.log(res)
@@ -185,9 +186,9 @@ export default {
       studyInfo.append('totalMember',this.input.totalMember)
       studyInfo.append('url',this.input.url)
       console.log(this.$refs.studyImg.files[0])
-      axios({
+      http({
         method: 'POST',
-        url: 'http://i6e103.p.ssafy.io:8080/api/study/register',
+        url: '/study/register',
         headers: this.getHeader(),
         data: studyInfo
       })

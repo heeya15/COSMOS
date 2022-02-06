@@ -53,7 +53,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 import {mapState} from 'vuex'
 
 export default {
@@ -89,9 +90,9 @@ export default {
     deleteComment() {
       const commentIdx = this.$store.state.comments.indexOf(this.comment)
       this.$store.state.comments.splice(commentIdx, 1)
-      axios({
+      http({
         method: 'delete',
-        url: `http://i6e103.p.ssafy.io:8080/api/comment/remove/${this.comment_no}`,
+        url: `/comment/remove/${this.comment_no}`,
         headers: this.getToken()
       })
       .then((res) => {
@@ -111,9 +112,9 @@ export default {
         comment_no: this.comment.comment_no,
         content: this.comment.content,
       }
-      axios({
+      http({
         method: 'put',
-        url: 'http://i6e103.p.ssafy.io:8080/api/comment/update',
+        url: '/comment/update',
         data: updateCommentItem,
         headers: this.getToken(),
       })
@@ -128,9 +129,9 @@ export default {
       })
     },
     getUserInfo(){
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/user/me',
+        url: '/user/me',
         headers: this.getToken()
       })
       .then(res =>{

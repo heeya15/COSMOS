@@ -103,7 +103,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 import Comment from '@/components/community/Comment.vue'
 
 export default {
@@ -167,9 +168,9 @@ export default {
 
     // 스터디 신청
     applyStudy() {
-      axios({
+      http({
         method: 'post',
-        url: `http://i6e103.p.ssafy.io:8080/api/study/applyMember/register/${this.studyInfo.studyNo}`,
+        url: `/study/applyMember/register/${this.studyInfo.studyNo}`,
         headers: this.getToken(),
       })
       .then((res) => {
@@ -189,9 +190,9 @@ export default {
 
     // 게시글 가져오기
     getBoard() {
-      axios({
+      http({
         method: 'get',
-        url: `http://i6e103.p.ssafy.io:8080/api/board/search/${this.board_no}`,
+        url: `/board/search/${this.board_no}`,
         // headers: this.getToken(),
       })
       .then(res => {
@@ -223,9 +224,9 @@ export default {
 
     // 게시글 삭제
     deleteBoardForm() {
-      axios({
+      http({
         method: 'delete',
-        url: `http://i6e103.p.ssafy.io:8080/api/board/remove/${this.board_no}`,
+        url: `/board/remove/${this.board_no}`,
         headers: this.getToken()
       })
       .then((res) => {
@@ -239,9 +240,9 @@ export default {
 
     // 유저 정보 가져오기
     getUserInfo(){
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/user/me',
+        url: '/user/me',
         headers: this.getToken()
       })
       .then(res =>{
@@ -267,9 +268,9 @@ export default {
         user_id: this.userInfo.user_id,
         header: this.boardInfo.header,
       }
-      axios({
+      http({
         method: 'put',
-        url: 'http://i6e103.p.ssafy.io:8080/api/board/update',
+        url: '/board/update',
         data: updateItem,
         headers: this.getToken(),
       })
@@ -298,9 +299,9 @@ export default {
         user_id: this.userInfo.user_id,
         header: this.boardInfo.header,
       }
-      axios({
+      http({
         method: 'put',
-        url: 'http://i6e103.p.ssafy.io:8080/api/board/update',
+        url: '/board/update',
         data: updateItem,
         headers: this.getToken(),
       })
@@ -318,9 +319,9 @@ export default {
 
     // 스터디 분류 가져오기
     getStudyType() {
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+        url: '/study/studyType'
       })
       .then(res => {
         // console.log(res)

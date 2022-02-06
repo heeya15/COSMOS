@@ -120,7 +120,8 @@ import StudyMember from '@/components/study/StudyMember.vue'
 
 import JwtDecode from 'jwt-decode'
 
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 import { mapState } from 'vuex'
 
 export default {
@@ -174,9 +175,9 @@ export default {
       this.toggleMember=true
     },
     getStudyInfo() {
-      axios({
+      http({
         method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/study/search/${this.studyNo}`
+        url: `/study/search/${this.studyNo}`
       })
       .then(res => {        
         this.studyInfo = res.data
@@ -186,9 +187,9 @@ export default {
       })
     },
     deleteStudy() {
-      axios({
+      http({
         method: 'DELETE',
-        url: `http://i6e103.p.ssafy.io:8080/api/study/remove/${this.studyNo}`
+        url: `/study/remove/${this.studyNo}`
       })
       .then(() => {
         this.$router.push({name:'MyPage'})
@@ -224,9 +225,9 @@ export default {
         // console.log(this.participant);
         console.log("😃");
        // 비밀번호 치고 방 입장 성공 시 비공개 스터디 참가자 등록 시킴
-        axios({
+        http({
             method: 'POST',
-            url: `http://i6e103.p.ssafy.io:8080/api/privateroom/register`,
+            url: `/privateroom/register`,
             headers: this.getToken(),
             params: {privatestudyroom_id: this.roomUrl},
           })
@@ -251,9 +252,9 @@ export default {
         totalMember: this.studyInfo.totalMember,
         url: this.studyInfo.url,
       }
-      axios({
+      http({
         method: 'PUT',
-        url: 'http://i6e103.p.ssafy.io:8080/api/study/update',
+        url: '/study/update',
         data: modifyInfo
       })
       .then(() => {
@@ -265,9 +266,9 @@ export default {
       })
     },
     getStudyType() {
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+        url: '/study/studyType'
       })
       .then(res => {
         // console.log(res)
@@ -292,9 +293,9 @@ export default {
       })
     },
     deleteMember(studymember_no) {
-      axios({
+      http({
         method: 'DELETE',
-        url: `http://i6e103.p.ssafy.io:8080/api/studymember/remove/${studymember_no}`
+        url: `/studymember/remove/${studymember_no}`
       })
       .then(() => {
         // console.log(res)

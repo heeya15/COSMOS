@@ -66,7 +66,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 import JwtDecode from 'jwt-decode'
 import { mapState } from 'vuex'
 
@@ -98,9 +99,9 @@ export default {
         study_no: this.$route.params.studyNo,
         user_id: this.newMemberId
       }
-      axios({
+      http({
         method: 'POST',
-        url: 'http://i6e103.p.ssafy.io:8080/api/studymember/register',
+        url: '/studymember/register',
         data: memberInfo
       })
       .then(res => {
@@ -114,9 +115,9 @@ export default {
       })
     },
     deleteMember(studymember_no) {
-      axios({
+      http({
         method: 'DELETE',
-        url: `http://i6e103.p.ssafy.io:8080/api/studymember/remove/${studymember_no}`
+        url: `/studymember/remove/${studymember_no}`
       })
       .then(() => {
         // console.log(res)
@@ -127,9 +128,9 @@ export default {
       })
     },
     giveAuthority(studymember_no) {
-      axios({
+      http({
         method: 'PUT',
-        url: 'http://i6e103.p.ssafy.io:8080/api/studymember/updateAuthority',
+        url: '/studymember/updateAuthority',
         data: {studymember_no: studymember_no, authority: true}
       })
       .then(res => {

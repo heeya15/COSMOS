@@ -346,6 +346,7 @@ background-color: #F0F0F0;
 </style>
 <script>
 import axios from 'axios';
+import http from "@/util/http-common.js";
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from '../components/openvidu/UserVideo';
 import jwt_decode from "jwt-decode";
@@ -437,9 +438,9 @@ export default {
 				score: score,
 				studymember_no: studymember_no
 			}
-			axios({
+			http({
 				method: 'PUT',
-				url: 'http://i6e103.p.ssafy.io:8080/api/studymember/updatescore',
+				url: '/studymember/updatescore',
 				data: updateInfo
 			})
 			.then(() => {
@@ -545,9 +546,9 @@ export default {
 			this.OVForScreenShare = undefined;
 			this.sharingPublisher = undefined;
 			window.removeEventListener('beforeunload', this.leaveSession);
-			axios({
+			http({
 				method: 'DELETE',
-				url: `http://i6e103.p.ssafy.io:8080/api/privateroom/removePrivateMember`,
+				url: `/privateroom/removePrivateMember`,
 				headers: this.getToken_info(),
 				params: {privatestudyroom_id: this.mySessionId},
 			})
