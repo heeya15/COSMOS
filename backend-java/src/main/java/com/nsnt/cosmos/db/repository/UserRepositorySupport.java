@@ -31,10 +31,10 @@ public class UserRepositorySupport {
     	 if(user == null) return true; 
     	 return false;
     }
-    public boolean findByUserEmailEquals(String userEmail) {
-    	User user = jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.userId.eq(userEmail)).fetchOne();
-	   	 if(user == null) return true; 
-	   	 return false;
-    }
+//    public boolean findByUserEmailEquals(String userEmail) {
+//    	User user = jpaQueryFactory.select(qUser).from(qUser)
+//                .where(qUser.userId.eq(userEmail)).fetchOne();
+//	   	 if(user == null) return true; 
+//	   	 return false;
+//    }
 }

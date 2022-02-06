@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, String> { // 제네�
 	// 아래와 같이, Query Method 인터페이스(반환값, 메소드명, 인자) 정의를 하면 자동으로 Query Method 구현됨.
     Optional<User> findByUserId(String userId);
     boolean findByUserIdEquals(String userId);
-    boolean findByUserEmailEquals(String userEmail);
+//    boolean findByUserEmailEquals(String userEmail);
     
  // 아래와 같이, Query Method 인터페이스(반환값, 메소드명, 인자) 정의를 하면 자동으로 Query Method 구현됨.
  	@Query(value="select leader, authority\r\n" + 
@@ -28,4 +28,8 @@ public interface UserRepository extends JpaRepository<User, String> { // 제네�
              ,nativeQuery = true)
     UserLeaderDtoRes isLeader(@Param("user_id") String user_id, @Param("study_no") String study_no);
 
+ 	@Query(value="select count(*)\r\n" + 
+ 			"from user\r\n" + 
+ 			"where user_email = :user_email", nativeQuery = true)
+ 	int findByUserEmail(@Param("user_email") String user_email);
 }
