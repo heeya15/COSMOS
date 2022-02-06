@@ -7,56 +7,78 @@
       <h3 v-if="editButton === true">글 수정</h3>
       <h3 v-else>상세보기</h3>
       <!-- <img src="게시판보드.png" alt=""> -->
-        <div class="body_total p-5" style="width: 600px;" >
-          <b-row style="height: 600px; background-color: #fff;">
-            <b-col cols="3" class="mt-2">
+      <div class="memo">
+        <p>함께해요!</p>
+      </div>
+      <div class="memo1">
+        <p>사람을 찾습니다!👀</p>
+      </div>
+      <div class="round_box"></div>
+      <div class="round_box1"></div>
+      <div class="round_box2"></div>
+      
+        <div class="body_total p-5" style="width: 500px;" >
+          <b-row class="content_rowTag">
+            <b-col cols="5" class="mt-2">
               <p>제목</p>
+              <hr>
             </b-col>
-            <b-col cols="9" class="mt-2" >
+            <b-col cols="7" class="mt-2" >
               <b-form-input v-if="editButton === true" type="text" v-model="boardInfo.contentTitle" style="height: 30px; text-align: center;"></b-form-input>
               <p v-else>{{ boardInfo.contentTitle }}</p>
+              <hr>
             </b-col>
 
-              <b-col cols="3" class="mt-2">
+              <b-col cols="5" class="mt-2">
                 <p v-show="this.boardInfo.header === false" >스터디 이름</p>
+                <hr>
               </b-col>
-              <b-col cols="9" class="mt-2">
+              <b-col cols="7" class="mt-2">
                 <p>{{ boardInfo.studyName }}</p>
+                <hr>
               </b-col>
 
-              <b-col cols="3" class="mt-2">
+              <b-col cols="5" class="mt-2">
                 <p v-show="this.boardInfo.header === false">스터디 인원</p>
+                <hr>
               </b-col>
-              <b-col cols="9" class="mt-2" >
+              <b-col cols="7" class="mt-2" >
                 <b-form-input v-show="this.boardInfo.header === false" v-if="editButton === true" type="text" v-model="boardInfo.recruitNumber" style="height: 30px; text-align: center;"></b-form-input>
                 <p v-else v-show="this.boardInfo.header === false">{{ boardInfo.recruitNumber }}</p>
+                <hr>
               </b-col>
 
-            <b-col cols="3" class="mt-2">
+            <b-col cols="5" class="mt-2">
               <p>스터디 분류</p>
+              <hr>
             </b-col>
-            <b-col cols="9" class="mt-2">
+            <b-col cols="7" class="mt-2">
               <p >{{ boardInfo.studytypeName }}</p>
               <!-- 수정을 눌렀을 때 값 타입 가져오고 원래는 생성될때의 값 불러와야 함 -->
               <b-form-select v-if="editButton === true" v-show="this.boardInfo.header === true" v-model="studyTypeSelected" :options="options" id="studytype_name"></b-form-select>
+              <hr>
             </b-col>
 
-            <b-col v-if="editButton === true" cols="3" class="mt-2">
+            <b-col v-if="editButton === true" cols="5" class="mt-2">
               <p v-if="editButton === true" for="some-radios">상태</p>
+              <hr>
             </b-col>
-            <b-col v-if="editButton === true" cols="9">
+            <b-col v-if="editButton === true" cols="7">
               <div v-if="editButton === true">
                 <label class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus_0" value="false">진행중</label>
                 <label class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus_1" value="true">완료</label>
+                <hr>
               </div>
             </b-col>
 
-            <b-col cols="3" class="mt-2">
+            <b-col cols="5" class="mt-2">
               <p>내용</p>
+              <hr>
             </b-col>
-            <b-col cols="9" class="mt-2">
+            <b-col cols="7" class="mt-2">
               <b-textarea v-if="editButton === true" type="text" v-model="boardInfo.content" style="height: 100px;"></b-textarea>
               <p v-else>{{ boardInfo.content }}</p>
+              <hr>
             </b-col>
             <!-- <p>여기 번호 : {{ studyInfo.studyNo }}</p> -->
           
@@ -349,18 +371,90 @@ p {
   font-size: 1rem ;  
 }
 
+.content_rowTag {
+  height: 500px; 
+  /* background-color: rgb(252, 252, 252); */
+}
+
+.memo {
+  width: 150px; 
+  height: 150px; 
+  background-color: rgb(252, 252, 135);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 150px;
+  top: 250px;
+  /* bottom: 100px; */
+}
+
+.memo1 {
+  width: 200px; 
+  height: 200px; 
+  background-color: rgb(155, 213, 236);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 150px;
+  top: 550px;
+  /* bottom: 100px; */
+}
+
+.round_box {
+  width: 15px;
+  height: 15px; 
+  border-radius: 70%;
+  overflow: hidden;
+  background-color: red;
+  position: absolute;
+  left: 220px;
+  top: 260px;
+  box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
+}
+
+.round_box1 {
+  width: 20px;
+  height: 20px; 
+  border-radius: 70%;
+  overflow: hidden;
+  background-color: rgb(66, 66, 252);
+  position: absolute;
+  left: 750px;
+  top: 280px;
+  box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
+}
+
+.round_box2 {
+  width: 17px;
+  height: 17px; 
+  border-radius: 70%;
+  overflow: hidden;
+  background-color: rgb(3, 184, 3);
+  position: absolute;
+  right: 240px;
+  top: 560px;
+  box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
+}
+
 .body_total {
-  background: repeating-linear-gradient(-45deg, #F3467B, #F3467B 20px, #FDD8E4 20px, #FDD8E4 80px);
+  /* background: repeating-linear-gradient(-45deg, #B96BC6, #B96BC6 10px, #e4c3f1 10px, #e4c3f1 40px); */
   /* background-image: url('https://thumb.ac-illust.com/72/72acde4a88378f62cf580ed7024d7a0d_t.jpeg');
   background-repeat: no-repeat;
   background-size: cover; */
   /* width: 800px; */
+  background: rgb(249, 250, 250);
 }
 
 .total_body {
   /* background-image: url('https://thumb.ac-illust.com/72/72acde4a88378f62cf580ed7024d7a0d_t.jpeg');
   background-repeat: no-repeat;
   background-size: cover; */
-  /* background-color: #ca8f37; */
+  border: 30px solid;
+  border-color: #ca8f37;
+  background-color: rgb(253, 186, 110);
 }
 </style>
