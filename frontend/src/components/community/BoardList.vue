@@ -63,7 +63,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 
 export default {
   name: 'BoardList',
@@ -117,9 +118,9 @@ export default {
     },
 
     getBoardItems() {
-      axios({
+      http({
         method: 'get',
-        url: 'http://i6e103.p.ssafy.io:8080/api/board/searchAll',
+        url: '/board/searchAll',
         // headers: this.
       })
       .then(res => {

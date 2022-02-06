@@ -81,7 +81,8 @@
 
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 
 export default {
   name: 'BoardForm',
@@ -137,9 +138,9 @@ export default {
         content: this.input.content,
         study_no: this.studyno[this.studyNameInfo.indexOf(this.nameSelected)],
       }
-      axios({
+      http({
         method: 'post',
-        url: 'http://i6e103.p.ssafy.io:8080/api/board/register',
+        url: '/board/register',
         data: createBoardItem,
         headers: this.getToken()
       })
@@ -166,9 +167,9 @@ export default {
         content: this.input.content,
         study_no: this.studyno[this.studyNameInfo.indexOf(this.nameSelected)],
       }
-      axios({
+      http({
         method: 'post',
-        url: 'http://i6e103.p.ssafy.io:8080/api/board/register',
+        url: '/board/register',
         data: createBoardItem,
         headers: this.getToken()
       })
@@ -184,9 +185,9 @@ export default {
     },
 
     getStudyName() {
-      axios({
+      http({
         method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/board/searchStudyName/${this.header}`,
+        url: `/board/searchStudyName/${this.header}`,
         headers: this.getToken()
       })
       .then(res => {
@@ -217,9 +218,9 @@ export default {
       this.$router.go()
     },
     getStudyType() {
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+        url: '/study/studyType'
       })
       .then(res => {
         // console.log(res)

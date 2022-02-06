@@ -28,7 +28,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 import { mapState } from 'vuex'
 
 export default {
@@ -55,9 +56,9 @@ export default {
     },
     // 공지사항 조회
     showStudyNotice() {
-      axios({
+      http({
         method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/studyManage/search/${this.studyNo}`,
+        url: `/studyManage/search/${this.studyNo}`,
       })
       .then(res => {
         // console.log(res)
@@ -76,9 +77,9 @@ export default {
         studyNo: this.studyNo,
         studymanageNotice: this.notice.studymanageNotice
       }
-      axios({
+      http({
         method: 'PUT',
-        url: 'http://i6e103.p.ssafy.io:8080/api/studyManage/update',
+        url: '/studyManage/update',
         data: updateFormdata,
         // headers: this.getToken()
       })
@@ -97,9 +98,9 @@ export default {
         studyNo: this.studyNo,
         studymanageNotice: this.notice.studymanageNotice
       }
-      axios({
+      http({
         method: 'POST',
-        url: 'http://i6e103.p.ssafy.io:8080/api/studyManage/register',
+        url: '/studyManage/register',
         data: updateFormdata,
         // headers: this.getToken()
       })
@@ -114,9 +115,9 @@ export default {
     },
     // 공지사항 삭제
     deleteNotice() {
-      axios({
+      http({
         method: 'DELETE',
-        url: `http://i6e103.p.ssafy.io:8080/api/studyManage/remove/${this.studyNo}`
+        url: `/studyManage/remove/${this.studyNo}`
       })
       .then(() => {
         this.$router.go()

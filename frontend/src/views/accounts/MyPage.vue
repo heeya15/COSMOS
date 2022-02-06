@@ -61,7 +61,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 
 export default {
   name: 'MyPage',
@@ -87,9 +88,9 @@ export default {
       return header
     },
     getUserInfo(){
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/user/me',
+        url: '/user/me',
         headers: this.getToken()
       })
       .then(res =>{
@@ -104,9 +105,9 @@ export default {
       })
     },
     signOut(){
-      axios({
+      http({
         method: 'DELETE',
-        url: `http://i6e103.p.ssafy.io:8080/api/user/remove/${this.user_id}`,
+        url: `/user/remove/${this.user_id}`,
         headers: this.getToken()
       })
       .then(res => {
@@ -125,9 +126,9 @@ export default {
         user_name: this.user_name,
         user_password: this.user_password
       }
-      axios({
+      http({
         method: 'PUT',
-        url: 'http://i6e103.p.ssafy.io:8080/api/user/update',
+        url: '/user/update',
         data: userInfo
       })
       .then(() => {
@@ -140,9 +141,9 @@ export default {
       })
     },
     getMyStudy() {
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/study/memberStudy',
+        url: '/study/memberStudy',
         headers: this.getToken()
       })
       .then(res => {
@@ -159,9 +160,9 @@ export default {
       this.$store.dispatch('isLeader', study)
     },
     checkPassword() {
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/user/password',
+        url: '/user/password',
         params: {user_password:this.user_pw},
         headers: this.getToken()
       })
