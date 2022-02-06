@@ -20,7 +20,7 @@
           <th>출석여부</th>
           <th>공부시간</th>
           <th>점수</th>
-          <th></th>
+          <th v-if="power.leader"></th>
         </tr>
       </thead>
       <tbody v-for="member in studyMembers" :key="member.id" class="info">
@@ -30,8 +30,9 @@
         <td>{{member.attendance}}</td>
         <td>{{member.studytime}}</td>
         <td>{{member.score}}</td>
-        <td v-if="power.leader&&member.studymember_no!==1">
+        <td v-if="power.leader&&member.user_id!==myId">
           <b-button class="me-3" variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button>
+          <!-- 권한이 true=>false, false=>true 바뀌게 설정 -->
           <b-button variant="success" @click="giveAuthority(member.studymember_no)">권한</b-button>
         </td>
         <td v-else></td>
@@ -52,19 +53,21 @@
     <hr>
 
     <b-row v-for="member in studyMembers" :key="member.id" class="my-2 info">
+      
       <b-col cols="2">{{member.user_name}}</b-col>
       <b-col cols="2">{{member.user_email}}</b-col>
       <b-col cols="2">{{member.attendance}}</b-col>
       <b-col cols="2">{{member.studytime}}</b-col>
       <b-col cols="2">{{member.score}}</b-col>
       <!-- 스터디장이면 강퇴가능 -->
-      <b-col v-if="power.leader&&member.studymember_no!==1"><b-button variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button></b-col>
+      <b-col v-if="power.leader&&member.user_id !== myId"><b-button variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button></b-col>
     </b-row>
   </div>  
 </template>
 
 <script>
 import axios from 'axios'
+import JwtDecode from 'jwt-decode'
 import { mapState } from 'vuex'
 
 export default {
@@ -73,9 +76,17 @@ export default {
     return {
       studyNo: this.$route.params.studyNo,
       newMemberId: null,
+      myId: '',
     }
   },
   methods: {
+    getMyId() {
+      var token = localStorage.getItem('jwt')
+      var decoded = JwtDecode(token);
+      var myId = decoded.sub;
+
+      this.myId = myId
+    },
     getStudyMembers() {
       this.$store.dispatch('getStudyMembers', this.studyNo)
     },
@@ -137,6 +148,7 @@ export default {
   },
   created() {
     this.getStudyMembers()
+    this.getMyId()
   }
 }
 </script>
