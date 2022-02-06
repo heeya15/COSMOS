@@ -25,7 +25,7 @@
       </thead>
       <tbody v-for="member in studyMembers" :key="member.id" class="info">
         <tr>
-        <td>{{member.user_name}}</td>
+        <td>{{member.user_name}}({{member.user_id}})</td>
         <td>{{member.user_email}}</td>
         <td>{{member.attendance}}</td>
         <td>{{member.studytime}}</td>
