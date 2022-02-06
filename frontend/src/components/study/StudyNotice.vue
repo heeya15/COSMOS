@@ -19,10 +19,11 @@
           <button @click="modifyNotice">수정</button>
         </div>
     </div>
-    <div v-else>
+    <div v-else-if="power.leader">
       <b-form-textarea id="textarea" v-model="notice.studymanageNotice" placeholder="스터디 공지사항을 입력해주세요." rows="3" max-rows="6"></b-form-textarea>
       <button @click="registNotice">등록</button>
-    </div>        
+    </div>
+    <div v-else>등록된 공지사항이 없습니다.</div> 
   </div>
 </template>
 

@@ -29,7 +29,7 @@
 
           <div v-if="user_study.length >= 1" >
             <div class="row">
-            <div v-for="study in user_study" :key="study.id" @click="goStudyManage(study.studyNo)" class="col-lg-6 mb-3 mb-lg-0">
+            <div v-for="study in user_study" :key="study.id" @click="goStudyManage(study.studyNo)" class="col-md-4 mb-3 mb-lg-0">
               <!-- DEMO 1 Item -->
               <!-- <div class="col-lg-6 mb-3 mb-lg-0"> -->
                 <div class="hover hover-1 text-white rounded"><img src="https://bootstrapious.com/i/snippets/sn-img-hover/hoverSet-3.jpg" alt="">
@@ -192,7 +192,6 @@ export default {
   width: 1000px;
   border: 1px solid rgb(204, 143, 143);
 }
-
 
 .hover {
   overflow: hidden;

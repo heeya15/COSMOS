@@ -17,13 +17,13 @@ export default {
 </script>
 
 <style>
-@font-face {
+/* @font-face {
     font-family: 'BMJua';
     font-weight: normal; 
     font-style: normal; 
     src: url(https://cdn.jsdelivr.net/gh/webfontworld/woowahan/BMJua.woff2) format('woff2');
     font-display: swap;
-}
+} */
 
 @font-face {
     font-family: 'yg-jalnan';
@@ -33,7 +33,7 @@ export default {
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */
