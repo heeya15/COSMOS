@@ -17,7 +17,8 @@
                 <div class="d-flex flex-row comment-row">
                   <div class="comment-text w-100">
                     <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-                      <span class=" d-block" style="text-align: left; font-size: 13px;"> {{ comment.content }}</span>
+                      <b-form-input v-if="editButton === true" type="text" class=" d-block" style="text-align: left; font-size: 13px; height: 30px;" v-model="comment.content" @keyup.enter="updateComment"></b-form-input>
+                      <span v-else class=" d-block" style="text-align: left; font-size: 13px;"> {{ comment.content }}</span>
                       <p class="font-medium" style="font-size: 10px; text-align: right;">작성자 : {{ comment.user_id }}</p>
                     </div>
                     <div class="comment-footer"> 
