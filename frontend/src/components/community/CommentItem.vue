@@ -215,6 +215,7 @@ export default {
   color: #fff;
   background-color: #DAC7F9;
   font-size: 10px;
+  border: none;
   /* display: flex; */
   /* justify-content: left; */
 }

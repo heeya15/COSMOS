@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavBar/>
-    <router-view/>
+    <router-view style="margin-top: 100px;"/>
   </div>
 </template>
 
@@ -17,13 +17,41 @@ export default {
 </script>
 
 <style>
-/* @font-face {
+@font-face {
+    font-family: 'IM_Hyemin-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/IM_Hyemin-Bold.woff2') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'GangwonEdu_OTFBoldA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'GangwonEduSaeeum_OTFMediumA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduSaeeum_OTFMediumA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SUIT-Medium';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Medium.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
     font-family: 'BMJua';
     font-weight: normal; 
     font-style: normal; 
     src: url(https://cdn.jsdelivr.net/gh/webfontworld/woowahan/BMJua.woff2) format('woff2');
     font-display: swap;
-} */
+}
 
 @font-face {
     font-family: 'yg-jalnan';
@@ -40,12 +68,24 @@ export default {
   color: #2c3e50;
   height: 100%;
   font-family: 'yg-jalnan';
-  padding-top: 80px;
 }
 
 body {
-  /* padding-top: 80px; */
-  
+  padding-top: 80px;
+}
+
+
+.page-item.active .page-link {  
+    background-color: #9255AD !important;  
+    border-color: #9255AD !important;  
+    color: #fff !important;
+}
+
+.page-link {
+    color: #9255AD !important;
+}
+
+.page-link:hover {
+    color: #9255AD;
 }
 </style>
-
