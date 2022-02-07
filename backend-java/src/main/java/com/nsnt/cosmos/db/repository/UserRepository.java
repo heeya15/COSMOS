@@ -4,9 +4,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import com.nsnt.cosmos.api.response.UserDtoRes;
 import com.nsnt.cosmos.api.response.UserLeaderDtoRes;
 import com.nsnt.cosmos.db.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 // Optional<T>는 null이 올수 있는 값을 감싸는 Wrapper클래스로, 참조하더라도 NPE가 발생하지 않도록 도와준다
 // Repository의 정확한 사용은 DAO를 위해 사용하는 어노테이션인데 JpaRepository는 JPA의 구현체라고 할 수 있다.
@@ -30,6 +33,12 @@ public interface UserRepository extends JpaRepository<User, String> { // 제네�
 
  	@Query(value="select count(*)\r\n" + 
  			"from user\r\n" + 
- 			"where user_email = :user_email", nativeQuery = true)
+ 			"where user_email = :user_email"
+ 			, nativeQuery = true)
  	int findByUserEmail(@Param("user_email") String user_email);
+ 	
+ 	@Query(value="select * \r\n" + 
+ 			" 	from user"
+ 			, nativeQuery = true)
+ 	List<UserDtoRes> findAllUser();
 }

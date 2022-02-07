@@ -1,6 +1,7 @@
 package com.nsnt.cosmos.api.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nsnt.cosmos.api.request.UserUpdateDto;
+import com.nsnt.cosmos.api.response.UserDtoRes;
 import com.nsnt.cosmos.api.response.UserLeaderDtoRes;
 import com.nsnt.cosmos.api.request.UserRegisterPostReq;
 import com.nsnt.cosmos.db.entity.User;
@@ -81,5 +83,10 @@ public class UserServiceImpl implements UserService {
 	public UserLeaderDtoRes isLeader(String user_id, String study_no) {
 		
 		return userRepository.isLeader(user_id, study_no);
+	}
+	
+	@Override
+	public List<User> findAll() {
+		return userRepository.findAll();
 	}
 }
