@@ -4,7 +4,7 @@
         <hr>
         <div class="container">
             <!-- 검색 -->
-            <div class="searchbar mb-4">
+            <div class="searchbar mb-4 d-flex justify-content-center">
                 <b-form-select class="mx-1" id="selectSearchOption" v-model="searchSelected" :options="searchOpt" @change="headerSel()" ></b-form-select>
                 <b-form-input class="mr-2" id="inputSearchOption" placeholder="검색할 키워드를 입력하세요." v-model="word"></b-form-input>
                 <b-button class="mr-1" id="userSearchBtn" @keydown.enter="search()" @click="search()">검색</b-button>
@@ -114,19 +114,22 @@ export default {
         }, 
 
         userDelete(deleteUserId) {
-            console.log("삭제할 유저 아이디 : ", deleteUserId);
-            http({
-                method: 'get',
-                url: `/admin/remove/${deleteUserId}`,
-            })
-            .then(res => {
-                console.log(res)
-                console.log(">>>>>>>>>> 유저 삭제 : ", deleteUserId)
-                this.$router.go();
-            })
-            .catch(err => {
-                console.log(err);
-            })
+            if(confirm('정말 삭제하시겠습니까?') == true) {
+                http({
+                    method: 'get',
+                    url: `/admin/remove/${deleteUserId}`,
+                })
+                .then(res => {
+                    console.log(res)
+                    console.log(">>>>>>>>>> 유저 삭제 : ", deleteUserId)
+                    this.$router.go();
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            } else {    // 삭제 취소
+                return;
+            }
         },
 
         searchPaging(){
@@ -226,7 +229,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #userTable {
     font-family: "BMJua";
     font-size: 17px;
