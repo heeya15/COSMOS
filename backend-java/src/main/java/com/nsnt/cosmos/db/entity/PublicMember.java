@@ -14,13 +14,15 @@ import org.hibernate.annotations.ColumnDefault;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
+@ToString
 public class PublicMember {
 	@Id
-	@Column(name = "publicmemeber_no", nullable = false)
+	@Column(name = "publicmemeber_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)		// 해당 속성에 auto_increment 제약조건 추가
 	private int publicmemberNo;
 	
@@ -32,9 +34,7 @@ public class PublicMember {
 	private int memberScore;
 
 	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name = "publicstudyroom_id", referencedColumnName = "publicstudyroom_id"),
-	})
+	@JoinColumn(name = "publicstudyroom_id")
 	private PublicStudyRoom publicStudyRoom;
 
 	@ManyToOne

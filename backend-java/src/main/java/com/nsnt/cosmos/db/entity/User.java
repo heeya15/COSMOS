@@ -4,9 +4,12 @@ package com.nsnt.cosmos.db.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nsnt.cosmos.api.request.UserUpdateDto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
@@ -25,6 +28,9 @@ import org.hibernate.annotations.CreationTimestamp;
 @Entity
 @Getter
 @Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 	@Id
 	@Column(name = "user_id", length= 20,  nullable = false)
