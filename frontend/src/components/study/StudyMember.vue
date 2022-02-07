@@ -1,18 +1,18 @@
 <template>
-  <div class="notice" style="width:1000px;">
+  <div class="member m-5" style="width:1000px;">
     <h3>스터디원 정보</h3>
     <!-- 스터디장만 회원 추가 가능 -->
-    <b-row v-if="power.leader" class="m-3">
+    <b-row v-if="power.leader" class="m-5">
       <b-col cols="2" offset="2"><label for="apply-member-form">회원 추가</label></b-col>
       <b-col cols="5"><b-form-input
         id="apply-member-form"
         class="mb-2 mr-sm-2 mb-sm-0"
         placeholder="추가할 회원의 아이디를 입력하세요." v-model="newMemberId"
       ></b-form-input></b-col>
-      <b-col cols="1"><button @click="addMember"><b-icon icon="person-plus"></b-icon></button></b-col>
+      <b-col cols="1"><button @click="addMember" class="memberBtn"><b-icon icon="person-plus-fill"></b-icon></button></b-col>
     </b-row>
     
-    <table class="table table-bordered table-hover align-middle">
+    <table class="table table-bordered table-hover" v-show="power.leader">
       <thead class="table-danger">
         <tr>
           <th>이름</th>
@@ -20,7 +20,7 @@
           <th>출석여부</th>
           <th>공부시간</th>
           <th>점수</th>
-          <th v-if="power.leader"></th>
+          <th></th>
         </tr>
       </thead>
       <tbody v-for="member in studyMembers" :key="member.id" class="info">
@@ -30,19 +30,39 @@
         <td>{{member.attendance}}</td>
         <td>{{member.studytime}}</td>
         <td>{{member.score}}</td>
-        <td v-if="power.leader&&member.user_id!==myId">
+        <td v-if="member.user_id!==myId">
           <b-button class="me-3" variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button>
           <!-- 권한이 true=>false, false=>true 바뀌게 설정 -->
           <b-button variant="success" @click="giveAuthority(member.studymember_no)">권한</b-button>
         </td>
-        <td v-else></td>
+        </tr>
+			</tbody>
+    </table>
+
+    <table class="table table-bordered table-hover align-middle" v-show="!power.leader">
+      <thead class="table-danger">
+        <tr>
+          <th>이름</th>
+          <th>Email</th>
+          <th>출석여부</th>
+          <th>공부시간</th>
+          <th>점수</th>          
+        </tr>
+      </thead>
+      <tbody v-for="member in studyMembers" :key="member.id" class="info">
+        <tr>
+        <td>{{member.user_name}}({{member.user_id}})</td>
+        <td>{{member.user_email}}</td>
+        <td>{{member.attendance}}</td>
+        <td>{{member.studytime}}</td>
+        <td>{{member.score}}</td>
         </tr>
 			</tbody>
     </table>
 
 
 
-    <b-row>
+    <!-- <b-row>
       <hr>
       <b-col cols="2">이름</b-col>
       <b-col cols="2">Email</b-col>
@@ -59,9 +79,8 @@
       <b-col cols="2">{{member.attendance}}</b-col>
       <b-col cols="2">{{member.studytime}}</b-col>
       <b-col cols="2">{{member.score}}</b-col>
-      <!-- 스터디장이면 강퇴가능 -->
       <b-col v-if="power.leader&&member.user_id !== myId"><b-button variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button></b-col>
-    </b-row>
+    </b-row> -->
   </div>  
 </template>
 
@@ -155,7 +174,18 @@ export default {
 </script>
 
 <style scoped>
-  .info {
-    height:50px;
-  }
+  th, td {
+  text-align: center;
+  vertical-align : middle !important;
+}
+.memberBtn {
+  border: none;
+  border-radius: 8px;
+  background-color: #e4c3f1;
+  height: 40px;
+  width: 100%;
+}
+.memberBtn:hover {
+  background-color: #ddaae6;
+}
 </style>

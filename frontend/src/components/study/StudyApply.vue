@@ -1,8 +1,8 @@
 <template>
-  <div class="apply" style="width:1000px;">
+  <div class="apply m-5" style="width:1000px;">
     <h3>가입 요청 회원</h3>
-    <div v-show="applyMembers===null">가입 요청한 회원이 없습니다.</div>
-    <b-row v-for="member in applyMembers" :key="member.id">    
+    <div v-show="applyMembers===null" class="m-5">가입 요청한 회원이 없습니다.</div>
+    <b-row v-for="member in applyMembers" :key="member.id" class="m-5">    
       <b-col style="background-color:lightgray;">{{ member.user_name }}</b-col>
       <b-col style="background-color:lightgray;">{{ member.user_id }}</b-col>
       <b-col v-if="power.leader">
