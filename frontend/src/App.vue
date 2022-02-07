@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavBar/>
-    <router-view style="margin-top: 100px;"/>
+    <router-view/>
   </div>
 </template>
 
@@ -40,9 +40,12 @@ export default {
   color: #2c3e50;
   height: 100%;
   font-family: 'yg-jalnan';
+  padding-top: 80px;
 }
 
 body {
-  padding-top: 80px;
+  /* padding-top: 80px; */
+  
 }
 </style>
+
