@@ -17,17 +17,12 @@ import lombok.Setter;
 @ApiModel("UserRegisterPostRequest")
 public class UserRegisterPostReq {
 	@ApiModelProperty(name="유저 ID", example="ssafy1")
-	@Pattern(regexp = "^[0-9a-zA-Z가-힣]*$", message = "닉네임은 숫자, 영어, 한글만 가능합니다.")
-	@Size(min = 4, max = 12)
 	String userId;
 	
 	@ApiModelProperty(name="유저 Name", example="kimssafy")
 	String userName;
 	
-	
 	@ApiModelProperty(name="유저 Password", example="ssafy11!")
-	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{8,12}$",
-    message = "비밀번호는 영문, 숫자, 특수문자가 적어도 1개 이상씩 포함된 8자 ~ 12자의 비밀번호여야 합니다.")
 	String userPassword;
 	
 	@ApiModelProperty(name="유저 Email", example="ssafy@ssafy.com")

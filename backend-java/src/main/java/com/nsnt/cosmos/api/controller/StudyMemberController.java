@@ -86,12 +86,15 @@ public class StudyMemberController {
 		return new ResponseEntity<List<StudyMemberSearchDtoRes>>(studymember, HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "해당 스터디 멤버의 점수를 수정", notes = "해당 스터디 멤버의 점수를 수정")
+	@ApiOperation(value = "해당 스터디 멤버의 점수를 수정(authority, leader, score, studymember_no) 4개 인자", notes = "해당 스터디 멤버의 점수를 수정")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), @ApiResponse(code = 401, message = "인증 실패"),
 			@ApiResponse(code = 404, message = "사용자 없음"), @ApiResponse(code = 500, message = "서버 오류") })
-	@PutMapping("/update")
-	public ResponseEntity<String> boardupdate(@RequestBody SaveStudyMemberDto saveStudyMemberDto) throws Exception {
+	@PutMapping("/updatescore")
+	public ResponseEntity<String> updateScore(@RequestBody SaveStudyMemberDto saveStudyMemberDto) throws Exception {
 		StudyMember studymember;
+		if (saveStudyMemberDto.isAuthority() == false && saveStudyMemberDto.isLeader() == false) {
+			return ResponseEntity.status(401).body("스터디 장이 아니거나 스터디장의 권한을 받지 않았습니다.");
+		}
 		try {
 			studymember = studyMeberService.findOneStudyMember(saveStudyMemberDto.getStudymember_no());
 		} catch (NoSuchElementException E) {
@@ -100,6 +103,26 @@ public class StudyMemberController {
 		StudyMember updateBoard = studyMeberService.updateStudyMemberScore(studymember, saveStudyMemberDto);
 		System.out.println("업데이트 됨");
 		return new ResponseEntity<String>(SUCCESS + "\n" + updateBoard.toString(), HttpStatus.OK);
+	}
+	
+
+	@ApiOperation(value = "해당 스터디 멤버에게 스터디장의 임시 권한 수정 기능 (authority, studymember_no)2개  인자", notes = "해당 스터디 멤버에게 스터디장의  임시 권한 수정 기능")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 500, message = "서버 오류") })
+	@PutMapping("/updateAuthority")
+	public ResponseEntity<String> updateAuthority(@RequestBody SaveStudyMemberDto saveStudyMemberDto) throws Exception {
+		StudyMember studymember;
+	
+		try {
+			studymember = studyMeberService.findOneStudyMember(saveStudyMemberDto.getStudymember_no());
+		} catch (NoSuchElementException E) {
+			return ResponseEntity.status(500).body("스터디 멤버 권한 수정 실패");
+		}
+		StudyMember updateStudyMember = studyMeberService.updateStudyMemberAuthority(studymember, saveStudyMemberDto);
+		System.out.println("업데이트 됨");
+		return new ResponseEntity<String>(SUCCESS + "\n" + updateStudyMember.toString(), HttpStatus.OK);
 	}
 
 	// 스터디 멤버 회원 삭제

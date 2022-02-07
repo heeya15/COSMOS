@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor /** Cannot construct instance of~ error를 해결해주었다.  파라미터가 없는 생성자 만들어줌* */ 
 public class StudyPostReq {
-	@JsonIgnore
+	
 	@ApiModelProperty(name="스터디 번호", example="")
 	long studyNo;
 
@@ -38,7 +38,6 @@ public class StudyPostReq {
 	@ApiModelProperty(name="스터디 분류", example="1")
 	int studytypeNo;
 	
-	@JsonIgnore
 	@ApiModelProperty(name="유저 아이디", example="")
 	String userId;
 	

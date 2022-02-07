@@ -13,6 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 비공개 스터디 룸 모델 정의.
@@ -20,6 +21,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@ToString
 public class PrivateStudyRoom {
 	@Id
 	@Column(name = "privatestudyroom_id", length= 10,  nullable = false)

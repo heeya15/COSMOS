@@ -28,8 +28,6 @@ public class QStudy extends EntityPathBase<Study> {
 
     public final NumberPath<Integer> numberOfMember = createNumber("numberOfMember", Integer.class);
 
-    public final QPrivateStudyRoom privateStudyRoom;
-
     public final StringPath studyName = createString("studyName");
 
     public final NumberPath<Long> studyNo = createNumber("studyNo", Long.class);
@@ -62,7 +60,6 @@ public class QStudy extends EntityPathBase<Study> {
 
     public QStudy(Class<? extends Study> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.privateStudyRoom = inits.isInitialized("privateStudyRoom") ? new QPrivateStudyRoom(forProperty("privateStudyRoom"), inits.get("privateStudyRoom")) : null;
         this.studyType = inits.isInitialized("studyType") ? new QStudyType(forProperty("studyType")) : null;
     }
 
