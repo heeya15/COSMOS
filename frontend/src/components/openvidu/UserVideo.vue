@@ -5,21 +5,28 @@
 		<div><p class="video_clientName">{{ clientData }}</p></div>
 		<div><p class="video_stopwatch">00:00:00</p></div>
 		<div class="selectDisplay d-flex justify-content-center">
-			<p>사용자 캠 보기</p>
-			<p>사용자 화면 보기</p>
+			<p>캠 보기</p>
+			<p>화면 보기</p>
 		</div>
 	</div>
 </div>
 </template>
-<style scope>
+<style>
+.user_autoplay_video{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+
 .userVideo{
 	position: relative;
 	/* width: 30%; */
 	/* height: 65%; */
 	height: 180px;
 	/* background-color: black; */
-	padding: 0;
-	margin: 0 10px 70px;
+	/* padding: 0; */
+	margin: 0 30px 70px;
 }
 
 .video_stopwatch{
