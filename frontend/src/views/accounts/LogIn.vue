@@ -41,15 +41,7 @@ export default {
   methods: {
     logIn() {
       this.$store.dispatch('logIn', this.credentials)
-      // this.$router.push({name: 'MainPage'})
-
-      if(localStorage.getItem('jwt')) {
-        // 입력값 초기화
-        this.credentials.id = '';
-        this.credentials.password = '';
-        this.msg = "잘못된 아이디 또는 비밀번호입니다."
-      }
-    }, 
+    },
 
     pwdPeek() {
       if(this.$refs.pwd.type == "password") {
@@ -58,6 +50,15 @@ export default {
       } else {
         this.$refs.pwd.type = "password";
         this.$refs.pwdIcon.icon = "eye-fill";
+      }
+    },
+    
+    beforeDestroy() {
+      if(!this.$store.state.isLogin) {
+        // 입력값 초기화
+        this.credentials.id = '';
+        this.credentials.password = '';
+        this.msg = "잘못된 아이디 또는 비밀번호입니다."
       }
     },
   }

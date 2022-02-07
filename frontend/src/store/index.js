@@ -36,9 +36,8 @@ export default new Vuex.Store({
       state.userInfo = credentials
     },
     LOGIN(state){
-      console.log( '로그인됨!!!!')
+      // console.log( '로그인됨!!!!')
       state.isLogin = true
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>> ", jwtDecode(localStorage.getItem('jwt')).sub);
       state.userId = jwtDecode(localStorage.getItem('jwt')).sub;
     },
     GET_BOARD_NO(state, boardNumber){
