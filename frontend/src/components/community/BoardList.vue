@@ -2,12 +2,12 @@
   <div class="container">
     <!-- <h3>게시글</h3> -->
     <div class="searchbar mb-4">
-      <b-form-select class="mx-1" v-model="stateSelected" :options="stateOpt" style="width: 75px; height: 30px;" @change="stateSel()" ></b-form-select>
-      <b-form-select class="mr-3" v-model="headerSelected" :options="headerOpt" style="width: 100px; height: 30px;" @change="headerSel()" ></b-form-select>
-      <b-form-select class="mx-1" v-model="searchSelected" :options="searchOpt" style="width: 50px; height: 30px;" @change="headerSel()" ></b-form-select>
-      <b-form-input class="mr-2" style="width: 300px; height: 30px;" placeholder="검색할 제목,분류를 입력하세요." v-model="word"></b-form-input>
-      <b-button class="mr-1" style="background-color: #DAC7F9; width: 40px padding: 0; height: 30px;" @click="searchTitle()">검색</b-button>
-      <b-button variant="primary" style="padding: 0; width: 40px; height: 30px;" @click="searchInit()">초기화</b-button>
+      <b-form-select class="mx-1" v-model="stateSelected" :options="stateOpt" style="width: 150px; height: 40px; font-size: 15px;" @change="stateSel()" ></b-form-select>
+      <b-form-select class="mr-3" v-model="headerSelected" :options="headerOpt" style="width: 170px; height: 40px; font-size: 15px;" @change="headerSel()" ></b-form-select>
+      <b-form-select class="mx-1" v-model="searchSelected" :options="searchOpt" style="width: 150px; height: 40px; font-size: 15px;" @change="headerSel()" ></b-form-select>
+      <b-form-input class="mr-2" style="width: 400px; height: 40px; font-size: 15px;" placeholder="검색할 제목,분류를 입력하세요." v-model="word"></b-form-input>
+      <b-button class="extraBtnTag mr-1" style="width: 40px padding: 0; height: 40px; font-size: 15px;" @click="searchTitle()">검색</b-button>
+      <b-button class="extraBtnTag" style="padding: 0; width: 60px; height: 40px; font-size: 15px;" @click="searchInit()">초기화</b-button>
     </div>
       <b-row>
         <b-col>
@@ -16,7 +16,7 @@
           width="100%"
           >
             <thead>
-              <tr>
+              <tr style="text-align: center; background-color: #afa2dd;">
                 <th>번호</th>
                 <th>상태</th>
                 <th>말머리</th>
@@ -26,18 +26,18 @@
                 <th>등록일</th>
               </tr>
             </thead>
-            <tbody id="test-table" v-for="(boardItem, idx) in paginatedItems" :key="idx"  @click="goBoardDetail(boardItem.boardNo)">
+            <tbody id="test-table" v-for="(boardItem, idx) in paginatedItems" :key="idx"  @click="goBoardDetail(boardItem.boardNo)" style="text-align: center;">
               <tr>
               <td>{{ 10*(currentPage-1)+(idx+1) }}</td>
 
             <div>
-              <td v-if="boardItem.contentStatus === false"><p class="boardnum_tag">[진행중]</p></td>
+              <td v-if="boardItem.contentStatus === false"><p class="boardnum_tag" style="color: #d5648a;">[진행중]</p></td>
               <td v-else><p class="boardnum_tag">[완료]</p></td>
             </div>
 
-            <td><span v-if="boardItem.header === false" class="boardnum_tag">[스터디원 구함]</span>
-            <span v-else class="boardnum_tag">[스터디 구함]</span></td>
-            <td><p class="boardnum_tag">{{ boardItem.contentTitle }}</p></td>
+            <td><span v-if="boardItem.header === false" class="boardnum_tag" style="color: #d5648a;">[스터디원 구함]</span>
+            <span v-else class="boardnum_tag" style="color: #afa2dd;">[스터디 구함]</span></td>
+            <td><p class="boardnum_tag" >{{ boardItem.contentTitle }}</p></td>
             <td><p class="boardnum_tag">{{ boardItem.studytypeName }}</p></td>
             <td><p class="boardnum_tag">{{ boardItem.user.userName }}</p></td>
             <td><p class="boardnum_tag">{{ makeDate(boardItem.createdAt) }}</p></td>
@@ -47,6 +47,10 @@
         </b-col>
       </b-row>
 
+      <div class="create_boardform mx-5">
+        <b-button class="btnTag" @click="goCreateForm">글생성</b-button>
+      </div>
+
     <b-pagination
       @click="onPageChanged"
       v-model="currentPage"
@@ -55,9 +59,9 @@
       aria-controls="test-table"
       align="center"
     >
-    
     </b-pagination>
 
+    
   </div>
 
 </template>
@@ -111,17 +115,25 @@ export default {
     console.log(itemsToParse.slice(0, 5))
     console.log(page_number * page_size, (page_number + 1) * page_size)
     this.paginatedItems = itemsToParse.slice(page_number * page_size, (page_number + 1) * page_size);
+    console.log(this.page_number, '위쪽 확인')
+
     },
     onPageChanged() {
-      console.log(this.currentPage)
+      console.log(this.currentPage, '여기는?')
+      // this.currentPage = 
       this.paginate(10, this.currentPage - 1)
+      console.log('작동하나?')
+    },
+
+    goCreateForm() {
+      this.$router.push({name: 'BoardForm'})
     },
 
     getBoardItems() {
       http({
         method: 'get',
         url: '/board/searchAll',
-        // headers: this.
+
       })
       .then(res => {
         this.boardItems = res.data
@@ -312,28 +324,52 @@ export default {
 </script>
 
 <style scoped>
-ul .page-item{
+/* ul .page-item{
   width: 1100px;
+} */
+
+.searchbar {
+  display: flex;
+  justify-content: center;
 }
 
-.table_content {
+
+.create_boardform {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: right;
 }
+
+/* 게시판 폰트 */
+#test-table {
+  font-family: BMJua;
+  /* font-weight: normal; */
+  font-size: 17px;
+}
+
 
 .boardnum_tag:hover {
   cursor: pointer;
 }
 
-p {
-  color: black !important;
-  font-size: 1rem !important;
+
+.btnTag {
+  background-color: #afa2dd;
+  border: none;
 }
 
-.table_title {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+.btnTag:hover {
+  background-color: #c8c1e4;
 }
+
+.extraBtnTag {
+  background-color: #afa2dd;
+  border: none;
+  color: black;
+}
+
+.extraBtnTag:hover {
+  background-color: #c8c1e4;
+}
+
+
 </style>

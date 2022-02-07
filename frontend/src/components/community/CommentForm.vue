@@ -9,7 +9,7 @@
           <b-form-input v-model="commentInput.content" @keyup.enter="createComment"></b-form-input>
         </b-col>
         <b-col cols="3" class="mt-3">
-          <b-button @click="createComment" style="background-color: #DAC7F9">작성</b-button>
+          <b-button class="btnTag" @click="createComment">작성</b-button>
         </b-col>
       </b-row>
     </center>
@@ -65,6 +65,15 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.btnTag {
+  background-color: #afa2dd;
+  border: none;
+}
+
+.btnTag:hover {
+  background-color: #c8c1e4;
+}
+
 
 </style>

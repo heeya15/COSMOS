@@ -3,7 +3,7 @@
     <center>
     <div class="total_body">
       <h1>스터디 모집 게시판</h1>
-      <hr style="width: 80%;">
+      <hr style="width: 80%; height: 3px;">
       <h3 v-if="editButton === true">글 수정</h3>
       <h3 v-else>상세보기</h3>
       <!-- <img src="게시판보드.png" alt=""> -->
@@ -13,15 +13,26 @@
       <div class="memo1">
         <p>사람을 찾습니다!👀</p>
       </div>
+      <div class="memo2">
+        <p>나랑 스터디 할 사람~✍</p>
+      </div>
+      <div class="memo3">
+        <p>열쩡🔥열쩡🔥열쩡🔥</p>
+      </div>
+
       <div class="round_box"></div>
       <div class="round_box1"></div>
       <div class="round_box2"></div>
+      <div class="round_box3"></div>
+      <div class="round_box4"></div>
+      <div class="line4"></div>
+      <div class="line5"></div>
       
-        <div class="body_total p-5" style="width: 500px;" >
+        <div class="body_total p-5" style="width: 500px;">
           <b-row class="content_rowTag">
             <b-col cols="5" class="mt-2">
               <p>제목</p>
-              <hr>
+              <hr class="hrTag">
             </b-col>
             <b-col cols="7" class="mt-2" >
               <b-form-input v-if="editButton === true" type="text" v-model="boardInfo.contentTitle" style="height: 30px; text-align: center;"></b-form-input>
@@ -29,23 +40,23 @@
               <hr>
             </b-col>
 
-              <b-col cols="5" class="mt-2">
+              <b-col v-show="this.boardInfo.header === false" cols="5" class="mt-2">
                 <p v-show="this.boardInfo.header === false" >스터디 이름</p>
-                <hr>
+                <hr v-show="this.boardInfo.header === false">
               </b-col>
-              <b-col cols="7" class="mt-2">
+              <b-col v-show="this.boardInfo.header === false" cols="7" class="mt-2">
                 <p>{{ boardInfo.studyName }}</p>
-                <hr>
+                <hr v-show="this.boardInfo.header === false">
               </b-col>
 
-              <b-col cols="5" class="mt-2">
+              <b-col v-show="this.boardInfo.header === false" cols="5" class="mt-2">
                 <p v-show="this.boardInfo.header === false">스터디 인원</p>
-                <hr>
+                <hr v-show="this.boardInfo.header === false">
               </b-col>
-              <b-col cols="7" class="mt-2" >
+              <b-col v-show="this.boardInfo.header === false" cols="7" class="mt-2" >
                 <b-form-input v-show="this.boardInfo.header === false" v-if="editButton === true" type="text" v-model="boardInfo.recruitNumber" style="height: 30px; text-align: center;"></b-form-input>
                 <p v-else v-show="this.boardInfo.header === false">{{ boardInfo.recruitNumber }}</p>
-                <hr>
+                <hr v-show="this.boardInfo.header === false">
               </b-col>
 
             <b-col cols="5" class="mt-2">
@@ -85,39 +96,42 @@
         
             <!-- 작성자인 경우 수정을 보여주고 아니면 스터디 신청을 보여준다 -->
 
-              <b-col cols="12" class="mt-2" v-show="this.boardInfo.header === false">
+              <b-col cols="12" class="btnPart mt-2" v-show="this.boardInfo.header === false">
                 <div v-show="editButton === false">
-                  <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정</b-button>
-                  <b-button v-else style="background-color: #DAC7F9" @click="applyStudy">스터디 신청</b-button>
-                  <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
-                  <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit">수정</b-button>
+                  <b-button v-else  @click="applyStudy" variant="info" size="sm">스터디 신청</b-button>
+                  <b-button variant="info" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
-                <div v-show="editButton === true" cols="3" class="mt-2">
-                  <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="updateForm">수정</b-button>
-                  <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
-                  <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+                <div v-show="editButton === true" cols="3" class="btnPart mt-2">
+                  <b-button v-if="editButton === true" variant="warning" size="sm" @click="updateForm">수정</b-button>
+                  <b-button variant="info" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                   <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
                 </div>
               </b-col>
 
 
           <!-- 스터디 구할 때 수정 부분 -->
-              <b-col cols="12" class="mt-2" v-show="this.boardInfo.header !== false">
+              <b-col cols="12" class="btnPart mt-2" v-show="this.boardInfo.header !== false">
                 <div v-show="editButton === false">
-                  <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정</b-button>
-                  <b-button v-else style="background-color: #DAC7F9" @click="applyStudy">스터디 신청</b-button>
-                  <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
-                  <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit">수정</b-button>
+                  <b-button v-else variant="warning" size="sm" @click="applyStudy">스터디 신청</b-button>
+                  <b-button variant="info" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
-                <div v-show="editButton === true">
-                  <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="studyWantBoardFormEdit">수정</b-button>
-                  <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
-                  <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+                <div v-show="editButton === true" class="btnPart mt-2">
+                  <b-button v-if="editButton === true" variant="warning" size="sm" @click="studyWantBoardFormEdit">수정</b-button>
+                  <b-button variant="info" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                   <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
                 </div>
               </b-col>
             </b-row>
           </div>
+            <div style="height: 30px;">
+              <p></p>
+            </div>
         </div>
       </center> 
     <comment/>
@@ -371,6 +385,11 @@ p {
   font-size: 1rem ;  
 }
 
+hr {
+  background-color: #afa2dd;
+  height: 1px;
+}
+
 .content_rowTag {
   height: 500px; 
   /* background-color: rgb(252, 252, 252); */
@@ -393,7 +412,7 @@ p {
 .memo1 {
   width: 200px; 
   height: 200px; 
-  background-color: rgb(155, 213, 236);
+  background-color: #f19cb0;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -404,12 +423,40 @@ p {
   /* bottom: 100px; */
 }
 
+.memo2 {
+  width: 300px; 
+  height: 300px; 
+  background-color: #75cff3;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 120px;
+  top: 470px;
+  /* bottom: 100px; */
+}
+
+.memo3 {
+  width: 250px; 
+  height: 250px; 
+  background-color: #caff08;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 150px;
+  top: 220px;
+  /* bottom: 100px; */
+}
+
 .round_box {
   width: 15px;
   height: 15px; 
   border-radius: 70%;
   overflow: hidden;
-  background-color: red;
+  background-color: rgb(255, 141, 10);
   position: absolute;
   left: 220px;
   top: 260px;
@@ -421,10 +468,10 @@ p {
   height: 20px; 
   border-radius: 70%;
   overflow: hidden;
-  background-color: rgb(66, 66, 252);
+  background-color: rgb(248, 64, 64);
   position: absolute;
   left: 750px;
-  top: 280px;
+  top: 260px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
@@ -440,6 +487,51 @@ p {
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
+.round_box3 {
+  width: 18px;
+  height: 18px; 
+  border-radius: 70%;
+  overflow: hidden;
+  background-color: yellow;
+  position: absolute;
+  left: 260px;
+  top: 480px;
+  box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
+}
+
+.round_box4 {
+  width: 18px;
+  height: 18px; 
+  border-radius: 70%;
+  overflow: hidden;
+  background-color: rgb(198, 82, 252);
+  position: absolute;
+  right: 270px;
+  top: 240px;
+  box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
+}
+
+.line4 {
+  position: absolute;
+  width: 30px;
+  height: 120px;
+  background-color: rgb(250, 171, 92);
+  transform: rotate(-45deg);
+  right: 520px;
+  top: 220px;
+}
+
+.line5 {
+  position: absolute;
+  width: 30px;
+  height: 120px;
+  background-color: rgb(250, 171, 92);
+  transform: rotate(45deg);
+  left: 520px;
+  top: 220px;
+}
+
+
 .body_total {
   /* background: repeating-linear-gradient(-45deg, #B96BC6, #B96BC6 10px, #e4c3f1 10px, #e4c3f1 40px); */
   /* background-image: url('https://thumb.ac-illust.com/72/72acde4a88378f62cf580ed7024d7a0d_t.jpeg');
@@ -454,7 +546,14 @@ p {
   background-repeat: no-repeat;
   background-size: cover; */
   border: 30px solid;
-  border-color: #ca8f37;
-  background-color: rgb(253, 186, 110);
+  border-color: #afa2dd;
+  background-color: #c8c1e4;
+}
+
+.btnPart{
+  display: flex;
+  justify-content: right;
+  align-items: flex-end;
+  border: none;
 }
 </style>
