@@ -6,15 +6,14 @@
       <b-col style="background-color:lightgray;">{{ member.user_name }}</b-col>
       <b-col style="background-color:lightgray;">{{ member.user_id }}</b-col>
       <b-col v-if="power.leader">
-        <button @click="addApplyMember(member)">승인</button>
-        <button @click="deleteApplyMember(member.applymember_no)">거절</button>
+        <button class="okBtn" @click="addApplyMember(member)">승인</button>
+        <button class="deleteBtn" @click="deleteApplyMember(member.applymember_no)">거절</button>
       </b-col>
     </b-row>
   </div>
 </template>
 
 <script>
-// import http from 'http'
 import http from "@/util/http-common.js";
 import { mapState } from 'vuex'
 
@@ -92,6 +91,27 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.okBtn {
+  border: none;
+  border-radius: 8px;
+  background-color: #e4c3f1;
+  height: 40px;
+  width: 100px;
+  float: right;
+}
+.okBtn:hover {
+  background-color: #ddaae6;
+}
+.deleteBtn {
+  color: white;
+  border: none;
+  border-radius: 8px;
+  background-color: #dc3545;
+  height: 40px;
+  width: 100px;
+}
+.deleteBtn:hover {
+  background-color: #be1e1e;
+}
 </style>
