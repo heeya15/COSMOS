@@ -9,5 +9,5 @@ import com.nsnt.cosmos.db.entity.PublicStudyRoom;
  */
 @Repository
 public interface PublicStudyRoomRepository extends JpaRepository<PublicStudyRoom, String> { // 제네릭 안에 해당 엔티티, 엔티티 PK 자료형을 적어줌
-	
+	boolean existsByUrl(String url);
 }
