@@ -1,5 +1,5 @@
 <template>
-  <center>
+  <center @keydown="doNotReload">
     <div class="container">
 
       <div class="black-bg" v-if="modal">
@@ -22,68 +22,82 @@
       <button @click="modal=true">방 입장</button>
 
       <!-- 스터디 정보 수정 추가 -->
-      <button type="button" v-if="power.leader" @click="$bvModal.show('bv-modal-example')">스터디 수정</button>
+      <button type="button" v-if="power.leader" @click="$bvModal.show('bv-modal-studyModify')">스터디 수정</button>
 
-        <b-modal id="bv-modal-example" hide-footer>
+        <b-modal id="bv-modal-studyModify" centered hide-footer size="lg">
           <template #modal-title>
-            스터디 정보 수정
+            <h3>스터디 정보 수정</h3>
           </template>
           <div class="d-block text-center">
-            <b-col cols="3">
-              <label for="studyName" class="mt-2">스터디 이름</label>
-            </b-col>
-            <b-col>
-              <b-form-input id="studyName" v-model="studyInfo.studyName"></b-form-input>
-            </b-col>
+            <b-row>
+              <b-col cols="3">
+                <label for="studyName" class="mt-2">스터디 이름</label>
+              </b-col>
+              <b-col>
+                <b-form-input id="studyName" v-model="studyInfo.studyName"></b-form-input>
+              </b-col>
+            </b-row>
             <hr class="mt-3">
 
-            <b-col cols="3">
-              <label for="studyImg" class="mt-2">스터디 이미지</label>
-            </b-col>
-            <b-col>
-              <b-form-input id="studyImg" v-model="studyInfo.image"></b-form-input>
-            </b-col>
+            <b-row>
+              <b-col cols="4" class="pr-4">
+                <label for="studyImg" class="mt-2">스터디 이미지</label>
+              </b-col>
+              <b-col>
+                <b-form-input id="studyImg" v-model="studyInfo.image"></b-form-input>
+              </b-col>
+            </b-row>
             <hr class="mt-3">
 
-            <b-col cols="">
-              <label for="studyPassword" class="mt-2">스터디 비밀번호</label>
-            </b-col>
-            <b-col>
-              <b-form-input id="studyPassword" v-model="studyInfo.studyPassword"></b-form-input>
-            </b-col>
+            <b-row>
+              <b-col cols="3" class="pr-4">
+                <label for="studyPassword" class="mt-2">스터디 비밀번호</label>
+              </b-col>
+              <b-col cols="4">
+                <b-form-input id="studyPassword" v-model="studyInfo.studyPassword"></b-form-input>
+              </b-col>
+            </b-row>
             <hr class="mt-3">
 
-            <b-col cols="3">
-              <label for="studyRule" class="mt-2">스터디 규칙</label>
-            </b-col>
-            <b-col>
-              <b-form-input id="studyRule" v-model="studyInfo.studyRule"></b-form-input>
-            </b-col>
+            <b-row>
+              <b-col cols="3">
+                <label for="studytypeNo" class="mt-2">스터디 타입</label>
+              </b-col>
+              <b-col cols="4">
+                <b-form-select v-model="studyInfo.studyType.studytypeNo" :options="options" ></b-form-select>
+              </b-col>
+            </b-row>
             <hr class="mt-3">
 
-            <b-col cols="3">
-              <label for="studytypeNo" class="mt-2">스터디 타입</label>
-            </b-col>
-            <b-col>
-              <b-form-input id="studytypeNo" v-model="studyInfo.studyType.studytypeNo"></b-form-input>
-            </b-col>
+            <b-row>
+              <b-col cols="3">
+                <label for="totalMember" class="mt-2">스터디 총 인원</label>
+              </b-col>
+              <b-col>
+                <b-form-input id="totalMember" v-model="studyInfo.totalMember"></b-form-input>
+              </b-col>
+            </b-row>
             <hr class="mt-3">
 
-            <b-col cols="3">
-              <label for="totalMember" class="mt-2">스터디 총 인원</label>
-            </b-col>
-            <b-col>
-              <b-form-input id="totalMember" v-model="studyInfo.totalMember"></b-form-input>
-            </b-col>
+            <b-row>
+              <b-col cols="3">
+                <label for="studyRule" class="mt-2">스터디 규칙</label>
+              </b-col>
+              <b-col>
+                <b-form-textarea id="studyRule" v-model="studyInfo.studyRule" rows="3" max-rows="6"></b-form-textarea>
+              </b-col>
+            </b-row>
             <hr class="mt-3">
           </div>
-          <b-button class="mt-3" block @click="updateStudy">수정</b-button>
-          <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">취소</b-button>
+          <div class="d-flex justify-content-center">
+            <b-button class="m-2" variant="success" @click="updateStudy">수정</b-button>
+            <b-button class="m-2" @click="$bvModal.hide('bv-modal-studyModify')">취소</b-button>
+          </div>
         </b-modal>
 
 
       <b-button v-if="power.leader" variant="danger" @click="deleteStudy">스터디 삭제</b-button>
-      <b-button v-else variant="danger">스터디 탈퇴</b-button>
+      <b-button v-else variant="danger" @click="deleteMember(myStudyMemberNo)">스터디 탈퇴</b-button>
       <div class="buttongroup d-flex justify-content-between" style="width:800px;">
         <b-button @click="togglenotice">공지사항</b-button>
         <b-button @click="toggleapply">가입 요청 확인 </b-button>
@@ -106,7 +120,8 @@ import StudyMember from '@/components/study/StudyMember.vue'
 
 import JwtDecode from 'jwt-decode'
 
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 import { mapState } from 'vuex'
 
 export default {
@@ -122,13 +137,16 @@ export default {
       toggleApply: false,
       toggleMember: false,
       studyNo: this.$route.params.studyNo,
+      myStudyMemberNo: '',
       studyInfo: {
+        studyType:{},
         // studyName: null,
         // url: null,
         // image: null,
         // totalMember: null,
         // numberOfMember: null, //현재 참여중인 스터디 인원
       },
+      options:[],
       modal: false,
       pwd: "",
     }
@@ -157,14 +175,11 @@ export default {
       this.toggleMember=true
     },
     getStudyInfo() {
-      axios({
+      http({
         method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/study/search/${this.studyNo}`
+        url: `/study/search/${this.studyNo}`
       })
-      .then(res => {
-        console.log(res)
-        // this.studyInfo.studyName = res.data.studyName
-        // this.studyInfo.url = res.data.url
+      .then(res => {        
         this.studyInfo = res.data
       })
       .catch(err => {
@@ -172,9 +187,9 @@ export default {
       })
     },
     deleteStudy() {
-      axios({
+      http({
         method: 'DELETE',
-        url: `http://i6e103.p.ssafy.io:8080/api/study/remove/${this.studyNo}`
+        url: `/study/remove/${this.studyNo}`
       })
       .then(() => {
         this.$router.push({name:'MyPage'})
@@ -210,9 +225,9 @@ export default {
         // console.log(this.participant);
         console.log("😃");
        // 비밀번호 치고 방 입장 성공 시 비공개 스터디 참가자 등록 시킴
-        axios({
+        http({
             method: 'POST',
-            url: `http://i6e103.p.ssafy.io:8080/api/privateroom/register`,
+            url: `/privateroom/register`,
             headers: this.getToken(),
             params: {privatestudyroom_id: this.roomUrl},
           })
@@ -237,28 +252,88 @@ export default {
         totalMember: this.studyInfo.totalMember,
         url: this.studyInfo.url,
       }
-      axios({
+      http({
         method: 'PUT',
-        url: 'http://i6e103.p.ssafy.io:8080/api/study/update',
+        url: '/study/update',
         data: modifyInfo
       })
-      .then(res => {
-        console.log(res)
-        this.$bvModal.hide('bv-modal-example')
+      .then(() => {
+        // console.log(res)
+        this.$bvModal.hide('bv-modal-studyModify')
       })
       .catch(err => {
-        console.log(modifyInfo)
         console.log(err)
       })
+    },
+    getStudyType() {
+      http({
+        method: 'GET',
+        url: '/study/studyType'
+      })
+      .then(res => {
+        // console.log(res)
+        res.data.forEach(element => {
+          this.options.push({value: element.studytypeNo, text:element.studytypeName})
+        })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    getStudyMemberNo(){
+      this.$store.dispatch('getStudyMembers', this.studyNo)
+
+      var token = localStorage.getItem('jwt')
+      var decoded = JwtDecode(token);
+      var myId = decoded.sub;
+      this.studyMembers.forEach(member => {
+        if(member.user_id === myId){
+          this.myStudyMemberNo = member.studymember_no
+        }
+      })
+    },
+    deleteMember(studymember_no) {
+      http({
+        method: 'DELETE',
+        url: `/studymember/remove/${studymember_no}`
+      })
+      .then(() => {
+        // console.log(res)
+        this.$router.push({name: 'MyPage'})
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    // preventNav(event) {
+    //   event.preventDefault()
+    //   event.returnValue = ""
+    // },
+    doNotReload(event){
+      if( (event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) //ctrl+N , ctrl+R
+      || (event.keyCode == 116)) // function F5
+      {
+        event.keyCode = 0;
+        event.cancelBubble = true;
+        event.returnValue = false;
+      }
     }
   },
+  // beforeMount() {
+  //   window.addEventListener("beforeunload", this.preventNav)
+  // },
+  // beforeDestroy() {
+  //   window.removeEventListener("beforeunload", this.preventNav);
+  // },
   computed:{
     ...mapState([
-      'power', 'roomName', 'roomUrl', 'participant', 'roomStudyNo'
+      'power', 'roomName', 'roomUrl', 'participant', 'roomStudyNo', 'studyMembers'
     ])
   },
   created() {
     this.getStudyInfo()
+    this.getStudyType()
+    this.getStudyMemberNo()
   }
 }
 </script>
@@ -266,6 +341,7 @@ export default {
 <style scoped>
 
 .black-bg{
+  z-index: 2;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   height: 100vw;
@@ -276,10 +352,16 @@ export default {
   padding: 20px;
 }
 .white-bg{
+	margin-top: 10%;
+	z-index: 3;
   width: 30%;
   background: white;
   border-radius: 8px;
   padding: 20px;
+}
+
+* {
+  font-family:'yg-jalnan';
 }
 
 </style>

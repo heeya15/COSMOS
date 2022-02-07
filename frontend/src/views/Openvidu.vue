@@ -25,10 +25,13 @@
 			</div>
 			<div id="session-aside-left" v-if="session">
 				<p><img src="../assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
-				<p><img src="../assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="$bvModal.show('bv-modal-score')"></p>
+				<p><img src="../assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="scoreModal=true"></p>
 				
 				<!-- 상벌점기능 모달 -->
-					<b-modal id="bv-modal-score" centered title="멤버(점수는 즉시 반영됩니다.)" size="lg">
+				<div v-if="scoreModal" class="black-bg">
+					<div class="white-bg">
+						<h2>멤버 (점수는 즉시 반영됩니다.)</h2>
+						<hr>						
 						<table class="table table-bordered table-hover align-middle">
 							<thead class="table-danger">
 								<tr>
@@ -39,7 +42,7 @@
 									<th>점수</th>
 								</tr>
 							</thead>
-							<tbody v-for="member in studyMembers" :key="member.id" class="info">
+							<tbody v-for="member in studyMembers" :key="member.id">
 								<tr>
 								<td>{{member.user_name}}</td>
 								<td>{{member.user_email}}</td>
@@ -49,10 +52,11 @@
 								</tr>
 							</tbody>
 						</table>
-						<template #modal-footer="{ok}">
-							<b-button @click="ok">닫기</b-button>
-						</template>
-					</b-modal>
+						<div class="d-flex justify-content-end">
+							<button @click="scoreModal=false" class="btn btn-secondary">닫기</button>
+						</div>
+					</div>
+				</div>
 
 				<p><img src="../assets/img/openvidu/asideimg03.png" class="sideMenuImg" alt="calendar"></p>
 			</div>
@@ -149,7 +153,27 @@
 .score-btn {
 	border: none;
 }
-
+.black-bg{
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+	z-index: 2;
+  height: 100vw;
+  background: rgba(0,0,0,0.5);
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 20px;
+}
+.white-bg{
+	margin-left:35%;
+	margin-top: 10%;
+	z-index: 3;
+  width: 30%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+}
+/* 상벌점 스타일 끝 */
 #main{
 	height: 100%;
 }
@@ -322,6 +346,7 @@ background-color: #F0F0F0;
 </style>
 <script>
 import axios from 'axios';
+import http from "@/util/http-common.js";
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from '../components/openvidu/UserVideo';
 import jwt_decode from "jwt-decode";
@@ -330,8 +355,8 @@ import { mapState } from "vuex";
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+const OPENVIDU_SERVER_URL = "https://i6e103.p.ssafy.io:8084";
+const OPENVIDU_SERVER_SECRET = "ssafy1234";
 
 export default {
 	name: 'App',
@@ -351,13 +376,12 @@ export default {
 		{ vmid: "description", name: "description", content: 'description' }
 		//vmid ↑ 메타 태그를 고유하게 만들어준다.
 		]
-  	},
+  },
 	data () {
 		return {
 			// 화면 공유
 			OVForScreenShare: undefined,
 			sessionForScreenShare: undefined,
-			mainStreamManager2: undefined,
 			sharingPublisher: undefined,
 
 			OV: undefined,
@@ -377,6 +401,7 @@ export default {
 			userId: '',
 
 			// 상벌점 기능
+			scoreModal: false,
 		}
 	},
 	computed:{
@@ -396,17 +421,16 @@ export default {
 	},
 	methods: {
 		getToken_info(){
-             const token = localStorage.getItem('jwt')
-             const header = {
-                   Authorization: `Bearer ${token}`
-              }
-            return header
-        }
-		,
+      const token = localStorage.getItem('jwt')
+      const header = {
+				Authorization: `Bearer ${token}`
+			}
+      return header
+    },
 		// 상벌점 기능 관련 methods
 		getStudyMembers() {
-          this.$store.dispatch('getStudyMembers', this.studyNo)
-        },
+      this.$store.dispatch('getStudyMembers', this.$store.state.roomStudyNo)
+    },
 		updateScore(score, studymember_no) {
 			const updateInfo = {
 				authority: this.$store.state.power.authority,
@@ -414,13 +438,14 @@ export default {
 				score: score,
 				studymember_no: studymember_no
 			}
-			axios({
+			http({
 				method: 'PUT',
-				url: 'http://i6e103.p.ssafy.io:8080/api/studymember/updatescore',
+				url: '/studymember/updatescore',
 				data: updateInfo
 			})
-			.then(res => {
-				console.log(res)
+			.then(() => {
+				// console.log(res)
+				this.getStudyMembers()
 			})
 			.catch(err => {
 				console.log(err)
@@ -435,13 +460,14 @@ export default {
 			this.updateScore(score, studymember_no)
 		},
 		
+		
 		joinSession () {
 			// --- Get an OpenVidu object ---
 			this.OV = new OpenVidu();
 
 			// --- Init a session ---
 			this.session = this.OV.initSession();
-
+		
 			// --- Specify the actions when events take place in the session ---
 
 			// On every new Stream received...
@@ -478,7 +504,8 @@ export default {
 					.then(() => {
 
 						// --- Get your own camera stream with the desired properties ---
-
+						// console.log("Dasdasdasdasdasdasdasdasdasdasdasdasdqwrqwrqw");
+						// console.log(this.session)
 						let publisher = this.OV.initPublisher(undefined, {
 							audioSource: undefined, // The source of audio. If undefined default microphone
 							videoSource: undefined, // The source of video. If undefined default webcam
@@ -496,6 +523,8 @@ export default {
 						// --- Publish your stream ---
 
 						this.session.publish(this.publisher);
+						console.log("Dasdasdasdasdasdasdasdasdasdasdasdasdqwrqwrqw");
+						console.log(this.session)
 					})
 					.catch(error => {
 						console.log('There was an error connecting to the session:', error.code, error.message);
@@ -517,9 +546,9 @@ export default {
 			this.OVForScreenShare = undefined;
 			this.sharingPublisher = undefined;
 			window.removeEventListener('beforeunload', this.leaveSession);
-			axios({
+			http({
 				method: 'DELETE',
-				url: `http://i6e103.p.ssafy.io:8080/api/privateroom/removePrivateMember`,
+				url: `/privateroom/removePrivateMember`,
 				headers: this.getToken_info(),
 				params: {privatestudyroom_id: this.mySessionId},
 			})
@@ -679,7 +708,7 @@ export default {
 					publisher.once('accessDenied', () => { 
 						console.warn('ScreenShare: Access Denied');
 					});
-					this.mainStreamManager2 = publisher;
+					this.mainStreamManager = publisher;
                     this.sharingPublisher = publisher;
                     this.sessionForScreenShare.publish(this.sharingPublisher);
 				}).catch((error => {
@@ -691,7 +720,7 @@ export default {
 			leaveSessionForScreenSharing () {
 			if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
             this.sessionForScreenShare = undefined;
-            this.mainStreamManager2 = undefined;
+            this.mainStreamManager = undefined;
             this.sharingPublisher = undefined;
             this.OVForScreenShare = undefined;
             window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
@@ -701,10 +730,10 @@ export default {
 	watch: {
 		messages() {
 			this.$nextTick(() => {
-                let msg = this.$refs.messages;
+        let msg = this.$refs.messages;
 
-                msg.scrollTo({ top: msg.scrollHeight, behavior: 'smooth' });
-            });
+        msg.scrollTo({ top: msg.scrollHeight, behavior: 'smooth' });
+      });
 		},
 	},
 }

@@ -8,8 +8,10 @@
             <label for="id">아이디</label>
           </div>
           <div class="input-box mb-3">
-            <input id="password" type="password" name="password" v-model="credentials.password" placeholder="비밀번호" required/>
+            <input id="password" type="password" ref="pwd" name="password" v-model="credentials.password" placeholder="비밀번호" required/>
             <label for="password">비밀번호</label>
+            <b-icon icon="eye-slash-fill" id="pwdIcon" ref="pwdIcon" aria-hidden="true" @click="pwdPeek"></b-icon>
+            <!-- <b-button id="passwordBtn" @click="pwdPeek">확인</b-button> -->
           </div>
           <div class="input-box">
             <div class="mt-4" id="message" :value="msg">{{ msg }}</div>
@@ -35,16 +37,29 @@ export default {
       msg: '',
     }
   },
+
   methods: {
     logIn() {
       this.$store.dispatch('logIn', this.credentials)
       // this.$router.push({name: 'MainPage'})
-      
-      // 입력값 초기화
-      this.credentials.id = '';
-      this.credentials.password = '';
-      this.msg = "잘못된 아이디 또는 비밀번호입니다."
-    }
+
+      if(localStorage.getItem('jwt')) {
+        // 입력값 초기화
+        this.credentials.id = '';
+        this.credentials.password = '';
+        this.msg = "잘못된 아이디 또는 비밀번호입니다."
+      }
+    }, 
+
+    pwdPeek() {
+      if(this.$refs.pwd.type == "password") {
+        this.$refs.pwd.type = "text";
+        this.$refs.pwdIcon.icon = "eye-fill";
+      } else {
+        this.$refs.pwd.type = "password";
+        this.$refs.pwdIcon.icon = "eye-fill";
+      }
+    },
   }
 }
 </script>
@@ -52,7 +67,7 @@ export default {
 <style scoped>
 
 #loginPage {
-  height: 90%;
+  height: 100%;
   position: relative;
   background-color: #DAC7F9;
 }
@@ -142,6 +157,13 @@ input:focus, input:not(:placeholder-shown){
 #message {
   font-size: 10pt;
   color: rgb(207, 1, 1);
+}
+
+#pwdIcon {
+  position: absolute;
+  cursor: pointer;
+  right: 5%;
+  top: 30%;
 }
 
 

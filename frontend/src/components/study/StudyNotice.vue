@@ -19,15 +19,17 @@
           <button @click="modifyNotice">수정</button>
         </div>
     </div>
-    <div v-else>
+    <div v-else-if="power.leader">
       <b-form-textarea id="textarea" v-model="notice.studymanageNotice" placeholder="스터디 공지사항을 입력해주세요." rows="3" max-rows="6"></b-form-textarea>
       <button @click="registNotice">등록</button>
-    </div>        
+    </div>
+    <div v-else>등록된 공지사항이 없습니다.</div> 
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 import { mapState } from 'vuex'
 
 export default {
@@ -54,9 +56,9 @@ export default {
     },
     // 공지사항 조회
     showStudyNotice() {
-      axios({
+      http({
         method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/studyManage/search/${this.studyNo}`,
+        url: `/studyManage/search/${this.studyNo}`,
       })
       .then(res => {
         // console.log(res)
@@ -75,16 +77,16 @@ export default {
         studyNo: this.studyNo,
         studymanageNotice: this.notice.studymanageNotice
       }
-      axios({
+      http({
         method: 'PUT',
-        url: 'http://i6e103.p.ssafy.io:8080/api/studyManage/update',
+        url: '/studyManage/update',
         data: updateFormdata,
         // headers: this.getToken()
       })
       .then(() => {
         // console.log(res)
         this.notice.modify = false
-        this.$router.go()
+        this.showStudyNotice()
       })
       .catch(err =>{
         console.log(err)
@@ -96,16 +98,16 @@ export default {
         studyNo: this.studyNo,
         studymanageNotice: this.notice.studymanageNotice
       }
-      axios({
+      http({
         method: 'POST',
-        url: 'http://i6e103.p.ssafy.io:8080/api/studyManage/register',
+        url: '/studyManage/register',
         data: updateFormdata,
         // headers: this.getToken()
       })
       .then(() => {
         // console.log(res)
         this.notice.modify = false
-        this.$router.go()
+        this.showStudyNotice()
       })
       .catch(err =>{
         console.log(err)
@@ -113,12 +115,12 @@ export default {
     },
     // 공지사항 삭제
     deleteNotice() {
-      axios({
+      http({
         method: 'DELETE',
-        url: `http://i6e103.p.ssafy.io:8080/api/studyManage/remove/${this.studyNo}`
+        url: `/studyManage/remove/${this.studyNo}`
       })
       .then(() => {
-        this.$router.go()
+        this.showStudyNotice()
       })
       .catch(err =>{
         console.log(err)

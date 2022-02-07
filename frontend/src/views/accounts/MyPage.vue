@@ -20,17 +20,49 @@
         </div>
       </div>
       <!-- My study는 해당멤버 스터디 조회 사용(token 실어서 보내기) -->
-      <div>MY STUDY</div>
-      <div v-if="user_study.length >= 1">
-        <div v-for="study in user_study" :key="study.id" @click="goStudyManage(study.studyNo)">{{study.studyName}}</div>
+
+      <div class="container py-5">
+        <!-- DEMO 1 -->
+        <div class="py-5">
+          <h3 class="font-weight-bold mb-0">My Study</h3>
+          <p class="font-italic text-muted mb-4">현재 가입한 스터디 입니다.</p>
+
+          <div v-if="user_study.length >= 1" >
+            <div class="row">
+            <div v-for="study in user_study" :key="study.id" @click="goStudyManage(study.studyNo)" class="col-md-4 mb-3 mb-lg-0">
+              <!-- DEMO 1 Item -->
+              <!-- <div class="col-lg-6 mb-3 mb-lg-0"> -->
+                <div class="hover hover-1 text-white rounded"><img src="https://bootstrapious.com/i/snippets/sn-img-hover/hoverSet-3.jpg" alt="">
+                  <div class="hover-overlay"></div>
+                  <div class="hover-1-content px-5 py-4">
+                    <h3 class="hover-1-title text-uppercase font-weight-bold mb-0"> <span class="font-weight-light">{{study.studyName}}</span></h3>
+                    <p class="hover-1-description font-weight-light mb-0">{{study.studyRule}}</p>
+                  </div>
+                <!-- </div>  -->
+              </div>
+              
+            </div>
+          </div>
+
+
+
+
+        </div>
+        <div v-else>아직 가입한 스터디가 없습니다.</div>
       </div>
-      <div v-else>아직 가입한 스터디가 없습니다.</div>
+
+
+
+
+
+      </div>
     </div>
   </center>
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 
 export default {
   name: 'MyPage',
@@ -56,9 +88,9 @@ export default {
       return header
     },
     getUserInfo(){
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/user/me',
+        url: '/user/me',
         headers: this.getToken()
       })
       .then(res =>{
@@ -73,9 +105,9 @@ export default {
       })
     },
     signOut(){
-      axios({
+      http({
         method: 'DELETE',
-        url: `http://i6e103.p.ssafy.io:8080/api/user/remove/${this.user_id}`,
+        url: `/user/remove/${this.user_id}`,
         headers: this.getToken()
       })
       .then(res => {
@@ -94,9 +126,9 @@ export default {
         user_name: this.user_name,
         user_password: this.user_password
       }
-      axios({
+      http({
         method: 'PUT',
-        url: 'http://i6e103.p.ssafy.io:8080/api/user/update',
+        url: '/user/update',
         data: userInfo
       })
       .then(() => {
@@ -109,9 +141,9 @@ export default {
       })
     },
     getMyStudy() {
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/study/memberStudy',
+        url: '/study/memberStudy',
         headers: this.getToken()
       })
       .then(res => {
@@ -128,9 +160,9 @@ export default {
       this.$store.dispatch('isLeader', study)
     },
     checkPassword() {
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/user/password',
+        url: '/user/password',
         params: {user_password:this.user_pw},
         headers: this.getToken()
       })
@@ -161,4 +193,80 @@ export default {
   width: 1000px;
   border: 1px solid rgb(204, 143, 143);
 }
+
+.hover {
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 60%;
+}
+
+.hover-overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  transition: all 0.4s;
+}
+
+.hover img {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 0.3s;
+}
+
+.hover-content {
+  position: relative;
+  z-index: 99;
+}
+
+
+/* DEMO 1 ============================== */
+.hover-1 img {
+  width: 105%;
+  position: absolute;
+  top: 0;
+  left: -5%;
+  transition: all 0.3s;
+}
+
+.hover-1-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  transition: all 0.4s;
+}
+
+.hover-1 .hover-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.hover-1-description {
+  transform: translateY(0.5rem);
+  transition: all 0.4s;
+  opacity: 0;
+}
+
+.hover-1:hover .hover-1-content {
+  bottom: 2rem;
+}
+
+.hover-1:hover .hover-1-description {
+  opacity: 1;
+  transform: none;
+}
+
+.hover-1:hover img {
+  left: 0;
+}
+
+.hover-1:hover .hover-overlay {
+  opacity: 0;
+}
+
+
 </style>

@@ -17,13 +17,13 @@ export default {
 </script>
 
 <style>
-@font-face {
+/* @font-face {
     font-family: 'BMJua';
     font-weight: normal; 
     font-style: normal; 
     src: url(https://cdn.jsdelivr.net/gh/webfontworld/woowahan/BMJua.woff2) format('woff2');
     font-display: swap;
-}
+} */
 
 @font-face {
     font-family: 'yg-jalnan';
@@ -33,7 +33,7 @@ export default {
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */
@@ -42,18 +42,7 @@ export default {
   font-family: 'yg-jalnan';
 }
 
-#nav {
-  /* padding: 30px; */
-  position: sticky;
-  height: 10%;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #9255AD;
+body {
+  padding-top: 80px;
 }
 </style>

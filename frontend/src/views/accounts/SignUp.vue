@@ -10,31 +10,43 @@
         <div class="input-box mt-4">
           <b-row>
             <b-col cols="8">
-              <input id="userId" type="text" name="userId" v-model="credentials.userId" placeholder="아이디" @keydown="resetIdDuplicateCheck" @blur="checkId" required/>
-              <label for="username">아이디</label>
+              <input id="userId" type="text" name="userId" v-model="credentials.userId" placeholder="아이디" @keydown="resetidDuplicate" @blur="idRuleCheck" required/>
+              <label for="username" style="left: 15px;">아이디</label>
             </b-col>
-            <b-col cols="4"><b-button class="mt-3" @click="idConfirm" id="idCheckBtn">중복확인</b-button></b-col>
+            <b-col cols="4" class="pl-0"><b-button class="mt-3" @click="idDuplicateCheck" id="idCheckBtn">중복확인</b-button></b-col>
           </b-row>
           <div class="mt-1 message" ref="idMsg"></div>
         </div>
         <div class="input-box mt-4">
-          <input id="password" type="text" ref="password" name="password" v-model="credentials.userPassword" placeholder="비밀번호" @keydown="resetPwdDoubleCheck" @blur="checkPassword" required/>
+          <input id="password" type="text" ref="password" name="password" v-model="credentials.userPassword" placeholder="비밀번호" @keydown="resetpwdDouble" @blur="passwordRuleCheck" required/>
           <label for="password">비밀번호</label>
           <div class="mt-1 message" ref="pwdMsg1"></div>
         </div>
         <div class="input-box mt-4">
-          <input id="passwordCheck" type="password" name="passwordCheck" v-model="passwordCheck" placeholder="비밀번호 확인" @blur="doubleCheckPassword" required/>
-          <label for="passwordCheck">비밀번호 확인</label>
+          <input id="passwordRule" type="password" name="passwordRule" v-model="passwordRule" placeholder="비밀번호 확인" @blur="doublePasswordCheck" required/>
+          <label for="passwordRule">비밀번호 확인</label>
           <div class="mt-1 message" ref="pwdMsg2"></div>
         </div>
         <div class="input-box mt-4">
           <b-row>
             <b-col cols="8">
-              <input id="email" type="text" name="email" v-model="credentials.userEmail" placeholder="이메일" required/>
-              <label for="useremailname">이메일</label>
+              <input id="email" type="text" name="email" :disabled="inputDisabled" v-model="credentials.userEmail" placeholder="이메일" required @blur="emailDuplicateCheck" />
+              <label for="useremailname" style="left: 15px;">이메일</label>
+              <div class="mt-1 message" ref="emailMsg"></div>
             </b-col>
-            <b-col cols="4"><b-button class="mt-3" @click="emailAuth" id="emailBtn">인증</b-button></b-col>
+            <b-col cols="4" class="pl-0"><b-button class="mt-3" @click="sendEmail" id="emailBtn">인증</b-button></b-col>
           </b-row>
+        </div>
+        <div v-if="email">
+          <div class="input-box">
+            <b-row>
+              <b-col cols="8">
+                <input id="emailCode" type="text" name="emailCode" v-model="emailCode" placeholder="인증번호" required/>
+                <label for="emailCode" style="left: 15px;">인증번호</label>
+              </b-col>
+              <b-col cols="4" class="pl-0"><b-button class="mt-3" @click="emailAuthenticate" id="emailBtn">확인</b-button></b-col>
+            </b-row>
+          </div>
         </div>
         <div class="mt-1 message" ref="resultMsg"></div>
         <b-button id="signupBtn" type="submit" @click="signUp">SIGNUP</b-button>
@@ -44,7 +56,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 
 export default {
   name:'SignUp',
@@ -56,134 +69,171 @@ export default {
         userPassword:'',
         userEmail:'',
       },
-      idRuleCheck: false,
-      idDuplicateCheck: false,
-      pwdRuleCheck: false,
-      pwdDoubleCheck: false,
+      idRule: false,
+      idDuplicate: false,
+      pwdRule: false,
+      pwdDouble: false,
       toggleIdCheck: false,
-      passwordCheck: '',
-      msg2:'',
-      msg3:'',
-      response: [],
+      passwordRule: '',
+      email: false,   // 이메일 전송 여부
+      emailRule: false,
+      emailDuplicate: false,    
+      emailAuth: false,
+      emailAuthCode: '',
+      emailCode: '',
+      inputDisabled: false,  // 이메일 입력 disabled 여부
     }
   },
 
   methods: {
     signUp() {
-      console.log('아이디 유효성 검사여부 : ', this.idRuleCheck, ' && 아이디 중복 검사 : ', this.idDuplicateCheck, 
-      '&& 비밀번호 유효성 검사 여부 : ', this.pwdRuleCheck, ' && 비밀번호 확인 : ', this.pwdDoubleCheck);
-      if(this.idRuleCheck && this.idDuplicateCheck && this.pwdRuleCheck && this.pwdDoubleCheck) this.$store.dispatch('signUp',this.credentials)
-      else {
-        if(!this.idRuleCheck) {
-          this.$refs.resultMsg.innerText = '아이디 유효성 규칙을 확인하세요.';
-        } else if(!this.idDuplicateCheck) {
+      console.log('아이디 유효성 검사여부 : ', this.idRule, ' && 아이디 중복 검사 : ', this.idDuplicate, 
+      '&& 비밀번호 유효성 검사 여부 : ', this.pwdRule, ' && 비밀번호 확인 : ', this.pwdDouble,
+      '&& 이메일 유효성 검사여부 : ', this.emailRule, '&& 이메일 중복 검사여부 : '
+      , this.emailDuplicate, ' && 이메일 인증여부 : ', this.emailAuth);
+      
+      if(this.idRule && this.idDuplicate && this.pwdRule && this.pwdDouble && this.emailRule && this.emailDuplicate && this.emailAuth) {
+        this.$store.dispatch('signUp',this.credentials)
+      } else {
+        if(!this.idDuplicate) {
           this.$refs.resultMsg.innerText = '아이디 중복 검사를 해주세요.';
-        } else if(!this.pwdRuleCheck) {
-          this.$refs.resultMsg.innerText = '비밀번호 유효성 규칙을 확인하세요.';
-        } else if(!this.pwdDoubleCheck) {
-          this.$refs.resultMsg.innerText = '비밀번호가 일치하지 않습니다.';
-        } else {
-          this.$refs.resultMsg.innerText = '';
+        } else if(!this.emailAuth) {
+          this.$refs.resultMsg.innerText = '이메일 인증을 해주세요.';
         }
       }
     },
     
-    idConfirm() {
-      axios({
+    idDuplicateCheck() {
+      http({
         method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/user/idcheck/${this.credentials.userId}`,
+        url: `/user/idcheck/${this.credentials.userId}`,
       })
       .then(res => {
         console.log(res);
         this.toggleIdCheck = true
-        this.idDuplicateCheck = true;
+        this.idDuplicate = true;
         this.$refs.idMsg.innerText = '';
       })
       .catch(err => {
         this.$refs.idMsg.innerText = '사용할 수 없는 아이디입니다.';
-        this.idDuplicateCheck = false;
+        this.idDuplicate = false;
         console.log(err)
       })
     },
 
-    async checkId() {
-      var idRule = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,12}$/;
+    async idRuleCheck() {
+      var rule = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,12}$/;
 
-      if(!idRule.test(this.credentials.userId)) {
+      if(!rule.test(this.credentials.userId)) {
         this.$refs.idMsg.innerText = '아이디는 4 ~ 12 자리수이며 문자, 숫자를 최소 1개씩 포함해야합니다.';
-        this.idRuleCheck = false;
+        this.idRule = false;
       } else {
         this.$refs.idMsg.innerText = '';
-        this.idRuleCheck = true;
+        this.idRule = true;
       }
     },
 
-    resetIdDuplicateCheck() {
-      this.idDuplicateCheck = false;
+    resetidDuplicate() {
+      this.idDuplicate = false;
     },
 
-    resetPwdDoubleCheck() {
-      if(this.pwdDoubleCheck == true) this.$refs.pwdMsg2.innerText = '비밀번호가 일치하지 않습니다.';
+    resetpwdDouble() {
+      if(this.pwdDouble == true) this.$refs.pwdMsg2.innerText = '비밀번호가 일치하지 않습니다.';
       else this.$refs.pwdMsg2.innerText = '';
-      this.pwdDoubleCheck = false;
+      this.pwdDouble = false;
     },
 
-    async checkPassword() {
-      var pwdRule = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,12}$/;
+    async passwordRuleCheck() {
+      var rule = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,12}$/;
 
-      if(!pwdRule.test(this.credentials.userPassword)) {
-        // this.msg2 = '비밀번호는 8 ~ 12 자리수이며 문자, 숫자, 특수기호를 최소 1개씩 포함해야합니다.';
+      if(!rule.test(this.credentials.userPassword)) {
         this.$refs.pwdMsg1.innerText = '비밀번호는 8 ~ 12 자리수이며 문자, 숫자, 특수기호를 최소 1개씩 포함해야합니다.';
-        this.pwdRuleCheck = false;
+        this.pwdRule = false;
       } else {
-        // this.msg2 = ''
         this.$refs.pwdMsg1.innerText = '';
-        this.pwdRuleCheck = true;
+        this.pwdRule = true;
       }
     },
 
-    async doubleCheckPassword() {
-      if(this.credentials.userPassword == this.passwordCheck) {
-        // this.msg3 = '';
+    async doublePasswordCheck() {
+      if(this.credentials.userPassword == this.passwordRule) {
         this.$refs.pwdMsg2.innerText = '';
-        this.pwdDoubleCheck = true;
+        this.pwdDouble = true;
       } else {
-        // this.msg3 = '비밀번호가 일치하지 않습니다.';
         this.$refs.pwdMsg2.innerText = '비밀번호가 일치하지 않습니다.';
-        this.pwdDoubleCheck = false;
+        this.pwdDouble = false;
       }
     },
 
-    emailAuth() {
+    // 이메일 중복 검사
+    async emailDuplicateCheck() {
+      http({
+        method: 'GET',
+        url: `/email/emailcheck/${this.credentials.userEmail}`,
+      })
+      .then(res => {
+        console.log(res.data)
+        this.emailDuplicate = true; 
+        this.$refs.emailMsg.innerText = ''
+      })
+      .catch(err => {
+        this.$refs.emailMsg.innerText = '사용할 수 없는 이메일 입니다.'
+        console.log(err)
+      })
 
     },
 
-    // passwordValidation() {
-    //   var pw = this.credentials.userPassword
-    //   var num = pw.search(/[0-9]/g)
-    //   var eng = pw.search(/[a-z]/ig)
-    //   var spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi)
+    // 이메일 유효성 검사
+    emailRuleCheck() {
+      var rule = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+      
+      if(!rule.test(this.credentials.userEmail)) {
+        this.emailRule = false;
+        this.$refs.emailMsg.innerText = '유효하지 않은 이메일 형식입니다.';
+      } else {
+        this.emailRule = true;
+        this.$refs.emailMsg.innerText = '';
+      }
+    },
 
-    //   if(pw.length < 8 || pw.length > 12){
-    //     // alert("8자리 ~ 12자리 이내로 입력해주세요.")
-    //     this.pwCheck = false
-    //   }else if(pw.search(/\s/) != -1){
-    //     // alert("비밀번호는 공백 없이 입력해주세요.")
-    //     this.pwCheck = false
-    //   }else if(num < 0 || eng < 0 || spe <0) {
-    //     // alert("영문,숫자,특수문자를 혼합하여 입력해주세요.")
-    //     this.pwCheck = false
-    //   }else {
-    //     console.log("통과")
-    //     this.pwCheck = true 
-    //   }
-    // },
+    // 이메일 전송
+    sendEmail() {
+      this.emailRuleCheck();
+      console.log(">>>>>>>>>>>>>>>> here/")
+
+      if(this.emailDuplicate == true && this.emailRule == true) {
+        this.email = true;
+        this.inputDisabled = true;
+
+        http({
+          method: 'GET',
+          url: `/email/send/${this.credentials.userEmail}`,
+        })
+        .then(res => {
+          console.log(res);
+          this.emailAuthCode = res.data;
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    // emailAuthCode
+    // 이메일 인증 코드 확인
+    emailAuthenticate() {
+      console.log(">>>>>>>>>>>>>>>> and here")
+
+      if(this.emailAuthCode == this.emailCode) {
+        this.emailAuth = true;
+        this.inputDisabled = true;
+        this.$refs.resultMsg.innerText = '';
+      } else {
+        console.log(">>>>>>>>>> 메일 코드 : ", this.emailAuthCode);
+        console.log(">>>>>>>>>> 내 코드 : ", this.emailCode);
+        this.$refs.resultMsg.innerText = '인증코드가 틀렸습니다.';
+      }
+    },
   },
-  // computed: {
-  //   pwState(){
-  //     return this.passwordValidation()
-  //   }
-  // }
 }
 </script>
 
@@ -200,7 +250,7 @@ p {
 }
 
 #signupBox {
-  height: 630px;
+  height: 700px;
   width: 500px;
   background-color: rgb(255, 255, 255);
   box-shadow: 10px 10px 10px rgb(235, 235, 235);
@@ -212,7 +262,7 @@ p {
 }
 
 #signupForm {
-  width: 400px;
+  width: 480px;
   position:absolute;
   top: 40%;
   left: 50%;
@@ -221,7 +271,7 @@ p {
 
 #signup {
   color: #3d3d3d;
-  margin-top: 100px;
+  margin-top: 110px;
 }
 
 #signupBtn {
@@ -233,7 +283,7 @@ p {
 }
 
 #emailBtn, #idCheckBtn {
-  font-size: 15pt;
+  font-size: 13pt;
   width: 100px;
 }
 

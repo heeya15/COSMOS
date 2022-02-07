@@ -1,104 +1,132 @@
 <template>
   <div>
-    <h1>스터디 모집 게시판</h1>
-    <hr>
-    <h3 v-if="editButton === true">글 수정</h3>
-    <h3 v-else>상세보기</h3>
     <center>
-      <div class="p-5" style="width: 600px">
-        <b-row>
-          <b-col cols="3" class="mt-2">
-            <p>제목</p>
-          </b-col>
-          <b-col cols="9" class="mt-2" >
-            <input v-if="editButton === true" type="text" v-model="boardInfo.contentTitle">
-            <p v-else>{{ boardInfo.contentTitle }}</p>
-          </b-col>
-
-            <b-col cols="3" class="mt-2">
-              <p v-show="this.boardInfo.header === false" >스터디 이름</p>
-            </b-col>
-            <b-col cols="9" class="mt-2">
-              <p>{{ boardInfo.studyName }}</p>
-            </b-col>
-
-            <b-col cols="3" class="mt-2">
-              <p v-show="this.boardInfo.header === false">스터디 인원</p>
-            </b-col>
-            <b-col cols="9" class="mt-2" >
-              <input v-show="this.boardInfo.header === false" v-if="editButton === true" type="text" v-model="boardInfo.recruitNumber">
-              <p v-else v-show="this.boardInfo.header === false">{{ boardInfo.recruitNumber }}</p>
-            </b-col>
-
-          <b-col cols="3" class="mt-2">
-            <p>스터디 분류</p>
-          </b-col>
-          <b-col cols="9" class="mt-2">
-            <p >{{ boardInfo.studytypeName }}</p>
-            <!-- 수정을 눌렀을 때 값 타입 가져오고 원래는 생성될때의 값 불러와야 함 -->
-            <b-form-select v-if="editButton === true" v-show="this.boardInfo.header === true" v-model="studyTypeSelected" :options="options" id="studytype_name"></b-form-select>
-          </b-col>
-
-          <b-col cols="3" class="mt-2">
-            <p v-if="editButton === true" for="some-radios">상태</p>
-          </b-col>
-          <b-col cols="9">
-            <div v-if="editButton === true">
-              <label class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus_0" value="false">진행중</label>
-              <label class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus_1" value="true">완료</label>
-            </div>
-          </b-col>
-
-          <b-col cols="3" class="mt-2">
-            <p>내용</p>
-          </b-col>
-          <b-col cols="9" class="mt-2">
-            <b-textarea v-if="editButton === true" type="text" v-model="boardInfo.content"></b-textarea>
-            <p v-else>{{ boardInfo.content }}</p>
-          </b-col>
-          <p>여기 번호 : {{ studyInfo.studyNo }}</p>
-        </b-row>
+    <div class="total_body">
+      <h1>스터디 모집 게시판</h1>
+      <hr style="width: 80%;">
+      <h3 v-if="editButton === true">글 수정</h3>
+      <h3 v-else>상세보기</h3>
+      <!-- <img src="게시판보드.png" alt=""> -->
+      <div class="memo">
+        <p>함께해요!</p>
       </div>
-    </center> 
-      <!-- 작성자인 경우 수정을 보여주고 아니면 스터디 신청을 보여준다 -->
-      <div v-show="this.boardInfo.header === false">
-        <div v-show="editButton === false">
-          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정</b-button>
-          <b-button v-else style="background-color: #DAC7F9" @click="applyStudy">스터디 신청</b-button>
-          <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
-          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
-        </div>
-        <div v-show="editButton === true">
-          <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="updateForm">수정</b-button>
-          <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
-          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
-          <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
-        </div>
+      <div class="memo1">
+        <p>사람을 찾습니다!👀</p>
       </div>
+      <div class="round_box"></div>
+      <div class="round_box1"></div>
+      <div class="round_box2"></div>
+      
+        <div class="body_total p-5" style="width: 500px;" >
+          <b-row class="content_rowTag">
+            <b-col cols="5" class="mt-2">
+              <p>제목</p>
+              <hr>
+            </b-col>
+            <b-col cols="7" class="mt-2" >
+              <b-form-input v-if="editButton === true" type="text" v-model="boardInfo.contentTitle" style="height: 30px; text-align: center;"></b-form-input>
+              <p v-else>{{ boardInfo.contentTitle }}</p>
+              <hr>
+            </b-col>
+
+              <b-col cols="5" class="mt-2">
+                <p v-show="this.boardInfo.header === false" >스터디 이름</p>
+                <hr>
+              </b-col>
+              <b-col cols="7" class="mt-2">
+                <p>{{ boardInfo.studyName }}</p>
+                <hr>
+              </b-col>
+
+              <b-col cols="5" class="mt-2">
+                <p v-show="this.boardInfo.header === false">스터디 인원</p>
+                <hr>
+              </b-col>
+              <b-col cols="7" class="mt-2" >
+                <b-form-input v-show="this.boardInfo.header === false" v-if="editButton === true" type="text" v-model="boardInfo.recruitNumber" style="height: 30px; text-align: center;"></b-form-input>
+                <p v-else v-show="this.boardInfo.header === false">{{ boardInfo.recruitNumber }}</p>
+                <hr>
+              </b-col>
+
+            <b-col cols="5" class="mt-2">
+              <p>스터디 분류</p>
+              <hr>
+            </b-col>
+            <b-col cols="7" class="mt-2">
+              <p >{{ boardInfo.studytypeName }}</p>
+              <!-- 수정을 눌렀을 때 값 타입 가져오고 원래는 생성될때의 값 불러와야 함 -->
+              <b-form-select v-if="editButton === true" v-show="this.boardInfo.header === true" v-model="studyTypeSelected" :options="options" id="studytype_name"></b-form-select>
+              <hr>
+            </b-col>
+
+            <b-col v-if="editButton === true" cols="5" class="mt-2">
+              <p v-if="editButton === true" for="some-radios">상태</p>
+              <hr>
+            </b-col>
+            <b-col v-if="editButton === true" cols="7">
+              <div v-if="editButton === true">
+                <label class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus_0" value="false">진행중</label>
+                <label class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus_1" value="true">완료</label>
+                <hr>
+              </div>
+            </b-col>
+
+            <b-col cols="5" class="mt-2">
+              <p>내용</p>
+              <hr>
+            </b-col>
+            <b-col cols="7" class="mt-2">
+              <b-textarea v-if="editButton === true" type="text" v-model="boardInfo.content" style="height: 100px;"></b-textarea>
+              <p v-else>{{ boardInfo.content }}</p>
+              <hr>
+            </b-col>
+            <!-- <p>여기 번호 : {{ studyInfo.studyNo }}</p> -->
+          
+        
+            <!-- 작성자인 경우 수정을 보여주고 아니면 스터디 신청을 보여준다 -->
+
+              <b-col cols="12" class="mt-2" v-show="this.boardInfo.header === false">
+                <div v-show="editButton === false">
+                  <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정</b-button>
+                  <b-button v-else style="background-color: #DAC7F9" @click="applyStudy">스터디 신청</b-button>
+                  <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+                </div>
+                <div v-show="editButton === true" cols="3" class="mt-2">
+                  <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="updateForm">수정</b-button>
+                  <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+                  <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
+                </div>
+              </b-col>
 
 
-      <!-- 스터디 구할 때 수정 부분 -->
-      <div v-show="this.boardInfo.header !== false">
-        <div v-show="editButton === false">
-          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정ss</b-button>
-          <b-button v-else style="background-color: #DAC7F9" @click="applyStudy">스터디 신청</b-button>
-          <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
-          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제ss</b-button>
+          <!-- 스터디 구할 때 수정 부분 -->
+              <b-col cols="12" class="mt-2" v-show="this.boardInfo.header !== false">
+                <div v-show="editButton === false">
+                  <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="boardFormEdit">수정</b-button>
+                  <b-button v-else style="background-color: #DAC7F9" @click="applyStudy">스터디 신청</b-button>
+                  <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+                </div>
+                <div v-show="editButton === true">
+                  <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="studyWantBoardFormEdit">수정</b-button>
+                  <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제</b-button>
+                  <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
+                </div>
+              </b-col>
+            </b-row>
+          </div>
         </div>
-        <div v-show="editButton === true">
-          <b-button v-if="editButton === true" style="background-color: #DAC7F9" @click="studyWantBoardFormEdit">수정ss</b-button>
-          <b-button style="background-color: #DAC7F9" @click="goBoardMain">목록</b-button>
-          <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="deleteBoardForm">삭제ss</b-button>
-          <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
-        </div>
-      </div>
-
+      </center> 
     <comment/>
   </div>  
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 import Comment from '@/components/community/Comment.vue'
 
 export default {
@@ -162,30 +190,31 @@ export default {
 
     // 스터디 신청
     applyStudy() {
-      axios({
+      http({
         method: 'post',
-        url: `http://i6e103.p.ssafy.io:8080/api/study/applyMember/register/${this.study_no}`,
+        url: `/study/applyMember/register/${this.studyInfo.studyNo}`,
         headers: this.getToken(),
       })
       .then((res) => {
-        console.log(res)
-        // this.study_no = 4
+        console.log(res, '신청부분 데이터')
+        // this.studyInfo.studyNo = res.data.studyNo
         // 스터디장이 만든 스터디 이름 조회
+        console.log(this.studyInfo.studyNo)
         // this.boardInfo.studyName = res.data['studyName']
         alert('신청이 완료되었습니다.')
-        // this.$router.push({name: 'BoardDetail'})
         
       })
       .catch((err) => {
         console.log(err)
+        console.log(this.studyInfo.studyNo)
       })
     },
 
     // 게시글 가져오기
     getBoard() {
-      axios({
+      http({
         method: 'get',
-        url: `http://i6e103.p.ssafy.io:8080/api/board/search/${this.board_no}`,
+        url: `/board/search/${this.board_no}`,
         // headers: this.getToken(),
       })
       .then(res => {
@@ -205,6 +234,7 @@ export default {
         this.boardInfo.header = res.data['header']
         this.userInfo.user_name = res.data.user['userName']
         this.userInfo.user_id = res.data.user['userId']
+        this.studyInfo.studyNo = res.data['studyNo']
         console.log('get board 작동확인')
         console.log(this.boardInfo.contentStatus)
         console.log(this.boardInfo.header, '모집 상태 여기 확인')
@@ -216,9 +246,9 @@ export default {
 
     // 게시글 삭제
     deleteBoardForm() {
-      axios({
+      http({
         method: 'delete',
-        url: `http://i6e103.p.ssafy.io:8080/api/board/remove/${this.board_no}`,
+        url: `/board/remove/${this.board_no}`,
         headers: this.getToken()
       })
       .then((res) => {
@@ -232,9 +262,9 @@ export default {
 
     // 유저 정보 가져오기
     getUserInfo(){
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/user/me',
+        url: '/user/me',
         headers: this.getToken()
       })
       .then(res =>{
@@ -260,9 +290,9 @@ export default {
         user_id: this.userInfo.user_id,
         header: this.boardInfo.header,
       }
-      axios({
+      http({
         method: 'put',
-        url: 'http://i6e103.p.ssafy.io:8080/api/board/update',
+        url: '/board/update',
         data: updateItem,
         headers: this.getToken(),
       })
@@ -291,9 +321,9 @@ export default {
         user_id: this.userInfo.user_id,
         header: this.boardInfo.header,
       }
-      axios({
+      http({
         method: 'put',
-        url: 'http://i6e103.p.ssafy.io:8080/api/board/update',
+        url: '/board/update',
         data: updateItem,
         headers: this.getToken(),
       })
@@ -309,31 +339,11 @@ export default {
       this.boardInfo.studyName = null
     },
 
-    // 스터디정보 불러오기(번호)
-    getStudyInfo() {
-      axios({
-        method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/study/search/${this.studyNo}`
-      })
-      .then(res => {
-        console.log('스터디 데이터 확인')
-        console.log(res)
-        // this.studyInfo.studyName = res.data.studyName
-        this.studyInfo.studyNo = 5
-        // this.studyInfo.url = res.data.url
-      })
-      .catch(err => {
-        console.log(err)
-        console.log('스터디정보 오류 확인')
-        console.log(this.studyInfo.studyNo)
-      })
-    },
-
     // 스터디 분류 가져오기
     getStudyType() {
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+        url: '/study/studyType'
       })
       .then(res => {
         // console.log(res)
@@ -349,7 +359,7 @@ export default {
   created() {
     this.getBoard()
     this.getUserInfo()
-    this.getStudyInfo()
+
     this.getStudyType()
   },
 }
@@ -359,5 +369,92 @@ export default {
 p {
   color: black ;
   font-size: 1rem ;  
+}
+
+.content_rowTag {
+  height: 500px; 
+  /* background-color: rgb(252, 252, 252); */
+}
+
+.memo {
+  width: 150px; 
+  height: 150px; 
+  background-color: rgb(252, 252, 135);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 150px;
+  top: 250px;
+  /* bottom: 100px; */
+}
+
+.memo1 {
+  width: 200px; 
+  height: 200px; 
+  background-color: rgb(155, 213, 236);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 150px;
+  top: 550px;
+  /* bottom: 100px; */
+}
+
+.round_box {
+  width: 15px;
+  height: 15px; 
+  border-radius: 70%;
+  overflow: hidden;
+  background-color: red;
+  position: absolute;
+  left: 220px;
+  top: 260px;
+  box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
+}
+
+.round_box1 {
+  width: 20px;
+  height: 20px; 
+  border-radius: 70%;
+  overflow: hidden;
+  background-color: rgb(66, 66, 252);
+  position: absolute;
+  left: 750px;
+  top: 280px;
+  box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
+}
+
+.round_box2 {
+  width: 17px;
+  height: 17px; 
+  border-radius: 70%;
+  overflow: hidden;
+  background-color: rgb(3, 184, 3);
+  position: absolute;
+  right: 240px;
+  top: 560px;
+  box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
+}
+
+.body_total {
+  /* background: repeating-linear-gradient(-45deg, #B96BC6, #B96BC6 10px, #e4c3f1 10px, #e4c3f1 40px); */
+  /* background-image: url('https://thumb.ac-illust.com/72/72acde4a88378f62cf580ed7024d7a0d_t.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover; */
+  /* width: 800px; */
+  background: rgb(249, 250, 250);
+}
+
+.total_body {
+  /* background-image: url('https://thumb.ac-illust.com/72/72acde4a88378f62cf580ed7024d7a0d_t.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover; */
+  border: 30px solid;
+  border-color: #ca8f37;
+  background-color: rgb(253, 186, 110);
 }
 </style>

@@ -6,10 +6,10 @@
           <p>댓글</p>
         </b-col>
         <b-col cols="6" class="mt-3">
-          <b-input v-model="commentInput.content" @keyup.enter="createComment"></b-input>
+          <b-form-input v-model="commentInput.content" @keyup.enter="createComment"></b-form-input>
         </b-col>
         <b-col cols="3" class="mt-3">
-          <b-button @click="createComment">작성</b-button>
+          <b-button @click="createComment" style="background-color: #DAC7F9">작성</b-button>
         </b-col>
       </b-row>
     </center>
@@ -17,7 +17,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 
 export default {
   name: 'CommentForm',
@@ -42,9 +43,9 @@ export default {
         board_no: this.$store.state.boardNo,
         content: this.commentInput.content
       }
-      axios({
+      http({
         method: 'post',
-        url: 'http://i6e103.p.ssafy.io:8080/api/comment/register',
+        url: '/comment/register',
         data: createCommentItem,
         headers: this.getToken()
 

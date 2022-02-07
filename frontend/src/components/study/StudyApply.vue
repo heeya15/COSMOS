@@ -14,7 +14,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 import { mapState } from 'vuex'
 
 export default {
@@ -27,9 +28,9 @@ export default {
   },
   methods: {
     showApplyMember() {
-      axios({
+      http({
         method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/study/applyMember/searchAll/${this.studyNo}`
+        url: `/study/applyMember/searchAll/${this.studyNo}`
       })
       .then(res =>{
         if (res.data.length === 0) {
@@ -50,9 +51,9 @@ export default {
         study_no: this.$route.params.studyNo,
         user_id: member.user_id
       }
-      axios({
+      http({
         method: 'POST',
-        url: 'http://i6e103.p.ssafy.io:8080/api/studymember/register',
+        url: '/studymember/register',
         data: memberInfo
       })
       .then(res => {
@@ -65,9 +66,9 @@ export default {
       })
     },
     deleteApplyMember(applymember_no) {
-      axios({
+      http({
         method: 'DELETE',
-        url: `http://i6e103.p.ssafy.io:8080/api/study/applyMember/remove/${applymember_no}`
+        url: `/study/applyMember/remove/${applymember_no}`
       })
       .then(res => {
         console.log(res)
