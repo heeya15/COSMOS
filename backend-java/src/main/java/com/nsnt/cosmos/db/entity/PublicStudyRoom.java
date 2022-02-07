@@ -9,8 +9,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 공개 스터디 룸 모델 정의.
@@ -18,6 +22,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Builder
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(
 	// 속성에 UNIQUE 제약조건 설정
 	uniqueConstraints = {
@@ -28,7 +36,7 @@ import lombok.Setter;
 )
 public class PublicStudyRoom {
 	@Id
-	@Column(name = "publicstudyroom_id", nullable = false)
+	@Column(name = "publicstudyroom_id")
 	String publicstudyroomId;
 	
 	@Column(name = "study_name", nullable = false)
