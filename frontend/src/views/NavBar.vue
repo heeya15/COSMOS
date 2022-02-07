@@ -25,20 +25,25 @@
       <b-collapse id="nav-collapse" is-nav>
         <!-- 로그인 했을 때 -->
         <b-navbar-nav class="nav ml-auto" v-if="this.$store.state.isLogin">
-
           <b-nav-item href="#">
             <router-link :to="{ name:'MainBoard' }" class="nav-text text-decoration-none mx-1 px-2">스터디 모집</router-link>
           </b-nav-item>
           <b-nav-item href="#">
             <router-link :to="{ name:'StudyRoomCreateForm' }" class="nav-text text-decoration-none mx-1 px-2">스터디 방 생성</router-link>
           </b-nav-item>
-          <b-nav-item href="#">
+
+          <!-- 관리자인 경우 -->
+          <b-nav-item href="#" v-if="this.$store.state.userId == 'admin'">
+            <router-link :to="{ name:'AdminPage' }" class="nav-text text-decoration-none mx-1 px-2">회원관리</router-link>
+          </b-nav-item>
+
+          <b-nav-item href="#" v-if="this.$store.state.userId != 'admin'">
             <router-link :to="{ name:'MyPage' }" class="nav-text text-decoration-none mx-1 px-2">마이페이지</router-link>
           </b-nav-item>
           <b-nav-item href="#">
             <b-button class="m-1" @click="logOut">로그아웃</b-button>
           </b-nav-item>
-
+        
 
         </b-navbar-nav>
 
@@ -62,8 +67,10 @@
 <script>
 export default {
     name:'NavBar',
+
     methods: {
       logOut() {
+        console.log(">>>>>>>>>>>>> Nav: ",);
         this.$store.dispatch('logOut')
         this.$router.push({ name: 'LogIn' })
         this.$router.go()

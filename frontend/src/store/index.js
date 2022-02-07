@@ -4,7 +4,7 @@ import createPersistedState from "vuex-persistedstate";
 // import http from 'http'
 import router from '@/router'
 import http from "@/util/http-common.js";
-
+import jwtDecode from 'jwt-decode';
 
 Vue.use(Vuex)
 
@@ -23,6 +23,7 @@ export default new Vuex.Store({
       authority: null,
       leader: null
     },
+    userId: "",
 
     // 비공개 스터디룸 state
     roomName: "",
@@ -37,6 +38,8 @@ export default new Vuex.Store({
     LOGIN(state){
       console.log( '로그인됨!!!!')
       state.isLogin = true
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>> ", jwtDecode(localStorage.getItem('jwt')).sub);
+      state.userId = jwtDecode(localStorage.getItem('jwt')).sub;
     },
     GET_BOARD_NO(state, boardNumber){
       console.log(state)
