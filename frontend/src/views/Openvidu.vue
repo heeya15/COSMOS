@@ -1,6 +1,6 @@
 <template>
 	<div id="main">
-		<div id="main-container" class="container">
+		<div id="main-container">
 			<div id="join" v-if="!session">
 				<!-- <div id="img-div"><img src="resources/images/openvidu_grey_bg_transp_cropped.png" /></div> -->
 				<div id="join-dialog" class="jumbotron vertical-center">
@@ -63,10 +63,10 @@
 			<div id="session-aside-right" v-if="session">
 				<div class="participant">
 					<p>참가자</p>
-						<div id="participant-container" class=""> <!-- 참가자 리스트 화면 -->
-						<user-list :stream-manager="publisher"/>
-						<user-list v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
-					</div>
+						<div class="participant_list"> <!-- 참가자 리스트 화면 -->
+							<user-list :stream-manager="publisher"/>
+							<user-list v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+						</div>
 				</div>
 
 				<!-- 채팅 기능 시작 -->
@@ -110,12 +110,14 @@
 					<div v-if="audio === true" class="buttomMenu">
 						
 						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteAudio()">
-							<b-icon icon="mic-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>{{ audioMsg }}
+							<b-icon icon="mic-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+							<span class="footerBtnText">{{ audioMsg }}</span> //
 						</button> <!-- 마이크 on/off 버튼 -->
 					</div>
-					<div v-else class="roomFun">
+					<div v-else class="roomFun buttomMenu">
 						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteAudio()">
-							<b-icon icon="mic-mute-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>{{ audioMsg }}
+							<b-icon icon="mic-mute-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+							<span class="footerBtnText">{{ audioMsg }}</span>
 						</button><!-- 마이크 on/off 버튼 -->
 					</div>	
 
@@ -123,26 +125,30 @@
 					<div v-if="video === true" class="buttomMenu">
 						<!-- <input class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" :value="video" @click="muteVideo()"> 비디오 on/off 버튼 -->
 						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteVideo()"> 
-							<b-icon icon="camera-video-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>{{ videoMsg }}
+							<b-icon icon="camera-video-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+							<span class="footerBtnText">{{ videoMsg }}</span>
 						</button>
 					</div>
-					<div v-else class="roomFun">
+					<div v-else class="roomFun buttomMenu">
 						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteVideo()"> 
-							<b-icon icon="camera-video-off-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>{{ videoMsg }}
+							<b-icon icon="camera-video-off-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+							<span class="footerBtnText">{{ videoMsg }}</span>
 						</button>
 					</div>
 
 					<!-- 화면공유 버튼 설정 -->
 					<div class="buttomMenu">
 						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="startScreenSharing()">
-							<b-icon icon="door-open" class="buttomMenuIcon" aria-hidden="true"></b-icon>화면공유
+							<b-icon icon="door-open" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+							<span class="footerBtnText">화면공유</span>
 						</button> <!-- 나가기 버튼 -->
 					</div>
 					
 					<!-- 나가기 버튼 설정 -->
 					<div class="buttomMenu">
 						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSession">
-							<b-icon icon="door-open-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>나가기
+							<b-icon icon="door-open-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+							<span class="footerBtnText">나가기</span>
 						</button> <!-- 나가기 버튼 -->
 					</div>
 				</div>	
@@ -152,6 +158,27 @@
 	</div>
 </template>
 <style scoped>
+/** 채팅창 반응형 */
+@media (max-width: 770px){
+	#session-aside-right{
+		display: none;
+	}
+	
+}
+/** footer 버튼 반응형 */
+@media (max-width: 1050px) {
+	#session-footer{
+		width: 270px !important;
+	}
+
+	.footerBtnText{
+		display: none;
+	}
+	.buttomMenuIcon{
+		margin-right: 0 !important;
+	}
+}
+
 /* 상벌점 기능 스타일 */
 .score-btn {
 	border: none;
@@ -179,14 +206,24 @@
 /* 상벌점 스타일 끝 */
 #main{
 	height: 100%;
+	/* margin-top: -70px; */
+	margin-top: 0px !important;
+	
 }
 #main-container{
-position: relative;
-height: 80%;
+	position: relative;
+	width: 90%;
+	height: 100%;
+	margin: 0 auto;
 }
 #session {
 	/* position: relative; */
-height: 50%;
+	width: 100%;
+	height: 90%;
+	overflow: auto;
+}
+#session::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
 }
 #session-aside-left{
 	height: 100%;
@@ -219,17 +256,21 @@ height: 50%;
 	margin-bottom: 5px;
 }
 #session-aside-right .participant{
-	height: 45%;
+	height: 35%;
 	margin-bottom: 20px;
+}
+#participant-container{
+	background-color: #ccc;
 }
 #session-aside-right .participant .participant_list{
 	width: 100%;
 	height: 90%;
 	background-color: #ccc;
+	overflow: auto;
 }
 
 #session-aside-right .chat{
-	height: 40%;
+	height: 60%;
 	display: flex;
 	flex-direction: column;
 }
@@ -255,7 +296,8 @@ height: 50%;
 }
 
 .footerBtn{
-	margin: 0 10px
+	/* margin: 0 10px */
+	width: 100%;
 }
 
 /* 채팅방 좌측 사이드 메뉴바 */
@@ -266,7 +308,8 @@ height: 50%;
 
 /* 채팅방 하단 메뉴바 */
 #session-footer{
-width: 40%;
+/* width: 40%; */
+width: 520px;
 height: 50px;
 line-height: 50px;
 position: absolute;
@@ -274,6 +317,7 @@ bottom: 0px;
 left: 15%;
 border-radius: 10px;
 background-color: #F0F0F0;
+margin-bottom: 15px;
 /* transform: translate(-50%,0%); */
 /* background-color: #ccc; */
 }

@@ -177,6 +177,7 @@ a:hover .demo-logo {
 }
 
 #session-title {
+  margin-left: 20px;
   display: inline-block;
 }
 
@@ -186,7 +187,7 @@ a:hover .demo-logo {
 }
 
 #video-container {
-  width: 80%;
+  width: 70%;
 }
 
 /* #video-container video {
