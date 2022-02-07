@@ -1,5 +1,5 @@
 <template>
-  <center @keydown="doNotReload">
+  <center>
     <div class="container">
 
       <div class="black-bg" v-if="modal">
@@ -7,8 +7,8 @@
           <h4>비밀번호 입력</h4>
           <b-form-input class="mb-3" style="width: 40%;" type="text" v-model="pwd"></b-form-input>
           <div>
-            <button class="mx-1" style="width:40px; height: 30px" @click="pwdCheck()">입장</button>
-            <button class="mx-1" style="width:40px; height: 30px" @click="modal=false">취소</button>
+            <button class="enterBtn mx-1"  @click="pwdCheck()">입장</button>
+            <button class="cancelBtn mx-1" @click="modal=false"><span style="color:white;">취소</span></button>
           </div>
         </div>
       </div>
@@ -19,10 +19,10 @@
       <span>스터디 방 URL : {{studyInfo.url}}</span>
 
       <!-- 권한있는 사람만 방입장 가능(세션생성 가능) -->
-      <button @click="modal=true">방 입장</button>
+      <button class="enterBtn2" @click="modal=true">방 입장</button>
 
       <!-- 스터디 정보 수정 추가 -->
-      <button type="button" v-if="power.leader" @click="$bvModal.show('bv-modal-studyModify')">스터디 수정</button>
+      <button class="modifyBtn" v-if="power.leader" @click="$bvModal.show('bv-modal-studyModify')">스터디 수정</button>
 
         <b-modal id="bv-modal-studyModify" centered hide-footer size="lg">
           <template #modal-title>
@@ -120,7 +120,6 @@ import StudyMember from '@/components/study/StudyMember.vue'
 
 import JwtDecode from 'jwt-decode'
 
-// import http from 'http'
 import http from "@/util/http-common.js";
 import { mapState } from 'vuex'
 
@@ -309,15 +308,6 @@ export default {
     //   event.preventDefault()
     //   event.returnValue = ""
     // },
-    doNotReload(event){
-      if( (event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) //ctrl+N , ctrl+R
-      || (event.keyCode == 116)) // function F5
-      {
-        event.keyCode = 0;
-        event.cancelBubble = true;
-        event.returnValue = false;
-      }
-    }
   },
   // beforeMount() {
   //   window.addEventListener("beforeunload", this.preventNav)
@@ -339,7 +329,6 @@ export default {
 </script>
 
 <style scoped>
-
 .black-bg{
   z-index: 2;
   width: 100vw;
@@ -364,4 +353,43 @@ export default {
   font-family:'yg-jalnan';
 }
 
+.modifyBtn {
+  border: none;
+  border-radius: 8px;
+  background-color: #ffc107;
+  height: 40px;
+  width: 110px;
+}
+.modifyBtn:hover {
+  background-color: #e2ab07;
+}
+
+.enterBtn {
+  border: none;
+  border-radius: 8px;
+  background-color: #e4c3f1;
+  height: 40px;
+  width: 50px;
+}
+.enterBtn2 {
+  border: none;
+  border-radius: 8px;
+  background-color: #e4c3f1;
+  height: 40px;
+  width: 80px;
+}
+.enterBtn:hover, .enterBtn2:hover {
+  background-color: #ddaae6;
+}
+
+.cancelBtn {
+  border: none;
+  border-radius: 8px;
+  background-color: #6c757d;
+  height: 40px;
+  width: 50px;
+}
+.cancelBtn:hover {
+  background-color: #495057;
+}
 </style>

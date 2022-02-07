@@ -40,9 +40,12 @@ export default {
   color: #2c3e50;
   height: 100%;
   font-family: 'yg-jalnan';
+  padding-top: 80px;
 }
 
 body {
-  padding-top: 80px;
+  /* padding-top: 80px; */
+  
 }
 </style>
+
