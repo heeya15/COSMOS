@@ -392,7 +392,7 @@ margin-bottom: 15px;
 
 </style>
 <script scoped>
-import "@/assets/style.css";
+import "@/assets/style/style.css";
 import axios from 'axios';
 import http from "@/util/http-common.js";
 import { OpenVidu } from 'openvidu-browser';
