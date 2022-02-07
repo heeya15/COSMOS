@@ -74,8 +74,8 @@
 					<p>채팅</p>
 					<div class="messages" ref="messages">
 						<div class="messageLoop" v-for="(message, idx) in messages" :key="idx">
-							<div class="text-left" >{{ userId }} 님의 메시지:</div>
-							<p class="text-left message__bubble">{{ message }}</p>
+							<!-- <div class="text-left" >{{ userId }} 님의 메시지:</div> -->
+							<div class="text-left message__bubble">{{ message }}</div>
 						</div>
 					</div>	
 
@@ -569,10 +569,12 @@ export default {
 		// 텍스트 채팅을 위한 메세지 전송하기
 		sendMessage() {
 			var message = document.getElementById("msg").value;
+			message.replace('\n','<br/>');
+			console.log(message)
 			document.getElementById("msg").value = "";
 			
 			this.session.signal({
-				data: message,
+				data: this.myUserName+ "님의 메시지:\n" +message,
 				to: [],
 				type: 'my-chat',
 			})
