@@ -1,44 +1,32 @@
 <template>
   <div id="main_page">
     <div class="mb-5" id="main_section">
-      <div id="carousel-example-generic" class="carousel slide">
-        <ol class="carousel-indicators ">
-          <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-          <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-        </ol>
-        <div class="carousel-inner" role="listbox">
-          <div class="item active">
-            <img class="carousel-item" src="@/assets/main_img1.jpg">
-          </div>
-          <div class="item">
-            <img class="carousel-item" src="@/assets/main_img2.jpg">
-            </div>
-          </div>
-          <a
-              class="left carousel-control"
-              href="#carousel-example-generic"
-              role="button"
-              data-slide="prev">
-              <!-- 왼쪽 화살표 -->
-              <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-          </a>
-          <!-- 오른쪽 화살표 버튼 -->
-          <!-- href는 carousel의 id를 가르킨다. -->
-          <a
-              class="right carousel-control"
-              href="#carousel-example-generic"
-              role="button"
-              data-slide="next">
-              <!-- 오른쪽 화살표 -->
-              <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-          </a>
-      </div>
+      <b-carousel
+        id="carousel-fade"
+        style="text-shadow: 0px 0px 2px #000"
+        fade
+        indicators
+        :interval="3000"
+        img-width="1024"
+        img-height="480"
+      >
+        <b-carousel-slide
+          img-src="https://i.ibb.co/Vqz7Dcf/main-img1.png.jpg"
+        ></b-carousel-slide>
+        <b-carousel-slide
+          img-src="https://i.ibb.co/1Msjgmz/main-img2.jpg"
+        ></b-carousel-slide>
+      </b-carousel>
     </div>
+
+
     <b-row>
-      <b-col cols="6" class="board_section">
+      <b-col cols="1"></b-col>
+      <b-col cols="5" class="board_section">
         <h2>board content</h2>
       </b-col>
-      <b-col cols="6" class="stduy_section">
+      <b-col cols="1"></b-col>
+      <b-col cols="5" class="stduy_section">
         <h2>open study</h2>
       </b-col>
     </b-row>
@@ -46,24 +34,37 @@
 </template>
 
 <script scoped>
-  export default {name: 'MainPage'}
+  export default {
+    name: 'MainPage',
+  
+    data() {
+      return {
+        slide: 0,
+        sliding: null
+      }
+    },
+
+    methods: {
+      onSlideStart(slide) {
+        console.log(slide)
+        this.sliding = true
+      },
+      onSlideEnd(slide) {
+        console.log(slide)
+        this.sliding = false
+      }
+    }
+  }
 </script>
 
-<style>
+<style scoped>
+
 #main_page {
   height: 90%;
 }
 
 #main_secion {
   height: 30%;
-}
-
-.carousel-inner>.item>a>img, .carousel-inner>.item>img, .img-responsive, .thumbnail a>img, .thumbnail>img {
-  height: 600px;
-}
-
-.carousel-item {
-  height: 100%;
 }
 
 #board_secion {
@@ -74,4 +75,7 @@
   height: 30%;
 }
 
+/* .carousel-indicators li {
+  background-color: transparent !important;
+} */
 </style>
