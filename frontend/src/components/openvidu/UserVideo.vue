@@ -11,7 +11,7 @@
 	</div>
 </div>
 </template>
-<style>
+<style scope>
 .userVideo{
 	position: relative;
 	/* width: 30%; */

@@ -63,7 +63,10 @@
 			<div id="session-aside-right" v-if="session">
 				<div class="participant">
 					<p>참가자</p>
-					<p class="participant_list"></p>
+						<div id="participant-container" class=""> <!-- 참가자 리스트 화면 -->
+						<user-list :stream-manager="publisher"/>
+						<user-list v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+					</div>
 				</div>
 
 				<!-- 채팅 기능 시작 -->
@@ -350,6 +353,7 @@ import axios from 'axios';
 import http from "@/util/http-common.js";
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from '../components/openvidu/UserVideo';
+import UserList from '../components/openvidu/UserList';
 import jwt_decode from "jwt-decode";
 
 import { mapState } from "vuex";
@@ -364,6 +368,7 @@ export default {
 
 	components: {
 		UserVideo,
+		UserList,
 	},
 	metaInfo: {
 		// title 입력하기
