@@ -7,8 +7,8 @@
           <h4>비밀번호 입력</h4>
           <b-form-input class="mb-3" style="width: 40%;" type="text" v-model="pwd"></b-form-input>
           <div>
-            <button class="mx-1" style="width:40px; height: 30px" @click="pwdCheck()">입장</button>
-            <button class="mx-1" style="width:40px; height: 30px" @click="modal=false">취소</button>
+            <button class="mx-1" style="width:50px; height: 40px" @click="pwdCheck()">입장</button>
+            <button class="mx-1" style="width:50px; height: 40px" @click="modal=false">취소</button>
           </div>
         </div>
       </div>
@@ -339,7 +339,6 @@ export default {
 </script>
 
 <style scoped>
-
 .black-bg{
   z-index: 2;
   width: 100vw;

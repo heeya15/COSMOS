@@ -344,7 +344,8 @@ background-color: #F0F0F0;
 }
 
 </style>
-<script>
+<script scoped>
+import "@/assets/style.css";
 import axios from 'axios';
 import http from "@/util/http-common.js";
 import { OpenVidu } from 'openvidu-browser';
