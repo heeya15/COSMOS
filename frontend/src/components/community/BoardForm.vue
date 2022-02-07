@@ -4,7 +4,7 @@
     <h1>스터디 모집 게시판</h1>
     <hr style="width: 80%">
     <h3>글생성</h3>
-    <marquee style="font-size: 50px; color: #E0BFE6;" scrolldelay="50">스터디를 모집해 보세요</marquee>
+    <marquee style="font-size: 50px; color: #ddaae6;" scrolldelay="50">스터디를 모집해 보세요</marquee>
     <img src="사람2.png" style="width: 200px; height: 200px;">
       <div class="form_body_tag p-5" style="width: 600px;">
         <b-row style="height: 600px; background-color: white;">
@@ -27,7 +27,7 @@
             <label v-show="this.input.header === false" for="study_name">스터디이름</label>
           </b-col>
           <b-col v-show="this.input.header === false" cols="9" class="mt-2">
-            <b-form-select style="width: 100%; height: 30px; font-size: 15px; " v-show="this.input.header === false" v-model="nameSelected" :options="titleOptions" id="study_name"></b-form-select>
+            <b-form-select style="width: 100%; height: 30px; font-size: 13px; " v-show="this.input.header === false" v-model="nameSelected" :options="titleOptions" id="study_name"></b-form-select>
           </b-col>
 
           <b-col v-show="this.input.header === false" cols="3" class="mt-2">
@@ -60,13 +60,13 @@
           </b-col>
           <!-- 스터디원 구함 -->
           <b-col v-show="this.input.header == false">
-            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="createBoardForm">게시글 생성</b-button>
-            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="backBoardMain">취소</b-button>
+            <b-button class="btnTag mx-2 mt-4" @click="createBoardForm">게시글 생성</b-button>
+            <b-button class="btnTag mx-2 mt-4" @click="backBoardMain">취소</b-button>
           </b-col>
           <!-- 스터디 구함 -->
           <b-col v-show="this.input.header !== false">
-            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="studyWantCreateBoardForm">게시글 생성</b-button>
-            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="backBoardMain">취소</b-button>
+            <b-button class="btnTag mx-2 mt-4" @click="studyWantCreateBoardForm">게시글 생성</b-button>
+            <b-button class="btnTag mx-2 mt-4" @click="backBoardMain">취소</b-button>
           </b-col>
         </b-row>
       </div>
@@ -243,6 +243,14 @@ export default {
 </script>
 
 <style scoped>
+.btnTag {
+  background-color: #e4c3f1;
+}
+
+.btnTag:hover {
+  background-color: #ddaae6;
+}
+
 .header_label {
   display: flex;
   justify-content: center;
