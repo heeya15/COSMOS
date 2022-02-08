@@ -33,7 +33,7 @@ server:
       force: 'true'
       charset: UTF-8
     contextPath: /
-  address: localhost
+  address: 0.0.0.0
   port: '8080'
   compression:
     enabled: 'true'
