@@ -3,7 +3,7 @@
     <CommentForm/>
     <CommentItem v-for="(comment, idx) in comments" :key="idx" :comment="comment"/>
     <!-- <button @click="getComment">확인</button> -->
-    <test/>
+    <!-- <test/> -->
   </div>
 </template>
 
@@ -12,14 +12,14 @@ import CommentForm from '@/components/community/CommentForm.vue'
 import CommentItem from '@/components/community/CommentItem.vue'
 import { mapState } from 'vuex'
 
-import test from '@/components/community/test.vue'
+// import test from '@/components/community/test.vue'
 
 export default {
   name: 'Comment',
   components: {
     CommentForm,
     CommentItem,
-    test,
+    // test,
   },
   data() {
     return {

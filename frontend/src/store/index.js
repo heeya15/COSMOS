@@ -13,6 +13,7 @@ export default new Vuex.Store({
     createPersistedState()  // 새로고침 초기화 방지
   ],
   state: {
+    saveCurrentPage: null,
     userInfo:null,
     isLogin:false,
     boardNo: null,
@@ -64,6 +65,10 @@ export default new Vuex.Store({
     IS_LEADER(state, leaderInfo){
       state.power.leader = leaderInfo.leader
       state.power.authority = leaderInfo.authority
+    },
+    PAGE_CLICK(state, currentPage) {
+      console.log(state, '페이지 번호 확인 스토어')
+      state.saveCurrentPage = currentPage
     }
   },
   actions: {
@@ -167,8 +172,10 @@ export default new Vuex.Store({
       .catch(err => {
         console.log(err)
       })
-
-    }
+    },
+    pageClick({commit}, currentPage) {
+      commit('PAGE_CLICK', currentPage)
+    },
   },
   // getters: {
   //   studyMembers(state){
