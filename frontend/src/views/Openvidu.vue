@@ -568,7 +568,7 @@ export default {
 				console.log(">>>>>>>>>>>>>> message : ", message);
 
 				if(message == "") {
-					this.messages += '<div> 화면공유.... </div>';
+					this.messages += '';
 				} else {
 					// console.log(">>>>>>>>>>>>>>>>>>> ", message[0]);
 					// this.messages.push(message[0]);
@@ -797,7 +797,7 @@ export default {
 							console.log("subscriber >>>>> ", this.subscribers);
 							this.isScreenShared=true;
 							this.session.signal({
-								data: JSON.stringify(status),  // Any string (optional)
+								data: JSON.stringify(),  // Any string (optional)
 								to: [],
 								type: 'startScreenSharing'             // The type of message (optional)
 							})
