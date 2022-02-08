@@ -23,9 +23,9 @@ public interface BoardService {
     /** 게시글을 수정하는 updateBoard 입니다.*/
     public Board updateBoard(Board board, SaveBoardDto saveBoardDto);
       
-
     /** 게시글을 삭제하는 deleteBoard 입니다. */
     public void deleteBoard(Board board);
+    
     /** 해당 스터디 장이  만든 스터디 이름 조회하는 findSearchStudyName 입니다. **/
     public List<StudyNameSearchDtoRes> findSearchStudyName(String user_id);
 }

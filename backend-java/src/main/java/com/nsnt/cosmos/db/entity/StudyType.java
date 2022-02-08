@@ -11,8 +11,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.nsnt.cosmos.api.request.SaveBoardDto;
+
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 스터디분류 모델 정의.
@@ -20,6 +23,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@ToString
 @Table(
 	// 속성에 UNIQUE 제약조건 설정
 	uniqueConstraints = {
@@ -36,4 +40,8 @@ public class StudyType {
 	
 	@Column(name = "studytype_name", length = 50, nullable = false)
 	String studytypeName;
+	
+	public void updateStudyTypeName(String studytype_name){
+	    this.studytypeName = studytype_name;    
+	}
 }

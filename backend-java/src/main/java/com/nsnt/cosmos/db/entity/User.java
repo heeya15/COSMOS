@@ -1,23 +1,17 @@
 package com.nsnt.cosmos.db.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.nsnt.cosmos.api.request.UserUpdateDto;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
