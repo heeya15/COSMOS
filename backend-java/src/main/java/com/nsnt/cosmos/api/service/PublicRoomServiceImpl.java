@@ -58,4 +58,8 @@ public class PublicRoomServiceImpl implements PublicRoomService {
 	public void deletePublicMember(String public_study_room_id, String user_id) {
 		PublicRoomMemberRepository.deletePublicMember(public_study_room_id, user_id);
 	}
+	@Override
+	public void deletePublicRoom(String publicstudy_room_id) {	// 공개 스터디방 삭제
+		PublicStudyRoomRepository.deletePublicRoom(publicstudy_room_id);
+	}
 }
