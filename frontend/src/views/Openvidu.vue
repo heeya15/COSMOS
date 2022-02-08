@@ -82,7 +82,7 @@ d<template>
 					</div>
 
 					<form class="chatFooter" onsubmit="return false">
-						<input class="chat_input" id="msg" type="text" placeholder="메세지를 입력하세요.">
+						<input class="chat_input" id="msg" type="text" autocomplete="off" placeholder="메세지를 입력하세요.">
 						<button id="submitBtn" type="submit" @click="sendMessage()">Enter</button>
 					</form>
 				</div>
@@ -314,7 +314,7 @@ d<template>
 
 /* 채팅방 좌측 사이드 메뉴바 */
 .sideMenuImg {
-	width: 30px;
+	width: 40px;
 	height: 30px;
 }
 
@@ -383,17 +383,19 @@ margin-bottom: 15px;
 }
 
 .chatFooter {
-	height: 50px;
+	height:10%;
 	line-height: 30px;
 	border-top: 1px solid rgba(156, 172, 172, 0.2);
 	display: flex;
 	flex-shrink: 0;
 	display: inline-block;
 }
-
+#msg{
+	height: 5.5%;
+}
 #submitBtn {
 	width: 55px;
-	height: 32px;
+	height:5.5%;;
 	border: none;
 	background: transparent;
 	font-size: 16px;
