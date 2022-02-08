@@ -3,6 +3,7 @@ package com.nsnt.cosmos.api.service;
 import java.util.List;
 
 import com.nsnt.cosmos.api.request.SaveStudyMemberDto;
+import com.nsnt.cosmos.api.response.RecentStudyNorSearchDtoRes;
 import com.nsnt.cosmos.api.response.StudyMemberSearchDtoRes;
 import com.nsnt.cosmos.db.entity.StudyMember;
 
@@ -16,6 +17,9 @@ public interface StudyMemberService {
 
     /** 스터디 멤버중 해당 studymember_no로 한 회원의 정보만 찾는 findOneStudyMember 입니다.*/
     public StudyMember findOneStudyMember(Long studymember_no);
+    
+    /** 스터디 생성 후 가장 최근에 생긴 스터디 번호 정보만 찾는 findResentStudyNo 입니다.*/
+    public RecentStudyNorSearchDtoRes findResentStudyNo(String user_id);
     
     /** 해당 회원들의 정보를 가져오는 findStudyMmeber 입니다. (목록 부분에 사용)*/
     public List<StudyMemberSearchDtoRes> findStudyMember(Long study_no);
