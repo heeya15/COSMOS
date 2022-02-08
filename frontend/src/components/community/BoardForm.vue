@@ -154,7 +154,7 @@ export default {
       })
       .then(res => {
         console.log(res.data)
-        this.$router.push({name: "MainBoard"})
+        this.$router.push({name: "BoardDetail"})
         console.log('스터디옵션 확인')
         // console.log(this.studyno[this.studyNameInfo.indexOf(this.nameSelected)], '여기 확인')
       })

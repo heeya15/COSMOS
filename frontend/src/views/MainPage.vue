@@ -44,6 +44,30 @@
         <hr class="line">
       </div>
 
+
+      <!-- 게시판 목록 Start -->
+      <center>
+        <h1 class="text-center">모집 중인 스터디</h1>
+        <div id="board_secion">
+          <table class="table table-boardered table-hover">
+            <thead>
+              <th>제목</th>
+              <th style="display: flex; justify-content: flex-end;">분류</th>
+            </thead>
+            <tbody v-for="(board, idx) in boardList" :key="idx">
+              <td><p>{{ board.studyName }}</p></td>
+              <td><p style="float: right;">{{ board.studytypeName }}</p></td>
+              <p></p>
+            </tbody>
+          </table>
+        </div>
+      </center>
+      <!-- 게시판 목록 End -->
+
+      <div class="my-5" align="center">  
+        <hr class="line">
+      </div>
+
       <!-- 오픈(공개) 스터디 목록 Start -->
       <div>
         <h1 class="text-center">오픈 스터디</h1>
@@ -54,19 +78,7 @@
         <hr class="line">
       </div>
 
-      <!-- 게시판 목록 Start -->
-      <div>
-        <h1 class="text-center">모집 중인 스터디</h1>
-        <div>
-          <table class="table table-boardered table-hover">
-            <tbody v-for="(board, idx) in boardList" :key="idx">
-              <td><p>{{ board.contentTitle }}test</p></td>
-            </tbody>
-          
-          </table>
-        </div>
-      </div>
-      <!-- 게시판 목록 End -->
+      
 
 
 
@@ -96,7 +108,7 @@ export default {
       // slide: 0,
       // sliding: null
       boardItems: null,
-      boardList: null,
+      boardList: [],
     }
   },
 
@@ -131,21 +143,31 @@ export default {
 
         console.log(">>>>>> 전달 받은 리스트 : ", this.boardItems);
 
-        var len = this.boardItems.res.data.length > 5 ? 5 : this.boardItems.res.data.length;
-        for(var i=0; i<len; i++) {
-          this.boardList.push(this.boardItems[i]);
+        // var len = this.boardItems.length > 5 ? 5 : this.boardItems.length;
+        for(var i=0; i<this.boardItems.length; i++) {
+          if (this.boardItems[i].header === false) {
+            this.boardList.push(this.boardItems[i]);
+            if (this.boardList.length === 5) {
+              break
+            }
+          }
         }
+        
+
+        // var len = this.boardItems.res.data.length > 5 ? 5 : this.boardItems.res.data.length;
+        // for(var i=0; i<len; i++) {
+        //   this.boardList.push(this.boardItems[i]);
+        // }
       })
       .catch(err => {
         console.log(err)
       })
-    },
-
-    beforeCreated() {
-      console.log("page created");
-      this.getBoardItems()
-    },
-  }
+    }
+  },
+  created() {
+    this.getBoardItems()
+    console.log('와졌나?')
+  },
 }
 </script>
 
@@ -155,17 +177,26 @@ export default {
   height: 90%;
 }
 
-/* #main_secion {
+#main_secion {
   height: 30%;
 }
 
 #board_secion {
+  /* display: flex; */
+  /* justify-content: center; */
   height: 30%;
+  width: 70%;
+}
+
+th, td {   
+  /* text-align: center; */
+  vertical-align : middle !important;
 }
 
 #study_secion {
   height: 30%;
-} */
+}
+
 
 /* .banner {
   height: 25%;
