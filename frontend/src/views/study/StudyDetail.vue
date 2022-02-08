@@ -197,7 +197,7 @@ export default {
         console.log(err)
       })
     },
-    pwdCheck(){
+    pwdCheck(){ // 방 입장시 비번 체크
       if(this.pwd == this.studyInfo.studyPassword){
         var token = localStorage.getItem('jwt')
         var decoded = JwtDecode(token);
