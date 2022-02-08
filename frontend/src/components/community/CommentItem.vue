@@ -172,6 +172,8 @@ export default {
   justify-content: space-evenly;
 } */
 
+
+
 .container {
   width: 700px;
 }
@@ -190,6 +192,7 @@ export default {
   flex-wrap: wrap;
   /* background: linear-gradient(to left yellow 20%, #fcfc87 80%); */
   background: linear-gradient(to left, #fcfc87 25%, #fcfc87 25% 50%, #fcfc87 50% 75%, yellow 90% );
+  /* background: linear-gradient(to left, #c8c1e4 25%, #c8c1e4 25% 50%, #c8c1e4 50% 75%, #afa2dd 90% ); */
   /* background-color: #fff; */
   border: none;
 }
@@ -204,6 +207,7 @@ export default {
 .comment_body {
   /* border: 5px solid transparent; */
   background: linear-gradient(to left, #fcfc87 25%, #fcfc87 25% 50%, #fcfc87 50% 75%, yellow 90% );
+  /* background: linear-gradient(to left, #c8c1e4 25%, #c8c1e4 25% 50%, #c8c1e4 50% 75%, #afa2dd 90% ); */
   /* background: repeating-linear-gradient(-45deg, #f45384, #f45384 5px, #f8bfd1 5px, #f8bfd1 10px); */
   /* background-color: #afa2dd; */
   box-shadow: 5px 6px 6px 2px #dcdcdd;

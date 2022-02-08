@@ -1,9 +1,11 @@
 <template>
   <div>
     <CommentForm/>
-    <CommentItem v-for="(comment, idx) in comments" :key="idx" :comment="comment"/>
+    <div class="commentBg">
+      <CommentItem v-for="(comment, idx) in comments" :key="idx" :comment="comment"/>
     <!-- <button @click="getComment">확인</button> -->
     <!-- <test/> -->
+    </div>
   </div>
 </template>
 
@@ -47,4 +49,7 @@ export default {
 
 <style>
 
+.commentBg {
+  /* background-color: #c8c1e4; */
+}
 </style>

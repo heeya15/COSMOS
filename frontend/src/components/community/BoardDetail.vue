@@ -25,8 +25,8 @@
       <div class="round_box2"></div>
       <div class="round_box3"></div>
       <div class="round_box4"></div>
-      <div class="line4"></div>
-      <div class="line5"></div>
+      <!-- <div class="line4"></div> -->
+      <!-- <div class="line5"></div> -->
       
         <div class="body_total p-5" style="width: 500px;">
           <b-row class="content_rowTag">
@@ -182,7 +182,8 @@ export default {
         studyName: null,
         studyNo: null,
         studyType: null,
-      }
+      },
+      applyMembers: [],
     }
   },
   methods: {
@@ -206,14 +207,20 @@ export default {
 
     // 스터디 신청
     applyStudy() {
+      for(var i=0; i < this.applyMembers.length; i++) {
+          if (this.applyMembers[i].user_id === this.loginUserId) {
+            alert('이미 신청한 스터디 입니다.')
+            return
+          }
+        }
       http({
         method: 'post',
         url: `/study/applyMember/register/${this.studyInfo.studyNo}`,
         headers: this.getToken(),
       })
       .then((res) => {
-        console.log(res, '신청부분 데이터')
-        // this.studyInfo.studyNo = res.data.studyNo
+        console.log(this.applyMembers)
+        console.log(res)
         // 스터디장이 만든 스터디 이름 조회
         console.log(this.studyInfo.studyNo)
         // this.boardInfo.studyName = res.data['studyName']
@@ -223,6 +230,26 @@ export default {
       .catch((err) => {
         console.log(err)
         console.log(this.studyInfo.studyNo)
+      })
+    },
+
+    // 스터디 신청 멤버 조회
+    getApplyMember() {
+      http({
+        method: 'GET',
+        url: `/study/applyMember/searchAll/${this.studyInfo.studyNo}`
+      })
+      .then(res =>{
+        console.log(res.data, '여기 확인')
+        if (res.data.length === 0) {
+          this.applyMembers = null
+        }
+        else {
+          this.applyMembers = res.data
+        }
+      })
+      .catch(err => {
+        console.log(err)
       })
     },
 
@@ -250,6 +277,9 @@ export default {
         console.log('get board 작동확인')
         console.log(this.boardInfo.contentStatus)
         console.log(this.boardInfo.header, '모집 상태 여기 확인')
+        if (this.boardInfo.header === false) {
+          this.getApplyMember()
+        }
       })
       .catch(err => {
         console.log(err)
@@ -371,7 +401,7 @@ export default {
   created() {
     this.getBoard()
     this.getUserInfo()
-
+    // this.getApplyMember()
     this.getStudyType()
   },
 }
@@ -473,9 +503,10 @@ p {
   overflow: hidden;
   background-color: rgb(248, 64, 64);
   position: absolute;
-  left: 750px;
+  left: 50%;
   top: 260px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
+  z-index: 1;
 }
 
 .round_box2 {
@@ -520,8 +551,9 @@ p {
   height: 120px;
   background-color: rgb(250, 171, 92);
   transform: rotate(-45deg);
-  right: 520px;
+  right: 38%;
   top: 220px;
+  z-index: 1;
 }
 
 .line5 {
@@ -530,8 +562,9 @@ p {
   height: 120px;
   background-color: rgb(250, 171, 92);
   transform: rotate(45deg);
-  left: 520px;
+  left: 38%;
   top: 220px;
+  z-index: 1;
 }
 
 .backListBtn {
@@ -554,6 +587,7 @@ p {
   background-size: cover; */
   /* width: 800px; */
   /* font-size: 13px; */
+  position: relative;
   background: rgb(249, 250, 250);
 }
 

@@ -28,14 +28,21 @@
             </thead>
             <tbody id="test-table" v-for="(boardItem, idx) in paginatedItems" :key="idx"  @click="goBoardDetail(boardItem.boardNo)" style="text-align: center;">
               <tr>
-              <td >{{ 10*(currentPage-1)+(idx+1) }}</td>
+              <!-- 1~10 까지 -->
+              <!-- <td >{{ 10*(currentPage-1)+(idx+1) }}</td> -->
+
+              <!-- 역순 -->
+              <td >{{ boardItems.length-idx-10*(currentPage-1) }}</td>
+
+              <!-- 게시글 고유 번호 -->
+              <!-- <td >{{ boardItem.boardNo }}</td> -->
 
 
             <td style="width: 100px" v-if="boardItem.contentStatus === false"><span class="boardnum_tag" style="color: #d5648a;">[진행중]</span></td>
             <td v-else><p class="boardnum_tag">[완료]</p></td>
 
 
-            <td style="width: 100px;" v-if="boardItem.header === false"><span  class="boardnum_tag" style="color: #d5648a;">[스터디원 구함]</span></td>
+            <td style="width: 150px;" v-if="boardItem.header === false"><span  class="boardnum_tag" style="color: #d5648a;">[스터디원 구함]</span></td>
             <td style="width: 150px;" v-else><span class="boardnum_tag" style="color: #afa2dd;">[스터디 구함]</span></td>
             <td style="width: 300px;"><p class="content_title_tag">{{ boardItem.contentTitle }}</p></td>
             <td style="width: 150px;"><p class="boardnum_tag">{{ boardItem.studytypeName }}</p></td>
