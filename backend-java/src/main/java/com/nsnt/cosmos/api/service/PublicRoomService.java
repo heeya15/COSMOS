@@ -24,4 +24,7 @@ public interface PublicRoomService {
     
     /** 해당 공개 스터디방에 참가자가 아무도 없으면 해당 공개 스터디방 삭제하는 deletePublicRoom 입니다. */
     public void deletePublicRoom(String publicstudy_room_id);
+    
+    
+    public List<PublicStudyRoom> findAllPublicStudyRoom();
 }

@@ -1,5 +1,7 @@
 package com.nsnt.cosmos.db.repository;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 import com.nsnt.cosmos.db.entity.PublicStudyRoom;
 
 /**
@@ -22,4 +25,10 @@ public interface PublicStudyRoomRepository extends JpaRepository<PublicStudyRoom
 			     "where publicstudyroom_id =:publicstudyroom_id"        
 	        ,nativeQuery = true)
 	void deletePublicRoom(@Param("publicstudyroom_id") String public_studyroom_id);
+	
+	
+	@Query(value="select * \r\n" + 
+ 			" 	from public_study_room"
+ 			, nativeQuery = true)
+ 	List<PublicStudyRoom> findAllPublicStudyRoom();
 }
