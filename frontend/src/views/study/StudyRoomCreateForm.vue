@@ -20,7 +20,8 @@
           <label for="url" class="mt-2">스터디 url</label>
         </b-col>
         <b-col cols="6">
-          <b-form-input id="url" v-model="input.url"></b-form-input>
+           <b-form-input id="url" v-model="input.defaulturl" disabled ></b-form-input>
+          <b-form-input id="url" v-model="input.url" placeholder="URL을 입력하세요" @keydown="regexp()"></b-form-input>
           <div ref="urlMsg"></div>
         </b-col>
         <b-col cols="3">
@@ -137,8 +138,9 @@ export default {
   data() {
     return {
       input: {
+        defaulturl: 'https://i6e103.p.ssafy.io/',
         studyName: null,
-        url: 'https://i6e103.p.ssafy.io/',
+        url: null,
         studytypeNo: null,
         options: [
           { value: null, text: '스터디 분류' },
@@ -155,6 +157,7 @@ export default {
         }
       },
       urlState: false,
+      regexpstate:false
     }
   },
   methods: {
@@ -211,7 +214,7 @@ export default {
         studyRule: this.input.studyRule,
         studytypeNo: this.input.studytypeNo,
         totalMember: this.input.totalMember,
-        url: this.input.url
+        url: this.input.defaulturl + this.input.url
       }
       http({
         method: 'POST',
@@ -240,11 +243,11 @@ export default {
       const studyInfo = {
         image: this.input.image,
         numberOfMember: this.input.totalMember,
-        publicstudyroomId: this.input.url.split('/')[3],
+        publicstudyroomId: this.input.url,
         studyName: this.input.studyName,
         studyRule: this.input.studyRule,
         studytypeNo: this.input.studytypeNo,
-        url: this.input.url
+        url: this.input.defaulturl+this.input.url
       }
       http({
         method: 'POST',
@@ -256,6 +259,7 @@ export default {
         console.log(res)
         if (res.status !== 200){
           alert('입력을 다시 한 번 확인하세요.')
+          console.log(studyInfo);
         }else { 
           // this.$router.push({name: 'Openvidu'})
           this.$router.push({name: 'MainPage'})
@@ -265,21 +269,32 @@ export default {
         console.log(err)
       })
     },
+    regexp(){
+      const notPhoneticSymbolExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+       if(notPhoneticSymbolExp.test(this.input.url)){ // 한글이 아니라면
+           this.$refs.urlMsg.innerHTML = '<p class="test12">영어로 url주소를 입력해주세요.</p>';
+           this.regexpstate = false;
+       }else{
+           this.$refs.urlMsg.innerText ='';
+           this.regexpstate = true;
+       }
+    },
     checkUrl() {
+      
       http({
         method: 'GET',
         url: '/study/urlcheck/',
-        params: {url: this.input.url}
+        params: {url: this.input.defaulturl+this.input.url}
       })
       .then(res => {
-        // console.log(res)
-        if(res.data === false){
+        // console.log(res)  
+        if(res.data === false && this.regexpstate){
           this.$refs.urlMsg.innerText = '사용가능한 url주소 입니다.';
           this.urlState = true
         }else{
           this.$refs.urlMsg.innerText = '사용할 수 없는 url주소 입니다.';
           this.urlState = false
-        }
+        }    
       })
       .catch(err => {
         console.log(err)
@@ -293,6 +308,9 @@ export default {
 </script>
 
 <style scoped>
+.test12{
+  color: #d5648a;
+}
 .createBtn {
   border: none;
   border-radius: 8px;
