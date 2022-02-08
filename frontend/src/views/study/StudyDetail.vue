@@ -206,8 +206,7 @@ export default {
         this.$store.state.roomName = this.studyInfo.studyName;
 
         var str = this.studyInfo.url;
-        var urlLen = this.studyInfo.url.length;
-        var url = str.substr(22,urlLen);
+        var url =  str.split('/')[3];
         
 
         // console.log(str);
