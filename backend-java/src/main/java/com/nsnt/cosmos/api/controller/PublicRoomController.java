@@ -44,8 +44,8 @@ public class PublicRoomController {
 	@Autowired
 	PublicRoomService publicRoomService;
 	
-	@PostMapping("/registerpublicroom")
-	@ApiOperation(value = "공개 스터디룸 생성 ", notes = "공개 스터디룸 생성")
+	@PostMapping("/register/publicRoom")
+	@ApiOperation(value = "공개 스터디룸 생성 (token)", notes = "공개 스터디룸 생성")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "원하는 정보 없음"), 
@@ -68,7 +68,7 @@ public class PublicRoomController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, SUCCESS));
 	}
 	
-	@PostMapping("/register/publicmember")
+	@PostMapping("/register/publicMember")
 	@ApiOperation(value="공개 스터디 참가자 등록 (token)(param)", notes="<strong>공개 스터디 참가자  등록</strong>시켜줍니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
@@ -89,17 +89,15 @@ public class PublicRoomController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, SUCCESS));
 	}
 	
-	
 	 /** 해당 공개 스터디 참가자 전체 조회 입니다. */
 	@ApiOperation(value="해당 공개 스터디 참가자 전체 조회(param)", notes="<strong>해당 공개 스터디 참가자  전체 조회를</strong>시켜줍니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "원하는 정보 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	@GetMapping("/search/publicmember")
-    public ResponseEntity<List<PublicMember>> findAllPrivateMember(@RequestParam String publicstudyroom_id){
+	@GetMapping("/search/publicMember")
+    public ResponseEntity<List<PublicMember>> findAllPublicMember(@RequestParam String publicstudyroom_id){
         List<PublicMember> publicmember = publicRoomService.findAllPublicMember(publicstudyroom_id);
-
         return new ResponseEntity<List<PublicMember>>(publicmember,HttpStatus.OK);
     }
 	
@@ -109,8 +107,8 @@ public class PublicRoomController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "해당 회원 없음")})
-	@DeleteMapping("/removePrivateMember")
-	public ResponseEntity<String> boarddelete(@RequestParam String publicstudyroom_id,  @ApiIgnore Authentication authentication) throws Exception {	
+	@DeleteMapping("/remove/publicMember")
+	public ResponseEntity<String> removePublicMember(@RequestParam String publicstudyroom_id,  @ApiIgnore Authentication authentication) throws Exception {	
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		String user_id = userDetails.getUsername();
 		try {	
