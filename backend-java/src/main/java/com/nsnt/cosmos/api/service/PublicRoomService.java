@@ -16,9 +16,12 @@ public interface PublicRoomService {
 	
 	/** 공개 스터디 참가자 테이블에 데이터를 생성하는 createPublicMember 입니다. */
     public void createPublicMember( PublicMemberRegisterDto publicMemberDto, String user_id);
-    /** 해당 공개 스터디의 참가자 모든 정보를 가져오는 findAllPrivateMember 입니다. (목록 부분에 사용)*/
+    /** 해당 공개 스터디의 참가자 모든 정보를 가져오는 findAllPublicMember 입니다. (목록 부분에 사용)*/
     public List<PublicMember> findAllPublicMember(String public_room_id);
     
-    /** 해당 공개 스터디 참가자가 방을 떠날시 참가자 명단에서 삭제하는 deleteBoard 입니다. */
+    /** 해당 공개 스터디 참가자가 방을 떠날시 참가자 명단에서 삭제하는 deletePublicMember 입니다. */
     public void deletePublicMember(String publicstudy_room_id, String user_id);
+    
+    /** 해당 공개 스터디방에 참가자가 아무도 없으면 해당 공개 스터디방 삭제하는 deletePublicRoom 입니다. */
+    public void deletePublicRoom(String publicstudy_room_id);
 }

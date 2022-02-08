@@ -102,7 +102,7 @@ public class PublicRoomController {
     }
 	
 	/** 해당 공개 스터디 참가자 명단 삭제 **/
-	@ApiOperation(value = "해당 공개 스터디 참가자가 방에서 나갈경우 명단 삭제", notes = "해당 공개 스터디 참가자가 방에서 나갈경우 명단 삭제")
+	@ApiOperation(value = "해당 공개 스터디 참가자가 방에서 나갈경우 명단 삭제(param)", notes = "해당 공개 스터디 참가자가 방에서 나갈경우 명단 삭제")
 	@ApiResponses({ @ApiResponse(code = 200, message = "해당 비공개 스터디 참가자 명단 삭제 성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
@@ -120,5 +120,24 @@ public class PublicRoomController {
 		}
 		logger.debug("해당 공개 스터디 참가자 명단에서 해당 user 삭제 성공");
 		return ResponseEntity.status(200).body(user_id+"가 방에 나가서 공개 스터디 멤버에서 제거 함"+SUCCESS);
+	}
+	
+	/** 해당 공개 스터디방에 참가자가 아무도 없으면 해당 공개 스터디방 삭제 **/
+	@ApiOperation(value = "해당 공개 스터디방에 참가자가 아무도 없으면 해당 공개 스터디방 삭제(param)", notes = "해당 공개 스터디방에 참가자가 아무도 없으면 해당 공개 스터디방 삭제")
+	@ApiResponses({ @ApiResponse(code = 200, message = "해당 공개 스터디 방 삭제 성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"), 
+					@ApiResponse(code = 500, message = "해당 회원 없음")})
+	@DeleteMapping("/remove/publicRoom")
+	public ResponseEntity<String> removePublicRoom(@RequestParam String publicstudyroom_id) throws Exception {	
+		try {	
+			publicRoomService.deletePublicRoom(publicstudyroom_id);
+		}catch(Exception e ) {
+			e.printStackTrace();
+			System.out.println("해당 공개 스터디 참가자  제거 실패");
+			return  ResponseEntity.status(500).body("해당 공개 스터디방 제거 "+FAIL);
+		}
+		logger.debug("해당 공개 스터디 참가자 명단에서 해당 user 삭제 성공");
+		return ResponseEntity.status(200).body("방에  남은 인원이 없어 "+ publicstudyroom_id +" 공개 스터디 방 삭제 함"+SUCCESS);
 	}
 }
