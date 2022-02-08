@@ -1,4 +1,4 @@
-<template>
+d<template>
 	<div id="main">
 		<div id="main-container">
 			<div id="join" v-if="!session">
@@ -70,14 +70,16 @@
 				</div>
 
 				<!-- 채팅 기능 시작 -->
+				<!-- <p @click="showChat">채팅</p> -->
+					<!-- <div class="chat" v-show="isChatVisible"> -->
+				<p>채팅</p>
 				<div class="chat">
-					<p>채팅</p>
-					<div class="messages" ref="messages">
-						<div class="messageLoop" v-for="(message, idx) in messages" :key="idx">
+					<div class="messages" v-html="messages" ref="messages">
+						<!-- <div class="messageLoop" v-for="(message, idx) in messages" :key="idx"> -->
 							<!-- <div class="text-left" >{{ userId }} 님의 메시지:</div> -->
-							<div class="text-left message__bubble">{{ message }}</div>
-						</div>
-					</div>	
+							<!-- <div class="text-left message__bubble">{{ message }}</div> -->
+						<!-- </div> -->
+					</div>
 
 					<form class="chatFooter" onsubmit="return false">
 						<input class="chat_input" id="msg" type="text" placeholder="메세지를 입력하세요.">
@@ -282,9 +284,10 @@
 	display: flex;
 	flex-direction: column;
 }
+
 #session-aside-right .chat .chat_content{
 	width: 100%;
-	height: 90%;
+	height: 100%;
 	background-color: #ccc;
 }
 
@@ -297,6 +300,7 @@
 	background: transparent;
 	padding: 0 30px;
 	font-size: 16px;
+	position: absolute;
 }
 
 #session-aside-right .chat input:focus{
@@ -347,12 +351,18 @@ margin-bottom: 15px;
 	padding: 10px 20px;
 	overflow: auto;
 	height: auto;
-	background-color: #ccc;
-	font-size: 15px;
+	background-color: #ccc; 
+	/* /* border: 5px #ccc solid; */
+	border-radius: 5px;
+	/* box-shadow: 5px 5px 5px rgb(235, 235, 235); */
+	font-size: 18px;
+	word-break: break-all;
+	font-family: "BMJua";
+	position: relative;
 }
 
-.messageLoop {
-	margin-bottom: 10px;
+#chatMessage {
+	font-family: "BMJua";
 }
 
 .messages::-webkit-scrollbar {
@@ -372,30 +382,32 @@ margin-bottom: 15px;
 	display: none;
 }
 
-.message__bubble {
-	margin: 5px;
-	text-align: left;
-}
 .chatFooter {
 	height: 50px;
 	line-height: 30px;
 	border-top: 1px solid rgba(156, 172, 172, 0.2);
 	display: flex;
 	flex-shrink: 0;
+	display: inline-block;
 }
 
 #submitBtn {
-	height: 50px;
+	width: 55px;
+	height: 32px;
 	border: none;
 	background: transparent;
-	padding: 0 30px;
 	font-size: 16px;
 	cursor: pointer;
+	position: absolute;
+	right: 0%;
+	background-color: #6363bf;
+	border-radius: 5px;
+	color: #FFF;
 }
 
 #submitBtn:hover {
-	background-color: #6363bf;
-	color: #FFF;
+	background-color: #fff;
+	color: #6363bf;
 }
 
 </style>
@@ -455,8 +467,9 @@ export default {
 			video: true,
 			audioMsg: '마이크 ON',
 			videoMsg: '비디오 ON',
-			messages: [],
+			messages: '',
 			userId: '',
+			isChatVisible: false,
 
 			// 상벌점 기능
 			scoreModal: false,
@@ -517,7 +530,9 @@ export default {
 			score -= 1
 			this.updateScore(score, studymember_no)
 		},
-		
+		// showChat() {
+		// 	this.isChatVisible = !this.isChatVisible;
+		// },
 		
 		joinSession () {
 			// --- Get an OpenVidu object ---
@@ -549,8 +564,32 @@ export default {
 
 			// 같은 session 내에서 텍스트 채팅을 위한 signal
 			this.session.on('signal', (event) => {
-				var message = event.data.split(".././././.");
-				this.messages.push(message[0]);
+				var message = event.data.split("&$");
+				console.log(">>>>>>>>>>>>>> message : ", message);
+
+				if(message == "") {
+					this.messages += '<div> 화면공유.... </div>';
+				} else {
+					// console.log(">>>>>>>>>>>>>>>>>>> ", message[0]);
+					// this.messages.push(message[0]);
+					console.log("저장된 : ", this.$store.state.userId, "현재 : ", message[0]);
+					if(this.$store.state.userId == message[0]) {
+						console.log("내가 쓴 메시지");
+						this.messages += '<div align="right">' 
+									   + 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #fff; border-radius: 10px;">'
+									   +  		'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
+									   +  		'<div class="mb-3">' + message[1] + ' </div>'
+									   +  	'</div>'
+									   + '</div>';
+					} else {
+						console.log('니가 쓴 메시지');
+						this.messages += '<div align="left">' 
+									   + 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #6363bf; color: #fff; border-radius: 10px;">'
+									   +  	'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
+									   +  	'<div class="mb-3">' + message[1] + ' </div>'
+									   +  '</div>';
+					}
+				}
 			});
 		
 			// --- Connect to the session with a valid user token ---
@@ -630,22 +669,23 @@ export default {
 		// 텍스트 채팅을 위한 메세지 전송하기
 		sendMessage() {
 			var message = document.getElementById("msg").value;
-			message.replace('\n','<br/>');
-			console.log(message)
-			
-			
-			this.session.signal({
-				data: this.myUserName+ "님의 메시지:\n" +message,
-				to: [],
-				type: 'my-chat',
-			})
-			.then(() => {
-				console.log("message sent successfully!!");
-				document.getElementById("msg").value = "";
-			})
-			.catch(error => {
-				console.error(error);
-			})
+			if(message != "") {
+				console.log("message " , message)
+				
+				
+				this.session.signal({
+					data: this.myUserName+ "&$" +message,
+					to: [],
+					type: 'my-chat',
+				})
+				.then(() => {
+					console.log("message sent successfully!!");
+					document.getElementById("msg").value = "";
+				})
+				.catch(error => {
+					console.error(error);
+				})
+			}
 		},
 
 		muteVideo() {
