@@ -645,7 +645,7 @@ export default {
 			window.removeEventListener('beforeunload', this.leaveSession);
 			http({
 				method: 'DELETE',
-				url: `/privateroom/removePrivateMember`,
+				url: `/privateroom/remove/privateMember`,
 				headers: this.getToken_info(),
 				params: {privatestudyroom_id: this.mySessionId},
 			})
