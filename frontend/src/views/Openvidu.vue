@@ -111,7 +111,7 @@
 						
 						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteAudio()">
 							<b-icon icon="mic-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
-							<span class="footerBtnText">{{ audioMsg }}</span> //
+							<span class="footerBtnText">{{ audioMsg }}</span>
 						</button> <!-- 마이크 on/off 버튼 -->
 					</div>
 					<div v-else class="roomFun buttomMenu">
@@ -288,7 +288,7 @@
 	border-radius: 5px;
 	background: transparent;
 	padding: 0 30px;
-	font-size: 10px;
+	font-size: 16px;
 }
 
 #session-aside-right .chat input:focus{
@@ -369,7 +369,7 @@ margin-bottom: 15px;
 	text-align: left;
 }
 .chatFooter {
-	height: 30px;
+	height: 50px;
 	line-height: 30px;
 	border-top: 1px solid rgba(156, 172, 172, 0.2);
 	display: flex;
@@ -377,7 +377,7 @@ margin-bottom: 15px;
 }
 
 #submitBtn {
-	height: 30px;
+	height: 50px;
 	border: none;
 	background: transparent;
 	padding: 0 30px;
@@ -615,7 +615,7 @@ export default {
 			var message = document.getElementById("msg").value;
 			message.replace('\n','<br/>');
 			console.log(message)
-			document.getElementById("msg").value = "";
+			
 			
 			this.session.signal({
 				data: this.myUserName+ "님의 메시지:\n" +message,
@@ -624,6 +624,7 @@ export default {
 			})
 			.then(() => {
 				console.log("message sent successfully!!");
+				document.getElementById("msg").value = "";
 			})
 			.catch(error => {
 				console.error(error);
