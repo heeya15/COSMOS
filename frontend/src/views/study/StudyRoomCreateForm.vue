@@ -155,8 +155,6 @@ export default {
         }
       },
       urlState: false,
-      image: null,
-      exampleImg: ''
     }
   },
   methods: {
@@ -164,7 +162,7 @@ export default {
       const token = localStorage.getItem('jwt')
       const header = {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data'
+        // 'Content-Type': 'multipart/form-data'
       }
       return header
     },
@@ -223,8 +221,10 @@ export default {
       })
       .then(res => {
         // console.log(res)
-        if (res.status === 200){
-          this.$router.push({name: 'StudyDetail', params: {studyNo: res.data.studyNo}})
+        if (res.status !== 200){
+          alert('입력을 다시 한 번 확인하세요.')
+        }else {
+          this.$router.push({name: 'StudyDetail', params: {studyNo: res.data.studyNo}})  
         }
       })
       .catch(err => {
@@ -243,16 +243,23 @@ export default {
         publicstudyroomId: this.input.url.split('/')[3],
         studyName: this.input.studyName,
         studyRule: this.input.studyRule,
+        studytypeNo: this.input.studytypeNo,
         url: this.input.url
       }
       http({
         method: 'POST',
-        url: '/publicroom/registerpublicroom',
-        // url: '/publicroom/register/publicroom'
+        url: '/publicroom/register/publicRoom',
+        headers: this.getHeader(),
         data: studyInfo,
       })
       .then(res => {
         console.log(res)
+        if (res.status !== 200){
+          alert('입력을 다시 한 번 확인하세요.')
+        }else { 
+          // this.$router.push({name: 'Openvidu'})
+          this.$router.push({name: 'MainPage'})
+        }
       })
       .catch(err => {
         console.log(err)
