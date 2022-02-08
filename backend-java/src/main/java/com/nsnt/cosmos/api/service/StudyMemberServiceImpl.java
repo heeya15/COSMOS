@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nsnt.cosmos.api.request.SaveBoardDto;
 import com.nsnt.cosmos.api.request.SaveStudyMemberDto;
+import com.nsnt.cosmos.api.response.RecentStudyNorSearchDtoRes;
 import com.nsnt.cosmos.api.response.StudyMemberSearchDtoRes;
 import com.nsnt.cosmos.db.entity.StudyMember;
 import com.nsnt.cosmos.db.repository.StudyMemberRepository;
@@ -54,5 +55,11 @@ public class StudyMemberServiceImpl implements StudyMemberService {
 	public StudyMember updateStudyMemberAuthority(StudyMember studymember, SaveStudyMemberDto saveStudyMemberDto) {
 		 studymember.updateAuthority(saveStudyMemberDto);
 	     return studymember;
+	}
+
+	@Override
+	public RecentStudyNorSearchDtoRes findResentStudyNo(String user_id) {
+		RecentStudyNorSearchDtoRes result = studyMemberRepository.findRecentStudyMember(user_id);
+		return result;
 	}
 }
