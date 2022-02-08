@@ -62,4 +62,9 @@ public class PublicRoomServiceImpl implements PublicRoomService {
 	public void deletePublicRoom(String publicstudy_room_id) {	// 공개 스터디방 삭제
 		PublicStudyRoomRepository.deletePublicRoom(publicstudy_room_id);
 	}
+	@Override
+	public List<PublicStudyRoom> findAllPublicStudyRoom() {
+		List<PublicStudyRoom> list = PublicStudyRoomRepository.findAllPublicStudyRoom();
+		return list;
+	}
 }

@@ -101,6 +101,18 @@ public class PublicRoomController {
         return new ResponseEntity<List<PublicMember>>(publicmember,HttpStatus.OK);
     }
 	
+	 /** 공개 스터디 방 전체 조회 입니다. */
+	@ApiOperation(value="공개 스터디 방 전체 조회", notes="<strong>공개 스터디 방 전체 조회를</strong>시켜줍니다.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "원하는 정보 없음"), 
+					@ApiResponse(code = 500, message = "서버 오류")})
+	@GetMapping("/search/searchAll/publicRoom")
+	public ResponseEntity<List<PublicStudyRoom>> findAllPublicRoom(){
+	     List<PublicStudyRoom> publicRoom = publicRoomService.findAllPublicStudyRoom();
+	     return new ResponseEntity<List<PublicStudyRoom>>(publicRoom, HttpStatus.OK);
+	}
+		
 	/** 해당 공개 스터디 참가자 명단 삭제 **/
 	@ApiOperation(value = "해당 공개 스터디 참가자가 방에서 나갈경우 명단 삭제(param)", notes = "해당 공개 스터디 참가자가 방에서 나갈경우 명단 삭제")
 	@ApiResponses({ @ApiResponse(code = 200, message = "해당 비공개 스터디 참가자 명단 삭제 성공"), 
