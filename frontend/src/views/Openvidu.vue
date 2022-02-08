@@ -137,10 +137,18 @@
 					</div>
 
 					<!-- 화면공유 버튼 설정 -->
-					<div class="buttomMenu">
+					<div v-if="sharing === true" class="buttomMenu">
 						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="startScreenSharing()">
-							<b-icon icon="door-open" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+							<b-icon icon="file-arrow-up" class="buttomMenuIcon" aria-hidden="true" ></b-icon>
 							<span class="footerBtnText">화면공유</span>
+						</button> <!-- 나가기 버튼 -->
+					</div>
+
+					<!-- 화면공유 중지 버튼 설정 -->
+					<div v-else class="buttomMenu">
+						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSessionForScreenSharing()">
+							<b-icon icon="file-arrow-down" class="buttomMenuIcon" aria-hidden="true" ></b-icon>
+							<span class="footerBtnText">공유중지</span>
 						</button> <!-- 나가기 버튼 -->
 					</div>
 					
@@ -433,7 +441,7 @@ export default {
 			OVForScreenShare: undefined,
 			sessionForScreenShare: undefined,
 			sharingPublisher: undefined,
-
+			sharing:true,
 			OV: undefined,
 			session: undefined,
 			mainStreamManager: undefined,
@@ -607,7 +615,16 @@ export default {
 			})
 			.catch(err => {
 				console.log(err)
-			});  	
+			});
+			
+			this.sharing = !this.sharing;
+			if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
+            this.sessionForScreenShare = undefined;
+            this.mainStreamManager = undefined;
+            this.sharingPublisher = undefined;
+            this.OVForScreenShare = undefined;
+            window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);		
+			  	
 		},
 
 		// 텍스트 채팅을 위한 메세지 전송하기
@@ -744,6 +761,7 @@ export default {
 								to: [],
 								type: 'startScreenSharing'             // The type of message (optional)
 							})
+							this.sharing = !this.sharing; // 화면 공유 버튼에서 중지 버튼으로 change toggle
 							publisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
 								console.log('User pressed the "Stop sharing" button');
 								this.session.signal({
@@ -770,7 +788,8 @@ export default {
 			});
 			window.addEventListener('beforeunload', this.leaveSessionForScreenSharing)
 		},
-			leaveSessionForScreenSharing () {
+		leaveSessionForScreenSharing () { // 화면 공유 중지
+			this.sharing = !this.sharing;
 			if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
             this.sessionForScreenShare = undefined;
             this.mainStreamManager = undefined;
@@ -779,7 +798,11 @@ export default {
             window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
 		},
 	},
-
+	stopScreenShare(){
+		
+		this.sharing = !this.sharing;
+		window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
+	},
 	watch: {
 		messages() {
 			this.$nextTick(() => {
