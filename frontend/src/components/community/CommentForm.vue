@@ -1,7 +1,7 @@
 <template>
   <div>
     <center>
-      <b-row style="width: 600px;">
+      <b-row style="width: 800px;">
         <b-col cols="3" class="mt-3">
           <p>댓글</p>
         </b-col>
@@ -10,6 +10,7 @@
         </b-col>
         <b-col cols="3" class="mt-3">
           <b-button class="btnTag" @click="createComment">작성</b-button>
+          <b-button v-b-toggle.collapse-2 class="getCommetTag m-1" @click="visible = !visible">댓글 보기</b-button>
         </b-col>
       </b-row>
     </center>
@@ -24,6 +25,7 @@ export default {
   name: 'CommentForm',
   data() {
     return {
+      visible: true,
       commentInput: {
         content: null,
         user_id: null,
@@ -73,6 +75,17 @@ export default {
 
 .btnTag:hover {
   background-color: #c8c1e4;
+}
+
+.getCommetTag {
+  width: 100px;
+  height: 36px;
+  background-color: #f45384 !important;
+  border: none;
+}
+
+.getCommetTag:hover {
+  background-color: #f8bfd1 !important;
 }
 
 
