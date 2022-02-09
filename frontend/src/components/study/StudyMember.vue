@@ -33,7 +33,7 @@
         <td v-if="member.user_id!==myId">
           <b-button class="me-3" variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button>
           <!-- 권한이 true=>false, false=>true 바뀌게 설정 -->
-          <b-button variant="success" @click="giveAuthority(member.studymember_no)">권한</b-button>
+          <b-button variant="info" @click="giveAuthority(member.studymember_no)">권한</b-button>
         </td>
         </tr>
 			</tbody>
@@ -59,8 +59,6 @@
         </tr>
 			</tbody>
     </table>
-
-
 
     <!-- <b-row>
       <hr>
