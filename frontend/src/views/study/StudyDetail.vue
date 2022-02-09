@@ -230,6 +230,7 @@ export default {
 
         this.$store.state.roomName = this.studyInfo.studyName;
 
+        var str = this.studyInfo.url;
         var url =  str.split('/')[3];
         
 
