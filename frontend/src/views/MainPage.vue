@@ -75,7 +75,7 @@
       <!-- 오픈(공개) 스터디 목록 Start -->
       <div>
         <h1 class="text-center">오픈 스터디</h1>
-        <div class="my-5 p-5" align="center">  
+        <!-- <div class="my-5 p-5" align="center">  
           <div v-if="publicStudyList.length >= 1" >
             <div class="row">
               <div v-for="publicstudy in publicStudyList" :key="publicstudy.publicstudyroomId" class="col-md-4 mb-3 mb-lg-2">
@@ -92,18 +92,46 @@
           <div v-else>아직 가입한 스터디가 없습니다.</div>
         </div>
       </div>
+
+      <div> -->
+        <div class="my-5 p-5" align="center">  
+          <div v-if="publicStudyList.length >= 1" >
+        <!-- <VueSlickCarousel ref="slick" :options="slickOption"> -->
+        <VueSlickCarousel ref="slick" 
+          :arrows="true"
+          :dots="true"
+          :infinite="true" 
+          :speed="500"
+          :slidesToShow="3"
+          :slidesToScroll="1"
+          :swipeToSlide="true"
+          :adaptiveHeight="true"
+          :autoplay="true"
+          :autoplaySpeed="2000"
+        >
+        <!-- https://i.ibb.co/zNbb7tG/cat1.jpg" alt="cat1"  -->
+            <div v-for="publicstudy in publicStudyList" :key="publicstudy.publicstudyroomId" class="px-5 mb-lg-2">
+                <div class="hover hover-1 text-white rounded">
+                  <img class="studyImg" :src="publicstudy.image" alt="Study Image is missing... :(">
+                  <div class="hover-overlay"></div>
+                  <div class="hover-1-content number">{{ publicstudy.currentParticipant }} / {{ publicstudy.numberOfMember }}</div>
+                  <div class="hover-1-content px-5 py-4">
+                    <h3 class="hover-1-title text-uppercase mb-0"><span :model="publicstudy.studyName">{{ publicstudy.studyName }}</span></h3>
+                    <p class="hover-1-description ml-5 mb-0">{{ publicstudy.studyTypeName }}</p>
+                    <!-- publicstudy.studyTypeName -->
+                  </div>
+                </div>
+              </div>
+            </VueSlickCarousel>
+            </div>
+          <div v-else>아직 가입한 스터디가 없습니다.</div>
+        </div>
+      </div>
       <!-- 오픈(공개) 스터디 목록 End -->
 
       <div class="my-5" align="center">  
         <hr class="line">
       </div>
-
-      
-
-
-
-
-
   </div>
     <!-- <b-row>
       <b-col cols="1"></b-col>
@@ -119,9 +147,13 @@
 
 <script>
 import http from "@/util/http-common.js";
+import VueSlickCarousel from 'vue-slick-carousel'
+import 'vue-slick-carousel/dist/vue-slick-carousel.css'
+import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
 
 export default {
   name: 'MainPage',
+  components: { VueSlickCarousel },
 
   data() {
     return {
@@ -130,8 +162,28 @@ export default {
       // board_no: this.$store.state.boardNo,
       boardItems: null,
       boardList: [],
-      publicStudyList: [],
-      publicStudyInfo: null,
+      publicStudyList: [{
+        image: '',
+        numberOfMember: 0,
+        publicstudyroomId: '',
+        studyName: '',
+        studyRule: '',
+        studyTypeName: '',
+        studyTypeNo: '',
+        url: '',
+        currentParticipant: 0,
+      }],
+
+      slickOption: {
+        arrows: true,
+        dots: true,
+        infinite: true, 
+        speed: 500,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        swipeToSlide: true,
+      },
+
     }
   },
 
@@ -200,21 +252,69 @@ export default {
       .then(res => {
         this.publicStudyList = res.data
         console.log(">>>>>>>> return public study: ", res.data);
+        this.publicStudyList.image = res.data.image
+        this.publicStudyList.numberOfMember = res.data.numberOfMember
+        this.publicStudyList.publicstudyroomId = res.data.publicstudyroomId
+        this.publicStudyList.studyName = res.data.studyName
+        this.publicStudyList.studyRule = res.data.studyRule
+        console.log("????")
+        // this.publicStudyList.studyTypeNo = res.data.studyType['studytypeNo']
+        // this.publicStudyList.studyTypeName = res.data.studyType['studytypeName']
+        console.log("!!!!!!!!!!")
+        this.publicStudyList.url = res.data.url
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+      // 오픈 스터디 객체 배열을 탐색하면서 스터디 현재 인원 파악
+      for(var i=0; i<this.publicStudyList.length; i++) {
+      //   console.log("here")
+        console.log(">>>>>>>>>>>>>>>> ", this.publicStudyList[i].publicstudyroomId)
+
+      //   http({
+      //     method: 'GET',
+      //     url: '/publicroom/search/publicMember',
+      //     params: { publicstudyroom_id: this.publicStudyList[i].publicstudyroomId }
+      //   })
+      //   .then(res => {
+      //     this.publicStudyList[i].currentParticipant = res.data.length == null ? 0 : res.data.length
+      //     console.log(">>>>>>>>>>>>>>>> 해당 스터디 멤버 수 : ", this.publicStudyList[i].currentParticipant)
+      //   })
+      //   .catch(err => {
+      //     console.log(err)
+      //   })
+        
+        this.getPublicStudyMember(i, this.publicStudyList[i].publicstudyroomId)
+      }
+    },
+    
+    async getPublicStudyMember(i, publicstudyroomid) {
+      await http({
+        method: 'GET',
+        url: '/publicroom/search/publicMember',
+        params: { publicstudyroom_id: publicstudyroomid }
+      })
+      .then(res => {
+        this.publicStudyList[i].currentParticipant = res.data.length == null ? 0 : res.data.length
+        console.log(">>>>>>>>>>>>>>>> 해당 스터디 멤버 수 : ", this.publicStudyList[i].currentParticipant)
       })
       .catch(err => {
         console.log(err)
       })
     },
-
-    getPublicStudyMember(publicstudyroomid) {
-      console.log(">>>>>>>>>>> 찾고자하는 오픈스터디룸 아이디 : ", publicstudyroomid)
-    },
   },
+
 
   created() {
     this.getBoardItems()
     this.getPublicStudy()
   },
+
+  // mounted() {
+  //   setInterval(this.getPublicStudy, 5000);
+  //   console.log("5 second later")
+  // },
 }
 </script>
 
@@ -429,11 +529,15 @@ thead {
 
 .hover-1:hover .hover-1-content {
   bottom: 2rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
 }
 
 .hover-1:hover .hover-1-description {
   opacity: 1;
   transform: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
 }
 
 .hover-1:hover img {
@@ -442,6 +546,21 @@ thead {
 
 .hover-1:hover .hover-overlay {
   opacity: 0;
+}
+
+.studyImg {
+  width: 100%;
+  height: 100%;
+}
+
+/* 오픈 스터디 슬라이드에 좌,우 화살표 검은색으로 수정 불가 */
+/* .slick-prev:before, .slick-next:before {
+  color: black;
+} */
+
+.number {
+  margin-bottom: 40%;
+  margin-left: 80%;
 }
 
 </style>
