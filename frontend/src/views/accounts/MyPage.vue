@@ -2,33 +2,50 @@
   <center>
     <h1>MY PAGE</h1>
     <div class="profile">
-      <div>아이디: {{user_id}}</div>
-      <div>이름: {{user_name}}</div>
-      <div>이메일: {{user_email}}</div>
-      <b-button variant="danger" class="me-3" @click="signOut">회원탈퇴</b-button>
-      <b-button variant="warning" @click="togglePwd">비밀번호 변경</b-button>
-
-      <!-- 비밀번호 일치하면, 비밀번호 수정가능 -->
-      <div v-show="togglePassword" style="width: 600px;">
-        <hr>
-        <b-row class="mt-3">
-          <b-col><b-form-input type="password" style="height:50px;" id="userpw" v-model="user_pw" required placeholder="현재 비밀번호를 입력하세요."></b-form-input></b-col>
-          <b-col><button class="checkBtn mt-2" @click="checkPassword">확인</button></b-col>
-        </b-row>
-        <div v-show="userpwCheck">
-          <b-form-input class="mt-3" style="height:50px;" type="password" id="userpw1" v-model="user_password" placeholder="변경할 비밀번호를 입력하세요." @blur="passwordRuleCheck" required></b-form-input>
-          <div ref="pwCheckMsg"></div>
-          <b-form-input class="mt-3" style="height:50px;" type="password" id="userpw2" v-model="user_password2" placeholder="변경할 비밀번호 확인" :state="pwState" required></b-form-input>
-          <div>
-            <b-button variant="warning" class="mt-5" @click="changePassword">변경</b-button>
-            <b-button class="ms-3 mt-5" @click="[togglePassword=false,userpwCheck=false]">취소</b-button>
+      <div class="banner">
+        <b-row>
+          <b-col>
+            <img src="@/assets/img/study/working_at_home.png" alt="프로필" style="height: 200px; width:200px;">
+          </b-col>
+          <b-col class="p-4">
+            <b-row class="my-2">
+              <div>아이디: {{user_id}}</div>
+            </b-row>
+            <b-row class="my-2">
+              <div>이름: {{user_name}}</div>
+            </b-row>
+            <b-row class="my-2">
+              <div>이메일: {{user_email}}</div>
+            </b-row>
+            <b-row class="mt-3">
+              <b-button variant="danger" class="mr-3" @click="signOut">회원탈퇴</b-button>
+              <b-button variant="warning" @click="togglePwd">비밀번호 변경</b-button>
+            </b-row>
+          </b-col>
+        <!-- 비밀번호 일치하면, 비밀번호 수정가능 -->
+        <div v-show="togglePassword" class="passwordBox">
+          <hr>
+          <b-row class="mt-3 ml-2">
+            <b-col cols="8"><b-form-input type="password" style="height:50px;" id="userpw" v-model="user_pw" required placeholder="현재 비밀번호를 입력하세요."></b-form-input></b-col>
+            <b-col><button class="checkBtn mt-2" @click="checkPassword">확인</button></b-col>
+          </b-row>
+          <div v-show="userpwCheck" class="mx-4">
+            <b-form-input class="mt-3" style="height:50px;" type="password" id="userpw1" v-model="user_password" placeholder="변경할 비밀번호를 입력하세요." @blur="passwordRuleCheck" required></b-form-input>
+            <div ref="pwCheckMsg"></div>
+            <b-form-input class="mt-3" style="height:50px;" type="password" id="userpw2" v-model="user_password2" placeholder="변경할 비밀번호 확인" :state="pwState" required></b-form-input>
+            <div>
+              <b-button variant="warning" class="mt-3 mr-2" @click="changePassword">변경</b-button>
+              <b-button class="ms-3 mt-3" @click="[togglePassword=false,userpwCheck=false]">취소</b-button>
+            </div>
           </div>
         </div>
+        </b-row>
       </div>
 
+      <hr class="mt-5">
       <!-- My study-->
-      <div class="container py-5">
-        <div class="py-5">
+      <div class="container">
+        <div class="py-3">
           <h3 class="font-weight-bold mb-0">My Study</h3>
           <p class="font-italic text-muted mb-4">현재 가입한 스터디 입니다.</p>
 
@@ -216,7 +233,21 @@ export default {
 <style scoped>
 .profile {
   width: 1000px;
-  border: 1px solid rgb(204, 143, 143);
+}
+
+/* user 정보 박스 */
+.banner {
+  width: 70%;
+  height: 60%;
+  background-color: #e0dfdf;
+  margin: auto;
+  border-radius: 30px;
+  position: relative;
+  padding: 30px;
+}
+
+.passwordBox {
+  width: 100%;
 }
 
 .checkBtn {
