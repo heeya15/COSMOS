@@ -90,8 +90,8 @@ export default new Vuex.Store({
         console.log(err)
       })
     },
-    logIn({commit}, credentials) {
-      http({
+    async logIn({commit}, credentials) {
+      await http({
         method: 'post',
         url: '/auth/login',
         data: credentials
@@ -100,10 +100,11 @@ export default new Vuex.Store({
         if(res.status === 200) {
           localStorage.setItem('jwt', res.data.accessToken)
           commit('LOGIN')
-          router.push({name:'MainPage'})
+          
         }
       })
       .catch(err => {
+        // this.state.loginMsg = "잘못된 아이디 또는 비밀번호입니다.";
         console.log(err)
       })
     },

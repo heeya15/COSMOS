@@ -4,7 +4,7 @@
         <b-form class="p-5" id="loginForm">
           <p id="login">로그인</p>
           <div class="input-box my-5">
-            <input id="id" type="text" name="id" v-model="credentials.id" placeholder="아이디" required/>
+            <input id="id" type="text" name="id" v-model="credentials.id" @keydown="resetMsg" placeholder="아이디" required/>
             <label for="id">아이디</label>
           </div>
           <div class="input-box mb-3">
@@ -35,12 +35,27 @@ export default {
         password:'',
       },
       msg: '',
+      login: '',
     }
   },
 
   methods: {
-    logIn() {
-      this.$store.dispatch('logIn', this.credentials)
+    resetMsg() {
+      if(this.msg != "") this.msg = "";
+    },
+
+    async logIn() {
+      await this.$store.dispatch('logIn', this.credentials)
+
+      // 입력값 초기화
+      if(this.$store.state.isLogin === true) {
+        this.msg = "";
+        this.$router.push({name:'MainPage'})
+      } else {
+        this.credentials.id = '';
+        this.credentials.password = '';
+        this.msg = "잘못된 아이디 또는 비밀번호입니다.";
+      }
     },
 
     pwdPeek() {
@@ -52,16 +67,11 @@ export default {
         this.$refs.pwdIcon.icon = "eye-fill";
       }
     },
-    
-    beforeDestroy() {
-      if(!this.$store.state.isLogin) {
-        // 입력값 초기화
-        this.credentials.id = '';
-        this.credentials.password = '';
-        this.msg = "잘못된 아이디 또는 비밀번호입니다."
-      }
-    },
-  }
+  }, 
+
+  beforeCreate() {
+    this.login = this.$store.state.isLogin;   // false
+  },
 }
 </script>
 
@@ -166,6 +176,5 @@ input:focus, input:not(:placeholder-shown){
   right: 5%;
   top: 30%;
 }
-
 
 </style>
