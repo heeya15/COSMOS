@@ -373,6 +373,7 @@ export default {
 .btnTag {
   background-color: #afa2dd;
   border: none;
+  color: black;
 }
 
 .btnTag:hover {

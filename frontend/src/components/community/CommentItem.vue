@@ -9,28 +9,29 @@
       <p>인덱스 확인 >> {{ idx }} // 뜨나?</p> -->
 
       <!-- <div class="totalCard row mt-20 mb-20"> -->
-      <b-collapse id="collapse-2">
+        <!-- visible 넣으면 그냥 보이게 -->
+      <b-collapse id="collapse-2" visible>
       <div class="container mt-3">
         <div class="comment_body">
             <div class="card">
               <div class="comment-widgets">
                   <!-- Comment Row -->
-                <div class="d-flex flex-row comment-row">
+                <div class="d-flex flex-row comment-row mt-3">
                   <div class="comment-text w-100">
                     <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
                       <b-form-input v-if="editButton === true" type="text" class=" d-block" style="text-align: left; font-size: 13px; height: 30px;" v-model="comment.content" @keyup.enter="updateComment"></b-form-input>
-                      <span v-else class=" d-block" style="text-align: left; font-size: 13px;"> {{ comment.content }}</span>
+                      <span v-else class=" d-block" style="text-align: left;"> {{ comment.content }}</span>
                       <p class="font-medium" style="font-size: 10px; text-align: right;">작성자 : {{ comment.user_id }}</p>
                     </div>
                     <div class="comment-footer"> 
                     <span class="text-muted float-right" style="font-size: 10px"> {{ makeDate(comment.created_at) }}</span>
                       <div v-show="editButton === false" style="display: flex; justify-content: left;">
-                        <b-button variant="warning" class="button_tag" size="sm" v-if="userId === loginUserId" @click="editButtonChange">수정</b-button>
-                        <b-button variant="danger" class="button_tag" size="sm" v-if="userId === loginUserId" @click="deleteComment">삭제</b-button>
+                        <b-button variant="warning" class="button_tag" size="sm" v-if="userId === loginUserId" @click="editButtonChange"><b-icon icon="pencil"></b-icon></b-button>
+                        <b-button variant="danger" class="button_tag" size="sm" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash"></b-icon></b-button>
                       </div>
-                      <div v-show="editButton === true" >
-                        <b-button variant="warning" class="button_tag" size="sm" v-if="userId === loginUserId" @click="updateComment">수정</b-button>
-                        <b-button variant="danger" class="button_tag" size="sm" v-if="userId === loginUserId" @click="deleteComment">삭제</b-button>
+                      <div v-show="editButton === true" style="display: flex; justify-content: left;">
+                        <b-button variant="warning" class="button_tag" size="sm" v-if="userId === loginUserId" @click="updateComment"><b-icon icon="pencil-square"></b-icon>수정</b-button>
+                        <b-button variant="danger" class="button_tag" size="sm" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash-fill"></b-icon>삭제</b-button>
                       </div>
                     </div>
                   </div>
@@ -165,27 +166,9 @@ export default {
 </script>
 
 <style scoped>
-/* .comment_position {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: left;
-  justify-content: space-evenly;
-} */
-
-
-
 .container {
-  width: 700px;
+  width: 50%;
 }
-
-/* .cardHead {
-  position: relative;
-  top: 100px;
-  right: 260px;
-  background-color: yellow;
-  width: 70px;
-  height: 100px;
-} */
 
 .card {
   display: flex;

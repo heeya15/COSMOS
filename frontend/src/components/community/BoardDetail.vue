@@ -207,6 +207,7 @@ export default {
 
     // 스터디 신청
     applyStudy() {
+      console.log(this.applyMembers.length, "신청 확인")
       for(var i=0; i < this.applyMembers.length; i++) {
           if (this.applyMembers[i].user_id === this.loginUserId) {
             alert('이미 신청한 스터디 입니다.')
@@ -240,7 +241,7 @@ export default {
         url: `/study/applyMember/searchAll/${this.studyInfo.studyNo}`
       })
       .then(res =>{
-        console.log(res.data, '여기 확인')
+        console.log(res.data)
         if (res.data.length === 0) {
           this.applyMembers = null
         }
@@ -258,7 +259,6 @@ export default {
       http({
         method: 'get',
         url: `/board/search/${this.board_no}`,
-        // headers: this.getToken(),
       })
       .then(res => {
         console.log(res)
@@ -274,9 +274,6 @@ export default {
         this.userInfo.user_name = res.data.user['userName']
         this.userInfo.user_id = res.data.user['userId']
         this.studyInfo.studyNo = res.data['studyNo']
-        console.log('get board 작동확인')
-        console.log(this.boardInfo.contentStatus)
-        console.log(this.boardInfo.header, '모집 상태 여기 확인')
         if (this.boardInfo.header === false) {
           this.getApplyMember()
         }
@@ -401,7 +398,6 @@ export default {
   created() {
     this.getBoard()
     this.getUserInfo()
-    // this.getApplyMember()
     this.getStudyType()
   },
 }
