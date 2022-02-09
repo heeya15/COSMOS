@@ -18,8 +18,9 @@
       <!-- 스터디 정보 받아오기 -->
       <div class="studyContainer my-2 py-5">
         <b-row class="d-flex align-items-center">
-          <b-col>
-            <img src="@/assets/img/nophoto.png" alt="이미지없음" class="studyImg" v-if="studyInfo.image.length<24">
+          <b-col cols="5">
+            <!-- <img src="@/assets/img/nophoto.png" alt="이미지없음" class="studyImg" v-if="studyInfo.image.length<24"> -->
+            <img src="https://bootstrapious.com/i/snippets/sn-img-hover/hoverSet-3.jpg" alt="이미지없음" class="studyImg" v-if="studyInfo.image.length<24">
             <img :src="studyInfo.image" alt="스터디 이미지" class="studyImg" v-else>
           </b-col>
           <b-col>
@@ -50,7 +51,7 @@
                           <label for="studyName" class="mt-2">스터디 이름</label>
                         </b-col>
                         <b-col>
-                          <b-form-input id="studyName" v-model="studyInfo.studyName"></b-form-input>
+                          <b-form-input id="studyName" v-model="modifyInfo.studyName"></b-form-input>
                         </b-col>
                       </b-row>
                       <hr class="mt-3">
@@ -60,7 +61,23 @@
                           <label for="studyImg" class="mt-2">스터디 이미지</label>
                         </b-col>
                         <b-col>
-                          <b-form-input id="studyImg" v-model="studyInfo.image"></b-form-input>
+                        <div class="preview" v-if="studyInfo.image && !modifyInfo.image">
+                          <img :src="studyInfo.image" alt="대표이미지" class="studyImg">
+                        </div>
+                        <div v-if="modifyInfo.image">
+                          <img :src="modifyInfo.image" alt="대표이미지" class="studyImg">
+                        </div>
+                        <b-button class="mt-3" @click="$bvModal.show('bv-modal-studyImg')">이미지변경</b-button>
+                          <b-modal id="bv-modal-studyImg" size="lg" centered hide-footer>
+                            <template #modal-title>
+                            <h3>스터디 이미지 선택</h3>
+                            </template>
+                            <b-row class="ml-2">
+                              <b-col><button class="imgBtn" @click="[getImageSrc(1),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg1" for="studyWithMe" src="@/assets/img/study/studywithme.jpg" alt="study_with_me"></button></b-col>
+                              <b-col><button class="imgBtn" @click="[getImageSrc(2),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg2" for="study2" src="@/assets/cosmos_bg.png" alt="study2"></button></b-col>
+                              <b-col><button class="imgBtn" @click="[getImageSrc(3),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg3" for="study3" src="@/../public/테마6.jpg" alt="study3"></button></b-col>
+                            </b-row>
+                          </b-modal>
                         </b-col>
                       </b-row>
                       <hr class="mt-3">
@@ -70,7 +87,7 @@
                           <label for="studyPassword" class="mt-2">스터디 비밀번호</label>
                         </b-col>
                         <b-col cols="4">
-                          <b-form-input id="studyPassword" v-model="studyInfo.studyPassword"></b-form-input>
+                          <b-form-input id="studyPassword" v-model="modifyInfo.studyPassword"></b-form-input>
                         </b-col>
                       </b-row>
                       <hr class="mt-3">
@@ -80,7 +97,7 @@
                           <label for="studytypeNo" class="mt-2">스터디 타입</label>
                         </b-col>
                         <b-col cols="4">
-                          <b-form-select v-model="studyInfo.studyType.studytypeNo" :options="options" ></b-form-select>
+                          <b-form-select v-model="modifyInfo.studytypeNo" :options="options" ></b-form-select>
                         </b-col>
                       </b-row>
                       <hr class="mt-3">
@@ -90,7 +107,7 @@
                           <label for="totalMember" class="mt-2">스터디 총 인원</label>
                         </b-col>
                         <b-col>
-                          <b-form-input id="totalMember" v-model="studyInfo.totalMember"></b-form-input>
+                          <b-form-input id="totalMember" v-model="modifyInfo.totalMember"></b-form-input>
                         </b-col>
                       </b-row>
                       <hr class="mt-3">
@@ -100,14 +117,14 @@
                           <label for="studyRule" class="mt-2">스터디 규칙</label>
                         </b-col>
                         <b-col>
-                          <b-form-textarea id="studyRule" v-model="studyInfo.studyRule" rows="3" max-rows="6"></b-form-textarea>
+                          <b-form-textarea id="studyRule" v-model="modifyInfo.studyRule" rows="3" max-rows="6"></b-form-textarea>
                         </b-col>
                       </b-row>
                       <hr class="mt-3">
                     </div>
                     <div class="d-flex justify-content-center">
                       <b-button class="m-2" variant="warning" @click="updateStudy">수정</b-button>
-                      <b-button class="m-2" @click="$bvModal.hide('bv-modal-studyModify')">취소</b-button>
+                      <b-button class="m-2" @click="cancelModify">취소</b-button>
                     </div>
                   </b-modal>
 
@@ -169,6 +186,15 @@ export default {
         // totalMember: null,
         // numberOfMember: null, //현재 참여중인 스터디 인원
       },
+      modifyInfo: {
+        studyName : '',
+        image : '',
+        studyPassword : '',
+        studytypeNo : null,
+        totalMember: null,
+        studyRule: '',
+        url:'',
+      },
       options:[],
       modal: false,
       pwd: "",
@@ -205,10 +231,31 @@ export default {
       .then(res => {        
         console.log(res.data)
         this.studyInfo = res.data
+        this.modifyInfo.studyNo = res.data.studyNo
+        this.modifyInfo.studyName = res.data.studyName
+        this.modifyInfo.image = res.data.image
+        this.modifyInfo.studyPassword = res.data.studyPassword
+        this.modifyInfo.studytypeNo = res.data.studyType.studytypeNo
+        this.modifyInfo.totalMember = res.data.totalMember
+        this.modifyInfo.studyRule = res.data.studyRule
+        this.modifyInfo.url = res.data.url
       })
       .catch(err => {
         console.log(err)
       })
+    },
+    getImageSrc(num) {
+      var image = document.getElementById(`studyImg${num}`).src
+      this.modifyInfo.image = image
+    },
+    cancelModify() {
+      this.modifyInfo.studyName = this.studyInfo.studyName
+      this.modifyInfo.image = this.studyInfo.image
+      this.modifyInfo.studyPassword = this.studyInfo.studyPassword
+      this.modifyInfo.studytypeNo = this.studyInfo.studyType.studytypeNo
+      this.modifyInfo.totalMember = this.studyInfo.totalMember
+      this.modifyInfo.studyRule = this.studyInfo.studyRule
+      this.$bvModal.hide('bv-modal-studyModify')
     },
     deleteStudy() {
       http({
@@ -265,20 +312,10 @@ export default {
       }
     },
     updateStudy() {
-      const modifyInfo = {
-        studyNo: this.$route.params.studyNo,
-        studyName: this.studyInfo.studyName,
-        image: this.studyInfo.image,
-        studyPassword: this.studyInfo.studyPassword,
-        studyRule: this.studyInfo.studyRule,
-        studytypeNo: this.studyInfo.studyType.studytypeNo,
-        totalMember: this.studyInfo.totalMember,
-        url: this.studyInfo.url,
-      }
       http({
         method: 'PUT',
         url: '/study/update',
-        data: modifyInfo
+        data: this.modifyInfo
       })
       .then(() => {
         // console.log(res)
@@ -360,6 +397,18 @@ export default {
   height: 200px;
   width: 300px;
   border-radius: 4px;
+}
+.imgBtn {
+  outline-width: 5px;
+  outline-color: #d5648a;
+  border: none;
+}
+.imgBtn:hover {
+  border: none;
+  filter: brightness(70%);
+}
+.imgBtn:focus {
+  border-radius: 8px;
 }
 /* 모달 스타일 */
 .black-bg{
