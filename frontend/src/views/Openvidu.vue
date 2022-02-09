@@ -89,79 +89,106 @@ d<template>
 				<!-- 채팅 기능 끝 -->
 
 			</div>
-			<div id="session" v-if="session">
-				<div id="session-header">
-					<h1 id="session-title">{{ this.roomName }}</h1> <!-- 방 제목 -->
-				</div>
-				
-				<div>
-					<!--
-					<div id="main-video" class="col-md-6"> 본인 화면 
-						<user-video :stream-manager="mainStreamManager"/>
-					</div>
-					-->
-					<div id="video-container" class=""> <!-- 참가자 화면 -->
-						<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-						<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
-					</div>
-				</div>
-			</div>
-			<div id="session-footer" v-if="session">
-				<div class="session-footer_btn d-flex justify-content-center">
-					<!-- microphone 버튼 설정 -->
-					<div v-if="audio === true" class="buttomMenu">
-						
-						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteAudio()">
-							<b-icon icon="mic-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
-							<span class="footerBtnText">{{ audioMsg }}</span>
-						</button> <!-- 마이크 on/off 버튼 -->
-					</div>
-					<div v-else class="roomFun buttomMenu">
-						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteAudio()">
-							<b-icon icon="mic-mute-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
-							<span class="footerBtnText">{{ audioMsg }}</span>
-						</button><!-- 마이크 on/off 버튼 -->
-					</div>	
-
-					<!-- video 버튼 설정 -->
-					<div v-if="video === true" class="buttomMenu">
-						<!-- <input class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" :value="video" @click="muteVideo()"> 비디오 on/off 버튼 -->
-						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteVideo()"> 
-							<b-icon icon="camera-video-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
-							<span class="footerBtnText">{{ videoMsg }}</span>
-						</button>
-					</div>
-					<div v-else class="roomFun buttomMenu">
-						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteVideo()"> 
-							<b-icon icon="camera-video-off-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
-							<span class="footerBtnText">{{ videoMsg }}</span>
-						</button>
-					</div>
-
-					<!-- 화면공유 버튼 설정 -->
-					<div v-if="sharing === true" class="buttomMenu">
-						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="startScreenSharing()">
-							<b-icon icon="file-arrow-up" class="buttomMenuIcon" aria-hidden="true" ></b-icon>
-							<span class="footerBtnText">화면공유</span>
-						</button> <!-- 나가기 버튼 -->
-					</div>
-
-					<!-- 화면공유 중지 버튼 설정 -->
-					<div v-else class="buttomMenu">
-						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSessionForScreenSharing()">
-							<b-icon icon="file-arrow-down" class="buttomMenuIcon" aria-hidden="true" ></b-icon>
-							<span class="footerBtnText">공유중지</span>
-						</button> <!-- 나가기 버튼 -->
+			<div id="session-center" style="height:100%;">
+				<div id="session" v-if="session">
+					<div id="session-header" class="d-flex">
+						<h1 id="session-title">{{ this.roomName }}</h1> <!-- 방 제목 -->
+						<div id="session-timer" class="text-center" style="margin-left: 30%;">
+							<div>
+								<h3> {{ hours }} : {{ minutes }} : {{ seconds }} </h3>
+							</div>
+							<div id="timerBtn" v-if="this.userAuthority">
+								<b-button v-if="!timer" variant="primary" @click="startTimer()">시작</b-button>
+								<b-button v-else variant="danger" @click="stopTimer">
+									정지
+								</b-button>
+								<b-button v-if="resetButton" variant="success" @click="resetTimer">
+									리셋
+								</b-button>
+								<b-button v-if="!timer" variant="warning" @click="editTimer">
+									시간 설정
+								</b-button>
+								<div v-if="edit" class="d-flex justify-content-center mt-1">
+									<b-input type="text" v-model="inputHour" placeholder="시" style="width:40px"/>
+									<b-input type="text" v-model="inputMin" placeholder="분" style="width:40px"/>
+									<b-input type="text" v-model="inputSec" placeholder="초" style="width:40px"/>
+								</div>
+							</div>
+						</div>
 					</div>
 					
-					<!-- 나가기 버튼 설정 -->
-					<div class="buttomMenu">
-						<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSession">
-							<b-icon icon="door-open-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
-							<span class="footerBtnText">나가기</span>
-						</button> <!-- 나가기 버튼 -->
+					<div>
+						<!--
+						<div id="main-video" class="col-md-6"> 본인 화면 
+							<user-video :stream-manager="mainStreamManager"/>
+						</div>
+						-->
+						<div id="video-container" class="d-flex flex-wrap"> <!-- 참가자 화면 -->
+							<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
+							<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+						</div>
 					</div>
-				</div>	
+				</div>
+
+				<div id="sesion-footer-wrap" class="d-flex justify-content-center" style="width: 70%; height:10%;">
+					<div id="session-footer" v-if="session">
+						<div class="session-footer_btn d-flex justify-content-center">
+							<!-- microphone 버튼 설정 -->
+							<div v-if="audio === true" class="buttomMenu">
+								
+								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteAudio()">
+									<b-icon icon="mic-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+									<span class="footerBtnText">{{ audioMsg }}</span>
+								</button> <!-- 마이크 on/off 버튼 -->
+							</div>
+							<div v-else class="roomFun buttomMenu">
+								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteAudio()">
+									<b-icon icon="mic-mute-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+									<span class="footerBtnText">{{ audioMsg }}</span>
+								</button><!-- 마이크 on/off 버튼 -->
+							</div>	
+
+							<!-- video 버튼 설정 -->
+							<div v-if="video === true" class="buttomMenu">
+								<!-- <input class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" :value="video" @click="muteVideo()"> 비디오 on/off 버튼 -->
+								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteVideo()"> 
+									<b-icon icon="camera-video-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+									<span class="footerBtnText">{{ videoMsg }}</span>
+								</button>
+							</div>
+							<div v-else class="roomFun buttomMenu">
+								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteVideo()"> 
+									<b-icon icon="camera-video-off-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+									<span class="footerBtnText">{{ videoMsg }}</span>
+								</button>
+							</div>
+
+							<!-- 화면공유 버튼 설정 -->
+							<div v-if="sharing === true" class="buttomMenu">
+								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="startScreenSharing()">
+									<b-icon icon="file-arrow-up" class="buttomMenuIcon" aria-hidden="true" ></b-icon>
+									<span class="footerBtnText">화면공유</span>
+								</button> <!-- 나가기 버튼 -->
+							</div>
+
+							<!-- 화면공유 중지 버튼 설정 -->
+							<div v-else class="buttomMenu">
+								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSessionForScreenSharing()">
+									<b-icon icon="file-arrow-down" class="buttomMenuIcon" aria-hidden="true" ></b-icon>
+									<span class="footerBtnText">공유중지</span>
+								</button> <!-- 나가기 버튼 -->
+							</div>
+							
+							<!-- 나가기 버튼 설정 -->
+							<div class="buttomMenu">
+								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSession">
+									<b-icon icon="door-open-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+									<span class="footerBtnText">나가기</span>
+								</button> <!-- 나가기 버튼 -->
+							</div>
+						</div>	
+					</div>
+				</div>
 			</div>
 		</div> <!-- #container -->
 		
@@ -169,12 +196,12 @@ d<template>
 </template>
 <style scoped>
 /** 채팅창 반응형 */
-@media (max-width: 770px){
+/* @media (max-width: 770px){
 	#session-aside-right{
 		display: none;
 	}
 	
-}
+} */
 /** footer 버튼 반응형 */
 @media (max-width: 1050px) {
 	#session-footer{
@@ -218,6 +245,7 @@ d<template>
 	height: 100%;
 	/* margin-top: -70px; */
 	margin-top: 0px !important;
+	min-width: 1050px;
 	
 }
 #main-container{
@@ -228,12 +256,15 @@ d<template>
 }
 #session {
 	/* position: relative; */
-	width: 100%;
-	height: 90%;
+	width: 70%;
+	height: 100%;
 	overflow: auto;
 }
 #session::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
+}
+#timerBtn .btn{
+	margin: 0 1px;
 }
 #session-aside-left{
 	height: 100%;
@@ -324,14 +355,14 @@ d<template>
 width: 520px;
 height: 50px;
 line-height: 50px;
-position: absolute;
+/* position: absolute;
 bottom: 0px;
-left: 15%;
+left: 15%; */
 border-radius: 10px;
 background-color: #F0F0F0;
 margin-bottom: 15px;
 /* transform: translate(-50%,0%); */
-/* background-color: #ccc; */
+
 }
 
 .buttomMenuIcon {
@@ -475,12 +506,58 @@ export default {
 
 			// 상벌점 기능
 			scoreModal: false,
+
+			// 타이머
+			timer: null,
+			inputHour: null,
+			inputMin: null,
+			inputSec: null,
+			time: 0,
+			resetButton: false,
+			edit: false,
+
+			// 권한 여부
+			userAuthority: false,
 		}
 	},
 	computed:{
-	...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers"]),
+		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers"]),
+
+		totalTime() {
+			return Number(this.inputHour * 3600) + Number(this.inputMin * 60) + Number(this.inputSec)
+		},
+		hours(){
+			const hours = Math.floor(this.time / 3600)
+			return this.padTime(hours)
+		},
+		minutes() {
+			// const minutes = Math.floor(this.time / 60)
+			const minutes = Math.floor((this.time - (this.hours * 3600)) / 60)
+			return this.padTime(minutes)
+		},
+		seconds() {
+			const seconds = this.time - ((this.hours * 3600) + (this.minutes * 60))
+			return this.padTime(seconds)
+		},
 	},
 	created(){
+		// 권한 여부 확인
+		http({
+            method: 'GET',
+            url: `/user/leader`,
+            headers: this.getUserToken(),
+			params: {study_no: this.roomStudyNo},
+			// params: {study_no: 25},
+          })
+        .then((res) => {
+            this.userAuthority = res.data.authority;
+			// console.log("😉😉")
+			// console.log(res);
+          })
+          .catch(err => {
+            console.log(err)
+		});  
+
 		this.mySessionId = this.roomUrl;
 		this.myUserName = this.participant;
 		this.joinSession();
@@ -493,17 +570,81 @@ export default {
 		this.getStudyMembers()
 	},
 	methods: {
-		getToken_info(){
-      const token = localStorage.getItem('jwt')
-      const header = {
+		getUserToken(){
+			const token = localStorage.getItem('jwt')
+			const header = {
 				Authorization: `Bearer ${token}`
 			}
-      return header
-    },
+			return header
+		},
+		startTimer() {
+			if(!this.inputHour && !this.inputMin && !this.inputSec){
+				alert("시간을 설정해주세요.")
+			} else{
+			//1000ms = 1 second
+			this.timer = setInterval(() => this.countdown(), 1000)
+			this.resetButton = true
+			this.edit = false
+			}
+		},
+		stopTimer: function() {
+			clearInterval(this.timer)
+			this.timer = null
+			this.resetButton = true
+		},
+		resetTimer: function() {
+			// this.time = this.totalTime
+			this.time = 0
+			clearInterval(this.timer)
+			this.timer = null
+			this.resetButton = false
+			this.inputHour = null
+			this.inputMin = null
+			this.inputSec = null
+		},
+		editTimer: function() {
+			this.edit = !this.edit
+		},
+		padTime: function(time){
+			return (time < 10 ? '0' : '') + time
+		},
+		countdown: function() {
+			if(this.time>0){
+				this.time--
+			}else{
+				this.resetTimer();
+				// alert("시간이 종료되었습니다.")
+			}
+		},
+		sendTimer(){
+			// 타이머 send
+			this.session.signal({
+				data: this.time,
+				to: [],
+				type: 'study-timer',
+			})
+			.then(() => {
+				console.log("timer success");
+				if(this.time==0){
+					alert("시간이 종료되었습니다.")
+				}
+			})
+			.catch(error => {
+				console.error(error);
+			})
+		},
+
+		getToken_info(){
+			const token = localStorage.getItem('jwt')
+			const header = {
+				Authorization: `Bearer ${token}`
+			}
+      		return header
+   		 },
 		// 상벌점 기능 관련 methods
 		getStudyMembers() {
-      this.$store.dispatch('getStudyMembers', this.$store.state.roomStudyNo)
-    },
+			this.$store.dispatch('getStudyMembers', this.$store.state.roomStudyNo)
+		},
 		updateScore(score, studymember_no) {
 			const updateInfo = {
 				authority: this.$store.state.power.authority,
@@ -565,7 +706,7 @@ export default {
 			});
 
 			// 같은 session 내에서 텍스트 채팅을 위한 signal
-			this.session.on('signal', (event) => {
+			this.session.on('signal:my-chat', (event) => {
 				var message = event.data.split("&$");
 				console.log(">>>>>>>>>>>>>> message : ", message);
 
@@ -629,6 +770,11 @@ export default {
 						console.log('There was an error connecting to the session:', error.code, error.message);
 					});
 			});
+
+			// 타이머 receive
+			this.session.on('signal:study-timer', (event) => {				
+				this.time = Number(event.data);
+			})
 
 			window.addEventListener('beforeunload', this.leaveSession)
 		},
@@ -848,10 +994,17 @@ export default {
 	watch: {
 		messages() {
 			this.$nextTick(() => {
-        let msg = this.$refs.messages;
+				let msg = this.$refs.messages;
 
-        msg.scrollTo({ top: msg.scrollHeight, behavior: 'smooth' });
-      });
+				msg.scrollTo({ top: msg.scrollHeight, behavior: 'smooth' });
+      		});
+		},
+
+		totalTime() {
+      		this.time = this.totalTime
+    	},
+		time(){
+			this.sendTimer();
 		},
 	},
 }
