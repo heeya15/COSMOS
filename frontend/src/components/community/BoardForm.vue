@@ -39,7 +39,15 @@
             <label v-show="this.input.header === false" for="recruit_number">모집인원</label>
           </b-col>
           <b-col v-show="this.input.header === false" class="spinbuttontag mt-2" cols="9">
-            <b-form-input v-show="this.input.header === false" id="recruit_number" v-model="input.recruit_number" style="height: 35px;"></b-form-input>
+            <b-form-input 
+            v-show="this.input.header === false" 
+            id="recruit_number" v-model="input.recruit_number" 
+            style="height: 35px;" 
+            type="number" 
+            min="1" max="5"
+            @keypress="recruitLimit"
+            >
+            </b-form-input>
           </b-col>
         
           <b-col cols="3" class="mt-2">
@@ -122,6 +130,16 @@ export default {
     }
   },
   methods: {
+    // 인원 수 제한
+    recruitLimit(event) {
+      console.log(event, '이벤트 확인')
+      if(event.key >= 0 && event.key <= 5) {
+      return true;
+      }
+      alert('5명 까지 입력이 가능합니다');
+      return false;
+      },
+
     backBoardMain() {
       this.$router.push({name: 'MainBoard'})
     },
@@ -154,7 +172,7 @@ export default {
       })
       .then(res => {
         console.log(res.data)
-        this.$router.push({name: "BoardDetail"})
+        this.$router.push({name: "MainBoard"})
         console.log('스터디옵션 확인')
         // console.log(this.studyno[this.studyNameInfo.indexOf(this.nameSelected)], '여기 확인')
       })
@@ -256,7 +274,7 @@ marquee {
   color: #ceb4f0;
   width: 500px;
   background-color: #fff;
-} 
+}
 
 .head_Img {
   width: 600px;
