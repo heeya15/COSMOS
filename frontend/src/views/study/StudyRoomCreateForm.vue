@@ -125,14 +125,14 @@
       <button v-if="input.study_type==='public'" class="mt-4 createBtn" type="button" @click="createPublicStudy">스터디 생성</button>
       <button v-else class="mt-4 createBtn" type="button" @click="createPrivateStudy">스터디 생성</button>
     </div>
-
-
   </center>
 </template>
 
 <script>
 import http from "@/util/http-common.js";
 
+import JwtDecode from 'jwt-decode'
+import { mapState } from 'vuex'
 export default {
   name: 'StudyRoomCreateForm',
   data() {
@@ -157,10 +157,12 @@ export default {
         }
       },
       urlState: false,
-      regexpstate:false
+      regexpstate:false,
+      study_no:"",
     }
   },
   methods: {
+   
     getHeader(){
       const token = localStorage.getItem('jwt')
       const header = {
@@ -216,6 +218,7 @@ export default {
         totalMember: this.input.totalMember,
         url: this.input.defaulturl + this.input.url
       }
+      // 가장 최근에 생긴 스터디 번호 조회후 studyNo 넣어주면 됨
       http({
         method: 'POST',
         url: '/study/register',
@@ -227,7 +230,7 @@ export default {
         if (res.status !== 200){
           alert('입력을 다시 한 번 확인하세요.')
         }else {
-          this.$router.push({name: 'StudyDetail', params: {studyNo: res.data.studyNo}})  
+          this.getStudyNo();// 가장 최근에 생긴 스터디 번호 들고오는 함수
         }
       })
       .catch(err => {
@@ -235,7 +238,26 @@ export default {
         console.log(err)
       })
     },
-    createPublicStudy(){
+    getStudyNo(){ // 가장 최근에 생긴 스터디 번호 들고오는 함수
+       http({
+        method: 'GET',
+        url: '/studymember/resent/search',
+        headers: this.getHeader(),
+      })
+      .then(res => {
+           console.log("가장 최근에 생긴 스터디 번호는?")
+           console.log(res.data);
+           console.log(res.data.study_no);
+           this.study_no = res.data.study_no;
+           this.$router.push({name: 'StudyDetail', params: {studyNo: this.study_no}})  
+      })
+      .catch(err => {
+        alert('요청을 다시 한 번 확인하세요.')
+        console.log(err)
+      })
+    }
+    ,
+    async createPublicStudy(){ // 공개 스터디룸 생성
       if (this.urlState === false){
         alert("url 중복확인을 해주세요!")
         return
@@ -249,7 +271,7 @@ export default {
         studytypeNo: this.input.studytypeNo,
         url: this.input.defaulturl+this.input.url
       }
-      http({
+      await http({
         method: 'POST',
         url: '/publicroom/register/publicRoom',
         headers: this.getHeader(),
@@ -261,13 +283,38 @@ export default {
           alert('입력을 다시 한 번 확인하세요.')
           console.log(studyInfo);
         }else { 
-          // this.$router.push({name: 'Openvidu'})
-          this.$router.push({name: 'MainPage'})
+          this.getPublicMemberAdd();
         }
       })
       .catch(err => {
         console.log(err)
       })
+   
+    },
+    getPublicMemberAdd(){
+      // 공개 스터디 생성 후 생성자가 바로 스터디 룸에 들어가서 공개 스터디 참가자 등록 로직 구현
+      var token = localStorage.getItem('jwt')
+      var decoded = JwtDecode(token);
+      var myId = decoded.sub;
+      this.$store.state.roomName = this.input.studyName; // 방 이름
+      this.$store.state.roomUrl = this.input.url; // 스터디룸 아이디
+      this.$store.state.participant = myId; // 내 아뒤
+      console.log("공개 스터디 룸 생성 후 데이터 디버깅 부분>>>>>>>>>>>>>>>")
+      console.log(this.input.studyName);
+      console.log(this.input.url);
+      console.log(myId);
+      http({
+        method: 'POST',
+        url: `/publicroom/register/publicMember`,
+        headers: this.getHeader(),
+        data: {publicstudyroomId: this.roomUrl},
+      })
+      .then(() => {
+          this.$router.push({name: "Openvidu"})
+      })
+      .catch(err => {
+          console.log(err)
+      });  
     },
     regexp(){
       const notPhoneticSymbolExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
@@ -279,8 +326,7 @@ export default {
            this.regexpstate = true;
        }
     },
-    checkUrl() {
-      
+    checkUrl() {   
       http({
         method: 'GET',
         url: '/study/urlcheck/',
@@ -300,6 +346,11 @@ export default {
         console.log(err)
       })
     }
+  },
+  computed:{
+     ...mapState([ // store state 접근
+      'roomName', 'roomUrl', 'participant'
+    ])
   },
   created() {
     this.getStudyType()
