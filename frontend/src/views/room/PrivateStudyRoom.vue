@@ -40,29 +40,35 @@ d<template>
 			</div>
 			<div id="session-aside-right" v-if="session">
 				<div class="participant">
-					<p>참가자</p>
-						<div class="participant_list"> <!-- 참가자 리스트 화면 -->
-							<user-list :stream-manager="publisher"/>
-							<user-list v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
-						</div>
+					<div class="right_label">
+						<span>참가자</span>
+					</div>
+					<div class="participant_list"> <!-- 참가자 리스트 화면 -->
+						<user-list :stream-manager="publisher"/>
+						<user-list v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+					</div>
 				</div>
 
 				<!-- 채팅 기능 시작 -->
 				<!-- <p @click="showChat">채팅</p> -->
 					<!-- <div class="chat" v-show="isChatVisible"> -->
-				<p>채팅</p>
-				<div class="chat">
-					<div class="messages" v-html="messages" ref="messages">
-						<!-- <div class="messageLoop" v-for="(message, idx) in messages" :key="idx"> -->
-							<!-- <div class="text-left" >{{ userId }} 님의 메시지:</div> -->
-							<!-- <div class="text-left message__bubble">{{ message }}</div> -->
-						<!-- </div> -->
+				<div class="user_chat">
+					<div class="right_label">
+						<span>채팅</span>
 					</div>
+					<div class="chat">
+						<div class="messages" v-html="messages" ref="messages">
+							<!-- <div class="messageLoop" v-for="(message, idx) in messages" :key="idx"> -->
+								<!-- <div class="text-left" >{{ userId }} 님의 메시지:</div> -->
+								<!-- <div class="text-left message__bubble">{{ message }}</div> -->
+							<!-- </div> -->
+						</div>
 
-					<form class="chatFooter" onsubmit="return false">
-						<input class="chat_input" id="msg" type="text" autocomplete="off" placeholder="메세지를 입력하세요.">
-						<button id="submitBtn" type="submit" @click="sendMessage()">Enter</button>
-					</form>
+						<form class="chatFooter" onsubmit="return false">
+							<input class="chat_input" id="msg" type="text" autocomplete="off" placeholder="메세지를 입력하세요.">
+							<button id="submitBtn" type="submit" @click="sendMessage()">Enter</button>
+						</form>
+					</div>
 				</div>
 				<!-- 채팅 기능 끝 -->
 
@@ -87,9 +93,9 @@ d<template>
 									시간 설정
 								</b-button>
 								<div v-if="edit" class="d-flex justify-content-center mt-1">
-									<b-input type="text" v-model="inputHour" placeholder="시" style="width:40px"/>
-									<b-input type="text" v-model="inputMin" placeholder="분" style="width:40px"/>
-									<b-input type="text" v-model="inputSec" placeholder="초" style="width:40px"/>
+									<b-input class="p-3 text-center" type="text" v-model="inputHour" placeholder="시" style="width:40px"/>
+									<b-input class="p-3 text-center" type="text" v-model="inputMin" placeholder="분" style="width:40px"/>
+									<b-input class="p-3 text-center" type="text" v-model="inputSec" placeholder="초" style="width:40px"/>
 								</div>
 							</div>
 						</div>
