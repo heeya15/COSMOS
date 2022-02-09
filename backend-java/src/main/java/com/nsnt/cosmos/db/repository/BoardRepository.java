@@ -19,11 +19,11 @@ import com.nsnt.cosmos.db.entity.Board;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> { // 제네릭 안에 해당 엔티티, 엔티티 PK 자료형을 적어줌
 	// 아래와 같이, Query Method 인터페이스(반환값, 메소드명, 인자) 정의를 하면 자동으로 Query Method 구현됨.
-	@Query(value="select t.study_name, t.study_no\r\n" + 
-			"from (select distinct(user_id) as user_id,leader, authority, s.study_no, s.study_name\r\n" + 
+	@Query(value="select t.study_name, t.study_no, st.studytype_no,st.studytype_name\r\n" + 
+			"from (select user_id as user_id, leader, authority, s.study_no, s.study_name, s.studytype_no\r\n" + 
 			"	  from study_member sm join study s on (sm.study_no = s.study_no)\r\n" + 
-			"	  where user_id = :user_id and leader=true and authority = true) as t\r\n" + 
-			"order by study_no"        
+			"	  where user_id = :user_id and leader=true and authority = true) as t  join  study_type st on (t.studytype_no = st.studytype_no)\r\n" + 
+			"order by study_no;"        
             ,nativeQuery = true)
     List<StudyNameSearchDtoRes> findStudyName(@Param("user_id") String user_id);
 	

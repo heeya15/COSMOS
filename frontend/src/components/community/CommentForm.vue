@@ -1,15 +1,16 @@
 <template>
   <div>
     <center>
-      <b-row style="width: 600px;">
+      <b-row style="width: 800px;">
         <b-col cols="3" class="mt-3">
           <p>댓글</p>
         </b-col>
         <b-col cols="6" class="mt-3">
-          <b-input v-model="commentInput.content" @keyup.enter="createComment"></b-input>
+          <b-form-input v-model="commentInput.content" @keyup.enter="createComment"></b-form-input>
         </b-col>
         <b-col cols="3" class="mt-3">
-          <b-button @click="createComment">작성</b-button>
+          <b-button class="btnTag" @click="createComment">작성</b-button>
+          <b-button v-b-toggle.collapse-2 class="getCommetTag m-1" @click="visible = !visible">댓글 접기</b-button>
         </b-col>
       </b-row>
     </center>
@@ -17,12 +18,14 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 
 export default {
   name: 'CommentForm',
   data() {
     return {
+      visible: true,
       commentInput: {
         content: null,
         user_id: null,
@@ -42,9 +45,9 @@ export default {
         board_no: this.$store.state.boardNo,
         content: this.commentInput.content
       }
-      axios({
+      http({
         method: 'post',
-        url: 'http://i6e103.p.ssafy.io:8080/api/comment/register',
+        url: '/comment/register',
         data: createCommentItem,
         headers: this.getToken()
 
@@ -64,6 +67,26 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.btnTag {
+  background-color: #afa2dd;
+  border: none;
+}
+
+.btnTag:hover {
+  background-color: #c8c1e4;
+}
+
+.getCommetTag {
+  width: 100px;
+  height: 36px;
+  background-color: #f45384 !important;
+  border: none;
+}
+
+.getCommetTag:hover {
+  background-color: #f8bfd1 !important;
+}
+
 
 </style>

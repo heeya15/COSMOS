@@ -23,6 +23,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 스터디 모델 정의.
@@ -40,6 +41,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor /** Cannot construct instance of~ error를 해결해주었다.  파라미터가 없는 생성자 만들어줌* */ 
 public class Study {
@@ -78,10 +80,6 @@ public class Study {
 	@Column(name="study_password",length = 10, nullable = true)
 	String studyPassword;
 	
-	@ManyToOne
-	@JoinColumn(name = "privatestudyroom_id")
-	
-	private PrivateStudyRoom privateStudyRoom;
 	
 	@OneToOne
 	@JoinColumn(name = "studytype_no")

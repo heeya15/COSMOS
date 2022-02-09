@@ -73,6 +73,10 @@ public class StudyMember{
 	public void updateScore(SaveStudyMemberDto saveStudyMemberDto){  
 	    this.score = saveStudyMemberDto.getScore();
 	}
+	
+	public void updateAuthority(SaveStudyMemberDto saveStudyMemberDto){  
+	    this.authority = saveStudyMemberDto.isAuthority();
+	}
 
 	@Override
 	public String toString() {

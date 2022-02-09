@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from "vuex-persistedstate";
-import axios from 'axios'
+// import http from 'http'
 import router from '@/router'
-
+import http from "@/util/http-common.js";
+import jwtDecode from 'jwt-decode';
 
 Vue.use(Vuex)
 
@@ -12,19 +13,33 @@ export default new Vuex.Store({
     createPersistedState()  // 새로고침 초기화 방지
   ],
   state: {
+    saveCurrentPage: null,
     userInfo:null,
     isLogin:false,
     boardNo: null,
     comments: [],
     studyOptions: [],
+    studyMembers: [],
+    power: {
+      authority: null,
+      leader: null
+    },
+    userId: "",
+
+    // 비공개 스터디룸 state
+    roomName: "",
+    roomUrl: "",
+    participant: "",
+    roomStudyNo: 0,
   },
   mutations: {
     SIGNUP(state, credentials){
       state.userInfo = credentials
     },
     LOGIN(state){
-      console.log( '로그인됨!!!!')
+      // console.log( '로그인됨!!!!')
       state.isLogin = true
+      state.userId = jwtDecode(localStorage.getItem('jwt')).sub;
     },
     GET_BOARD_NO(state, boardNumber){
       console.log(state)
@@ -44,36 +59,52 @@ export default new Vuex.Store({
       console.log('여기까지 확인')
       state.studyOptions = studyTypeData
     },
-
+    GET_STUDY_MEMBERS(state, memberInfo) {
+      state.studyMembers = memberInfo
+    },
+    IS_LEADER(state, leaderInfo){
+      state.power.leader = leaderInfo.leader
+      state.power.authority = leaderInfo.authority
+    },
+    PAGE_CLICK(state, currentPage) {
+      console.log(state, '페이지 번호 확인 스토어')
+      state.saveCurrentPage = currentPage
+    }
   },
   actions: {
     signUp({commit}, credentials) {
       // console.log(credentials)
-      axios({
+      http({
         method: 'POST',
-        url: 'http://i6e103.p.ssafy.io:8080/api/user/signup',
+        url: '/user/signup',
         data: credentials
       })
       .then(res => {
         // console.log(res)
-        commit('SIGNUP', res.data)
-        router.push({name:'LogIn'})
+        if(res.status === 200) {
+          commit('SIGNUP', res.data)
+          router.push({name:'LogIn'})
+        }
       })
       .catch(err => {
         console.log(err)
       })
     },
-    logIn({commit}, credentials) {
-      axios({
+    async logIn({commit}, credentials) {
+      await http({
         method: 'post',
-        url: 'http://i6e103.p.ssafy.io:8080/api/auth/login',
+        url: '/auth/login',
         data: credentials
       })
       .then(res => {
-        localStorage.setItem('jwt', res.data.accessToken)
-        commit('LOGIN')
+        if(res.status === 200) {
+          localStorage.setItem('jwt', res.data.accessToken)
+          commit('LOGIN')
+          
+        }
       })
       .catch(err => {
+        // this.state.loginMsg = "잘못된 아이디 또는 비밀번호입니다.";
         console.log(err)
       })
     },
@@ -84,9 +115,9 @@ export default new Vuex.Store({
       commit('LOGOUT')
     },
     getComment({commit}) {
-      axios({
+      http({
         method: 'get',
-        url: `http://i6e103.p.ssafy.io:8080/api/comment/searchAll/${this.state.boardNo}`,
+        url: `/comment/searchAll/${this.state.boardNo}`,
         // headers: this.getToken(),
       })
       .then(res => {
@@ -97,9 +128,9 @@ export default new Vuex.Store({
       })
     },
     getStudyType({commit}) {
-      axios({
+      http({
         method: 'get',
-        url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+        url: '/study/studyType'
       })
       .then(res => {
         // console.log('res 확인')
@@ -110,7 +141,48 @@ export default new Vuex.Store({
         console.log(err)
       })
     },
+    getStudyMembers({commit},studyNo) {
+      http({
+        method: 'GET',
+        url: `/studymember/search/${studyNo}`,
+      })
+      .then(res => {
+        // console.log(res.data)
+        commit('GET_STUDY_MEMBERS', res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    isLeader({commit}, studyNo){
+      const token = localStorage.getItem('jwt')
+      const header = {
+        Authorization: `Bearer ${token}`,
+      }
+      http({
+        method: 'GET',
+        url: '/user/leader',
+        headers: header,
+        // data: studyNo
+        params: {study_no: studyNo},
+      })
+      .then(res => {
+        // console.log(res)
+        commit('IS_LEADER', res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    pageClick({commit}, currentPage) {
+      commit('PAGE_CLICK', currentPage)
+    },
   },
+  // getters: {
+  //   studyMembers(state){
+  //     return state.studyMembers
+  //   }
+  // },
   modules: {
   }
 })
