@@ -1,12 +1,13 @@
 <template>
   <!-- 공지사항 페이지 -->
+  <center>
   <div class="notice m-5" style="width:1000px;">
     <h3>공지사항</h3>
     <!-- 등록된 공지사항이 있을 때 -->
     <div v-if="notice.studyManageNo">
       <div v-show="!notice.modify">
         <p style="text-align:right;">변경일: {{notice.createdAt}}</p>
-        <div style="width:1000px; height:100px; padding:10px; background-color:lightgray;">
+        <div class="noticeContainer" style="background-color:#c8c1e4;">
           {{notice.studymanageNotice}}
         </div>
         <!-- 스터디장만 수정,삭제 보이게 -->
@@ -15,20 +16,21 @@
           <button @click="deleteNotice" class="deleteBtn">삭제</button>
         </b-button-group>
       </div>
-        <div v-show="power.leader && notice.modify">
+        <div class="noticeContainer" v-show="power.leader && notice.modify">
           <b-form-textarea id="textarea" v-model="notice.studymanageNotice" :placeholder=notice.studymanageNotice rows="3" max-rows="6"></b-form-textarea>
           <button @click="modifyNotice" class="modifyBtn m-2">수정</button>
         </div>
     </div>
 
     <!-- 등록된 공지사항이 없을 때 -->
-    <div v-else-if="power.leader && noNotice">
+    <div class="noticeContainer" v-else-if="power.leader && noNotice">
       <b-form-textarea id="textarea" v-model="notice.studymanageNotice" placeholder="스터디 공지사항을 입력해주세요." rows="3" max-rows="6"></b-form-textarea>
       <button @click="registNotice" class="createBtn m-2">등록</button>
     </div>
     <div v-else-if="(!power.leader) && noNotice">등록된 공지사항이 없습니다.</div> 
     
   </div>
+  </center>
 </template>
 
 <script>
@@ -145,6 +147,13 @@ export default {
 </script>
 
 <style scoped>
+.noticeContainer {
+  width:1000px; 
+  height:100px; 
+  padding:10px;
+}
+
+/* 버튼 */
 .createBtn {
   border: none;
   border-radius: 8px;

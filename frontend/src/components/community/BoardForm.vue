@@ -1,11 +1,16 @@
 <template>
   <div class="total">
     <center>
+    <div class="backImg">
+    
     <h1>스터디 모집 게시판</h1>
     <hr style="width: 80%">
     <h3>글생성</h3>
-    <marquee style="font-size: 50px; color: #ddaae6;" scrolldelay="50">스터디를 모집해 보세요</marquee>
-    <img src="사람2.png" style="width: 200px; height: 200px;">
+    <img class="head_Img" src="가랜드.png" alt="" >
+    <img class="head_Img2" src="가랜드.png" alt="" >
+    <marquee behavior=alternate  scrolldelay="50">Hello World!</marquee>
+    <img class="sideImg" src="사람2.png">
+    <img class="sideImg2" src="사람.png">
       <div class="form_body_tag p-5" style="width: 600px;">
         <b-row style="height: 600px; background-color: white;">
           <b-col cols="3" class="header_label mt-2">
@@ -20,35 +25,37 @@
             <label class="mt-2" for="content_title">제목</label>
           </b-col>
           <b-col cols="9">
-            <b-form-input class="mt-2" id="content_title" v-model="input.content_title" style="height: 30px;"></b-form-input>
+            <b-form-input class="mt-2" id="content_title" v-model="input.content_title" style="height: 35px;" maxlength="30"></b-form-input>
           </b-col>
         
           <b-col v-show="this.input.header === false" cols="3" class="mt-2">
             <label v-show="this.input.header === false" for="study_name">스터디이름</label>
           </b-col>
           <b-col v-show="this.input.header === false" cols="9" class="mt-2">
-            <b-form-select style="width: 100%; height: 30px; font-size: 13px; " v-show="this.input.header === false" v-model="nameSelected" :options="titleOptions" id="study_name"></b-form-select>
+            <b-form-select style="width: 100%; height: 35px; font-size: 13px; " v-show="this.input.header === false" v-model="nameSelected" :options="titleOptions" id="study_name"></b-form-select>
           </b-col>
 
           <b-col v-show="this.input.header === false" cols="3" class="mt-2">
             <label v-show="this.input.header === false" for="recruit_number">모집인원</label>
           </b-col>
           <b-col v-show="this.input.header === false" class="spinbuttontag mt-2" cols="9">
-            <b-form-input v-show="this.input.header === false" id="recruit_number" v-model="input.recruit_number" style="height: 30px;"> 명</b-form-input>
+            <b-form-input v-show="this.input.header === false" id="recruit_number" v-model="input.recruit_number" style="height: 35px;"></b-form-input>
           </b-col>
         
           <b-col cols="3" class="mt-2">
             <label for="studytype_name">스터디분류</label>
           </b-col>
           
-          <!-- 스터디원일 때 -->
+          <!-- 스터디 구할 때 -->
           <b-col v-show="this.input.header !== false" cols="9" class="mt-2">
-            <b-form-select v-model="studyTypeSelected" :options="options" style="width: 100%; height: 30px; font-size: 15px;" id="studytype_name"></b-form-select>
+            <b-form-select class="studyTypeTag" v-model="studyTypeSelected" :options="options" style="width: 100%; height: 35px; font-size: 15px;" id="studytype_name"></b-form-select>
           </b-col>
 
+
+          <!-- 스터디원 구할 때 -->
           <b-col v-show="this.input.header === false" class="selectag mt-2" cols="9">
             <div v-for="temp in temps" :key="temp.idx">
-              <p v-if="nameSelected === temp.value" style="background-color: #FDD8E4;">{{ temp.text }}</p>
+              <p class="studyTypeTag" v-if="nameSelected === temp.value">{{ temp.text }}</p>
             </div>
           </b-col>
         
@@ -69,6 +76,7 @@
             <b-button class="btnTag mx-2 mt-4" @click="backBoardMain">취소</b-button>
           </b-col>
         </b-row>
+      </div>
       </div>
     </center>
   </div>
@@ -146,7 +154,7 @@ export default {
       })
       .then(res => {
         console.log(res.data)
-        this.$router.push({name: "MainBoard"})
+        this.$router.push({name: "BoardDetail"})
         console.log('스터디옵션 확인')
         // console.log(this.studyno[this.studyNameInfo.indexOf(this.nameSelected)], '여기 확인')
       })
@@ -243,12 +251,58 @@ export default {
 </script>
 
 <style scoped>
+marquee {
+  font-size: 50px;
+  color: #ceb4f0;
+  width: 500px;
+  background-color: #fff;
+} 
+
+.head_Img {
+  width: 600px;
+  height: 200px;
+  transform: rotate(15deg);
+  position: absolute;
+  right: 0;
+}
+
+.head_Img2 {
+  width: 600px;
+  height: 200px;
+  transform: rotate(-15deg);
+  position: absolute;
+  left: 0;
+}
+
+.sideImg {
+  width: 300px; 
+  height: 300px;
+  position: absolute;
+  top: 500px;
+  right: 50px;
+}
+
+.sideImg2 {
+  width: 270px; 
+  height: 270px;
+  position: absolute;
+  top: 520px;
+  left: 50px;
+}
+
+.backImg {
+  background-image: url('https://t1.daumcdn.net/cfile/blog/1532170949754B963C');
+  /* background-repeat: repeat; */
+  /* background-size: cover; */
+}
+
 .btnTag {
-  background-color: #e4c3f1;
+  background-color: #afa2dd;
+  border: none;
 }
 
 .btnTag:hover {
-  background-color: #ddaae6;
+  background-color: #F3467B;
 }
 
 .header_label {
@@ -259,9 +313,19 @@ export default {
 
 .total {
   font-size: 15px;
+  
 }
 .form_body_tag {
-  background: repeating-linear-gradient(-45deg, #F3467B, #F3467B 20px, #FDD8E4 20px, #FDD8E4 80px);
+  background: repeating-linear-gradient(-45deg, #afa2dd, #afa2dd 20px, #c8c1e4 20px, #c8c1e4 80px);
+  /* background-color: #afa2dd; */
+}
+
+.studyTypeTag {
+  background-color: #d7cff7;
+  width: 370px;
+  height: 35px;
+  border-radius: 4px;
+  text-align: center;
 }
 
 .radio_position {

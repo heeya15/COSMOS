@@ -22,24 +22,31 @@
                 <th>말머리</th>
                 <th>제목</th>
                 <th>분류</th>
-                <th>작성자</th>
+                <th>작성자 (ID)</th>
                 <th>등록일</th>
               </tr>
             </thead>
             <tbody id="test-table" v-for="(boardItem, idx) in paginatedItems" :key="idx"  @click="goBoardDetail(boardItem.boardNo)" style="text-align: center;">
               <tr>
-              <td>{{ 10*(currentPage-1)+(idx+1) }}</td>
+              <!-- 1~10 까지 -->
+              <!-- <td >{{ 10*(currentPage-1)+(idx+1) }}</td> -->
 
-            <div>
-              <td v-if="boardItem.contentStatus === false"><p class="boardnum_tag" style="color: #d5648a;">[진행중]</p></td>
-              <td v-else><p class="boardnum_tag">[완료]</p></td>
-            </div>
+              <!-- 역순 -->
+              <td >{{ boardItems.length-idx-10*(currentPage-1) }}</td>
 
-            <td><span v-if="boardItem.header === false" class="boardnum_tag" style="color: #d5648a;">[스터디원 구함]</span>
-            <span v-else class="boardnum_tag" style="color: #afa2dd;">[스터디 구함]</span></td>
-            <td><p class="boardnum_tag" >{{ boardItem.contentTitle }}</p></td>
-            <td><p class="boardnum_tag">{{ boardItem.studytypeName }}</p></td>
-            <td><p class="boardnum_tag">{{ boardItem.user.userName }}</p></td>
+              <!-- 게시글 고유 번호 -->
+              <!-- <td >{{ boardItem.boardNo }}</td> -->
+
+
+            <td style="width: 100px" v-if="boardItem.contentStatus === false"><span class="boardnum_tag" style="color: #d5648a;">[진행중]</span></td>
+            <td v-else><p class="boardnum_tag">[완료]</p></td>
+
+
+            <td style="width: 150px;" v-if="boardItem.header === false"><span  class="boardnum_tag" style="color: #d5648a;">[스터디원 구함]</span></td>
+            <td style="width: 150px;" v-else><span class="boardnum_tag" style="color: #afa2dd;">[스터디 구함]</span></td>
+            <td style="width: 300px;"><p class="content_title_tag">{{ boardItem.contentTitle }}</p></td>
+            <td style="width: 150px;"><p class="boardnum_tag">{{ boardItem.studytypeName }}</p></td>
+            <td><p class="boardnum_tag">{{ boardItem.user.userName }} ({{ boardItem.user.userId }})</p></td>
             <td><p class="boardnum_tag">{{ makeDate(boardItem.createdAt) }}</p></td>
             </tr>
             </tbody>
@@ -52,7 +59,8 @@
       </div>
 
     <b-pagination
-      @click="onPageChanged"
+      @page-click="pageClick"
+      
       v-model="currentPage"
       :total-rows="rowws"
       :per-page="perPage"
@@ -115,14 +123,14 @@ export default {
     console.log(itemsToParse.slice(0, 5))
     console.log(page_number * page_size, (page_number + 1) * page_size)
     this.paginatedItems = itemsToParse.slice(page_number * page_size, (page_number + 1) * page_size);
-    console.log(this.page_number, '위쪽 확인')
 
     },
-    onPageChanged() {
-      console.log(this.currentPage, '여기는?')
-      // this.currentPage = 
+    pageClick: function (button, page){
+      this.currentPage = page;
+      // this.getNoticeListByPage(page);
+      console.log(button, '새함수')
       this.paginate(10, this.currentPage - 1)
-      console.log('작동하나?')
+      this.$store.dispatch('pageClick', this.currentPage)
     },
 
     goCreateForm() {
@@ -154,19 +162,20 @@ export default {
         console.log(err)
       })
     },
+
+    // 상세보기로
     goBoardDetail(boardItemsIdx) {
-      console.log('상세보기로')
       console.log(boardItemsIdx)
       this.$store.dispatch('getBoardNo', boardItemsIdx)
-      this.$router.push({ name: 'BoardDetail'})
+      this.$router.push({ name: 'BoardDetail', query: { pageId: this.currentPage }})
     },
+
+    // 등록일 슬라이싱
     makeDate(datetime) {
       const old = ''+datetime
       return old.substring(0, 10)
     },
-    // pickSelect(event) {
-    //   console.log(event.target.value)
-    // }
+
     searchPaging(){
       this.rowws = this.boardItems.length;
       this.currentPage = 1;
@@ -293,12 +302,7 @@ export default {
           }
         }
       }
-
-
-      
     },
-
-
   },
   created() {
     this.getBoardItems()
@@ -346,6 +350,20 @@ export default {
   font-size: 17px;
 }
 
+.content_title_tag {
+  width: 250px; 
+  text-overflow: ellipsis; 
+  overflow: hidden; 
+  white-space: nowrap;
+  position: relative;
+  left: 30px;
+  /* align-items: center; */
+  /* margin: 0; */
+}
+
+.content_title_tag:hover {
+  cursor: pointer;
+}
 
 .boardnum_tag:hover {
   cursor: pointer;

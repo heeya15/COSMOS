@@ -3,7 +3,7 @@
     <center>
     <div class="total_body">
       <h1>스터디 모집 게시판</h1>
-      <hr style="width: 80%; height: 3px;">
+      <hr class="titleHr_tag">
       <h3 v-if="editButton === true">글 수정</h3>
       <h3 v-else>상세보기</h3>
       <!-- <img src="게시판보드.png" alt=""> -->
@@ -25,71 +25,71 @@
       <div class="round_box2"></div>
       <div class="round_box3"></div>
       <div class="round_box4"></div>
-      <div class="line4"></div>
-      <div class="line5"></div>
+      <!-- <div class="line4"></div> -->
+      <!-- <div class="line5"></div> -->
       
         <div class="body_total p-5" style="width: 500px;">
           <b-row class="content_rowTag">
-            <b-col cols="5" class="mt-2">
+            <b-col cols="5" class="mt-3">
               <p>제목</p>
               <hr class="hrTag">
             </b-col>
-            <b-col cols="7" class="mt-2" >
-              <b-form-input v-if="editButton === true" type="text" v-model="boardInfo.contentTitle" style="height: 30px; text-align: center;"></b-form-input>
+            <b-col cols="7" class="mt-3">
+              <b-form-input v-if="editButton === true" type="text" v-model="boardInfo.contentTitle" style="height: 35px; text-align: center;" maxlength="30"></b-form-input>
               <p v-else>{{ boardInfo.contentTitle }}</p>
-              <hr>
+              <hr class="hrTag">
             </b-col>
 
               <b-col v-show="this.boardInfo.header === false" cols="5" class="mt-2">
                 <p v-show="this.boardInfo.header === false" >스터디 이름</p>
-                <hr v-show="this.boardInfo.header === false">
+                <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
               <b-col v-show="this.boardInfo.header === false" cols="7" class="mt-2">
                 <p>{{ boardInfo.studyName }}</p>
-                <hr v-show="this.boardInfo.header === false">
+                <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
 
               <b-col v-show="this.boardInfo.header === false" cols="5" class="mt-2">
                 <p v-show="this.boardInfo.header === false">스터디 인원</p>
-                <hr v-show="this.boardInfo.header === false">
+                <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
               <b-col v-show="this.boardInfo.header === false" cols="7" class="mt-2" >
                 <b-form-input v-show="this.boardInfo.header === false" v-if="editButton === true" type="text" v-model="boardInfo.recruitNumber" style="height: 30px; text-align: center;"></b-form-input>
                 <p v-else v-show="this.boardInfo.header === false">{{ boardInfo.recruitNumber }}</p>
-                <hr v-show="this.boardInfo.header === false">
+                <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
 
             <b-col cols="5" class="mt-2">
               <p>스터디 분류</p>
-              <hr>
+              <hr class="hrTag">
             </b-col>
             <b-col cols="7" class="mt-2">
-              <p >{{ boardInfo.studytypeName }}</p>
+              <p v-if="editButton === false">{{ boardInfo.studytypeName }}</p>
               <!-- 수정을 눌렀을 때 값 타입 가져오고 원래는 생성될때의 값 불러와야 함 -->
               <b-form-select v-if="editButton === true" v-show="this.boardInfo.header === true" v-model="studyTypeSelected" :options="options" id="studytype_name"></b-form-select>
-              <hr>
+              <hr class="hrTag" >
             </b-col>
 
             <b-col v-if="editButton === true" cols="5" class="mt-2">
               <p v-if="editButton === true" for="some-radios">상태</p>
-              <hr>
+              <hr class="hrTag">
             </b-col>
             <b-col v-if="editButton === true" cols="7">
               <div v-if="editButton === true">
                 <label class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus_0" value="false">진행중</label>
                 <label class="mx-3 mt-2"><input v-model="boardInfo.contentStatus" type="radio" name="contentStatus_1" value="true">완료</label>
-                <hr>
+                <hr class="hrTag">
               </div>
             </b-col>
 
             <b-col cols="5" class="mt-2">
               <p>내용</p>
-              <hr>
+              <hr class="hrTag">
             </b-col>
             <b-col cols="7" class="mt-2">
-              <b-textarea v-if="editButton === true" type="text" v-model="boardInfo.content" style="height: 100px;"></b-textarea>
+              <b-textarea v-if="editButton === true" type="text" v-model="boardInfo.content" style="height: 80px;"></b-textarea>
               <p v-else>{{ boardInfo.content }}</p>
-              <hr>
+              <hr class="hrTag">
             </b-col>
             <!-- <p>여기 번호 : {{ studyInfo.studyNo }}</p> -->
           
@@ -99,13 +99,13 @@
               <b-col cols="12" class="btnPart mt-2" v-show="this.boardInfo.header === false">
                 <div v-show="editButton === false">
                   <b-button v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit">수정</b-button>
-                  <b-button v-else  @click="applyStudy" variant="info" size="sm">스터디 신청</b-button>
-                  <b-button variant="info" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button v-else  @click="applyStudy" variant="warning" size="sm">스터디 신청</b-button>
+                  <b-button class="backListBtn" size="sm" @click="goBoardMain">목록</b-button>
                   <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
                 <div v-show="editButton === true" cols="3" class="btnPart mt-2">
                   <b-button v-if="editButton === true" variant="warning" size="sm" @click="updateForm">수정</b-button>
-                  <b-button variant="info" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button class="backListBtn" size="sm" @click="goBoardMain">목록</b-button>
                   <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                   <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
                 </div>
@@ -116,13 +116,12 @@
               <b-col cols="12" class="btnPart mt-2" v-show="this.boardInfo.header !== false">
                 <div v-show="editButton === false">
                   <b-button v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit">수정</b-button>
-                  <b-button v-else variant="warning" size="sm" @click="applyStudy">스터디 신청</b-button>
-                  <b-button variant="info" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button class="backListBtn" size="sm" @click="goBoardMain">목록</b-button>
                   <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
                 <div v-show="editButton === true" class="btnPart mt-2">
                   <b-button v-if="editButton === true" variant="warning" size="sm" @click="studyWantBoardFormEdit">수정</b-button>
-                  <b-button variant="info" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button class="backListBtn" size="sm" @click="goBoardMain">목록</b-button>
                   <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                   <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
                 </div>
@@ -150,6 +149,7 @@ export default {
   },
   data() {
     return {
+      savePosition: this.$store.state.saveCurrentPage,
       studyTypeSelected: null,
       editButton: false,
       loginUserId: null,
@@ -182,7 +182,8 @@ export default {
         studyName: null,
         studyNo: null,
         studyType: null,
-      }
+      },
+      applyMembers: [],
     }
   },
   methods: {
@@ -194,9 +195,11 @@ export default {
       }
       return header
     },
-
+    
     goBoardMain() {
-      this.$router.push({name: 'MainBoard'})
+      this.$router.push({name: 'MainBoard', query: {pageId: this.savePosition}})
+      console.log(this.savePosition)
+      // this.$router.go(this.savePosition);
     },
     boardFormEdit() {
       this.editButton = true
@@ -204,14 +207,20 @@ export default {
 
     // 스터디 신청
     applyStudy() {
+      for(var i=0; i < this.applyMembers.length; i++) {
+          if (this.applyMembers[i].user_id === this.loginUserId) {
+            alert('이미 신청한 스터디 입니다.')
+            return
+          }
+        }
       http({
         method: 'post',
         url: `/study/applyMember/register/${this.studyInfo.studyNo}`,
         headers: this.getToken(),
       })
       .then((res) => {
-        console.log(res, '신청부분 데이터')
-        // this.studyInfo.studyNo = res.data.studyNo
+        console.log(this.applyMembers)
+        console.log(res)
         // 스터디장이 만든 스터디 이름 조회
         console.log(this.studyInfo.studyNo)
         // this.boardInfo.studyName = res.data['studyName']
@@ -221,6 +230,26 @@ export default {
       .catch((err) => {
         console.log(err)
         console.log(this.studyInfo.studyNo)
+      })
+    },
+
+    // 스터디 신청 멤버 조회
+    getApplyMember() {
+      http({
+        method: 'GET',
+        url: `/study/applyMember/searchAll/${this.studyInfo.studyNo}`
+      })
+      .then(res =>{
+        console.log(res.data, '여기 확인')
+        if (res.data.length === 0) {
+          this.applyMembers = null
+        }
+        else {
+          this.applyMembers = res.data
+        }
+      })
+      .catch(err => {
+        console.log(err)
       })
     },
 
@@ -239,11 +268,7 @@ export default {
         this.boardInfo.studyName = res.data['studyName']
         this.boardInfo.recruitNumber = res.data['recruitNumber']
         this.boardInfo.studytypeName = res.data['studytypeName']
-        // if (this.boardInfo.header === false) {
-        //   this.boardInfo.studytypeName = res.data['studytypeName']
-        // } else {
-        //   this.boardInfo.studytypeName = this.studyTypeSelected
-        // }
+        this.studyTypeSelected = res.data['studytypeName']
         this.boardInfo.content = res.data['content']
         this.boardInfo.header = res.data['header']
         this.userInfo.user_name = res.data.user['userName']
@@ -252,6 +277,9 @@ export default {
         console.log('get board 작동확인')
         console.log(this.boardInfo.contentStatus)
         console.log(this.boardInfo.header, '모집 상태 여기 확인')
+        if (this.boardInfo.header === false) {
+          this.getApplyMember()
+        }
       })
       .catch(err => {
         console.log(err)
@@ -373,7 +401,7 @@ export default {
   created() {
     this.getBoard()
     this.getUserInfo()
-
+    // this.getApplyMember()
     this.getStudyType()
   },
 }
@@ -382,12 +410,17 @@ export default {
 <style scoped>
 p {
   color: black ;
-  font-size: 1rem ;  
+  font-size: 1rem ;
 }
 
-hr {
+.titleHr_tag {
+  width: 80%;
+  background-color: #afa2dd ;
+  border: solid 2px #afa2dd;
+}
+.hrTag {
   background-color: #afa2dd;
-  height: 1px;
+  border: solid 1px #afa2dd;
 }
 
 .content_rowTag {
@@ -470,9 +503,10 @@ hr {
   overflow: hidden;
   background-color: rgb(248, 64, 64);
   position: absolute;
-  left: 750px;
+  left: 50%;
   top: 260px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
+  z-index: 1;
 }
 
 .round_box2 {
@@ -517,8 +551,9 @@ hr {
   height: 120px;
   background-color: rgb(250, 171, 92);
   transform: rotate(-45deg);
-  right: 520px;
+  right: 38%;
   top: 220px;
+  z-index: 1;
 }
 
 .line5 {
@@ -527,10 +562,23 @@ hr {
   height: 120px;
   background-color: rgb(250, 171, 92);
   transform: rotate(45deg);
-  left: 520px;
+  left: 38%;
   top: 220px;
+  z-index: 1;
 }
 
+.backListBtn {
+  width: 47px;
+  height: 31px;
+  background-color: #f45384 !important;
+  border: none;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+.backListBtn:hover {
+  background-color: #f8bfd1 !important;
+}
 
 .body_total {
   /* background: repeating-linear-gradient(-45deg, #B96BC6, #B96BC6 10px, #e4c3f1 10px, #e4c3f1 40px); */
@@ -538,6 +586,8 @@ hr {
   background-repeat: no-repeat;
   background-size: cover; */
   /* width: 800px; */
+  /* font-size: 13px; */
+  position: relative;
   background: rgb(249, 250, 250);
 }
 

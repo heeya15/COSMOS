@@ -13,6 +13,7 @@ export default new Vuex.Store({
     createPersistedState()  // 새로고침 초기화 방지
   ],
   state: {
+    saveCurrentPage: null,
     userInfo:null,
     isLogin:false,
     boardNo: null,
@@ -64,6 +65,10 @@ export default new Vuex.Store({
     IS_LEADER(state, leaderInfo){
       state.power.leader = leaderInfo.leader
       state.power.authority = leaderInfo.authority
+    },
+    PAGE_CLICK(state, currentPage) {
+      console.log(state, '페이지 번호 확인 스토어')
+      state.saveCurrentPage = currentPage
     }
   },
   actions: {
@@ -85,8 +90,8 @@ export default new Vuex.Store({
         console.log(err)
       })
     },
-    logIn({commit}, credentials) {
-      http({
+    async logIn({commit}, credentials) {
+      await http({
         method: 'post',
         url: '/auth/login',
         data: credentials
@@ -95,10 +100,11 @@ export default new Vuex.Store({
         if(res.status === 200) {
           localStorage.setItem('jwt', res.data.accessToken)
           commit('LOGIN')
-          router.push({name:'MainPage'})
+          
         }
       })
       .catch(err => {
+        // this.state.loginMsg = "잘못된 아이디 또는 비밀번호입니다.";
         console.log(err)
       })
     },
@@ -167,8 +173,10 @@ export default new Vuex.Store({
       .catch(err => {
         console.log(err)
       })
-
-    }
+    },
+    pageClick({commit}, currentPage) {
+      commit('PAGE_CLICK', currentPage)
+    },
   },
   // getters: {
   //   studyMembers(state){

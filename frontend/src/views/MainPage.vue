@@ -22,7 +22,7 @@
       <div class="banner">
         <div class="bannerBox">
           <div class="leftBox">
-            <img src="@/assets/main_img7.png" alt="">
+            <img src="@/assets/main_img7.png" alt="코스모스">
           </div>
           <div class="rightBox" align="center">
             <div class="wrapper" >
@@ -44,6 +44,33 @@
         <hr class="line">
       </div>
 
+
+      <!-- 게시판 목록 Start -->
+      <center>
+        <h1 class="text-center mb-5">모집 중인 스터디</h1>
+        <div id="board_section">
+          <table class="table table-boardered table-hover">
+            <col style="width:70%">
+            <col style="width:30%">
+
+            <thead align="center">
+              <th>게시글 제목</th>
+              <th>분류</th>
+            </thead>
+            <tbody v-for="(board, idx) in boardList" :key="idx">
+              <td><p>{{ board.contentTitle }}</p></td>
+              <td align="center"><p>{{ board.studytypeName }}</p></td>
+              <p></p>
+            </tbody>
+          </table>
+        </div>
+      </center>
+      <!-- 게시판 목록 End -->
+
+      <div class="my-5" align="center">  
+        <hr class="line">
+      </div>
+
       <!-- 오픈(공개) 스터디 목록 Start -->
       <div>
         <h1 class="text-center">오픈 스터디</h1>
@@ -54,19 +81,7 @@
         <hr class="line">
       </div>
 
-      <!-- 게시판 목록 Start -->
-      <div>
-        <h1 class="text-center">모집 중인 스터디</h1>
-        <div>
-          <table class="table table-boardered table-hover">
-            <tbody v-for="(board, idx) in boardList" :key="idx">
-              <td><p>{{ board.contentTitle }}test</p></td>
-            </tbody>
-          
-          </table>
-        </div>
-      </div>
-      <!-- 게시판 목록 End -->
+      
 
 
 
@@ -85,7 +100,7 @@
     </b-row> -->
 </template>
 
-<script scoped>
+<script>
 import http from "@/util/http-common.js";
 
 export default {
@@ -96,7 +111,7 @@ export default {
       // slide: 0,
       // sliding: null
       boardItems: null,
-      boardList: null,
+      boardList: [],
     }
   },
 
@@ -112,12 +127,14 @@ export default {
     //   this.sliding = false
     // },
     start() {
-      this.$router.push({name:'SignUp'})
+      if (this.$store.state.isLogin){
+        this.$router.push({name: 'StudyRoomCreateForm'})
+      } else {
+        this.$router.push({name: 'SignUp'})
+      }
     },
 
-    // 게시글 리스트 받아오기 안됌, 왜?
     getBoardItems() {
-      console.log("is it here?")
       http({
         method: 'get',
         url: '/board/searchAll',
@@ -131,41 +148,52 @@ export default {
 
         console.log(">>>>>> 전달 받은 리스트 : ", this.boardItems);
 
-        var len = this.boardItems.res.data.length > 5 ? 5 : this.boardItems.res.data.length;
-        for(var i=0; i<len; i++) {
-          this.boardList.push(this.boardItems[i]);
+        // var len = this.boardItems.length > 5 ? 5 : this.boardItems.length;
+        for(var i=0; i<this.boardItems.length; i++) {
+          if (this.boardItems[i].header === false) {
+            this.boardList.push(this.boardItems[i]);
+            if (this.boardList.length === 5) {
+              break
+            }
+          }
         }
       })
       .catch(err => {
         console.log(err)
       })
-    },
-
-    beforeCreated() {
-      console.log("page created");
-      this.getBoardItems()
-    },
-  }
+    }
+  },
+  created() {
+    this.getBoardItems()
+  },
 }
 </script>
 
 <style scoped>
-
 #main_page {
   height: 90%;
 }
 
-/* #main_secion {
+#main_section {
   height: 30%;
 }
 
-#board_secion {
+#board_section {
+  /* display: flex; */
+  /* justify-content: center; */
   height: 30%;
+  width: 50%;
+}
+
+th, td {   
+  /* text-align: center; */
+  vertical-align : middle !important;
 }
 
 #study_secion {
   height: 30%;
-} */
+}
+
 
 /* .banner {
   height: 25%;

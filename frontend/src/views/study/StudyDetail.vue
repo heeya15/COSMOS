@@ -14,90 +14,113 @@
       </div>
 
       <h1>Study Detail</h1>
+      <hr>
       <!-- 스터디 정보 받아오기 -->
-      <h2>스터디 이름: {{studyInfo.studyName}}</h2> 
-      <span>스터디 방 URL : {{studyInfo.url}}</span>
-
-      <!-- 권한있는 사람만 방입장 가능(세션생성 가능) -->
-      <button class="enterBtn2" @click="modal=true">방 입장</button>
-
-      <!-- 스터디 정보 수정 추가 -->
-      <button class="modifyBtn" v-if="power.leader" @click="$bvModal.show('bv-modal-studyModify')">스터디 수정</button>
-
-        <b-modal id="bv-modal-studyModify" centered hide-footer size="lg">
-          <template #modal-title>
-            <h3>스터디 정보 수정</h3>
-          </template>
-          <div class="d-block text-center">
+      <div class="studyContainer my-2 py-5">
+        <b-row class="d-flex align-items-center">
+          <b-col>
+            <img src="@/assets/img/nophoto.png" alt="이미지없음" class="studyImg" v-if="studyInfo.image.length<24">
+            <img :src="studyInfo.image" alt="스터디 이미지" class="studyImg" v-else>
+          </b-col>
+          <b-col>
             <b-row>
-              <b-col cols="3">
-                <label for="studyName" class="mt-2">스터디 이름</label>
-              </b-col>
-              <b-col>
-                <b-form-input id="studyName" v-model="studyInfo.studyName"></b-form-input>
-              </b-col>
+              
+              <h2>스터디 이름: {{studyInfo.studyName}}</h2>
+              
             </b-row>
-            <hr class="mt-3">
-
             <b-row>
-              <b-col cols="4" class="pr-4">
-                <label for="studyImg" class="mt-2">스터디 이미지</label>
-              </b-col>
-              <b-col>
-                <b-form-input id="studyImg" v-model="studyInfo.image"></b-form-input>
-              </b-col>
+              <div class="my-2">            
+                <span>스터디 방 URL : {{studyInfo.url}}</span>
+                <!-- 권한있는 사람만 방입장 가능(세션생성 가능) -->
+                <button class="enterBtn2 ml-3" @click="modal=true">방 입장</button>
+              </div>
             </b-row>
-            <hr class="mt-3">
-
             <b-row>
-              <b-col cols="3" class="pr-4">
-                <label for="studyPassword" class="mt-2">스터디 비밀번호</label>
-              </b-col>
-              <b-col cols="4">
-                <b-form-input id="studyPassword" v-model="studyInfo.studyPassword"></b-form-input>
-              </b-col>
+              <div class="my-2 ">
+              <!-- 스터디 정보 수정 추가 -->
+                <button class="modifyBtn mr-3" v-if="power.leader" @click="$bvModal.show('bv-modal-studyModify')">스터디 수정</button>
+
+                  <b-modal id="bv-modal-studyModify" centered hide-footer size="lg">
+                    <template #modal-title>
+                      <h3>스터디 정보 수정</h3>
+                    </template>
+                    <div class="d-block text-center">
+                      <b-row>
+                        <b-col cols="3">
+                          <label for="studyName" class="mt-2">스터디 이름</label>
+                        </b-col>
+                        <b-col>
+                          <b-form-input id="studyName" v-model="studyInfo.studyName"></b-form-input>
+                        </b-col>
+                      </b-row>
+                      <hr class="mt-3">
+
+                      <b-row>
+                        <b-col cols="4" class="pr-4">
+                          <label for="studyImg" class="mt-2">스터디 이미지</label>
+                        </b-col>
+                        <b-col>
+                          <b-form-input id="studyImg" v-model="studyInfo.image"></b-form-input>
+                        </b-col>
+                      </b-row>
+                      <hr class="mt-3">
+
+                      <b-row>
+                        <b-col cols="3" class="pr-4">
+                          <label for="studyPassword" class="mt-2">스터디 비밀번호</label>
+                        </b-col>
+                        <b-col cols="4">
+                          <b-form-input id="studyPassword" v-model="studyInfo.studyPassword"></b-form-input>
+                        </b-col>
+                      </b-row>
+                      <hr class="mt-3">
+
+                      <b-row>
+                        <b-col cols="3">
+                          <label for="studytypeNo" class="mt-2">스터디 타입</label>
+                        </b-col>
+                        <b-col cols="4">
+                          <b-form-select v-model="studyInfo.studyType.studytypeNo" :options="options" ></b-form-select>
+                        </b-col>
+                      </b-row>
+                      <hr class="mt-3">
+
+                      <b-row>
+                        <b-col cols="3">
+                          <label for="totalMember" class="mt-2">스터디 총 인원</label>
+                        </b-col>
+                        <b-col>
+                          <b-form-input id="totalMember" v-model="studyInfo.totalMember"></b-form-input>
+                        </b-col>
+                      </b-row>
+                      <hr class="mt-3">
+
+                      <b-row>
+                        <b-col cols="3">
+                          <label for="studyRule" class="mt-2">스터디 규칙</label>
+                        </b-col>
+                        <b-col>
+                          <b-form-textarea id="studyRule" v-model="studyInfo.studyRule" rows="3" max-rows="6"></b-form-textarea>
+                        </b-col>
+                      </b-row>
+                      <hr class="mt-3">
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      <b-button class="m-2" variant="warning" @click="updateStudy">수정</b-button>
+                      <b-button class="m-2" @click="$bvModal.hide('bv-modal-studyModify')">취소</b-button>
+                    </div>
+                  </b-modal>
+
+
+                <b-button v-if="power.leader" variant="danger" @click="deleteStudy" style="border-radius:8px; height:40px;">스터디 삭제</b-button>
+                <b-button v-else variant="danger" @click="deleteMember(myStudyMemberNo)" style="border-radius:8px; height:40px;">스터디 탈퇴</b-button>
+              </div>
             </b-row>
-            <hr class="mt-3">
+          </b-col>
+        </b-row>
+      </div>
 
-            <b-row>
-              <b-col cols="3">
-                <label for="studytypeNo" class="mt-2">스터디 타입</label>
-              </b-col>
-              <b-col cols="4">
-                <b-form-select v-model="studyInfo.studyType.studytypeNo" :options="options" ></b-form-select>
-              </b-col>
-            </b-row>
-            <hr class="mt-3">
-
-            <b-row>
-              <b-col cols="3">
-                <label for="totalMember" class="mt-2">스터디 총 인원</label>
-              </b-col>
-              <b-col>
-                <b-form-input id="totalMember" v-model="studyInfo.totalMember"></b-form-input>
-              </b-col>
-            </b-row>
-            <hr class="mt-3">
-
-            <b-row>
-              <b-col cols="3">
-                <label for="studyRule" class="mt-2">스터디 규칙</label>
-              </b-col>
-              <b-col>
-                <b-form-textarea id="studyRule" v-model="studyInfo.studyRule" rows="3" max-rows="6"></b-form-textarea>
-              </b-col>
-            </b-row>
-            <hr class="mt-3">
-          </div>
-          <div class="d-flex justify-content-center">
-            <b-button class="m-2" variant="success" @click="updateStudy">수정</b-button>
-            <b-button class="m-2" @click="$bvModal.hide('bv-modal-studyModify')">취소</b-button>
-          </div>
-        </b-modal>
-
-
-      <b-button v-if="power.leader" variant="danger" @click="deleteStudy">스터디 삭제</b-button>
-      <b-button v-else variant="danger" @click="deleteMember(myStudyMemberNo)">스터디 탈퇴</b-button>
+      <hr>
       <div class="buttongroup d-flex justify-content-between" style="width:800px;">
         <b-button @click="togglenotice">공지사항</b-button>
         <b-button @click="toggleapply">가입 요청 확인 </b-button>
@@ -139,6 +162,7 @@ export default {
       myStudyMemberNo: '',
       studyInfo: {
         studyType:{},
+        image:'',
         // studyName: null,
         // url: null,
         // image: null,
@@ -179,6 +203,7 @@ export default {
         url: `/study/search/${this.studyNo}`
       })
       .then(res => {        
+        console.log(res.data)
         this.studyInfo = res.data
       })
       .catch(err => {
@@ -206,8 +231,7 @@ export default {
         this.$store.state.roomName = this.studyInfo.studyName;
 
         var str = this.studyInfo.url;
-        var urlLen = this.studyInfo.url.length;
-        var url = str.substr(22,urlLen);
+        var url =  str.split('/')[3];
         
 
         // console.log(str);
@@ -329,6 +353,15 @@ export default {
 </script>
 
 <style scoped>
+.studyContainer {
+  background-color: aliceblue;
+}
+.studyImg {
+  height: 200px;
+  width: 300px;
+  border-radius: 4px;
+}
+/* 모달 스타일 */
 .black-bg{
   z-index: 2;
   width: 100vw;
@@ -353,6 +386,7 @@ export default {
   font-family:'yg-jalnan';
 }
 
+/* 버튼 */
 .modifyBtn {
   border: none;
   border-radius: 8px;

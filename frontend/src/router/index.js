@@ -11,6 +11,8 @@ import BoardList from '@/components/community/BoardList.vue'
 import StudyRoomCreateForm from '@/views/study/StudyRoomCreateForm.vue'
 import StudyDetail from '@/views/study/StudyDetail.vue'
 import AdminPage from '@/views/admin/Admin.vue'
+import StudyTypeManage from '@/components/admin/StudyTypeManage.vue'
+import UserManage from '@/components/admin/UserManage.vue'
 
 import Openvidu from '@/views/Openvidu.vue'
 
@@ -77,6 +79,16 @@ const routes = [
     path: '/admin',
     name: 'AdminPage',
     component: AdminPage,
+  },
+  {
+    path: '/studytypemanage',
+    name: 'StudyTypeManage',
+    component: StudyTypeManage,
+  },
+  {
+    path: '/usermanange',
+    name: 'UserManage',
+    component: UserManage,
   },
 ]
 
