@@ -11,12 +11,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -42,34 +44,33 @@ public class UserHistory implements Serializable{
 	@Id
 	@Column(name = "userhistory_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int userhistoryNo;
+	Long userhistoryNo;
+
+
+	@Column(name = "date", columnDefinition = "TIMESTAMP")
+	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
+	@CreationTimestamp
+	private LocalDateTime date;
 	
-//	@Id
-//	@OneToOne
-//	@JoinColumn(name="user_id")
-//	private User user;
-//	
-//	@Id
-//	@Column(name = "date", columnDefinition = "TIMESTAMP")
-//	@CreationTimestamp
-//	private LocalDateTime date;
+
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private User user;
 	
-	
-//	@EmbeddedId
-//	private UserHistoryId userHistoryID;
 	
 	@Column(name = "user_start_time", columnDefinition = "TIMESTAMP")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
+	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
 	@CreationTimestamp
 	private LocalDateTime userStartTime;
 	
 	@Column(name = "user_finish_time", columnDefinition = "TIMESTAMP")
+	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
 	@CreationTimestamp
 	private LocalDateTime userFinishTime;
-	
-//	@OneToOne(mappedBy = "userhistory")
-//	private UserHistoryDay day;
-	
+		
 }
 
 //@Entity
