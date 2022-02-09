@@ -1,6 +1,6 @@
 <template>
   <div align="center" id="signupPage">    
-    <div class="mt-3" id="signupBox">
+    <div class="my-3" id="signupBox">
       <b-form class="p-5" id="signupForm" @submit.stop.prevent>        
         <p id="signup">회원가입</p>
         <div class="input-box mt-4">
@@ -15,24 +15,24 @@
             </b-col>
             <b-col cols="4" class="pl-0"><b-button class="mt-3" @click="idDuplicateCheck" id="idCheckBtn">중복확인</b-button></b-col>
           </b-row>
-          <div class="mt-1 message" ref="idMsg"></div>
+          <div class="mt-1 message" :class="{ completeCheck: idDuplicate }">{{ idMsg }}</div>
         </div>
         <div class="input-box mt-4">
           <input id="password" type="text" ref="password" name="password" v-model="credentials.userPassword" placeholder="비밀번호" @keydown="resetpwdDouble" @blur="passwordRuleCheck" required/>
           <label for="password">비밀번호</label>
-          <div class="mt-1 message" ref="pwdMsg1"></div>
+          <div class="mt-1 message">{{ pwdMsg1 }}</div>
         </div>
         <div class="input-box mt-4">
           <input id="passwordRule" type="password" name="passwordRule" v-model="passwordRule" placeholder="비밀번호 확인" @blur="doublePasswordCheck" required/>
           <label for="passwordRule">비밀번호 확인</label>
-          <div class="mt-1 message" ref="pwdMsg2"></div>
+          <div class="mt-1 message">{{ pwdMsg2 }}</div>
         </div>
         <div class="input-box mt-4">
           <b-row>
             <b-col cols="8">
               <input id="email" type="text" name="email" :disabled="inputDisabled" v-model="credentials.userEmail" placeholder="이메일" required @blur="emailDuplicateCheck" />
               <label for="useremailname" style="left: 15px;">이메일</label>
-              <div class="mt-1 message" ref="emailMsg"></div>
+              <div class="mt-1 message">{{ emailMsg }}</div>
             </b-col>
             <b-col cols="4" class="pl-0"><b-button class="mt-3" @click="sendEmail" id="emailBtn">인증</b-button></b-col>
           </b-row>
@@ -46,10 +46,11 @@
               </b-col>
               <b-col cols="4" class="pl-0"><b-button class="mt-3" @click="emailAuthenticate" id="emailBtn">확인</b-button></b-col>
             </b-row>
+            <div class="mt-1 message" :class="{ completeCheck: emailAuth }">{{ emailAuthMsg }}</div>
           </div>
         </div>
-        <div class="mt-1 message" ref="resultMsg"></div>
-        <b-button id="signupBtn" type="submit" @click="signUp">SIGNUP</b-button>
+        <div class="mt-1 message">{{ resultMsg }}</div>
+        <b-button id="signupBtn" type="submit" @keydown.enter="signUp" @click="signUp">SIGNUP</b-button>
       </b-form> 
     </div>
   </div>
@@ -82,6 +83,15 @@ export default {
       emailAuthCode: '',
       emailCode: '',
       inputDisabled: false,  // 이메일 입력 disabled 여부
+      
+      // 데이터 오입력 출력 메시지
+      idMsg: '',
+      pwdMsg1: '',
+      pwdMsg2: '',
+      emailMsg: '',
+      emailAuthMsg: '',
+      resultMsg: '',
+
     }
   },
 
@@ -96,9 +106,9 @@ export default {
         this.$store.dispatch('signUp',this.credentials)
       } else {
         if(!this.idDuplicate) {
-          this.$refs.resultMsg.innerText = '아이디 중복 검사를 해주세요.';
+          this.resultMsg = '아이디 중복 검사를 해주세요.';
         } else if(!this.emailAuth) {
-          this.$refs.resultMsg.innerText = '이메일 인증을 해주세요.';
+          this.resultMsg = '이메일 인증을 해주세요.';
         }
       }
     },
@@ -112,23 +122,24 @@ export default {
         console.log(res);
         this.toggleIdCheck = true
         this.idDuplicate = true;
-        this.$refs.idMsg.innerText = '';
+        this.idMsg = '사용가능한 아이디입니다.';
+        if(this.resultMsg == '아이디 중복 검사를 해주세요.') this.resultMsg = '';
       })
       .catch(err => {
-        this.$refs.idMsg.innerText = '사용할 수 없는 아이디입니다.';
+        this.idMsg = '사용할 수 없는 아이디입니다.';
         this.idDuplicate = false;
         console.log(err)
       })
     },
 
-    async idRuleCheck() {
+    idRuleCheck() {
       var rule = /^(?=.*[a-zA-Z])(?=.*[0-9]).{4,12}$/;
 
       if(!rule.test(this.credentials.userId)) {
-        this.$refs.idMsg.innerText = '아이디는 4 ~ 12 자리수이며 문자, 숫자를 최소 1개씩 포함해야합니다.';
+        this.idMsg = '아이디는 4 ~ 12 자리수이며 문자, 숫자를 최소 1개씩 포함해야합니다.';
         this.idRule = false;
       } else {
-        this.$refs.idMsg.innerText = '';
+        this.idMsg = '';
         this.idRule = true;
       }
     },
@@ -138,35 +149,35 @@ export default {
     },
 
     resetpwdDouble() {
-      if(this.pwdDouble == true) this.$refs.pwdMsg2.innerText = '비밀번호가 일치하지 않습니다.';
-      else this.$refs.pwdMsg2.innerText = '';
+      if(this.pwdDouble == true) this.pwdMsg2 = '비밀번호가 일치하지 않습니다.';
+      else this.pwdMsg2 = '';
       this.pwdDouble = false;
     },
 
-    async passwordRuleCheck() {
+    passwordRuleCheck() {
       var rule = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,12}$/;
 
       if(!rule.test(this.credentials.userPassword)) {
-        this.$refs.pwdMsg1.innerText = '비밀번호는 8 ~ 12 자리수이며 문자, 숫자, 특수기호를 최소 1개씩 포함해야합니다.';
+        this.pwdMsg1 = '비밀번호는 8 ~ 12 자리수이며 문자, 숫자, 특수기호를 최소 1개씩 포함해야합니다.';
         this.pwdRule = false;
       } else {
-        this.$refs.pwdMsg1.innerText = '';
+        this.pwdMsg1 = '';
         this.pwdRule = true;
       }
     },
 
-    async doublePasswordCheck() {
+    doublePasswordCheck() {
       if(this.credentials.userPassword == this.passwordRule) {
-        this.$refs.pwdMsg2.innerText = '';
+        this.pwdMsg2 = '';
         this.pwdDouble = true;
       } else {
-        this.$refs.pwdMsg2.innerText = '비밀번호가 일치하지 않습니다.';
+        this.pwdMsg2 = '비밀번호가 일치하지 않습니다.';
         this.pwdDouble = false;
       }
     },
 
     // 이메일 중복 검사
-    async emailDuplicateCheck() {
+    emailDuplicateCheck() {
       http({
         method: 'GET',
         url: `/email/emailcheck/${this.credentials.userEmail}`,
@@ -174,10 +185,10 @@ export default {
       .then(res => {
         console.log(res.data)
         this.emailDuplicate = true; 
-        this.$refs.emailMsg.innerText = ''
+        this.emailMsg = ''
       })
       .catch(err => {
-        this.$refs.emailMsg.innerText = '사용할 수 없는 이메일 입니다.'
+        this.emailMsg = '사용할 수 없는 이메일 입니다.'
         console.log(err)
       })
 
@@ -189,16 +200,18 @@ export default {
       
       if(!rule.test(this.credentials.userEmail)) {
         this.emailRule = false;
-        this.$refs.emailMsg.innerText = '유효하지 않은 이메일 형식입니다.';
+        this.emailMsg = '유효하지 않은 이메일 형식입니다.';
       } else {
         this.emailRule = true;
-        this.$refs.emailMsg.innerText = '';
+        this.emailMsg = '';
       }
     },
 
     // 이메일 전송
     sendEmail() {
       this.emailRuleCheck();
+      this.emailDuplicateCheck();
+
       console.log(">>>>>>>>>>>>>>>> here/")
 
       if(this.emailDuplicate == true && this.emailRule == true) {
@@ -221,16 +234,12 @@ export default {
     // emailAuthCode
     // 이메일 인증 코드 확인
     emailAuthenticate() {
-      console.log(">>>>>>>>>>>>>>>> and here")
-
       if(this.emailAuthCode == this.emailCode) {
         this.emailAuth = true;
         this.inputDisabled = true;
-        this.$refs.resultMsg.innerText = '';
+        this.emailAuthMsg = '인증 완료';
       } else {
-        console.log(">>>>>>>>>> 메일 코드 : ", this.emailAuthCode);
-        console.log(">>>>>>>>>> 내 코드 : ", this.emailCode);
-        this.$refs.resultMsg.innerText = '인증코드가 틀렸습니다.';
+        this.emailAuthMsg = '인증코드가 틀렸습니다.';
       }
     },
   },
@@ -244,14 +253,15 @@ p {
 }
 
 #signupPage {
-  height: 90%;
+  /* padding: 100px 0; */
+  height: 120%;
   position: relative;
   background-color: #DAC7F9;
 }
 
 #signupBox {
-  height: 700px;
-  width: 500px;
+  height: 90%;
+  width: 600px;
   background-color: rgb(255, 255, 255);
   box-shadow: 10px 10px 10px rgb(235, 235, 235);
   border-radius: 10px;
@@ -263,15 +273,16 @@ p {
 
 #signupForm {
   width: 480px;
+  height: auto;
   position:absolute;
-  top: 40%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%,-50%);
 }
 
 #signup {
   color: #3d3d3d;
-  margin-top: 110px;
+  margin-top: 70px;
 }
 
 #signupBtn {
@@ -334,6 +345,11 @@ input:focus, input:not(:placeholder-shown){
 .message {
   font-size: 8pt;
   color: rgb(207, 1, 1);
+}
+
+/* 중복 확인 성공 안내 메시지 */
+.completeCheck {
+  color: #3C77C9;
 }
 
 </style>
