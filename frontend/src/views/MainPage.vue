@@ -22,7 +22,7 @@
       <div class="banner">
         <div class="bannerBox">
           <div class="leftBox">
-            <img src="@/assets/main_img7.png" alt="코스모스">
+            <img class="cosmos" src="@/assets/main_img7.png" alt="코스모스">
           </div>
           <div class="rightBox" align="center">
             <div class="wrapper" >
@@ -75,6 +75,22 @@
       <!-- 오픈(공개) 스터디 목록 Start -->
       <div>
         <h1 class="text-center">오픈 스터디</h1>
+        <div class="my-5 p-5" align="center">  
+          <div v-if="publicStudyList.length >= 1" >
+            <div class="row">
+              <div v-for="publicstudy in publicStudyList" :key="publicstudy.publicstudyroomId" class="col-md-4 mb-3 mb-lg-2">
+                <div class="hover hover-1 text-white rounded"><img src="https://bootstrapious.com/i/snippets/sn-img-hover/hoverSet-3.jpg" alt="" @mouseover="getPublicStudyMember(publicstudy.publicstudyroomId)">
+                  <div class="hover-overlay"></div>
+                  <div class="hover-1-content px-5 py-4">
+                    <h3 class="hover-1-title text-uppercase font-weight-bold mb-0"><span class="font-weight-light">{{ publicstudy.studyName }}</span></h3>
+                    <p class="hover-1-description font-weight-light mb-0">{{ publicstudy.studyType.studytypeName }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else>아직 가입한 스터디가 없습니다.</div>
+        </div>
       </div>
       <!-- 오픈(공개) 스터디 목록 End -->
 
@@ -114,6 +130,8 @@ export default {
       // board_no: this.$store.state.boardNo,
       boardItems: null,
       boardList: [],
+      publicStudyList: [],
+      publicStudyInfo: null,
     }
   },
 
@@ -171,10 +189,31 @@ export default {
       .catch(err => {
         console.log(err)
       })
-    }
+    }, 
+
+    // 공개(오픈)스터디 전체 조회
+    getPublicStudy() {
+      http({
+        method: 'GET',
+        url: '/publicroom/search/searchAll/publicRoom',
+      })
+      .then(res => {
+        this.publicStudyList = res.data
+        console.log(">>>>>>>> return public study: ", res.data);
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+
+    getPublicStudyMember(publicstudyroomid) {
+      console.log(">>>>>>>>>>> 찾고자하는 오픈스터디룸 아이디 : ", publicstudyroomid)
+    },
   },
+
   created() {
     this.getBoardItems()
+    this.getPublicStudy()
   },
 }
 </script>
@@ -319,7 +358,7 @@ thead {
   font-size: 20px;
 }
 
-img {
+.cosmos {
   position: absolute;
   width: 60%;
   height: 75%;
@@ -330,6 +369,79 @@ img {
 
 .line {
   width: 80%;
+}
+
+/* 오픈 스터디관련 css */
+.hover {
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 60%;
+}
+
+.hover-overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  transition: all 0.4s;
+}
+
+.hover img {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 0.3s;
+}
+
+.hover-content {
+  position: relative;
+  z-index: 99;
+}
+
+.hover-1 img {
+  width: 105%;
+  position: absolute;
+  top: 0;
+  left: -5%;
+  transition: all 0.3s;
+}
+
+.hover-1-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  transition: all 0.4s;
+}
+
+.hover-1 .hover-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.hover-1-description {
+  transform: translateY(0.5rem);
+  transition: all 0.4s;
+  opacity: 0;
+}
+
+.hover-1:hover .hover-1-content {
+  bottom: 2rem;
+}
+
+.hover-1:hover .hover-1-description {
+  opacity: 1;
+  transform: none;
+}
+
+.hover-1:hover img {
+  left: 0;
+}
+
+.hover-1:hover .hover-overlay {
+  opacity: 0;
 }
 
 </style>
