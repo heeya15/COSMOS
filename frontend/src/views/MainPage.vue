@@ -45,6 +45,7 @@
       </div>
 
 
+
       <!-- 게시판 목록 Start -->
       <center>
         <h1 class="text-center mb-5">모집 중인 스터디</h1>
@@ -54,12 +55,12 @@
             <col style="width:30%">
 
             <thead align="center">
-              <th>게시글 제목</th>
-              <th>분류</th>
+              <th>🌼 게시글 제목 🌼</th>
+              <th>🌼 분류 🌼</th>
             </thead>
-            <tbody v-for="(board, idx) in boardList" :key="idx">
-              <td><p>{{ board.contentTitle }}</p></td>
-              <td align="center"><p>{{ board.studytypeName }}</p></td>
+            <tbody v-for="(board, idx) in boardList" :key="idx" @click="goBoardDetail(board.boardNo)">
+              <td><p class="mx-3">🌷 {{ board.contentTitle }} 🌷</p></td>
+              <td align="center"><p>🌷 {{ board.studytypeName }} 🌷</p></td>
               <p></p>
             </tbody>
           </table>
@@ -110,6 +111,7 @@ export default {
     return {
       // slide: 0,
       // sliding: null
+      // board_no: this.$store.state.boardNo,
       boardItems: null,
       boardList: [],
     }
@@ -134,6 +136,14 @@ export default {
       }
     },
 
+    // 상세보기로
+    goBoardDetail(boardItemsIdx) {
+      console.log(boardItemsIdx)
+      this.$store.dispatch('getBoardNo', boardItemsIdx)
+      this.$router.push({ name: 'BoardDetail', query: { pageId: this.currentPage }})
+    },
+
+    // 게시판 불러오기
     getBoardItems() {
       http({
         method: 'get',
@@ -192,6 +202,15 @@ th, td {
 
 #study_secion {
   height: 30%;
+}
+
+tbody:hover {
+  cursor: pointer;
+  background-color: #c8c1e4;
+}
+
+thead {
+  background-color: #afa2dd;
 }
 
 
