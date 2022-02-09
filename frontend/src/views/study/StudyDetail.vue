@@ -5,7 +5,7 @@
       <div class="black-bg" v-if="modal">
         <div class="white-bg">
           <h4>비밀번호 입력</h4>
-          <b-form-input class="mb-3" style="width: 40%;" type="text" v-model="pwd"></b-form-input>
+          <b-form-input class="mb-3" style="width: 40%;" type="text" v-model="pwd" @keydown.enter="pwdCheck()"></b-form-input>
           <div>
             <button class="enterBtn mx-1"  @click="pwdCheck()">입장</button>
             <button class="cancelBtn mx-1" @click="modal=false"><span style="color:white;">취소</span></button>

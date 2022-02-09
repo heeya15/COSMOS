@@ -4,8 +4,8 @@
             <!-- 검색 Start -->
             <div class="searchbar mb-4 d-flex justify-content-center">
                 <b-form-select class="mx-1" id="selectSearchOption" v-model="searchSelected" :options="searchOpt" @change="headerSel()" ></b-form-select>
-                <b-form-input class="mr-2" id="inputSearchOption" placeholder="검색할 키워드를 입력하세요." v-model="word"></b-form-input>
-                <b-button class="mr-1" id="studyTypeSearchBtn" @keydown.enter="search()" @click="search()">검색</b-button>
+                <b-form-input class="mr-2" id="inputSearchOption" placeholder="검색할 키워드를 입력하세요." v-model="word" @keydown.enter="search"></b-form-input>
+                <b-button class="mr-1" id="studyTypeSearchBtn" @click="search">검색</b-button>
                 <b-button id="resetSearchBtn" @click="searchInit()">초기화</b-button>
             </div>
             <!-- 검색 End -->

@@ -1,7 +1,7 @@
 <template>
   <div align="center" id="loginPage">
       <div class="mt-3" id="loginBox">
-        <b-form class="p-5" id="loginForm">
+        <b-form class="p-5" id="loginForm" @submit.stop.prevent>
           <p id="login">로그인</p>
           <div class="input-box my-5">
             <input id="id" type="text" name="id" v-model="credentials.id" @keydown="resetMsg" placeholder="아이디" required/>
@@ -18,7 +18,7 @@
           </div>
           <!-- <b-form-input class="mt-3"  id="id" v-model="credentials.id" required placeholder="아이디"></b-form-input>
           <b-form-input class="mt-3" id="password" v-model="credentials.password" type="password" placeholder="비밀번호"></b-form-input> -->
-          <b-button id="loginBtn" @click="logIn">LOGIN</b-button>
+          <b-button id="loginBtn" type="submit" @keydown.enter="logIn" @click="logIn">LOGIN</b-button>
         </b-form>
       </div>
   </div>
