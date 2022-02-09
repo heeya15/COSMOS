@@ -1,74 +1,90 @@
 <template>
-  <div>
-    <h1>스터디 모집 게시판</h1>
-    <hr>
-    <h3>글생성</h3>
+  <div class="total">
     <center>
-      <div class="p-5" style="width: 600px">
-        <b-row>
-          <b-col cols="3" class="mt-2">
-            <label for="some-radios">말머리</label>
+    <div class="backImg">
+    
+    <h1>스터디 모집 게시판</h1>
+    <hr style="width: 80%">
+    <h3>글생성</h3>
+    <img class="head_Img" src="가랜드.png" alt="" >
+    <img class="head_Img2" src="가랜드.png" alt="" >
+    <marquee behavior=alternate  scrolldelay="50">Hello World!</marquee>
+    <img class="sideImg" src="사람2.png">
+    <img class="sideImg2" src="사람.png">
+      <div class="form_body_tag p-5" style="width: 40%;">
+        <b-row style="height: 600px; background-color: white;">
+          <b-col cols="3" class="header_label mt-2">
+            <p for="some-radios">말머리</p>
           </b-col>
-          <b-col cols="9">
-            <label class="mx-3 mt-2"><input v-model="input.header" type="radio" name="header" value="false" @click="falseHearder">스터디원 구함</label>
-            <label class="mx-3 mt-2"><input v-model="input.header" type="radio" name="header" value="true" @click="trueHearder">스터디 구함</label>
+          <b-col class="radio_position" cols="9">
+            <label class="hearder_radio_tag mx-3 mt-2"><input class="header_radio" v-model="input.header" type="radio" name="header" value="false" @click="falseHearder">스터디원 구함</label>
+            <label class="hearder_radio_tag mx-3 mt-2"><input class="header_radio" v-model="input.header" type="radio" name="header" value="true" @click="trueHearder">스터디 구함</label>
           </b-col>
         
           <b-col class="title_label" cols="3" >
             <label class="mt-2" for="content_title">제목</label>
           </b-col>
           <b-col cols="9">
-            <b-form-input class="mt-2" id="content_title" v-model="input.content_title"></b-form-input>
+            <b-form-input class="mt-2" id="content_title" v-model="input.content_title" style="height: 35px;" maxlength="30"></b-form-input>
           </b-col>
         
-          <b-col cols="3" class="mt-2">
+          <b-col v-show="this.input.header === false" cols="3" class="mt-2">
             <label v-show="this.input.header === false" for="study_name">스터디이름</label>
           </b-col>
-          <b-col cols="9" class="mt-2">
-            <b-form-select v-show="this.input.header === false" v-model="nameSelected" :options="titleOptions" id="study_name">"스터디 이름 불러 오는 곳"</b-form-select>
+          <b-col v-show="this.input.header === false" cols="9" class="mt-2">
+            <b-form-select style="width: 100%; height: 35px; font-size: 13px; " v-show="this.input.header === false" v-model="nameSelected" :options="titleOptions" id="study_name"></b-form-select>
           </b-col>
 
-          <b-col cols="3" class="mt-2">
+          <b-col v-show="this.input.header === false" cols="3" class="mt-2">
             <label v-show="this.input.header === false" for="recruit_number">모집인원</label>
           </b-col>
-          <b-col class="spinbuttontag mt-2" cols="9">
-            <b-form-input v-show="this.input.header === false" id="recruit_number" v-model="input.recruit_number"> 명</b-form-input>
+          <b-col v-show="this.input.header === false" class="spinbuttontag mt-2" cols="9">
+            <b-form-input 
+            v-show="this.input.header === false" 
+            id="recruit_number" v-model="input.recruit_number" 
+            style="height: 35px;" 
+            type="number" 
+            min="1" max="5"
+            @keypress="recruitLimit"
+            >
+            </b-form-input>
           </b-col>
         
           <b-col cols="3" class="mt-2">
             <label for="studytype_name">스터디분류</label>
           </b-col>
           
-          <!-- 스터디원일 때 -->
+          <!-- 스터디 구할 때 -->
           <b-col v-show="this.input.header !== false" cols="9" class="mt-2">
-            <b-form-select v-model="studyTypeSelected" :options="options" id="studytype_name"></b-form-select>
+            <b-form-select class="studyTypeTag" v-model="studyTypeSelected" :options="options" style="width: 100%; height: 35px; font-size: 15px;" id="studytype_name"></b-form-select>
           </b-col>
 
-          <!-- 폰트 사이즈 조절 -->
+
+          <!-- 스터디원 구할 때 -->
           <b-col v-show="this.input.header === false" class="selectag mt-2" cols="9">
             <div v-for="temp in temps" :key="temp.idx">
-              <p v-if="nameSelected === temp.value">{{ temp.text }}</p>
+              <p class="studyTypeTag" v-if="nameSelected === temp.value">{{ temp.text }}</p>
             </div>
           </b-col>
-
         
           <b-col cols="3" class="mt-2">
             <label for="content">내용</label>
           </b-col>
           <b-col cols="9" class="mt-2">
-            <b-form-textarea v-model="input.content" id="content" row="8" max-rows="10"></b-form-textarea>
+            <b-form-textarea v-model="input.content" id="content" row="8" max-rows="10" style="height: 100px;"></b-form-textarea>
           </b-col>
           <!-- 스터디원 구함 -->
           <b-col v-show="this.input.header == false">
-            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="createBoardForm">게시글 생성</b-button>
-            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="backBoardMain">취소</b-button>
+            <b-button class="btnTag mx-2 mt-4" @click="createBoardForm">게시글 생성</b-button>
+            <b-button class="btnTag mx-2 mt-4" @click="backBoardMain">취소</b-button>
           </b-col>
           <!-- 스터디 구함 -->
           <b-col v-show="this.input.header !== false">
-            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="studyWantCreateBoardForm">게시글 생성ss</b-button>
-            <b-button class="mx-3 mt-4" style="background-color: #DAC7F9" @click="backBoardMain">취소</b-button>
+            <b-button class="btnTag mx-2 mt-4" @click="studyWantCreateBoardForm">게시글 생성</b-button>
+            <b-button class="btnTag mx-2 mt-4" @click="backBoardMain">취소</b-button>
           </b-col>
         </b-row>
+      </div>
       </div>
     </center>
   </div>
@@ -81,7 +97,8 @@
 
 
 <script>
-import axios from 'axios'
+// import http from 'http'
+import http from "@/util/http-common.js";
 
 export default {
   name: 'BoardForm',
@@ -102,6 +119,7 @@ export default {
         studytype_name: null,
         content: null,
         user_id: null,
+        // study_no: null,
       },
       temps: [],
       titleOptions: [],
@@ -112,6 +130,16 @@ export default {
     }
   },
   methods: {
+    // 인원 수 제한
+    recruitLimit(event) {
+      console.log(event, '이벤트 확인')
+      if(event.key >= 0 && event.key <= 5) {
+      return true;
+      }
+      alert('5명 까지 입력이 가능합니다');
+      return false;
+      },
+
     backBoardMain() {
       this.$router.push({name: 'MainBoard'})
     },
@@ -136,9 +164,9 @@ export default {
         content: this.input.content,
         study_no: this.studyno[this.studyNameInfo.indexOf(this.nameSelected)],
       }
-      axios({
+      http({
         method: 'post',
-        url: 'http://i6e103.p.ssafy.io:8080/api/board/register',
+        url: '/board/register',
         data: createBoardItem,
         headers: this.getToken()
       })
@@ -146,7 +174,7 @@ export default {
         console.log(res.data)
         this.$router.push({name: "MainBoard"})
         console.log('스터디옵션 확인')
-        console.log(this.index)
+        // console.log(this.studyno[this.studyNameInfo.indexOf(this.nameSelected)], '여기 확인')
       })
       .catch(err => {
         console.log(err)
@@ -165,9 +193,9 @@ export default {
         content: this.input.content,
         study_no: this.studyno[this.studyNameInfo.indexOf(this.nameSelected)],
       }
-      axios({
+      http({
         method: 'post',
-        url: 'http://i6e103.p.ssafy.io:8080/api/board/register',
+        url: '/board/register',
         data: createBoardItem,
         headers: this.getToken()
       })
@@ -183,9 +211,9 @@ export default {
     },
 
     getStudyName() {
-      axios({
+      http({
         method: 'GET',
-        url: `http://i6e103.p.ssafy.io:8080/api/board/searchStudyName/${this.header}`,
+        url: `/board/searchStudyName/${this.header}`,
         headers: this.getToken()
       })
       .then(res => {
@@ -194,7 +222,7 @@ export default {
         console.log(this.studyNameInfo)
         res.data.forEach(element => {
           this.titleOptions.push({value: element.study_name, text: element.study_name})
-          this.temps.push({value: element.study_name, text: element.studytype_name})
+          this.temps.push({value: element.study_name, text: element.studytype_name, num: element.study_no})
           this.studyNameInfo.push(element.study_name)
           this.typeInfo.push(element.studytype_name)
           this.studyno.push(element.study_no)
@@ -216,9 +244,9 @@ export default {
       this.$router.go()
     },
     getStudyType() {
-      axios({
+      http({
         method: 'GET',
-        url: 'http://i6e103.p.ssafy.io:8080/api/study/studyType'
+        url: '/study/studyType'
       })
       .then(res => {
         // console.log(res)
@@ -240,7 +268,90 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+marquee {
+  font-size: 50px;
+  color: #ceb4f0;
+  width: 30%;
+  background-color: #fff;
+}
+
+.head_Img {
+  width: 38%;
+  height: 25%;
+  transform: rotate(16deg);
+  position: absolute;
+  right: 0;
+}
+
+.head_Img2 {
+  width: 38%;
+  height: 25%;
+  transform: rotate(-16deg);
+  position: absolute;
+  left: 0;
+}
+
+.sideImg {
+  width: 20%; 
+  height: 40%;
+  position: absolute;
+  top: 65%;
+  right: 5%;
+}
+
+.sideImg2 {
+  width: 17%; 
+  height: 30%;
+  position: absolute;
+  top: 72%;
+  left: 6%;
+}
+
+.backImg {
+  background-image: url('https://t1.daumcdn.net/cfile/blog/1532170949754B963C');
+  /* background-repeat: repeat; */
+  /* background-size: cover; */
+}
+
+.btnTag {
+  background-color: #afa2dd;
+  border: none;
+}
+
+.btnTag:hover {
+  background-color: #F3467B;
+}
+
+.header_label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.total {
+  font-size: 15px;
+  
+}
+.form_body_tag {
+  background: repeating-linear-gradient(-45deg, #afa2dd, #afa2dd 20px, #c8c1e4 20px, #c8c1e4 80px);
+  /* background-color: #afa2dd; */
+}
+
+.studyTypeTag {
+  background-color: #d7cff7;
+  width: 370px;
+  height: 35px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.radio_position {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .form {
   display: flex;
   justify-content: center;
@@ -249,6 +360,7 @@ export default {
 .radio_hearder {
   display: flex;
   justify-content: center;
+  /* color: #DAC7F9; */
 }
 
 .study_title {
@@ -275,7 +387,4 @@ export default {
   justify-content: center;
 }
 
-button{
-  size: 40px;
-}
 </style>

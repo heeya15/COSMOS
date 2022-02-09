@@ -1,22 +1,24 @@
 <template>
   <div align="center" id="loginPage">
       <div class="mt-3" id="loginBox">
-        <b-form class="p-5" id="loginForm">
+        <b-form class="p-5" id="loginForm" @submit.stop.prevent>
           <p id="login">로그인</p>
           <div class="input-box my-5">
-            <input id="id" type="text" name="id" v-model="credentials.id" placeholder="아이디" required/>
+            <input id="id" type="text" name="id" v-model="credentials.id" @keydown="resetMsg" placeholder="아이디" required/>
             <label for="id">아이디</label>
           </div>
           <div class="input-box mb-3">
-            <input id="password" type="password" name="password" v-model="credentials.password" placeholder="비밀번호" required/>
+            <input id="password" type="password" ref="pwd" name="password" v-model="credentials.password" placeholder="비밀번호" required/>
             <label for="password">비밀번호</label>
+            <b-icon icon="eye-slash-fill" id="pwdIcon" ref="pwdIcon" aria-hidden="true" @click="pwdPeek"></b-icon>
+            <!-- <b-button id="passwordBtn" @click="pwdPeek">확인</b-button> -->
           </div>
           <div class="input-box">
             <div class="mt-4" id="message" :value="msg">{{ msg }}</div>
           </div>
           <!-- <b-form-input class="mt-3"  id="id" v-model="credentials.id" required placeholder="아이디"></b-form-input>
           <b-form-input class="mt-3" id="password" v-model="credentials.password" type="password" placeholder="비밀번호"></b-form-input> -->
-          <b-button id="loginBtn" @click="logIn">LOGIN</b-button>
+          <b-button id="loginBtn" type="submit" @keydown.enter="logIn" @click="logIn">LOGIN</b-button>
         </b-form>
       </div>
   </div>
@@ -33,26 +35,50 @@ export default {
         password:'',
       },
       msg: '',
+      login: '',
     }
   },
+
   methods: {
-    logIn() {
-      this.$store.dispatch('logIn', this.credentials)
-      // this.$router.push({name: 'MainPage'})
-      
+    resetMsg() {
+      if(this.msg != "") this.msg = "";
+    },
+
+    async logIn() {
+      await this.$store.dispatch('logIn', this.credentials)
+
       // 입력값 초기화
-      this.credentials.id = '';
-      this.credentials.password = '';
-      this.msg = "잘못된 아이디 또는 비밀번호입니다."
-    }
-  }
+      if(this.$store.state.isLogin === true) {
+        this.msg = "";
+        this.$router.push({name:'MainPage'})
+      } else {
+        this.credentials.id = '';
+        this.credentials.password = '';
+        this.msg = "잘못된 아이디 또는 비밀번호입니다.";
+      }
+    },
+
+    pwdPeek() {
+      if(this.$refs.pwd.type == "password") {
+        this.$refs.pwd.type = "text";
+        this.$refs.pwdIcon.icon = "eye-fill";
+      } else {
+        this.$refs.pwd.type = "password";
+        this.$refs.pwdIcon.icon = "eye-fill";
+      }
+    },
+  }, 
+
+  beforeCreate() {
+    this.login = this.$store.state.isLogin;   // false
+  },
 }
 </script>
 
 <style scoped>
 
 #loginPage {
-  height: 90%;
+  height: 100%;
   position: relative;
   background-color: #DAC7F9;
 }
@@ -144,5 +170,11 @@ input:focus, input:not(:placeholder-shown){
   color: rgb(207, 1, 1);
 }
 
+#pwdIcon {
+  position: absolute;
+  cursor: pointer;
+  right: 5%;
+  top: 30%;
+}
 
 </style>
