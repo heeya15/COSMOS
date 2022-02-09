@@ -232,13 +232,14 @@ d<template>
   padding: 20px;
 }
 .white-bg{
-	margin-left:35%;
-	margin-top: 10%;
+	/* margin-left:35%; */
 	z-index: 3;
-  width: 30%;
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
+	/* width: 30%; */
+	width: 500px;
+	margin: 10% auto 0;
+	background: white;
+	border-radius: 8px;
+ 	padding: 20px;
 }
 /* 상벌점 스타일 끝 */
 #main{
@@ -298,7 +299,8 @@ d<template>
 }
 #session-aside-right .participant{
 	height: 35%;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
+	padding: 5px 0;
 }
 #participant-container{
 	background-color: #ccc;
@@ -308,6 +310,7 @@ d<template>
 	height: 90%;
 	background-color: #ccc;
 	overflow: auto;
+	padding: 5px;
 }
 
 #session-aside-right .chat{
