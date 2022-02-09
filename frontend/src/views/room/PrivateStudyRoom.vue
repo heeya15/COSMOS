@@ -1,31 +1,9 @@
 d<template>
 	<div id="main">
 		<div id="main-container">
-			<div id="join" v-if="!session">
-				<!-- <div id="img-div"><img src="resources/images/openvidu_grey_bg_transp_cropped.png" /></div> -->
-				<div id="join-dialog" class="jumbotron vertical-center">
-					<h1>Join a video session</h1>
-					<div class="form-group">
-						<!-- 참가자 아이디 입력 -->
-						<p>
-							<label>Participant</label>
-							<input v-model="myUserName" class="form-control" type="text" required>
-						</p>
-						<!-- 방 제목 입력 -->
-						<p>
-							<label>Session</label>
-							<input v-model="mySessionId" class="form-control" type="text" required>
-						</p>
-						<!-- 방 입장 버튼 -->
-						<p class="text-center">
-							<button class="btn bftn-lg btn-success" @click="joinSession()">Join!</button>
-						</p>
-					</div>
-				</div>
-			</div>
 			<div id="session-aside-left" v-if="session">
-				<p><img src="../assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
-				<p><img src="../assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="scoreModal=true"></p>
+				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
+				<p><img src="@/assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="scoreModal=true"></p>
 				
 				<!-- 상벌점기능 모달 -->
 				<div v-if="scoreModal" class="black-bg">
@@ -58,7 +36,7 @@ d<template>
 					</div>
 				</div>
 
-				<p><img src="../assets/img/openvidu/asideimg03.png" class="sideMenuImg" alt="calendar"></p>
+				<p><img src="@/assets/img/openvidu/asideimg03.png" class="sideMenuImg" alt="calendar"></p>
 			</div>
 			<div id="session-aside-right" v-if="session">
 				<div class="participant">
@@ -195,265 +173,16 @@ d<template>
 	</div>
 </template>
 <style scoped>
-/** 채팅창 반응형 */
-/* @media (max-width: 770px){
-	#session-aside-right{
-		display: none;
-	}
-	
-} */
-/** footer 버튼 반응형 */
-@media (max-width: 1050px) {
-	#session-footer{
-		width: 270px !important;
-	}
-
-	.footerBtnText{
-		display: none;
-	}
-	.buttomMenuIcon{
-		margin-right: 0 !important;
-	}
-}
-
-/* 상벌점 기능 스타일 */
-.score-btn {
-	border: none;
-}
-.black-bg{
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-	z-index: 2;
-  height: 100vw;
-  background: rgba(0,0,0,0.5);
-  position: fixed;
-  left: 0;
-  top: 0;
-  padding: 20px;
-}
-.white-bg{
-	/* margin-left:35%; */
-	z-index: 3;
-	/* width: 30%; */
-	width: 500px;
-	margin: 10% auto 0;
-	background: white;
-	border-radius: 8px;
- 	padding: 20px;
-}
-/* 상벌점 스타일 끝 */
-#main{
-	height: 100%;
-	/* margin-top: -70px; */
-	margin-top: 0px !important;
-	min-width: 1050px;
-	
-}
-#main-container{
-	position: relative;
-	width: 90%;
-	height: 100%;
-	margin: 0 auto;
-}
-#session {
-	/* position: relative; */
-	width: 70%;
-	height: 100%;
-	overflow: auto;
-}
-#session::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera*/
-}
-#timerBtn .btn{
-	margin: 0 1px;
-}
-#session-aside-left{
-	height: 100%;
-	position: absolute;
-	left: -40px;
-	background-color: #ccc;
-}
-
-#session-aside-left p:first-child{
-	margin-top: 10px;
-}
-
-#session-aside-left p{
-	padding: 0 8px;
-}
-
-#session-aside-left p img{
-	width: 25px;
-	height: 25px;
-}
-
-#session-aside-right{
-	width: 30%;
-	height: 100%;
-	position: absolute;
-	right: 0px;
-	/* background-color: #ccc; */
-}
-#session-aside-right p{
-	margin-bottom: 5px;
-}
-#session-aside-right .participant{
-	height: 35%;
-	margin-bottom: 10px;
-	padding: 5px 0;
-}
-#participant-container{
-	background-color: #ccc;
-}
-#session-aside-right .participant .participant_list{
-	width: 100%;
-	height: 90%;
-	background-color: #ccc;
-	overflow: auto;
-	padding: 5px;
-}
-
-#session-aside-right .chat{
-	height: 60%;
-	display: flex;
-	flex-direction: column;
-}
-
-#session-aside-right .chat .chat_content{
-	width: 100%;
-	height: 100%;
-	background-color: #ccc;
-}
-
-#session-aside-right .chat .chat_input{
-	width: 100%;
-	flex-grow: 1;
-	border: 1px solid #ccc;
-	padding: 5px;
-	border-radius: 5px;
-	background: transparent;
-	padding: 0 30px;
-	font-size: 16px;
-	position: absolute;
-}
-
-#session-aside-right .chat input:focus{
-	outline: none;
-}
-
-.footerBtn{
-	/* margin: 0 10px */
-	width: 100%;
-}
-
-/* 채팅방 좌측 사이드 메뉴바 */
-.sideMenuImg {
-	width: 40px;
-	height: 30px;
-}
-
-/* 채팅방 하단 메뉴바 */
-#session-footer{
-/* width: 40%; */
-width: 520px;
-height: 50px;
-line-height: 50px;
-/* position: absolute;
-bottom: 0px;
-left: 15%; */
-border-radius: 10px;
-background-color: #F0F0F0;
-margin-bottom: 15px;
-/* transform: translate(-50%,0%); */
-
-}
-
-.buttomMenuIcon {
-	width: 15px;
-	height: 15px;
-	margin-right: 5px;
-}
-
-.buttomMenu {
-	margin: 0px 10px;
-}
-
-
-/* 채팅창 */
-.messages {
-	flex-grow: 1;
-	padding: 10px 20px;
-	overflow: auto;
-	height: auto;
-	background-color: #ccc; 
-	/* /* border: 5px #ccc solid; */
-	border-radius: 5px;
-	/* box-shadow: 5px 5px 5px rgb(235, 235, 235); */
-	font-size: 18px;
-	word-break: break-all;
-	font-family: "BMJua";
-	position: relative;
-}
-
-#chatMessage {
-	font-family: "BMJua";
-}
-
-.messages::-webkit-scrollbar {
-	width: 5px;
-	height: 1px;
-}
-
-.messages::-webkit-scrollbar-track {
-	background-color: rgb(255, 255, 255);
-}
-
-.messages::-webkit-scrollbar-thumb {
-	background-color: rgb(126, 125, 125);
-}
-
-.messages::-webkit-scrollbar-button {
-	display: none;
-}
-
-.chatFooter {
-	height:10%;
-	line-height: 30px;
-	border-top: 1px solid rgba(156, 172, 172, 0.2);
-	display: flex;
-	flex-shrink: 0;
-	display: inline-block;
-}
-#msg{
-	height: 5.5%;
-}
-#submitBtn {
-	width: 55px;
-	height:5.5%;;
-	border: none;
-	background: transparent;
-	font-size: 16px;
-	cursor: pointer;
-	position: absolute;
-	right: 0%;
-	background-color: #6363bf;
-	border-radius: 5px;
-	color: #FFF;
-}
-
-#submitBtn:hover {
-	background-color: #fff;
-	color: #6363bf;
-}
 
 </style>
-<script scoped>
+<script>
 import "@/assets/style/style.css";
+import "@/assets/style/PrivateStudyRoom/room.css"
 import axios from 'axios';
 import http from "@/util/http-common.js";
 import { OpenVidu } from 'openvidu-browser';
-import UserVideo from '../components/openvidu/UserVideo';
-import UserList from '../components/openvidu/UserList';
+import UserVideo from '@/components/openvidu/UserVideo';
+import UserList from '@/components/openvidu/UserList';
 import jwt_decode from "jwt-decode";
 
 import { mapState } from "vuex";
@@ -472,7 +201,7 @@ export default {
 	},
 	metaInfo: {
 		// title 입력하기
-		title: '페이지 타이틀',
+		title: 'COSMOS',
 		// link tag 입력하기
 		link: [{rel: "stylesheet", href: 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'}],
 		// meta tag 입력하기
