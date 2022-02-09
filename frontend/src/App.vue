@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavBar v-if="$route.name !== 'Openvidu'"/>
+    <NavBar v-if="$route.name !== 'PrivateStudyRoom'"/>
     <router-view style="margin-top: 100px;"/>
   </div>
 </template>

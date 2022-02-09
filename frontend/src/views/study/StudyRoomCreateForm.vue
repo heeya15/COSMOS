@@ -310,7 +310,7 @@ export default {
         data: {publicstudyroomId: this.roomUrl},
       })
       .then(() => {
-          this.$router.push({name: "Openvidu"})
+          this.$router.push({name: "PrivateStudyRoom"})
       })
       .catch(err => {
           console.log(err)

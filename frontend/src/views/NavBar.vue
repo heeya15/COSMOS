@@ -18,7 +18,7 @@
         </router-link>
       </b-navbar-brand>
 
-      <router-link :to="{ name:'Openvidu' }" class="nav-text text-decoration-none">openviduTest</router-link>
+      <router-link :to="{ name:'PrivateStudyRoom' }" class="nav-text text-decoration-none">openviduTest</router-link>
 
       <b-navbar-toggle target="nav-collapse" style="background-color: #ddd"></b-navbar-toggle>
       
