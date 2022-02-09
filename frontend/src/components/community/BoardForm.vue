@@ -11,7 +11,7 @@
     <marquee behavior=alternate  scrolldelay="50">Hello World!</marquee>
     <img class="sideImg" src="사람2.png">
     <img class="sideImg2" src="사람.png">
-      <div class="form_body_tag p-5" style="width: 600px;">
+      <div class="form_body_tag p-5" style="width: 40%;">
         <b-row style="height: 600px; background-color: white;">
           <b-col cols="3" class="header_label mt-2">
             <p for="some-radios">말머리</p>
@@ -272,40 +272,40 @@ export default {
 marquee {
   font-size: 50px;
   color: #ceb4f0;
-  width: 500px;
+  width: 30%;
   background-color: #fff;
 }
 
 .head_Img {
-  width: 600px;
-  height: 200px;
-  transform: rotate(15deg);
+  width: 38%;
+  height: 25%;
+  transform: rotate(16deg);
   position: absolute;
   right: 0;
 }
 
 .head_Img2 {
-  width: 600px;
-  height: 200px;
-  transform: rotate(-15deg);
+  width: 38%;
+  height: 25%;
+  transform: rotate(-16deg);
   position: absolute;
   left: 0;
 }
 
 .sideImg {
-  width: 300px; 
-  height: 300px;
+  width: 20%; 
+  height: 40%;
   position: absolute;
-  top: 500px;
-  right: 50px;
+  top: 65%;
+  right: 5%;
 }
 
 .sideImg2 {
-  width: 270px; 
-  height: 270px;
+  width: 17%; 
+  height: 30%;
   position: absolute;
-  top: 520px;
-  left: 50px;
+  top: 72%;
+  left: 6%;
 }
 
 .backImg {

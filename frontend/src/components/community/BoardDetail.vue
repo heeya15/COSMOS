@@ -64,7 +64,7 @@
               <hr class="hrTag">
             </b-col>
             <b-col cols="7" class="mt-2">
-              <p v-if="editButton === false">{{ boardInfo.studytypeName }}</p>
+              <p>{{ boardInfo.studytypeName }}</p>
               <!-- 수정을 눌렀을 때 값 타입 가져오고 원래는 생성될때의 값 불러와야 함 -->
               <b-form-select v-if="editButton === true" v-show="this.boardInfo.header === true" v-model="studyTypeSelected" :options="options" id="studytype_name"></b-form-select>
               <hr class="hrTag" >
@@ -417,6 +417,7 @@ p {
 .hrTag {
   background-color: #afa2dd;
   border: solid 1px #afa2dd;
+  width: 100%;
 }
 
 .content_rowTag {
