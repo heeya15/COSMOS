@@ -2,6 +2,7 @@
   <center>
     <h1>MY PAGE</h1>
     <div class="profile">
+    <hr>
       <div class="banner">
         <b-row>
           <b-col>
@@ -57,8 +58,8 @@
                   <img :src="study.image" alt="스터디이미지" v-else>
                   <div class="hover-overlay"></div>
                   <div class="hover-1-content px-5 py-4">
-                    <h4 class="hover-1-title text-uppercase font-weight-bold mb-0"><span class="font-weight-light">{{study.studyName}}</span></h4>
-                    <p class="hover-1-description font-weight-light mb-0">{{study.studyRule}}</p>
+                    <h4 class="hover-1-title text-uppercase mb-0"><span>{{study.studyName}}</span></h4>
+                    <p class="hover-1-description mb-1">{{study.studyType.studytypeName}}</p>
                   </div>
                 </div>
               </div>
@@ -72,7 +73,6 @@
 </template>
 
 <script>
-// import http from 'http'
 import http from "@/util/http-common.js";
 
 export default {
@@ -297,6 +297,7 @@ export default {
 }
 
 .hover-1-content {
+  width:100%;
   position: absolute;
   bottom: 0;
   left: 0;
