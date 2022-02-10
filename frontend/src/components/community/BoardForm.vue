@@ -318,8 +318,6 @@ marquee {
 
 .backImg {
   background-image: url('https://t1.daumcdn.net/cfile/blog/1532170949754B963C');
-  /* background-repeat: repeat; */
-  /* background-size: cover; */
 }
 
 .btnTag {
@@ -343,7 +341,6 @@ marquee {
 }
 .form_body_tag {
   background: repeating-linear-gradient(-45deg, #afa2dd, #afa2dd 20px, #c8c1e4 20px, #c8c1e4 80px);
-  /* background-color: #afa2dd; */
 }
 
 .studyTypeTag {

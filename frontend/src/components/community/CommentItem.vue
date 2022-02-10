@@ -1,14 +1,5 @@
 <template>
   <center>
-    <!-- <div class="comment_position">
-      <p>{{ comment.comment_no }}</p>
-      <b-form-input v-if="editButton === true" type="text" v-model="comment.content" @keyup.enter="updateComment"></b-form-input>
-      <p v-else style="text-align: left;">내용 : {{ comment.content }}</p>
-      <p>작성자 : {{ comment.user_id }}</p>
-      <p>작성 시간 : {{ makeDate(comment.created_at) }}</p>
-      <p>인덱스 확인 >> {{ idx }} // 뜨나?</p> -->
-
-      <!-- <div class="totalCard row mt-20 mb-20"> -->
         <!-- visible 넣으면 그냥 보이게 -->
       <b-collapse id="collapse-2" visible>
       <div class="container mt-3">
@@ -41,22 +32,10 @@
         </div>
       </div>
       </b-collapse>
-
-      <!-- <div v-show="editButton === false">
-        <b-button v-if="userId === loginUserId" @click="editButtonChange" style="background-color: #DAC7F9">수정</b-button>
-        <b-button v-if="userId === loginUserId" @click="deleteComment" style="background-color: #DAC7F9">삭제</b-button>
-      </div>
-      <div v-show="editButton === true">
-        <b-button v-if="userId === loginUserId" @click="updateComment" style="background-color: #DAC7F9">수정</b-button>
-        <b-button v-if="userId === loginUserId" @click="deleteComment" style="background-color: #DAC7F9">삭제</b-button>
-      </div> -->
-
-    <!-- </div> -->
   </center>
 </template>
 
 <script>
-// import http from 'http'
 import http from "@/util/http-common.js";
 import {mapState} from 'vuex'
 
@@ -87,8 +66,6 @@ export default {
     },
     getComment() {
       this.$store.dispatch('getComment')
-      // this.$router.go()
-      console.log('댓글 가져오기')
     },
     deleteComment() {
       const commentIdx = this.$store.state.comments.indexOf(this.comment)
@@ -98,8 +75,7 @@ export default {
         url: `/comment/remove/${this.comment_no}`,
         headers: this.getToken()
       })
-      .then((res) => {
-        console.log(res)
+      .then(() => {
         this.comment_no = this.comment.comment_no
       })
       .catch(err => {
@@ -121,9 +97,7 @@ export default {
         data: updateCommentItem,
         headers: this.getToken(),
       })
-      .then(res => {
-        console.log('수정부분')
-        console.log(res.data)
+      .then(() => {
         this.editButton = false
         this.$router.go(this.$router.currentRoute)
       })
@@ -138,10 +112,7 @@ export default {
         headers: this.getToken()
       })
       .then(res =>{
-        // console.log(res.data)
         this.loginUserId=res.data['user_id']
-        // console.log('유저 확인')
-        // console.log(this.loginUserId)
       })
       .catch(err =>{
         console.log(err)

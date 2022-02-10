@@ -12,7 +12,7 @@
       <b-row>
         <b-col>
           <table  
-          class="table table-boarded table-hover"
+          class="table table-boarded"
           width="100%"
           >
             <thead>
@@ -32,7 +32,7 @@
               <!-- <td >{{ 10*(currentPage-1)+(idx+1) }}</td> -->
 
               <!-- 역순 -->
-              <td >{{ boardItems.length-idx-10*(currentPage-1) }}</td>
+              <td class="boardnum_tag">{{ boardItems.length-idx-10*(currentPage-1) }}</td>
 
               <!-- 게시글 고유 번호 -->
               <!-- <td >{{ boardItem.boardNo }}</td> -->
@@ -328,15 +328,15 @@ export default {
 </script>
 
 <style scoped>
-/* ul .page-item{
-  width: 1100px;
-} */
+
+tbody:hover {
+  background-color: #c8c1e4;
+}
 
 .searchbar {
   display: flex;
   justify-content: center;
 }
-
 
 .create_boardform {
   display: flex;
@@ -346,7 +346,6 @@ export default {
 /* 게시판 폰트 */
 #test-table {
   font-family: BMJua;
-  /* font-weight: normal; */
   font-size: 17px;
 }
 
@@ -357,8 +356,6 @@ export default {
   white-space: nowrap;
   position: relative;
   left: 30px;
-  /* align-items: center; */
-  /* margin: 0; */
 }
 
 .content_title_tag:hover {
