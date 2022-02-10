@@ -41,11 +41,12 @@
           <b-col v-show="this.input.header === false" class="spinbuttontag mt-2" cols="9">
             <b-form-input 
             v-show="this.input.header === false" 
-            id="recruit_number" v-model="input.recruit_number" 
+            id="recruit_number"
+            v-model="input.recruit_number" 
             style="height: 35px;" 
             type="number" 
             min="1" max="5"
-            @keypress="recruitLimit"
+            @keyup="recruitLimit"
             >
             </b-form-input>
           </b-col>
@@ -131,21 +132,23 @@ export default {
   },
   methods: {
     // 인원 수 제한
-    recruitLimit(event) {
-      console.log(event, '이벤트 확인')
+    recruitLimit(event) { 
+      console.log(event)
       if(event.key >= 0 && event.key <= 5) {
-      return true;
-      }
-      alert('5명 까지 입력이 가능합니다');
-      return false;
+        return true;
+      } else if (event.key !== 'Backspace' && event.key !== 'F5' && event.key !== 'Enter') {
+          alert('5명 까지 입력이 가능합니다');
+          this.input.recruit_number = null
+          return false;
+        } 
       },
-
+    
+    // 게시판으로
     backBoardMain() {
       this.$router.push({name: 'MainBoard'})
     },
-    goBoardDetail(){
-      this.$router.push({name: 'BoardDetail'})
-    },
+
+    // 토큰 가져오기
     getToken(){
       const token = localStorage.getItem('jwt')
       const header = {
@@ -153,6 +156,8 @@ export default {
       }
       return header
     },
+
+    // 게시글 생성
     createBoardForm() {
       const createBoardItem = {
         header: this.input.header,
@@ -186,9 +191,7 @@ export default {
       const createBoardItem = {
         header: this.input.header,
         content_title: this.input.content_title,
-        // study_name: this.nameSelected,
         content_status: this.input.content_status,
-        // recruit_number: this.input.recruit_number,
         studytype_name: this.studyTypeSelected,
         content: this.input.content,
         study_no: this.studyno[this.studyNameInfo.indexOf(this.nameSelected)],
@@ -210,6 +213,7 @@ export default {
       })
     },
 
+    // 스터디 이름 불러오기
     getStudyName() {
       http({
         method: 'GET',
@@ -234,6 +238,8 @@ export default {
         console.log(err)
       })
     },
+
+    // 진행중, 완료일 때
     trueHearder() {
       this.input.header = true
       console.log(this.input.header)
@@ -243,6 +249,8 @@ export default {
       console.log(this.input.header)
       this.$router.go()
     },
+
+    // 스터디 분류 불러오기
     getStudyType() {
       http({
         method: 'GET',
@@ -264,7 +272,7 @@ export default {
     // this.getStudyInfo()
     this.getStudyName()
     this.getStudyType()
-  }
+  },
 }
 </script>
 
