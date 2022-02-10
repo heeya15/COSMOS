@@ -18,6 +18,7 @@ import javax.validation.constraints.Email;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -68,7 +69,7 @@ public class UserHistory implements Serializable{
 	@Column(name = "user_finish_time", columnDefinition = "TIMESTAMP")
 	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
-	@CreationTimestamp
+	@UpdateTimestamp
 	private LocalDateTime userFinishTime;
 		
 }
