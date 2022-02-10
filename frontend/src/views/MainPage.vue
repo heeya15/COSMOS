@@ -119,6 +119,14 @@
                   </div>
                 </div>
               </div>
+              <template #prevArrow>
+                <button>
+                </button>
+              </template>
+              <template #nextArrow>
+                <button>                  
+                </button>
+              </template>
             </VueSlickCarousel>
             </div>
           <div v-else>아직 가입한 스터디가 없습니다.</div>
@@ -530,10 +538,12 @@ thead {
   height: 100%;
 }
 
-/* 오픈 스터디 슬라이드에 좌,우 화살표 검은색으로 수정 불가 */
-/* .slick-prev:before, .slick-next:before {
-  color: black;
-} */
-
+/* 오픈 스터디 슬라이드 좌,우 화살표 */
+.slick-prev::before{
+  content: url(../assets/icon_prev.png);
+}
+.slick-next::before{
+  content: url(../assets/icon_next.png);
+}
 
 </style>
