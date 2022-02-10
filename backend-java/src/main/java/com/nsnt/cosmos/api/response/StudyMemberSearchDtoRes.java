@@ -17,4 +17,5 @@ public interface StudyMemberSearchDtoRes{
 	int getStudytime(); // 공부 시간
 	int getScore(); // 숫자
 	boolean getAuthority();
+	boolean getLeader();
 }
