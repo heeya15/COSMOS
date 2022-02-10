@@ -2,9 +2,12 @@ package com.nsnt.cosmos.api.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nsnt.cosmos.api.request.BannedUserReq;
 import com.nsnt.cosmos.api.request.PublicMemberRegisterDto;
 import com.nsnt.cosmos.api.request.PublicStudyRoomRegisterDto;
 import com.nsnt.cosmos.db.entity.PrivateMember;
@@ -12,6 +15,7 @@ import com.nsnt.cosmos.db.entity.PrivateStudyRoom;
 import com.nsnt.cosmos.db.entity.PublicMember;
 import com.nsnt.cosmos.db.entity.PublicStudyRoom;
 import com.nsnt.cosmos.db.entity.User;
+import com.nsnt.cosmos.db.repository.BannedUserRepository;
 import com.nsnt.cosmos.db.repository.PublicRoomMemberRepository;
 import com.nsnt.cosmos.db.repository.PublicStudyRoomRepository;
 
@@ -25,6 +29,9 @@ public class PublicRoomServiceImpl implements PublicRoomService {
 	
 	@Autowired // 각각 repository Autowired 해줘야함 안그러면 null 에러 남.
 	private PublicRoomMemberRepository PublicRoomMemberRepository;
+	
+	@Autowired
+	private BannedUserRepository bannedUserRepository;
 	
 	@Override
 	public PublicStudyRoom createPublicStudyRoom(PublicStudyRoomRegisterDto publicroomDto, String user_id) {
@@ -66,5 +73,24 @@ public class PublicRoomServiceImpl implements PublicRoomService {
 	public List<PublicStudyRoom> findAllPublicStudyRoom() {
 		List<PublicStudyRoom> list = PublicStudyRoomRepository.findAllPublicStudyRoom();
 		return list;
+	}
+	
+	@Override
+	@Transactional
+	public void createBannedUser(String publicstudyroom_id, String user_id) {
+		BannedUserReq bannedUserReq = new BannedUserReq();
+		
+		bannedUserReq.setUser_id(user_id);
+		bannedUserReq.setPublicstudyroom_id(publicstudyroom_id);
+		
+		bannedUserRepository.save(bannedUserReq.toEntity());
+	}
+	
+	@Override
+	public boolean isBannedCheck(String publicstudyroom_id, String user_id) {
+		int count = bannedUserRepository.findByUserId(publicstudyroom_id, user_id);
+		
+		if(count>0) return true;
+		else return false;
 	}
 }
