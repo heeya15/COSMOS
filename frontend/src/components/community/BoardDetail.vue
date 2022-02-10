@@ -6,7 +6,7 @@
       <hr class="titleHr_tag">
       <h3 v-if="editButton === true">글 수정</h3>
       <h3 v-else>상세보기</h3>
-      <!-- <img src="게시판보드.png" alt=""> -->
+
       <div class="memo">
         <p>함께해요!</p>
       </div>
@@ -25,8 +25,6 @@
       <div class="round_box2"></div>
       <div class="round_box3"></div>
       <div class="round_box4"></div>
-      <!-- <div class="line4"></div> -->
-      <!-- <div class="line5"></div> -->
       
         <div class="body_total p-5" style="width: 500px;">
           <b-row class="content_rowTag">
@@ -100,23 +98,22 @@
               <p v-else>{{ boardInfo.content }}</p>
               <hr class="hrTag">
             </b-col>
-            <!-- <p>여기 번호 : {{ studyInfo.studyNo }}</p> -->
           
         
             <!-- 작성자인 경우 수정을 보여주고 아니면 스터디 신청을 보여준다 -->
 
               <b-col cols="12" class="btnPart mt-2" v-show="this.boardInfo.header === false">
                 <div v-show="editButton === false">
-                  <b-button v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit">수정</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit" >수정</b-button>
                   <b-button v-else  @click="applyStudy" variant="warning" size="sm">스터디 신청</b-button>
-                  <b-button class="backListBtn" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button class="backListBtn mx-1" size="sm" @click="goBoardMain">목록</b-button>
                   <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
                 <div v-show="editButton === true" cols="3" class="btnPart mt-2">
                   <b-button v-if="editButton === true" variant="warning" size="sm" @click="updateForm">수정</b-button>
-                  <b-button class="backListBtn" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button class="backListBtn mx-1" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" size="sm" @click="updatedCancel" class="cancelBtn mr-1">취소</b-button>
                   <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
-                  <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
                 </div>
               </b-col>
 
@@ -125,14 +122,14 @@
               <b-col cols="12" class="btnPart mt-2" v-show="this.boardInfo.header !== false">
                 <div v-show="editButton === false">
                   <b-button v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit">수정</b-button>
-                  <b-button class="backListBtn" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button class="backListBtn mx-1" size="sm" @click="goBoardMain">목록</b-button>
                   <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
                 <div v-show="editButton === true" class="btnPart mt-2">
                   <b-button v-if="editButton === true" variant="warning" size="sm" @click="studyWantBoardFormEdit">수정</b-button>
-                  <b-button class="backListBtn" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button class="backListBtn mx-1" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" size="sm" @click="updatedCancel" class="cancelBtn mr-1">취소</b-button>
                   <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
-                  <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
                 </div>
               </b-col>
             </b-row>
@@ -147,7 +144,6 @@
 </template>
 
 <script>
-// import http from 'http'
 import http from "@/util/http-common.js";
 import Comment from '@/components/community/Comment.vue'
 
@@ -158,6 +154,7 @@ export default {
   },
   data() {
     return {
+      timeOut: null,
       savePosition: this.$store.state.saveCurrentPage,
       studyTypeSelected: null,
       editButton: false,
@@ -182,11 +179,10 @@ export default {
         comment_no: null,
         content: null,
         created_at: null,
-        // user_id: null,
+
       },
       options: [],
-      // comments: null,
-      // 스터디 방 번호 값 받아와야 함
+
       studyInfo: {
         studyName: null,
         studyNo: null,
@@ -215,11 +211,14 @@ export default {
         return false;
       },
 
+    // 게시판으로
     goBoardMain() {
       this.$router.push({name: 'MainBoard', query: {pageId: this.savePosition}})
       console.log(this.savePosition)
       // this.$router.go(this.savePosition);
     },
+
+    // 게시판 수정 버튼
     boardFormEdit() {
       this.editButton = true
     },
@@ -238,12 +237,8 @@ export default {
         url: `/study/applyMember/register/${this.studyInfo.studyNo}`,
         headers: this.getToken(),
       })
-      .then((res) => {
-        console.log(this.applyMembers)
-        console.log(res)
+      .then(() => {
         // 스터디장이 만든 스터디 이름 조회
-        console.log(this.studyInfo.studyNo)
-        // this.boardInfo.studyName = res.data['studyName']
         alert('신청이 완료되었습니다.')
         
       })
@@ -273,6 +268,12 @@ export default {
       })
     },
 
+    // 수정 취소
+    updatedCancel() {
+      this.getBoard()
+      this.editButton = false
+    },
+
     // 게시글 가져오기
     getBoard() {
       http({
@@ -280,7 +281,6 @@ export default {
         url: `/board/search/${this.board_no}`,
       })
       .then(res => {
-        console.log(res, '여기보드')
         this.boardInfo.boardNo = res.data['boardNo']
         this.boardInfo.contentStatus = res.data['contentStatus']
         this.boardInfo.contentTitle = res.data['contentTitle']
@@ -309,8 +309,7 @@ export default {
         url: `/board/remove/${this.board_no}`,
         headers: this.getToken()
       })
-      .then((res) => {
-        console.log(res)
+      .then(() => {
         this.$router.push({name: 'MainBoard'})
       })
       .catch(err => {
@@ -326,8 +325,6 @@ export default {
         headers: this.getToken()
       })
       .then(res =>{
-        console.log('유저정보 확인')
-        console.log(res)
         this.loginUserId=res.data['user_id']
       })
       .catch(err =>{
@@ -356,8 +353,6 @@ export default {
       })
       .then(() => {
         this.getBoard()
-        console.log('상태 확인')
-        console.log(this.boardInfo.contentStatus)
         this.editButton = false
       })
       .catch(err => {
@@ -387,8 +382,6 @@ export default {
       })
       .then(() => {
         this.getBoard()
-        console.log('상태 확인')
-        console.log(this.boardInfo.contentStatus)
         this.editButton = false
       })
       .catch(err => {
@@ -404,7 +397,6 @@ export default {
         url: '/study/studyType'
       })
       .then(res => {
-        // console.log(res)
         res.data.forEach(element => {
           this.options.push({value: element.studytypeName, text:element.studytypeName})
         })
@@ -441,7 +433,6 @@ p {
 
 .content_rowTag {
   height: 500px; 
-  /* background-color: rgb(252, 252, 252); */
 }
 
 .memo {
@@ -455,7 +446,7 @@ p {
   position: absolute;
   left: 150px;
   top: 250px;
-  /* bottom: 100px; */
+  border-radius: 4px;
 }
 
 .memo1 {
@@ -469,7 +460,7 @@ p {
   position: absolute;
   right: 150px;
   top: 550px;
-  /* bottom: 100px; */
+  border-radius: 4px;
 }
 
 .memo2 {
@@ -483,7 +474,7 @@ p {
   position: absolute;
   left: 120px;
   top: 470px;
-  /* bottom: 100px; */
+  border-radius: 4px;
 }
 
 .memo3 {
@@ -497,7 +488,7 @@ p {
   position: absolute;
   right: 150px;
   top: 220px;
-  /* bottom: 100px; */
+  border-radius: 4px;
 }
 
 .round_box {
@@ -561,35 +552,11 @@ p {
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
-.line4 {
-  position: absolute;
-  width: 30px;
-  height: 120px;
-  background-color: rgb(250, 171, 92);
-  transform: rotate(-45deg);
-  right: 38%;
-  top: 220px;
-  z-index: 1;
-}
-
-.line5 {
-  position: absolute;
-  width: 30px;
-  height: 120px;
-  background-color: rgb(250, 171, 92);
-  transform: rotate(45deg);
-  left: 38%;
-  top: 220px;
-  z-index: 1;
-}
-
 .backListBtn {
   width: 47px;
   height: 31px;
   background-color: #f45384 !important;
   border: none;
-  margin-left: 3px;
-  margin-right: 3px;
 }
 
 .backListBtn:hover {
@@ -597,20 +564,12 @@ p {
 }
 
 .body_total {
-  /* background: repeating-linear-gradient(-45deg, #B96BC6, #B96BC6 10px, #e4c3f1 10px, #e4c3f1 40px); */
-  /* background-image: url('https://thumb.ac-illust.com/72/72acde4a88378f62cf580ed7024d7a0d_t.jpeg');
-  background-repeat: no-repeat;
-  background-size: cover; */
-  /* width: 800px; */
-  /* font-size: 13px; */
   position: relative;
   background: rgb(249, 250, 250);
+  border-radius: 4px;
 }
 
 .total_body {
-  /* background-image: url('https://thumb.ac-illust.com/72/72acde4a88378f62cf580ed7024d7a0d_t.jpeg');
-  background-repeat: no-repeat;
-  background-size: cover; */
   border: 30px solid;
   border-color: #afa2dd;
   background-color: #c8c1e4;
@@ -621,5 +580,18 @@ p {
   justify-content: right;
   align-items: flex-end;
   border: none;
+}
+
+.cancelBtn {
+  width: 47px;
+  height: 31px;
+  background-color: rgb(71, 166, 255);
+  border: none;
+}
+
+.cancelBtn:hover {
+  width: 47px;
+  height: 31px;
+  background-color: rgb(112, 184, 252);
 }
 </style>
