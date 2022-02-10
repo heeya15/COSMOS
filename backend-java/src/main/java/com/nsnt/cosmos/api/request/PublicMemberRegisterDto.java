@@ -14,10 +14,6 @@ public class PublicMemberRegisterDto {
 
 	@ApiModelProperty(name = "출석여부")
 	private boolean attendance;
-
-	@ApiModelProperty(name = "점수")
-	private Long member_score;
-	
 	
 	@ApiModelProperty(name="공개스터디룸 아이디", example="")
 	String publicstudyroomId;
