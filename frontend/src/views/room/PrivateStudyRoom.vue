@@ -259,7 +259,7 @@ export default {
 		}
 	},
 	computed:{
-		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers"]),
+		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers", "audio","video"]),
 
 		totalTime() {
 			return Number(this.inputHour * 3600) + Number(this.inputMin * 60) + Number(this.inputSec)
@@ -279,6 +279,12 @@ export default {
 		},
 	},
 	created(){
+		// 초기 장치 셋팅
+		this.audioEnabled =this.$store.state.audio,
+		this.videoEnabled= this.$store.state.video;
+		this.audio= this.$store.state.audio;
+		this.video= this.$store.state.video;
+	
 		// 권한 여부 확인
 		http({
             method: 'GET',
@@ -487,8 +493,8 @@ export default {
 						let publisher = this.OV.initPublisher(undefined, {
 							audioSource: undefined, // The source of audio. If undefined default microphone
 							videoSource: undefined, // The source of video. If undefined default webcam
-							publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
-							publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
+							publishAudio: this.audio,  	// Whether you want to start publishing with your audio unmuted or not
+							publishVideo: this.video,  	// Whether you want to start publishing with your video enabled or not
 							resolution: '640x480',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
