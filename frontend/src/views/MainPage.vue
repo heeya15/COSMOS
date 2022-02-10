@@ -109,16 +109,13 @@
           :autoplay="true"
           :autoplaySpeed="2000"
         >
-        <!-- https://i.ibb.co/zNbb7tG/cat1.jpg" alt="cat1"  -->
-            <div v-for="publicstudy in publicStudyList" :key="publicstudy.publicstudyroomId" class="px-5 mb-lg-2">
+            <div v-for="(publicstudy, idx) in publicStudyList" :key="idx" class="px-5 mb-lg-2">
                 <div class="hover hover-1 text-white rounded">
-                  <img class="studyImg" :src="publicstudy.image" alt="Study Image is missing... :(">
-                  <div class="hover-overlay"></div>
-                  <div class="hover-1-content number">{{ publicstudy.currentParticipant }} / {{ publicstudy.numberOfMember }}</div>
+                  <img class="studyImg" :src="publicstudy.image" alt="Study Image is missing... :(" @click="goStudyRoom(publicstudy)">
+                  <div class="hover-1-number">{{ currentParticipant[idx] }} &#47; {{ publicstudy.numberOfMember }}</div>
                   <div class="hover-1-content px-5 py-4">
                     <h3 class="hover-1-title text-uppercase mb-0"><span :model="publicstudy.studyName">{{ publicstudy.studyName }}</span></h3>
-                    <p class="hover-1-description ml-5 mb-0">{{ publicstudy.studyTypeName }}</p>
-                    <!-- publicstudy.studyTypeName -->
+                    <p class="hover-1-description mb-1">{{ publicstudy.studyType.studytypeName }}</p>
                   </div>
                 </div>
               </div>
@@ -133,16 +130,6 @@
         <hr class="line">
       </div>
   </div>
-    <!-- <b-row>
-      <b-col cols="1"></b-col>
-      <b-col cols="5" class="board_section">
-        <h2>board subTitle</h2>
-      </b-col>
-      <b-col cols="1"></b-col>
-      <b-col cols="5" class="stduy_section">
-        <h2>open study</h2>
-      </b-col>
-    </b-row> -->
 </template>
 
 <script>
@@ -162,17 +149,22 @@ export default {
       // board_no: this.$store.state.boardNo,
       boardItems: null,
       boardList: [],
-      publicStudyList: [{
-        image: '',
-        numberOfMember: 0,
-        publicstudyroomId: '',
-        studyName: '',
-        studyRule: '',
-        studyTypeName: '',
-        studyTypeNo: '',
-        url: '',
-        currentParticipant: 0,
-      }],
+      // publicStudyList: [{
+      //   image: '',
+      //   numberOfMember: 0,
+      //   publicstudyroomId: '',
+      //   studyName: '',
+      //   studyRule: '',
+      //   studyType: {
+      //     studyTypeName: '',
+      //     studyTypeNo: '',
+      //   },
+      //   url: '',
+      // }],
+
+      publicStudyList: [],
+      currentParticipant: [],
+
 
       slickOption: {
         arrows: true,
@@ -244,77 +236,53 @@ export default {
     }, 
 
     // 공개(오픈)스터디 전체 조회
-    getPublicStudy() {
-      http({
+    async getPublicStudy() {
+      await http({
         method: 'GET',
         url: '/publicroom/search/searchAll/publicRoom',
       })
       .then(res => {
+        console.log(">>>>>>>>>>>>>", res.data);
         this.publicStudyList = res.data
-        console.log(">>>>>>>> return public study: ", res.data);
-        this.publicStudyList.image = res.data.image
-        this.publicStudyList.numberOfMember = res.data.numberOfMember
-        this.publicStudyList.publicstudyroomId = res.data.publicstudyroomId
-        this.publicStudyList.studyName = res.data.studyName
-        this.publicStudyList.studyRule = res.data.studyRule
-        console.log("????")
-        // this.publicStudyList.studyTypeNo = res.data.studyType['studytypeNo']
-        // this.publicStudyList.studyTypeName = res.data.studyType['studytypeName']
-        console.log("!!!!!!!!!!")
-        this.publicStudyList.url = res.data.url
+        for(var i=0; i<this.publicStudyList.length; i++) {
+        // 오픈 스터디 객체 배열을 탐색하면서 스터디 현재 인원 파악
+          this.getPublicStudyMember(this.publicStudyList[i].publicstudyroomId)
+        }
       })
       .catch(err => {
         console.log(err)
       })
-
-      // 오픈 스터디 객체 배열을 탐색하면서 스터디 현재 인원 파악
-      for(var i=0; i<this.publicStudyList.length; i++) {
-      //   console.log("here")
-        console.log(">>>>>>>>>>>>>>>> ", this.publicStudyList[i].publicstudyroomId)
-
-      //   http({
-      //     method: 'GET',
-      //     url: '/publicroom/search/publicMember',
-      //     params: { publicstudyroom_id: this.publicStudyList[i].publicstudyroomId }
-      //   })
-      //   .then(res => {
-      //     this.publicStudyList[i].currentParticipant = res.data.length == null ? 0 : res.data.length
-      //     console.log(">>>>>>>>>>>>>>>> 해당 스터디 멤버 수 : ", this.publicStudyList[i].currentParticipant)
-      //   })
-      //   .catch(err => {
-      //     console.log(err)
-      //   })
-        
-        this.getPublicStudyMember(i, this.publicStudyList[i].publicstudyroomId)
-      }
     },
     
-    async getPublicStudyMember(i, publicstudyroomid) {
+    async getPublicStudyMember(publicstudyroomid) {
       await http({
         method: 'GET',
         url: '/publicroom/search/publicMember',
         params: { publicstudyroom_id: publicstudyroomid }
       })
       .then(res => {
-        this.publicStudyList[i].currentParticipant = res.data.length == null ? 0 : res.data.length
-        console.log(">>>>>>>>>>>>>>>> 해당 스터디 멤버 수 : ", this.publicStudyList[i].currentParticipant)
+        this.currentParticipant.push(res.data.length == null ? 0 : res.data.length)
       })
       .catch(err => {
         console.log(err)
       })
     },
-  },
 
+    // 공개 방 가기
+    goStudyRoom(studyroominfo) {
+      console.log(">>>>>>>>>>> ", studyroominfo)
+    }
+  },
 
   created() {
     this.getBoardItems()
     this.getPublicStudy()
   },
 
-  // mounted() {
-  //   setInterval(this.getPublicStudy, 5000);
-  //   console.log("5 second later")
-  // },
+  mounted() {
+    setInterval(this.getPublicStudy, 5000);
+    console.log("5 second later")
+  },
 }
 </script>
 
@@ -328,8 +296,6 @@ export default {
 }
 
 #board_section {
-  /* display: flex; */
-  /* justify-content: center; */
   height: 30%;
   width: 50%;
 }
@@ -515,6 +481,18 @@ thead {
   left: 0;
   z-index: 99;
   transition: all 0.4s;
+  text-align: left;
+}
+
+.hover-1-number {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 47%;
+  margin-left: 75%;
+  font-size: 15pt;
+  background-color: rgba(34, 34, 34, 0.9);
+  width: 80px;
+  border-radius: 30px;
 }
 
 .hover-1 .hover-overlay {
@@ -527,17 +505,16 @@ thead {
   opacity: 0;
 }
 
-.hover-1:hover .hover-1-content {
-  bottom: 2rem;
+.hover-1:hover .hover-1-content  {
+  bottom: 1rem;
   background-color: rgba(0, 0, 0, 0.5);
   width: 100%;
+  text-align: center;
 }
 
 .hover-1:hover .hover-1-description {
   opacity: 1;
   transform: none;
-  background-color: rgba(0, 0, 0, 0.5);
-  width: 100%;
 }
 
 .hover-1:hover img {
@@ -558,9 +535,5 @@ thead {
   color: black;
 } */
 
-.number {
-  margin-bottom: 40%;
-  margin-left: 80%;
-}
 
 </style>
