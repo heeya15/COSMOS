@@ -37,7 +37,7 @@ public class UserHistoryController {
 	HistoryService historyService;
 	
 	@PostMapping("/register/starttime")
-	@ApiOperation(value = "사용자 history 등록", notes = "<strong>사용자 history 등록</strong>")
+	@ApiOperation(value = "사용자 history 등록", notes = "<strong>사용자 스터디룸 이용 시작시, 사용자 history 등록</strong>")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
@@ -52,7 +52,7 @@ public class UserHistoryController {
 	}
 	
 	@PostMapping("register/finishtime")
-	@ApiOperation(value = "사용자 history 등록", notes = "<strong>사용자 history 등록</strong>")
+	@ApiOperation(value = "사용자 history finish time 갱신", notes = "<strong>사용자 스터디룸 이용 종료시, 사용자 history finish time 갱신</strong>")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
