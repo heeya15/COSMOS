@@ -3,40 +3,6 @@ d<template>
 		<div id="main-container">
 			<div id="session-aside-left" v-if="session">
 				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
-				<p v-if="userAuthority"><img src="@/assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="scoreModal=true"></p>
-				
-				<!-- 상벌점기능 모달 -->
-				<div v-if="scoreModal" class="black-bg">
-					<div class="white-bg">
-						<h2>멤버 (점수는 즉시 반영됩니다.)</h2>
-						<hr>						
-						<table class="table table-bordered table-hover align-middle">
-							<thead class="table-danger">
-								<tr>
-									<th>이름</th>
-									<th>Email</th>
-									<th>출석여부</th>
-									<th>공부시간</th>
-									<th>점수</th>
-								</tr>
-							</thead>
-							<tbody v-for="member in studyMembers" :key="member.id">
-								<tr>
-								<td>{{member.user_name}}</td>
-								<td>{{member.user_email}}</td>
-								<td>{{member.attendance}}</td>
-								<td>{{member.studytime}}</td>
-								<td><button class="score-btn" @click="minusScore(member.score, member.studymember_no)">-</button>{{member.score}}<button class="score-btn" @click="plusScore(member.score, member.studymember_no)">+</button></td>
-								</tr>
-							</tbody>
-						</table>
-						<div class="d-flex justify-content-end">
-							<button @click="scoreModal=false" class="btn btn-secondary">닫기</button>
-						</div>
-					</div>
-				</div>
-
-				<p v-if="userAuthority"><img src="@/assets/img/openvidu/asideimg03.png" class="sideMenuImg" alt="calendar"></p>
 			</div>
 			<div id="session-aside-right" v-if="session">
 				<div class="participant">
@@ -77,28 +43,6 @@ d<template>
 				<div id="session" v-if="session">
 					<div id="session-header" class="d-flex">
 						<h1 id="session-title">{{ this.roomName }}</h1> <!-- 방 제목 -->
-						<div id="session-timer" class="text-center" style="margin-left: 30%;">
-							<div>
-								<h3> {{ hours }} : {{ minutes }} : {{ seconds }} </h3>
-							</div>
-							<div id="timerBtn" v-if="this.userAuthority">
-								<b-button v-if="!timer" variant="primary" @click="startTimer()">시작</b-button>
-								<b-button v-else variant="danger" @click="stopTimer">
-									정지
-								</b-button>
-								<b-button v-if="resetButton" variant="success" @click="resetTimer">
-									리셋
-								</b-button>
-								<b-button v-if="!timer" variant="warning" @click="editTimer">
-									시간 설정
-								</b-button>
-								<div v-if="edit" class="d-flex justify-content-center mt-1">
-									<b-input class="p-3 text-center" type="text" v-model="inputHour" placeholder="시" style="width:40px"/>
-									<b-input class="p-3 text-center" type="text" v-model="inputMin" placeholder="분" style="width:40px"/>
-									<b-input class="p-3 text-center" type="text" v-model="inputSec" placeholder="초" style="width:40px"/>
-								</div>
-							</div>
-						</div>
 					</div>
 					
 					<div>
@@ -147,22 +91,6 @@ d<template>
 								</button>
 							</div>
 
-							<!-- 화면공유 버튼 설정 -->
-							<div v-if="sharing === true" class="buttomMenu">
-								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="startScreenSharing()">
-									<b-icon icon="file-arrow-up" class="buttomMenuIcon" aria-hidden="true" ></b-icon>
-									<span class="footerBtnText">화면공유</span>
-								</button> <!-- 나가기 버튼 -->
-							</div>
-
-							<!-- 화면공유 중지 버튼 설정 -->
-							<div v-else class="buttomMenu">
-								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSessionForScreenSharing()">
-									<b-icon icon="file-arrow-down" class="buttomMenuIcon" aria-hidden="true" ></b-icon>
-									<span class="footerBtnText">공유중지</span>
-								</button> <!-- 나가기 버튼 -->
-							</div>
-							
 							<!-- 나가기 버튼 설정 -->
 							<div class="buttomMenu">
 								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSession">
@@ -221,8 +149,8 @@ export default {
 	data () {
 		return {
 			// 화면 공유
-			OVForScreenShare: undefined,
-			sessionForScreenShare: undefined,
+			// OVForScreenShare: undefined,
+			// sessionForScreenShare: undefined,
 			sharingPublisher: undefined,
 			sharing:true,
 			OV: undefined,
@@ -242,17 +170,15 @@ export default {
 			userId: '',
 			isChatVisible: false,
 
-			// 상벌점 기능
-			scoreModal: false,
 
 			// 타이머
-			timer: null,
-			inputHour: null,
-			inputMin: null,
-			inputSec: null,
-			time: 0,
-			resetButton: false,
-			edit: false,
+			// timer: null,
+			// inputHour: null,
+			// inputMin: null,
+			// inputSec: null,
+			// time: 0,
+			// resetButton: false,
+			// edit: false,
 
 			// 권한 여부
 			userAuthority: false,
@@ -261,22 +187,22 @@ export default {
 	computed:{
 		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers"]),
 
-		totalTime() {
-			return Number(this.inputHour * 3600) + Number(this.inputMin * 60) + Number(this.inputSec)
-		},
-		hours(){
-			const hours = Math.floor(this.time / 3600)
-			return this.padTime(hours)
-		},
-		minutes() {
-			// const minutes = Math.floor(this.time / 60)
-			const minutes = Math.floor((this.time - (this.hours * 3600)) / 60)
-			return this.padTime(minutes)
-		},
-		seconds() {
-			const seconds = this.time - ((this.hours * 3600) + (this.minutes * 60))
-			return this.padTime(seconds)
-		},
+		// totalTime() {
+		// 	return Number(this.inputHour * 3600) + Number(this.inputMin * 60) + Number(this.inputSec)
+		// },
+		// hours(){
+		// 	const hours = Math.floor(this.time / 3600)
+		// 	return this.padTime(hours)
+		// },
+		// minutes() {
+		// 	// const minutes = Math.floor(this.time / 60)
+		// 	const minutes = Math.floor((this.time - (this.hours * 3600)) / 60)
+		// 	return this.padTime(minutes)
+		// },
+		// seconds() {
+		// 	const seconds = this.time - ((this.hours * 3600) + (this.minutes * 60))
+		// 	return this.padTime(seconds)
+		// },
 	},
 	created(){
 		// 권한 여부 확인
@@ -300,6 +226,9 @@ export default {
 		this.myUserName = this.participant;
 		this.joinSession();
 		
+		// console.log("😀😀😀😀😀")
+		// console.log(this.mySessionId)
+
 		// 텍스트 채팅에서 사용하기위한 유저 아이디(임시)
 		this.userId = jwt_decode(localStorage.getItem("jwt")).sub;
 		console.log(">>>>>>>>>>>>>>>>>>>> userId : ", this.userId);
@@ -315,62 +244,62 @@ export default {
 			}
 			return header
 		},
-		startTimer() {
-			if(!this.inputHour && !this.inputMin && !this.inputSec){
-				alert("시간을 설정해주세요.")
-			} else{
-			//1000ms = 1 second
-			this.timer = setInterval(() => this.countdown(), 1000)
-			this.resetButton = true
-			this.edit = false
-			}
-		},
-		stopTimer: function() {
-			clearInterval(this.timer)
-			this.timer = null
-			this.resetButton = true
-		},
-		resetTimer: function() {
-			// this.time = this.totalTime
-			this.time = 0
-			clearInterval(this.timer)
-			this.timer = null
-			this.resetButton = false
-			this.inputHour = null
-			this.inputMin = null
-			this.inputSec = null
-		},
-		editTimer: function() {
-			this.edit = !this.edit
-		},
-		padTime: function(time){
-			return (time < 10 ? '0' : '') + time
-		},
-		countdown: function() {
-			if(this.time>0){
-				this.time--
-			}else{
-				this.resetTimer();
-				// alert("시간이 종료되었습니다.")
-			}
-		},
-		sendTimer(){
-			// 타이머 send
-			this.session.signal({
-				data: this.time,
-				to: [],
-				type: 'study-timer',
-			})
-			.then(() => {
-				console.log("timer success");
-				if(this.time==0){
-					alert("시간이 종료되었습니다.")
-				}
-			})
-			.catch(error => {
-				console.error(error);
-			})
-		},
+		// startTimer() {
+		// 	if(!this.inputHour && !this.inputMin && !this.inputSec){
+		// 		alert("시간을 설정해주세요.")
+		// 	} else{
+		// 	//1000ms = 1 second
+		// 	this.timer = setInterval(() => this.countdown(), 1000)
+		// 	this.resetButton = true
+		// 	this.edit = false
+		// 	}
+		// },
+		// stopTimer: function() {
+		// 	clearInterval(this.timer)
+		// 	this.timer = null
+		// 	this.resetButton = true
+		// },
+		// resetTimer: function() {
+		// 	// this.time = this.totalTime
+		// 	this.time = 0
+		// 	clearInterval(this.timer)
+		// 	this.timer = null
+		// 	this.resetButton = false
+		// 	this.inputHour = null
+		// 	this.inputMin = null
+		// 	this.inputSec = null
+		// },
+		// editTimer: function() {
+		// 	this.edit = !this.edit
+		// },
+		// padTime: function(time){
+		// 	return (time < 10 ? '0' : '') + time
+		// },
+		// countdown: function() {
+		// 	if(this.time>0){
+		// 		this.time--
+		// 	}else{
+		// 		this.resetTimer();
+		// 		// alert("시간이 종료되었습니다.")
+		// 	}
+		// },
+		// sendTimer(){
+		// 	// 타이머 send
+		// 	this.session.signal({
+		// 		data: this.time,
+		// 		to: [],
+		// 		type: 'study-timer',
+		// 	})
+		// 	.then(() => {
+		// 		console.log("timer success");
+		// 		if(this.time==0){
+		// 			alert("시간이 종료되었습니다.")
+		// 		}
+		// 	})
+		// 	.catch(error => {
+		// 		console.error(error);
+		// 	})
+		// },
 
 		getToken_info(){
 			const token = localStorage.getItem('jwt')
@@ -379,41 +308,7 @@ export default {
 			}
       		return header
    		 },
-		// 상벌점 기능 관련 methods
-		getStudyMembers() {
-			this.$store.dispatch('getStudyMembers', this.$store.state.roomStudyNo)
-		},
-		updateScore(score, studymember_no) {
-			const updateInfo = {
-				authority: this.$store.state.power.authority,
-				leader: this.$store.state.power.leader,
-				score: score,
-				studymember_no: studymember_no
-			}
-			http({
-				method: 'PUT',
-				url: '/studymember/updatescore',
-				data: updateInfo
-			})
-			.then(() => {
-				// console.log(res)
-				this.getStudyMembers()
-			})
-			.catch(err => {
-				console.log(err)
-			})
-		},
-		plusScore(score, studymember_no) {
-			score += 1
-			this.updateScore(score, studymember_no)
-		},
-		minusScore(score, studymember_no) {
-			score -= 1
-			this.updateScore(score, studymember_no)
-		},
-		// showChat() {
-		// 	this.isChatVisible = !this.isChatVisible;
-		// },
+
 		
 		joinSession () {
 			// --- Get an OpenVidu object ---
@@ -509,10 +404,7 @@ export default {
 					});
 			});
 
-			// 타이머 receive
-			this.session.on('signal:study-timer', (event) => {				
-				this.time = Number(event.data);
-			})
+			
 
 			window.addEventListener('beforeunload', this.leaveSession)
 		},
@@ -531,12 +423,12 @@ export default {
 			window.removeEventListener('beforeunload', this.leaveSession);
 			http({
 				method: 'DELETE',
-				url: `/privateroom/remove/privateMember`,
+				url: `/publicroom/remove/publicMember`,
 				headers: this.getToken_info(),
-				params: {privatestudyroom_id: this.mySessionId},
+				params: {publicstudyroom_id: this.mySessionId},
 			})
 			.then(() => {
-				this.$router.push({name:'StudyDetail', params:{studyNo: this.roomStudyNo}})
+				this.$router.push({name:'MainPage'})
 			})
 			.catch(err => {
 				console.log(err)
@@ -660,75 +552,9 @@ export default {
 					.catch(error => reject(error.response));
 			});
 		},	
-		// 화면 공유 부분
-		startScreenSharing () {
-			this.OVForScreenShare = new OpenVidu();
-			this.sessionForScreenShare = this.OVForScreenShare.initSession();
-			var mySessionId = this.mySessionId;
-			this.getToken(mySessionId).then(token => {
-				this.sessionForScreenShare.connect(token, { clientData: this.screenShareName })
-				.then(() => {
-					let publisher = this.OVForScreenShare.initPublisher("sharingvideo", {
-						audioSource: false,
-						videoSource: "screen",      
-                        publishVideo: true,  
-						resolution: "1920x1980",
-						frameRate: 10,           
-                        insertMode: 'APPEND',    
-                        mirror: false        
-					});
-					console.log("publisher",publisher);
-					publisher.once('accessAllowed', () => {
-						try {
-							console.log("subscriber >>>>> ", this.subscribers);
-							this.isScreenShared=true;
-							this.session.signal({
-								data: JSON.stringify(),  // Any string (optional)
-								to: [],
-								type: 'startScreenSharing'             // The type of message (optional)
-							})
-							this.sharing = !this.sharing; // 화면 공유 버튼에서 중지 버튼으로 change toggle
-							publisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
-								console.log('User pressed the "Stop sharing" button');
-								this.session.signal({
-									data: JSON.stringify(status),  // Any string (optional)
-									to: [],
-									type: 'stopScreenSharing'             // The type of message (optional)
-								})
-								this.leaveSessionForScreenSharing()
-								this.isScreenShared=false;
-							});					
-						} catch (error) {
-							console.error('Error applying constraints: ', error);
-						}
-					});
-					publisher.once('accessDenied', () => { 
-						console.warn('ScreenShare: Access Denied');
-					});
-					this.mainStreamManager = publisher;
-                    this.sharingPublisher = publisher;
-                    this.sessionForScreenShare.publish(this.sharingPublisher);
-				}).catch((error => {
-					console.warn('There was an error connecting to the session:', error.code, error.message);
-				}));
-			});
-			window.addEventListener('beforeunload', this.leaveSessionForScreenSharing)
-		},
-		leaveSessionForScreenSharing () { // 화면 공유 중지
-			this.sharing = !this.sharing;
-			if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
-            this.sessionForScreenShare = undefined;
-            this.mainStreamManager = undefined;
-            this.sharingPublisher = undefined;
-            this.OVForScreenShare = undefined;
-            window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
-		},
-	},
-	stopScreenShare(){
 		
-		this.sharing = !this.sharing;
-		window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
 	},
+	
 	watch: {
 		messages() {
 			this.$nextTick(() => {
@@ -738,12 +564,12 @@ export default {
       		});
 		},
 
-		totalTime() {
-      		this.time = this.totalTime
-    	},
-		time(){
-			this.sendTimer();
-		},
+		// totalTime() {
+      	// 	this.time = this.totalTime
+    	// },
+		// time(){
+		// 	this.sendTimer();
+		// },
 	},
 }
 </script>
