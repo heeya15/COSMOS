@@ -4,7 +4,7 @@
     <router-view style="margin-top: 100px;"/>
 
     <!-- 맨위로 가기 버튼 부분 -->
-      <div class="back-to-top pointer" @click="scrollToTop();return false;">
+      <div class="back-to-top pointer" @click="scrollToTop(); return false;">
         <!-- <img src="main_img5.png" alt="" class="top_icon"> -->
         <b-icon class="top_icon" icon="arrow-up-circle-fill"></b-icon>
       </div>
@@ -17,6 +17,11 @@ import NavBar from '@/views/NavBar.vue'
 
 export default {
   name: 'App',
+  data() {
+    return {
+      timeOut: null,
+    }
+  },
   components:{
     NavBar,
   },
@@ -24,7 +29,7 @@ export default {
     scrollToTop() {
       if (document.body.scrollTop!=0 || document.documentElement.scrollTop!=0){
         window.scrollBy(0, -50000);
-        this.timeOut=setTimeout('scrollToTop()', 10);
+        this.timeOut=setTimeout(10);
       }
       else clearTimeout(this.timeOut);
     },
