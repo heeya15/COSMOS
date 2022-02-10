@@ -54,7 +54,16 @@
                 <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
               <b-col v-show="this.boardInfo.header === false" cols="7" class="mt-2" >
-                <b-form-input v-show="this.boardInfo.header === false" v-if="editButton === true" type="text" v-model="boardInfo.recruitNumber" style="height: 30px; text-align: center;"></b-form-input>
+                <b-form-input 
+                  class="recruit_input"
+                  v-show="this.boardInfo.header === false" 
+                  v-if="editButton === true" type="number" 
+                  v-model="boardInfo.recruitNumber" 
+                  style="height: 30px; text-align: center;"
+                  min="1" max="5"
+                  @keypress="recruitLimit"
+                  >
+                </b-form-input>
                 <p v-else v-show="this.boardInfo.header === false">{{ boardInfo.recruitNumber }}</p>
                 <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
@@ -195,7 +204,17 @@ export default {
       }
       return header
     },
-    
+
+    // 인원 수 제한
+    recruitLimit(event) {
+      console.log(event, '이벤트 확인')
+      if(event.key >= 0 && event.key <= 5) {
+        return true;
+      } alert('5명 까지 입력이 가능합니다');
+        this.getBoard()
+        return false;
+      },
+
     goBoardMain() {
       this.$router.push({name: 'MainBoard', query: {pageId: this.savePosition}})
       console.log(this.savePosition)
@@ -261,7 +280,7 @@ export default {
         url: `/board/search/${this.board_no}`,
       })
       .then(res => {
-        console.log(res)
+        console.log(res, '여기보드')
         this.boardInfo.boardNo = res.data['boardNo']
         this.boardInfo.contentStatus = res.data['contentStatus']
         this.boardInfo.contentTitle = res.data['contentTitle']

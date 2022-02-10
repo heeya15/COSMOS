@@ -16,7 +16,7 @@
 
     <title>COSMOS</title>
 
-    <img id="img1" style="position:absolute; left:0; top:0; z-index:999; width: 25px; height: 25px;" src="main_img5.png">
+    <!-- <img id="img1" style="position:absolute; left:0; top:0; z-index:999; width: 20px; height: 20px;" src="main_img5.png">
     
     <script language="JavaScript">
 
@@ -37,8 +37,8 @@
             var m_y = parseInt(document.getElementById('img1').style.top.replace('px', ''));
     
             // 이미지 움직이기
-            document.getElementById('img1').style.left = Math.round(m_x + ((mouseX - m_x) / 5)) + 'px';
-            document.getElementById('img1').style.top = Math.round(m_y + ((mouseY - m_y) / 5)) + 'px';
+            document.getElementById('img1').style.left = Math.round(m_x + ((mouseX - m_x) / 3)) + 'px';
+            document.getElementById('img1').style.top = Math.round(m_y + ((mouseY - m_y) / 3)) + 'px';
     
             // 부드럽게 따라오는 공식 대략..
             // 현재 이미지위치 = 현재이미지 위치 + (이미지 위치기준 마우스 커서 위치 / 적절한 나누기 값)
@@ -52,10 +52,10 @@
         setInterval("moveImg()", 50); // moveImg 함수 반복 실행하여 이미지 움직이기
     
     //-->
-    </script>
+    </script> -->
 
     <!-- 마우스 커서 효과 팅커벨-->
-    <!-- <script type="text/javascript">
+    <script type="text/javascript">
       // <![CDATA[
       var colour="random"; // in addition to "random" can be set to any valid colour eg "#f0f" or "red"
       var sparkles=50;
@@ -252,7 +252,7 @@
         return ("rgb("+c[0]+", "+c[1]+", "+c[2]+")");
       }
       // ]]>
-      </script> -->
+      </script>
   </head>
   <body>
     <noscript>
