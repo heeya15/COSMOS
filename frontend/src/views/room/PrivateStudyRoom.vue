@@ -1,4 +1,4 @@
-d<template>
+<template>
 	<div id="main">
 		<div id="main-container">
 			<div id="session-aside-left" v-if="session">
@@ -377,8 +377,8 @@ export default {
 			const header = {
 				Authorization: `Bearer ${token}`
 			}
-      		return header
-   		 },
+			return header
+		},
 		// 상벌점 기능 관련 methods
 		getStudyMembers() {
 			this.$store.dispatch('getStudyMembers', this.$store.state.roomStudyNo)
@@ -457,18 +457,18 @@ export default {
 					if(this.$store.state.userId == message[0]) {
 						console.log("내가 쓴 메시지");
 						this.messages += '<div align="right">' 
-									   + 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #fff; border-radius: 10px;">'
-									   +  		'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
-									   +  		'<div class="mb-3">' + message[1] + ' </div>'
-									   +  	'</div>'
-									   + '</div>';
+										+ 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #fff; border-radius: 10px; word-wrap: break-word;">'
+										+  		'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
+										+  		'<div class="mb-3" style="">' + message[1] + ' </div>'
+										+  	'</div>'
+										+ '</div>';
 					} else {
 						console.log('니가 쓴 메시지');
 						this.messages += '<div align="left">' 
-									   + 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #6363bf; color: #fff; border-radius: 10px;">'
-									   +  	'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
-									   +  	'<div class="mb-3">' + message[1] + ' </div>'
-									   +  '</div>';
+										+ 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #6363bf; color: #fff; border-radius: 10px; word-wrap: break-word;">'
+										+  	'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
+										+  	'<div class="mb-3">' + message[1] + ' </div>'
+										+  '</div>';
 					}
 				}
 			});
@@ -549,7 +549,6 @@ export default {
             this.sharingPublisher = undefined;
             this.OVForScreenShare = undefined;
             window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);		
-			  	
 		},
 
 		// 텍스트 채팅을 위한 메세지 전송하기
@@ -735,12 +734,12 @@ export default {
 				let msg = this.$refs.messages;
 
 				msg.scrollTo({ top: msg.scrollHeight, behavior: 'smooth' });
-      		});
+      });
 		},
 
 		totalTime() {
-      		this.time = this.totalTime
-    	},
+			this.time = this.totalTime
+    },
 		time(){
 			this.sendTimer();
 		},
