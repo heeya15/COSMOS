@@ -1,12 +1,13 @@
 <template>
-  <center>
-    <h1>스터디 방 생성</h1>
-    <div style="width:1000px;">
+  <div align="center" id="studyFormPage">   
+    <div class="my-3" id="studyFormpBox">
+    <h1 class="pt-5" >스터디 방 생성</h1>
+    <div style="width:1000px;" class="p-4">
     <hr>
       <b-row>
         <!-- 스터디 이름 중복체크 http 요청 버튼 -->
         <b-col cols="3">
-          <label for="studyName" class="mt-2">스터디 이름</label>
+          <label for="studyName" class="mt-1">스터디 이름</label>
         </b-col>
         <b-col cols="6" class="mr-3">
           <b-form-input id="studyName" v-model="input.studyName"></b-form-input>
@@ -22,7 +23,8 @@
         <b-col cols="6">
           <b-form-input id="url" v-model="input.defaulturl" disabled></b-form-input>
           <b-form-input id="url" v-model="input.url" placeholder="URL을 입력하세요" @keydown="regexp()"></b-form-input>
-          <div ref="urlMsg"></div>
+            <div ref="urlMsg" v-if="this.urlState==true && this.regexpstate == true" style="color:#3C77C9"></div>
+            <div ref="urleerorMsg" v-if="this.urlState==false || this.regexpstate==false" style="color:rgb(207, 1, 1);"></div>
         </b-col>
         <b-col cols="3">
           <b-button @click="checkUrl" class="mt-4">중복확인</b-button>
@@ -121,10 +123,11 @@
           <b-form-textarea id="studyRule" v-model="input.studyRule" placeholder="스터디 규칙, 공지사항 등 입력" rows="3" max-rows="6"></b-form-textarea>
         </b-col>
       </b-row>
-      <button v-if="input.study_type==='public'" class="mt-4 createBtn" type="button" @click="createPublicStudy">스터디 생성</button>
-      <button v-else class="mt-4 createBtn" type="button" @click="createPrivateStudy">스터디 생성</button>
+      <button v-if="input.study_type==='public'" class="my-4 createBtn" type="button" @click="createPublicStudy">스터디 생성</button>
+      <button v-else class="my-4 createBtn" type="button" @click="createPrivateStudy">스터디 생성</button>
     </div>
-  </center>
+   </div>
+  </div>
 </template>
 
 <script>
@@ -302,15 +305,16 @@ export default {
           console.log(err)
       });  
     },
-    regexp(){
+     regexp(){
       const notPhoneticSymbolExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
        if(notPhoneticSymbolExp.test(this.input.url)){ // 한글이 아니라면
-          this.$refs.urlMsg.innerHTML = '<span style="color: #d5648a;">영어로 url주소를 입력해주세요.</span>';
-          this.regexpstate = false;
-      }else{
-          this.$refs.urlMsg.innerText ='';
-          this.regexpstate = true;
-      }
+           this.regexpstate = false;
+           this.$refs.urleerorMsg.innerText = '영어로 url주소를 입력해주세요';
+       }else{
+           this.regexpstate = true;
+           this.$refs.urleerorMsg.innerText = '';
+           this.$refs.urlMsg.innerText ='';
+       }
     },
     checkUrl() {   
       http({
@@ -319,13 +323,12 @@ export default {
         params: {url: this.input.defaulturl+this.input.url}
       })
       .then(res => {
-        // console.log(res)  
-        if(res.data === false && this.regexpstate){
-          this.$refs.urlMsg.innerText = '사용가능한 url주소 입니다.';
+         if(res.data == false && this.regexpstate == true){
           this.urlState = true
-        }else{
-          this.$refs.urlMsg.innerText = '사용할 수 없는 url주소 입니다.';
-          this.urlState = false
+          this.$refs.urlMsg.innerText = '사용가능한 url주소 입니다.';
+        }else if(res.data == true && (this.regexpstate == false || this.regexpstate == false)  ){ 
+          this.urlState = false;
+          this.$refs.urleerorMsg.innerText = '사용할 수 없는 url주소 입니다.';
         }    
       })
       .catch(err => {
@@ -345,6 +348,23 @@ export default {
 </script>
 
 <style scoped>
+#studyFormPage {
+  /* padding: 100px 0; */
+  height: 140%;
+  position: relative;
+  background-color: #DAC7F9;
+}
+#studyFormpBox {
+  height: auto;
+  width: auto;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 10px 10px 10px rgb(235, 235, 235);
+  border-radius: 10px;
+  position:absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+}
 .createBtn {
   border: none;
   border-radius: 8px;
