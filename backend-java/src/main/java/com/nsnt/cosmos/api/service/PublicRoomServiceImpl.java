@@ -44,17 +44,16 @@ public class PublicRoomServiceImpl implements PublicRoomService {
 		
 		// 2. 공개 스터디룸 생성 후, 생성자가 공개 스터디 참가자로 추가.
 	
-		PublicRoomMemberRepository.insertPublicMember(true, 0L, publicroomDto.getPublicstudyroomId(),user_id); // 2. 스터디 멤버 생성	
+		PublicRoomMemberRepository.insertPublicMember(true, publicroomDto.getPublicstudyroomId(),user_id); // 2. 스터디 멤버 생성	
 		return publicstudyroom;
 	}
 	@Override
 	public void createPublicMember(PublicMemberRegisterDto publicMemberDto, String user_id) {
 		boolean attendance  = publicMemberDto.isAttendance();
-		Long score = publicMemberDto.getMember_score();
 		String public_studyroom_id = publicMemberDto.getPublicstudyroomId();
 		System.out.println("공개 스터디 참가자 등록 service >>>>>>>>>>>>>>>>>>>DEBUG");
-		System.out.println(attendance +" "+ score +" "+ public_studyroom_id);
-		PublicRoomMemberRepository.insertPublicMember(attendance,score,public_studyroom_id,user_id); 	
+		System.out.println(attendance +" "+ public_studyroom_id);
+		PublicRoomMemberRepository.insertPublicMember(attendance,public_studyroom_id,user_id); 	
 	}
 	@Override
 	public List<PublicMember> findAllPublicMember(String publicroom_id) {

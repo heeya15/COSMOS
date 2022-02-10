@@ -26,10 +26,10 @@ public interface PublicRoomMemberRepository extends JpaRepository<PublicMember, 
 	
 	@Transactional
 	@Modifying
-	@Query(value="insert into public_member(attendance, member_score, publicstudyroom_id, user_id) \r\n" + 
-			"values (:attendance,:member_score,:publicstudyroomId, :user_id)"        
+	@Query(value="insert into public_member(attendance, publicstudyroom_id, user_id) \r\n" + 
+			"values (:attendance,:publicstudyroomId, :user_id)"        
             ,nativeQuery = true)
-	public void insertPublicMember(@Param("attendance") boolean attendance, @Param("member_score") Long member_score, 
+	public void insertPublicMember(@Param("attendance") boolean attendance, 
 			  @Param("publicstudyroomId") String publicstudyroomId, @Param("user_id") String user_id);
 	
 	@Transactional

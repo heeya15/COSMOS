@@ -27,19 +27,12 @@ public class PublicMember {
 	@Column(name = "attendance")
 	@ColumnDefault("0")
 	private boolean attenacne;
-	
-	@Column(name = "member_score")
-	private int memberScore;
 
 	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name = "publicstudyroom_id", referencedColumnName = "publicstudyroom_id"),
-	})
+	@JoinColumn(name = "publicstudyroom_id")
 	private PublicStudyRoom publicStudyRoom;
 
 	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name = "user_id", referencedColumnName = "user_id")
-	})
+	@JoinColumn(name = "user_id")
 	private User user;
 }
