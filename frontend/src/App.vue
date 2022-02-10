@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <NavBar v-if="$route.name !== 'PrivateStudyRoom'"/>
+    <NavBar v-if="($route.name !== 'PrivateStudyRoom') && ($route.name !== 'PublicStudyRoom')"/>
     <router-view style="margin-top: 100px;"/>
   </div>
 </template>

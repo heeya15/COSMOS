@@ -15,6 +15,7 @@ import StudyTypeManage from '@/components/admin/StudyTypeManage.vue'
 import UserManage from '@/components/admin/UserManage.vue'
 
 import PrivateStudyRoom from '@/views/room/PrivateStudyRoom.vue'
+import PublicStudyRoom from '@/views/room/PublicStudyRoom.vue'
 
 
 Vue.use(VueRouter)
@@ -29,6 +30,11 @@ const routes = [
     path: '/privateStudyRoom',
     name: 'PrivateStudyRoom',
     component: PrivateStudyRoom
+  },
+  {
+    path: '/publicStudyRoom',
+    name: 'PublicStudyRoom',
+    component: PublicStudyRoom
   },
   {
     path: '/signup',
