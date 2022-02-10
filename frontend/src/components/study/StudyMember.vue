@@ -13,7 +13,8 @@
     </b-row>
     
     <table class="table table-bordered table-hover" v-show="power.leader">
-      <thead class="table-danger">
+      <!-- <thead class="table-danger"> -->
+      <thead style="background-color: #afa2dd;">
         <tr>
           <th>이름</th>
           <th>Email</th>
@@ -25,7 +26,9 @@
       </thead>
       <tbody v-for="member in studyMembers" :key="member.id" class="info">
         <tr>
-        <td>{{member.user_name}}({{member.user_id}})</td>
+        <td v-if="member.leader">👑{{member.user_name}}({{member.user_id}})</td>
+        <td v-else-if="!member.leader && member.authority">🌸{{member.user_name}}({{member.user_id}})</td>
+        <td v-else>{{member.user_name}}({{member.user_id}})</td>
         <td>{{member.user_email}}</td>
         <td>{{member.attendance}}</td>
         <td>{{member.studytime}}</td>
@@ -33,7 +36,7 @@
         <td v-if="member.user_id!==myId">
           <b-button class="me-3" variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button>
           <!-- 권한이 true=>false, false=>true 바뀌게 설정 -->
-          <b-button variant="info" @click="giveAuthority(member.studymember_no)">권한</b-button>
+          <b-button variant="info" @click="giveAuthority(member.studymember_no, member.authority)">권한</b-button>
         </td>
         </tr>
 			</tbody>
@@ -51,7 +54,9 @@
       </thead>
       <tbody v-for="member in studyMembers" :key="member.id" class="info">
         <tr>
-        <td>{{member.user_name}}({{member.user_id}})</td>
+        <td v-if="member.leader">👑{{member.user_name}}({{member.user_id}})</td>
+        <td v-else-if="!member.leader && member.authority">🌸{{member.user_name}}({{member.user_id}})</td>
+        <td v-else>{{member.user_name}}({{member.user_id}})</td>
         <td>{{member.user_email}}</td>
         <td>{{member.attendance}}</td>
         <td>{{member.studytime}}</td>
@@ -59,31 +64,10 @@
         </tr>
 			</tbody>
     </table>
-
-    <!-- <b-row>
-      <hr>
-      <b-col cols="2">이름</b-col>
-      <b-col cols="2">Email</b-col>
-      <b-col cols="2">출석여부</b-col>
-      <b-col cols="2">공부시간</b-col>
-      <b-col cols="2">점수</b-col>
-    </b-row>
-    <hr>
-
-    <b-row v-for="member in studyMembers" :key="member.id" class="my-2 info">
-      
-      <b-col cols="2">{{member.user_name}}</b-col>
-      <b-col cols="2">{{member.user_email}}</b-col>
-      <b-col cols="2">{{member.attendance}}</b-col>
-      <b-col cols="2">{{member.studytime}}</b-col>
-      <b-col cols="2">{{member.score}}</b-col>
-      <b-col v-if="power.leader&&member.user_id !== myId"><b-button variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button></b-col>
-    </b-row> -->
   </div>  
 </template>
 
 <script>
-// import http from 'http'
 import http from "@/util/http-common.js";
 import JwtDecode from 'jwt-decode'
 import { mapState } from 'vuex'
@@ -144,14 +128,20 @@ export default {
         console.log(err)
       })
     },
-    giveAuthority(studymember_no) {
+    giveAuthority(studymember_no,authority) {
+      if (authority === true){
+        var memberAuthority = false
+      } else {
+        memberAuthority = true
+      }
       http({
         method: 'PUT',
         url: '/studymember/updateAuthority',
-        data: {studymember_no: studymember_no, authority: true}
+        data: {studymember_no: studymember_no, authority: memberAuthority}
       })
-      .then(res => {
-        console.log(res)
+      .then(() => {
+        // console.log(res)
+        this.getStudyMembers()
       })
       .catch(err => {
         console.log(err)

@@ -2,43 +2,71 @@
   <center>
     <div class="container">
 
-      <div class="black-bg" v-if="modal">
-        <div class="white-bg">
-          <h4>비밀번호 입력</h4>
-          <b-form-input class="mb-3" style="width: 40%;" type="text" v-model="pwd" @keydown.enter="pwdCheck()"></b-form-input>
-          <div>
-            <button class="enterBtn mx-1"  @click="pwdCheck()">입장</button>
-            <button class="cancelBtn mx-1" @click="modal=false"><span style="color:white;">취소</span></button>
-          </div>
+      <!-- 모달 시작-->
+      <b-modal ref="my-modal" :id="infoModal.id" hide-footer centered hide-header>
+        <center>
+          <h4 slot="header" class="card-title">방 입장을 위한 초기 세팅</h4>
+        </center>
+        <br />
+        <b-row>
+        <b-col cols="5">초기 장치 설정</b-col>
+        <b-col>
+          <input type="checkbox" id="mic"  v-model="settings.mic">
+          <label for="mic" class="ml-1 mr-5">마이크</label>
+          <input type="checkbox" id="cam"  v-model="settings.cam">
+          <label for="cam" class="ml-1 mr-5">카메라</label>
+        </b-col>
+        </b-row>
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td class="table-danger">방 비밀번호 입력</td>
+              <td>
+                <input
+                  type="text"
+                  name="room_pwd"
+                  id="room_pwd"
+                  class="form-control bd-control"
+                  placeholder="비밀번호"
+                  v-model="pwd"
+                  @keydown.enter="pwdCheck()"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="text-center">
+          <button @click="hideModal" class="cancelBtn ml-3 float-right" >취소</button>
+          <button @click="pwdCheck()" type="submit" class="enterBtn ml-3 float-right" >입장</button>
         </div>
-      </div>
+      </b-modal>
+      <!-- 모달 끝 -->
 
-      <h1>Study Detail</h1>
+      <h1>STUDY DETAIL</h1>
       <hr>
       <!-- 스터디 정보 받아오기 -->
-      <div class="studyContainer my-2 py-5">
-        <b-row class="d-flex align-items-center">
+      <div class="studyContainer my-2 py-5 pr-5">
+        <b-row class="mx-0">
           <b-col cols="5">
             <!-- <img src="@/assets/img/nophoto.png" alt="이미지없음" class="studyImg" v-if="studyInfo.image.length<24"> -->
             <img src="https://bootstrapious.com/i/snippets/sn-img-hover/hoverSet-3.jpg" alt="이미지없음" class="studyImg" v-if="studyInfo.image.length<24">
             <img :src="studyInfo.image" alt="스터디 이미지" class="studyImg" v-else>
           </b-col>
           <b-col>
-            <b-row>
-              
-              <h2>스터디 이름: {{studyInfo.studyName}}</h2>
-              
+            <b-row align="left">
+              <b-col cols="5">
+              <h2>{{studyInfo.studyName}}</h2>
+              </b-col>
+              <b-col cols="2">
+              <button class="enterBtn2 ml-3" @click="info($event.target)">방 입장</button>
+              </b-col>
             </b-row>
-            <b-row>
-              <div class="my-2">            
-                <span>스터디 방 URL : {{studyInfo.url}}</span>
-                <!-- 권한있는 사람만 방입장 가능(세션생성 가능) -->
-                <button class="enterBtn2 ml-3" @click="modal=true">방 입장</button>
+              <div class="my-2" align="left">
+                {{studyInfo.studyRule}}
               </div>
-            </b-row>
-            <b-row>
-              <div class="my-2 ">
-              <!-- 스터디 정보 수정 추가 -->
+            <b-row class="my-2">
+              <b-col>
+              <div class="mt-3" align="left">
                 <button class="modifyBtn mr-3" v-if="power.leader" @click="$bvModal.show('bv-modal-studyModify')">스터디 수정</button>
 
                   <b-modal id="bv-modal-studyModify" centered hide-footer size="lg">
@@ -128,10 +156,10 @@
                     </div>
                   </b-modal>
 
-
                 <b-button v-if="power.leader" variant="danger" @click="deleteStudy" style="border-radius:8px; height:40px;">스터디 삭제</b-button>
                 <b-button v-else variant="danger" @click="deleteMember(myStudyMemberNo)" style="border-radius:8px; height:40px;">스터디 탈퇴</b-button>
               </div>
+              </b-col>
             </b-row>
           </b-col>
         </b-row>
@@ -195,12 +223,29 @@ export default {
         studyRule: '',
         url:'',
       },
+      infoModal: {
+        id: "info-modal",
+        user_password: "",
+      },
+      settings: {
+        mic: null,
+        cam: null,
+        speaker: null,
+      },
       options:[],
       modal: false,
       pwd: "",
     }
   },
   methods: {
+    // 모달 값 셋팅
+    info( button) {
+      this.$root.$emit("bv::show::modal", this.infoModal.id, button);
+    },
+    hideModal() {
+      this.$refs["my-modal"].hide();
+    },
+
     getToken(){
       const token = localStorage.getItem('jwt')
       const header = {
@@ -275,6 +320,12 @@ export default {
         var decoded = JwtDecode(token);
         var myId = decoded.sub;
 
+        // 마이크 캠 셋팅
+        this.$store.state.audio = this.settings.mic;
+        this.$store.state.video = this.settings.cam;
+        console.log("디버깅>>>>>>>>>>>>>>>>>>>>>>>")
+        console.log(this.$store.state.audio);
+        console.log(this.$store.state.video);
         this.$store.state.roomName = this.studyInfo.studyName;
 
         var str = this.studyInfo.url;
@@ -320,6 +371,7 @@ export default {
       .then(() => {
         // console.log(res)
         this.$bvModal.hide('bv-modal-studyModify')
+        this.$router.go()
       })
       .catch(err => {
         console.log(err)
@@ -378,7 +430,7 @@ export default {
   // },
   computed:{
     ...mapState([
-      'power', 'roomName', 'roomUrl', 'participant', 'roomStudyNo', 'studyMembers'
+      'power', 'roomName', 'roomUrl', 'participant', 'roomStudyNo', 'studyMembers', 'audio', 'video'
     ])
   },
   created() {
@@ -392,7 +444,14 @@ export default {
 <style scoped>
 .studyContainer {
   background-color: aliceblue;
+  width: 100%;
 }
+
+.sessionLink:hover {
+  color: #6c757d;
+  cursor: pointer;
+}
+
 .studyImg {
   height: 200px;
   width: 300px;
@@ -468,6 +527,7 @@ export default {
 .cancelBtn {
   border: none;
   border-radius: 8px;
+  color: white;
   background-color: #6c757d;
   height: 40px;
   width: 50px;
