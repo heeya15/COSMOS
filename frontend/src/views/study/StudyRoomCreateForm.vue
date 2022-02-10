@@ -1,14 +1,14 @@
 <template>
   <center>
     <h1>스터디 방 생성</h1>
+    <div style="width:1000px;">
     <hr>
-    <div style="width:1000px;" class="p-4">
       <b-row>
         <!-- 스터디 이름 중복체크 http 요청 버튼 -->
         <b-col cols="3">
           <label for="studyName" class="mt-2">스터디 이름</label>
         </b-col>
-        <b-col>
+        <b-col cols="6" class="mr-3">
           <b-form-input id="studyName" v-model="input.studyName"></b-form-input>
         </b-col>  
       </b-row>
@@ -20,12 +20,12 @@
           <label for="url" class="mt-2">스터디 url</label>
         </b-col>
         <b-col cols="6">
-           <b-form-input id="url" v-model="input.defaulturl" disabled ></b-form-input>
+          <b-form-input id="url" v-model="input.defaulturl" disabled></b-form-input>
           <b-form-input id="url" v-model="input.url" placeholder="URL을 입력하세요" @keydown="regexp()"></b-form-input>
           <div ref="urlMsg"></div>
         </b-col>
         <b-col cols="3">
-          <b-button @click="checkUrl">중복확인</b-button>
+          <b-button @click="checkUrl" class="mt-4">중복확인</b-button>
         </b-col>
       </b-row>  
       <hr class="mt-3">
@@ -49,17 +49,16 @@
             <img :src="input.image" alt="대표이미지" class="studyImg">
           </div>
           <div v-else>선택된 이미지가 없습니다.</div>
-          <!-- <input ref="studyImg" accept="image/*" type="file" id="studyImg" class="mt-3" @change="uploadImage"/> -->
           
           <b-button class="mt-3" @click="$bvModal.show('bv-modal-studyImg')">이미지변경</b-button>
-          <b-modal id="bv-modal-studyImg" size="lg" centered>
+          <b-modal id="bv-modal-studyImg" size="lg" centered hide-footer>
             <template #modal-title>
             <h3>스터디 이미지 선택</h3>
             </template>
             <b-row class="ml-2">
-              <b-col><button class="imgBtn" @click="getImageSrc(1)"><img class="studyImg" id="studyImg1" for="studyWithMe" src="@/assets/img/study/studywithme.jpg" alt="study_with_me"></button></b-col>
-              <b-col><button class="imgBtn" @click="getImageSrc(2)"><img class="studyImg" id="studyImg2" for="study2" src="@/assets/cosmos_bg.png" alt="study2"></button></b-col>
-              <b-col><button class="imgBtn" @click="getImageSrc(3)"><img class="studyImg" id="studyImg3" for="study3" src="@/../public/테마6.jpg" alt="study3"></button></b-col>
+              <b-col><button class="imgBtn" @click="[getImageSrc(1),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg1" for="studyWithMe" src="@/assets/img/study/studywithme.jpg" alt="study_with_me"></button></b-col>
+              <b-col><button class="imgBtn" @click="[getImageSrc(2),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg2" for="study2" src="@/assets/cosmos_bg.png" alt="study2"></button></b-col>
+              <b-col><button class="imgBtn" @click="[getImageSrc(3),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg3" for="study3" src="@/../public/테마6.jpg" alt="study3"></button></b-col>
             </b-row>
           </b-modal>
         </b-col>
@@ -133,6 +132,7 @@ import http from "@/util/http-common.js";
 
 import JwtDecode from 'jwt-decode'
 import { mapState } from 'vuex'
+
 export default {
   name: 'StudyRoomCreateForm',
   data() {
@@ -162,22 +162,16 @@ export default {
     }
   },
   methods: {
-   
     getHeader(){
       const token = localStorage.getItem('jwt')
       const header = {
         Authorization: `Bearer ${token}`,
-        // 'Content-Type': 'multipart/form-data'
       }
       return header
     },
     getImageSrc(num) {
-      // var image = this.$refs.studyImg.files[0]
-      // const url = URL.createObjectURL(image)
-      // this.input.image = url
       var image = document.getElementById(`studyImg${num}`).src
       this.input.image = image
-      // console.log(this.input.image)
     },
     getStudyType() {
       http({
@@ -195,16 +189,6 @@ export default {
       })
     },
     createPrivateStudy() {
-      // const studyInfo = new FormData()
-      // studyInfo.append('image',this.$refs.studyImg.files[0])
-      // studyInfo.append('studyName',this.input.studyName)
-      // studyInfo.append('studyNo',this.input.studyNo)
-      // studyInfo.append('studyPassword',this.input.studyPassword)
-      // studyInfo.append('studyRule',this.input.studyRule)
-      // studyInfo.append('studytypeNo',this.input.studytypeNo)
-      // studyInfo.append('totalMember',this.input.totalMember)
-      // studyInfo.append('url',this.input.url)
-      // console.log(this.$refs.studyImg.files[0])
       if (this.urlState === false){
         alert("url 중복확인을 해주세요!")
         return
@@ -228,28 +212,30 @@ export default {
       .then(res => {
         // console.log(res)
         if (res.status !== 200){
-          alert('입력을 다시 한 번 확인하세요.')
+          alert('입력사항을 모두 입력하였는지 확인해주세요.')
         }else {
-          this.getStudyNo();// 가장 최근에 생긴 스터디 번호 들고오는 함수
+          this.getStudyNo()// 가장 최근에 생긴 스터디 번호 들고오는 함수
         }
       })
       .catch(err => {
-        alert('입력을 다시 한 번 확인하세요.')
+        alert('입력사항을 모두 입력하였는지 확인해주세요.')
         console.log(err)
       })
     },
     getStudyNo(){ // 가장 최근에 생긴 스터디 번호 들고오는 함수
-       http({
+      http({
         method: 'GET',
         url: '/studymember/resent/search',
         headers: this.getHeader(),
       })
       .then(res => {
-           console.log("가장 최근에 생긴 스터디 번호는?")
-           console.log(res.data);
-           console.log(res.data.study_no);
-           this.study_no = res.data.study_no;
-           this.$router.push({name: 'StudyDetail', params: {studyNo: this.study_no}})  
+          console.log("가장 최근에 생긴 스터디 번호는?")
+          console.log(res.data);
+          console.log(res.data.study_no);
+          this.study_no = res.data.study_no;
+          this.$router.push({name: 'StudyDetail', params: {studyNo: this.study_no}})  
+          this.$router.push({name: 'StudyDetail', params: {studyNo: this.study_no}})  
+          this.$router.push({name: 'StudyDetail', params: {studyNo: this.study_no}})  
       })
       .catch(err => {
         alert('요청을 다시 한 번 확인하세요.')
@@ -280,16 +266,16 @@ export default {
       .then(res => {
         console.log(res)
         if (res.status !== 200){
-          alert('입력을 다시 한 번 확인하세요.')
+          alert('입력을 다시 한 번 확인해주세요.')
           console.log(studyInfo);
         }else { 
           this.getPublicMemberAdd();
         }
       })
       .catch(err => {
+        alert('입력사항을 모두 입력하였는지 확인해주세요.')
         console.log(err)
       })
-   
     },
     getPublicMemberAdd(){
       // 공개 스터디 생성 후 생성자가 바로 스터디 룸에 들어가서 공개 스터디 참가자 등록 로직 구현
@@ -305,12 +291,12 @@ export default {
       console.log(myId);
       http({
         method: 'POST',
-        url: `/publicroom/register/publicMember`,
+        url: '/publicroom/register/publicMember',
         headers: this.getHeader(),
         data: {publicstudyroomId: this.roomUrl},
       })
       .then(() => {
-          this.$router.push({name: "PrivateStudyRoom"})
+          this.$router.push({name: "PublicStudyRoom"})
       })
       .catch(err => {
           console.log(err)
@@ -319,12 +305,12 @@ export default {
     regexp(){
       const notPhoneticSymbolExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
        if(notPhoneticSymbolExp.test(this.input.url)){ // 한글이 아니라면
-           this.$refs.urlMsg.innerHTML = '<p class="test12">영어로 url주소를 입력해주세요.</p>';
-           this.regexpstate = false;
-       }else{
-           this.$refs.urlMsg.innerText ='';
-           this.regexpstate = true;
-       }
+          this.$refs.urlMsg.innerHTML = '<span style="color: #d5648a;">영어로 url주소를 입력해주세요.</span>';
+          this.regexpstate = false;
+      }else{
+          this.$refs.urlMsg.innerText ='';
+          this.regexpstate = true;
+      }
     },
     checkUrl() {   
       http({
@@ -359,9 +345,6 @@ export default {
 </script>
 
 <style scoped>
-.test12{
-  color: #d5648a;
-}
 .createBtn {
   border: none;
   border-radius: 8px;
