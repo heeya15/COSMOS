@@ -27,4 +27,10 @@ public interface PublicRoomService {
     
     
     public List<PublicStudyRoom> findAllPublicStudyRoom();
+    
+    /** 해당 공개 스터디방으로부터 강퇴 당한 유저를 기록하기위한 createBannedUser 입니다. */
+    public void createBannedUser(String publicstudyroom_id, String user_id);
+    
+    /** 현재 유저에대해 해당 공개 스터디방으로부터 강퇴 당한지 여부를 체크하기위한 isBannedCheck 입니다. */
+    public boolean isBannedCheck(String publicstudyroom_id, String user_id);
 }

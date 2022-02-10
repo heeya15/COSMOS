@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,7 +70,7 @@ public class PublicRoomController {
 	}
 	
 	@PostMapping("/register/publicMember")
-	@ApiOperation(value="공개 스터디 참가자 등록 (token)(param)", notes="<strong>공개 스터디 참가자  등록</strong>시켜줍니다.")
+	@ApiOperation(value="공개 스터디 참가자 등록 (token)", notes="<strong>공개 스터디 참가자  등록</strong>시켜줍니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "원하는 정보 없음"), 
@@ -152,4 +153,45 @@ public class PublicRoomController {
 		logger.debug("해당 공개 스터디 참가자 명단에서 해당 user 삭제 성공");
 		return ResponseEntity.status(200).body("방에  남은 인원이 없어 "+ publicstudyroom_id +" 공개 스터디 방 삭제 함"+SUCCESS);
 	}
+	
+	/** 공개 스터디방 강퇴 유저 히스토리 **/
+	@PostMapping("/register/bannedUser")
+	@ApiOperation(value="강퇴 유저 히스토리 등록 (param)", notes="<strong>해당 공개 스터디방으로부터 강퇴 당한 유저를 히스토리</strong>에 추가시켜줍니다.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "원하는 정보 없음"), 
+					@ApiResponse(code = 500, message = "서버 오류")})
+	public ResponseEntity<? extends BaseResponseBody> bannedUserRegister(@RequestParam String publicstudyroom_id, @RequestParam String user_id) {
+		try {
+			publicRoomService.createBannedUser(publicstudyroom_id, user_id);
+		}catch(Exception E) {
+			E.printStackTrace();
+			System.out.println("강퇴 유저 추가 실패");
+			return  ResponseEntity.status(500).body(BaseResponseBody.of(500, FAIL));
+		}
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, SUCCESS));
+	}
+	
+	/** 현재 유저에 대해서 해당 공개 스터디 강퇴 여부 **/
+	@GetMapping("/bannedCheck")
+	@ApiOperation(value = "회원 강퇴 여부 체크", notes = "회원 오픈 채팅방 입장시 이전 강퇴 여부 체크. 해당 오픈 채팅에 대해 강퇴된 유저라면 true, 아니라면 false를 리턴한다.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"),
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 500, message = "서버 오류") 
+					})
+	public ResponseEntity<Boolean> bannedCheck(@RequestParam("publicstudyroom_id") String publicstudyroom_id, @ApiIgnore Authentication authentication) throws Exception {	
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		String user_id = userDetails.getUsername();
+		
+		boolean isBanned = publicRoomService.isBannedCheck(publicstudyroom_id, user_id);
+		
+		if (isBanned == true) {
+			System.out.println("이전에 강퇴된 유저입니다. 해당 채팅방에 들어갈 수 없습니다.");
+			return ResponseEntity.status(200).body(isBanned);
+		} else
+			System.out.println("이전에 강퇴된 기록이 없습니다. 해당 채팅방에 들어갈 수 있습니다.");
+		return ResponseEntity.status(401).body(isBanned);
+	}
+	
 }
