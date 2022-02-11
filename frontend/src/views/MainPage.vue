@@ -146,6 +146,8 @@ import VueSlickCarousel from 'vue-slick-carousel'
 import 'vue-slick-carousel/dist/vue-slick-carousel.css'
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
 
+import JwtDecode from 'jwt-decode'
+
 export default {
   name: 'MainPage',
   components: { VueSlickCarousel },
@@ -183,11 +185,19 @@ export default {
         slidesToScroll: 1,
         swipeToSlide: true,
       },
-
+      // 강퇴여부
+      isBanned: null,
     }
   },
 
   methods: {
+    getHeader(){
+      const token = localStorage.getItem('jwt')
+      const header = {
+        Authorization: `Bearer ${token}`,
+      }
+      return header
+    },
     // carousel 메소드
     // onSlideStart(slide) {
     //   console.log(slide)
@@ -276,10 +286,51 @@ export default {
       })
     },
 
-    // 공개 방 가기
+    // 이전 강퇴 여부 체크
+    checkBanned(publicstudyroom_id){
+      http({
+        method: 'GET',
+        url: '/publicroom/bannnedCheck',
+        params: {publicstudyroom_id: publicstudyroom_id}
+      })
+      .then(res => {
+        this.isBanned = res.data
+      })
+    },
+    // 공개 방 가기(가면 공개방 멤버로 추가)
     goStudyRoom(studyroominfo) {
-      console.log(">>>>>>>>>>> ", studyroominfo)
-    }
+      var token = localStorage.getItem('jwt')
+      var decoded = JwtDecode(token);
+      var myId = decoded.sub;
+
+      this.$store.state.roomUrl = studyroominfo.publicstudyroomId
+      this.$store.state.roomName = studyroominfo.studyName
+      this.$store.state.participant = myId
+
+      // 강퇴된적 있는 유저면 입장 불가
+      this.checkBanned(studyroominfo.publicstudyroomId)
+      if (this.isBanned == true){
+        alert('입장이 불가능한 스터디입니다.')
+        return
+      } else {
+        // 멤버로 추가
+        http({
+          method:'POST',
+          url:'/publicroom/register/publicMember',
+          data: {publicstudyroomId: studyroominfo.publicstudyroomId},
+          headers: this.getHeader()
+        })
+        .then(res => {
+          console.log('>>>>>>>>>>>>>>>>>>>>>>메인에서 공개스터디입장axios',res.data)
+          this.$router.push({name: 'PublicStudyRoom'})
+        })
+        .catch(err => {
+          console.log(err)
+        })
+        console.log(">>>>>>>>>>> ", studyroominfo)
+      }      
+    },
+
   },
 
   created() {

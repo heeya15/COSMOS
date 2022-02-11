@@ -2,7 +2,33 @@ d<template>
 	<div id="main">
 		<div id="main-container">
 			<div id="session-aside-left" v-if="session">
-				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
+				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings" @click="outMemberModal=true"></p>
+
+				<!-- 강퇴기능 모달 -->
+				<div v-if="outMemberModal" class="black-bg">
+					<div class="white-bg">
+						<h2>멤버</h2>
+						<hr>						
+						<table class="table table-bordered table-hover align-middle">
+							<thead class="table-danger">
+								<tr>
+									<th>이름(ID)</th>
+									<th>강퇴</th>
+								</tr>
+							</thead>
+							<tbody v-for="member in publicStudyMembers" :key="member.id">
+								<tr>
+								<td>{{member.user.userName}}({{member.user.userId}})</td>
+								<td><b-button variant="danger" @click="outMember(member.user.userId)">강퇴</b-button></td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="d-flex justify-content-end">
+							<button @click="outMemberModal=false" class="btn btn-secondary">닫기</button>
+						</div>
+					</div>
+				</div>
+
 			</div>
 			<div id="session-aside-right" v-if="session">
 				<div class="participant">
@@ -52,8 +78,8 @@ d<template>
 						</div>
 						-->
 						<div id="video-container" class="d-flex flex-wrap"> <!-- 참가자 화면 -->
-							<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-							<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+							<user-video :session="session" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
+							<user-video :session="session" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 						</div>
 					</div>
 				</div>
@@ -115,7 +141,7 @@ import "@/assets/style/PrivateStudyRoom/room.css"
 import axios from 'axios';
 import http from "@/util/http-common.js";
 import { OpenVidu } from 'openvidu-browser';
-import UserVideo from '@/components/openvidu/UserVideo';
+import UserVideo from '@/components/openvidu/PublicUserVideo';
 import UserList from '@/components/openvidu/UserList';
 import jwt_decode from "jwt-decode";
 
@@ -158,8 +184,8 @@ export default {
 			mainStreamManager: undefined,
 			publisher: undefined,
 			subscribers: [],
-			mySessionId: 'SessionA',
-			myUserName: 'Participant' + Math.floor(Math.random() * 100),
+			mySessionId: null,
+			myUserName: null,
 			audioEnabled: true,
 			videoEnabled: true,
 			audio: true,
@@ -172,37 +198,21 @@ export default {
 
 
 			// 타이머
-			// timer: null,
-			// inputHour: null,
-			// inputMin: null,
-			// inputSec: null,
-			// time: 0,
-			// resetButton: false,
-			// edit: false,
+			timer: null,
+			time: 0,
 
 			// 권한 여부
 			userAuthority: false,
+			
+			// 공개스터디 참가자 목록
+			publicStudyMembers: [],
+
+			// 강퇴관련
+			outMemberModal: false,
 		}
 	},
 	computed:{
-		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers"]),
-
-		// totalTime() {
-		// 	return Number(this.inputHour * 3600) + Number(this.inputMin * 60) + Number(this.inputSec)
-		// },
-		// hours(){
-		// 	const hours = Math.floor(this.time / 3600)
-		// 	return this.padTime(hours)
-		// },
-		// minutes() {
-		// 	// const minutes = Math.floor(this.time / 60)
-		// 	const minutes = Math.floor((this.time - (this.hours * 3600)) / 60)
-		// 	return this.padTime(minutes)
-		// },
-		// seconds() {
-		// 	const seconds = this.time - ((this.hours * 3600) + (this.minutes * 60))
-		// 	return this.padTime(seconds)
-		// },
+		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo"]),
 	},
 	created(){
 		// 권한 여부 확인
@@ -226,15 +236,16 @@ export default {
 		this.myUserName = this.participant;
 		this.joinSession();
 		
-		// console.log("😀😀😀😀😀")
-		// console.log(this.mySessionId)
+		console.log("😀😀😀😀😀")
+		console.log(this.myUserName)
 
 		// 텍스트 채팅에서 사용하기위한 유저 아이디(임시)
 		this.userId = jwt_decode(localStorage.getItem("jwt")).sub;
 		console.log(">>>>>>>>>>>>>>>>>>>> userId : ", this.userId);
 
-		// 상벌점 위한 스터디멤버 불러오기
-		this.getStudyMembers()
+		// 강퇴기능위해 공개스터디멤버 불러오기
+		this.getPublicStudyMembers(this.roomUrl)
+		console.log(this.roomUrl)
 	},
 	methods: {
 		getUserToken(){
@@ -244,70 +255,45 @@ export default {
 			}
 			return header
 		},
-		// startTimer() {
-		// 	if(!this.inputHour && !this.inputMin && !this.inputSec){
-		// 		alert("시간을 설정해주세요.")
-		// 	} else{
-		// 	//1000ms = 1 second
-		// 	this.timer = setInterval(() => this.countdown(), 1000)
-		// 	this.resetButton = true
-		// 	this.edit = false
-		// 	}
-		// },
-		// stopTimer: function() {
-		// 	clearInterval(this.timer)
-		// 	this.timer = null
-		// 	this.resetButton = true
-		// },
-		// resetTimer: function() {
-		// 	// this.time = this.totalTime
-		// 	this.time = 0
-		// 	clearInterval(this.timer)
-		// 	this.timer = null
-		// 	this.resetButton = false
-		// 	this.inputHour = null
-		// 	this.inputMin = null
-		// 	this.inputSec = null
-		// },
-		// editTimer: function() {
-		// 	this.edit = !this.edit
-		// },
-		// padTime: function(time){
-		// 	return (time < 10 ? '0' : '') + time
-		// },
-		// countdown: function() {
-		// 	if(this.time>0){
-		// 		this.time--
-		// 	}else{
-		// 		this.resetTimer();
-		// 		// alert("시간이 종료되었습니다.")
-		// 	}
-		// },
-		// sendTimer(){
-		// 	// 타이머 send
-		// 	this.session.signal({
-		// 		data: this.time,
-		// 		to: [],
-		// 		type: 'study-timer',
-		// 	})
-		// 	.then(() => {
-		// 		console.log("timer success");
-		// 		if(this.time==0){
-		// 			alert("시간이 종료되었습니다.")
-		// 		}
-		// 	})
-		// 	.catch(error => {
-		// 		console.error(error);
-		// 	})
-		// },
 
 		getToken_info(){
 			const token = localStorage.getItem('jwt')
 			const header = {
 				Authorization: `Bearer ${token}`
 			}
-      		return header
-   		 },
+      return header
+		},
+
+		// 공개스터디 멤버 불러오기
+		getPublicStudyMembers(publicstudyroomid) {
+      http({
+        method: 'GET',
+        url: '/publicroom/search/publicMember',
+        params: { publicstudyroom_id: publicstudyroomid }
+      })
+      .then(res => {
+        console.log(res)
+				this.publicStudyMembers = res.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
+		},
+		// 멤버 강퇴하기(user_id,publicstudyroom_id)
+		outMember(memberId) {
+			http({
+				method: 'DELETE',
+				url:'publicroom/remove/publicMember',
+				params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
+			})
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},	
+
 
 		
 		joinSession () {
@@ -323,6 +309,7 @@ export default {
 			this.session.on('streamCreated', ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
 				this.subscribers.push(subscriber);
+				this.getPublicStudyMembers()
 			});
 
 			// On every Stream destroyed...
@@ -352,18 +339,18 @@ export default {
 					if(this.$store.state.userId == message[0]) {
 						console.log("내가 쓴 메시지");
 						this.messages += '<div align="right">' 
-									   + 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #fff; border-radius: 10px;">'
-									   +  		'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
-									   +  		'<div class="mb-3">' + message[1] + ' </div>'
-									   +  	'</div>'
-									   + '</div>';
+										+ 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #fff; border-radius: 10px;  word-wrap: break-word;"">'
+										+  		'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
+										+  		'<div class="mb-3">' + message[1] + ' </div>'
+										+  	'</div>'
+										+ '</div>';
 					} else {
 						console.log('니가 쓴 메시지');
 						this.messages += '<div align="left">' 
-									   + 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #6363bf; color: #fff; border-radius: 10px;">'
-									   +  	'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
-									   +  	'<div class="mb-3">' + message[1] + ' </div>'
-									   +  '</div>';
+										+ 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #6363bf; color: #fff; border-radius: 10px;  word-wrap: break-word;"">'
+										+  	'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
+										+  	'<div class="mb-3">' + message[1] + ' </div>'
+										+  '</div>';
 					}
 				}
 			});
@@ -403,10 +390,26 @@ export default {
 						console.log('There was an error connecting to the session:', error.code, error.message);
 					});
 			});
-
 			
+			// 타이머 receive
+			// this.session.on('signal:study-timer', (event) => {				
+			// 	this.time = Number(event.data);
+			// })
 
 			window.addEventListener('beforeunload', this.leaveSession)
+		},
+		async removePublicRoom(){
+			await http({
+				method: 'DELETE',
+				url: '/publicroom/remove/publicRoom',				
+				params: {publicstudyroom_id: this.mySessionId},
+			})
+			.then(() => {
+				
+			})
+			.catch(err => {
+				console.log(err)
+			});
 		},
 
 		leaveSession () {
@@ -423,16 +426,19 @@ export default {
 			window.removeEventListener('beforeunload', this.leaveSession);
 			http({
 				method: 'DELETE',
-				url: `/publicroom/remove/publicMember`,
+				url: '/publicroom/remove/publicMember',
 				headers: this.getToken_info(),
 				params: {publicstudyroom_id: this.mySessionId},
 			})
 			.then(() => {
+				this.removePublicRoom()
 				this.$router.push({name:'MainPage'})
 			})
 			.catch(err => {
 				console.log(err)
 			});
+
+
 			
 			this.sharing = !this.sharing;
 			if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
@@ -440,8 +446,7 @@ export default {
             this.mainStreamManager = undefined;
             this.sharingPublisher = undefined;
             this.OVForScreenShare = undefined;
-            window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);		
-			  	
+            window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
 		},
 
 		// 텍스트 채팅을 위한 메세지 전송하기
@@ -561,15 +566,9 @@ export default {
 				let msg = this.$refs.messages;
 
 				msg.scrollTo({ top: msg.scrollHeight, behavior: 'smooth' });
-      		});
+      });
 		},
 
-		// totalTime() {
-      	// 	this.time = this.totalTime
-    	// },
-		// time(){
-		// 	this.sendTimer();
-		// },
 	},
 }
 </script>

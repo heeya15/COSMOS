@@ -225,13 +225,15 @@ export default {
 
     // 스터디 신청
     applyStudy() {
-      console.log(this.applyMembers.length, "신청 확인")
-      for(var i=0; i < this.applyMembers.length; i++) {
-          if (this.applyMembers[i].user_id === this.loginUserId) {
-            alert('이미 신청한 스터디 입니다.')
-            return
+      console.log(this.applyMembers, "신청 확인")
+      if (this.applyMembers !== null) {
+        for(var i=0; i < this.applyMembers.length; i++) {
+            if (this.applyMembers[i].user_id === this.loginUserId) {
+              alert('이미 신청한 스터디 입니다.')
+              return
+            }
           }
-        }
+      }
       http({
         method: 'post',
         url: `/study/applyMember/register/${this.studyInfo.studyNo}`,
@@ -255,7 +257,7 @@ export default {
         url: `/study/applyMember/searchAll/${this.studyInfo.studyNo}`
       })
       .then(res =>{
-        console.log(res.data)
+        console.log(res.data, '신청 멤버 조회')
         if (res.data.length === 0) {
           this.applyMembers = null
         }
@@ -325,6 +327,7 @@ export default {
         headers: this.getToken()
       })
       .then(res =>{
+        console.log(res.data, '유저 정보 조회')
         this.loginUserId=res.data['user_id']
       })
       .catch(err =>{
@@ -438,7 +441,7 @@ p {
 .memo {
   width: 150px; 
   height: 150px; 
-  background-color: rgb(252, 252, 135);
+  background-color: rgb(252, 252, 57);
   text-align: center;
   display: flex;
   justify-content: center;
@@ -447,6 +450,7 @@ p {
   left: 150px;
   top: 250px;
   border-radius: 4px;
+  box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
 
 .memo1 {
@@ -461,6 +465,7 @@ p {
   right: 150px;
   top: 550px;
   border-radius: 4px;
+  box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
 
 .memo2 {
@@ -475,6 +480,7 @@ p {
   left: 120px;
   top: 470px;
   border-radius: 4px;
+  box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
 
 .memo3 {
@@ -489,7 +495,9 @@ p {
   right: 150px;
   top: 220px;
   border-radius: 4px;
+  box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
+
 
 .round_box {
   width: 15px;
@@ -567,6 +575,7 @@ p {
   position: relative;
   background: rgb(249, 250, 250);
   border-radius: 4px;
+  box-shadow: 2px 2px 2px 2px #a8a8a8;
 }
 
 .total_body {

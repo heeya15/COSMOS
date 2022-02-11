@@ -85,7 +85,10 @@
           <label for="totalMember" class="mt-2">인원 수</label>
         </b-col>
         <b-col cols="5">
-          <b-form-input id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember"></b-form-input>
+          <!-- 비공 -->
+          <b-form-input v-if="input.study_type==='private'" id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="5" maxlength="2"></b-form-input>
+          <!-- 공개 -->
+          <b-form-input v-else id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="10" maxlength="2"></b-form-input>
         </b-col>
         <b-col cols="1" class="mt-2">명</b-col>
       </b-row>    
@@ -126,7 +129,7 @@
       <button v-if="input.study_type==='public'" class="my-4 createBtn" type="button" @click="createPublicStudy">스터디 생성</button>
       <button v-else class="my-4 createBtn" type="button" @click="createPrivateStudy">스터디 생성</button>
     </div>
-   </div>
+  </div>
   </div>
 </template>
 
@@ -165,6 +168,29 @@ export default {
     }
   },
   methods: {
+    // 인원 수 제한
+    recruitLimit() { 
+      // 공개 일 때
+      if (this.input.study_type !=='private') {
+        if(this.input.totalMember >= 0 && this.input.totalMember <= 10) {
+          return true;
+        } else {
+            alert('10명까지 입력이 가능합니다');
+            this.input.totalMember = null
+            return false;
+          }
+      // 비공개 일 때
+      } else {
+          if(this.input.totalMember >= 0 && this.input.totalMember <= 5) {
+          return true;
+        } else {
+            alert('5명까지 입력이 가능합니다');
+            this.input.totalMember = null
+            return false;
+          }
+        } 
+      },
+
     getHeader(){
       const token = localStorage.getItem('jwt')
       const header = {
@@ -246,11 +272,19 @@ export default {
       })
     }
     ,
-    async createPublicStudy(){ // 공개 스터디룸 생성
+    async createPublicStudy(){ // 공개 스터디룸 생성(백엔드에서 생성시 바로 공개스터디 멤버 테이블에 추가)
       if (this.urlState === false){
         alert("url 중복확인을 해주세요!")
         return
       }
+      // 공개스터디룸 만들기위해 정보 저장
+      var token = localStorage.getItem('jwt')
+      var decoded = JwtDecode(token);
+      var myId = decoded.sub;
+      this.$store.state.roomName = this.input.studyName; // 방 이름
+      this.$store.state.roomUrl = this.input.url; // 스터디룸 아이디
+      this.$store.state.participant = myId; // 내 아뒤
+
       const studyInfo = {
         image: this.input.image,
         numberOfMember: this.input.totalMember,
@@ -272,7 +306,8 @@ export default {
           alert('입력을 다시 한 번 확인해주세요.')
           console.log(studyInfo);
         }else { 
-          this.getPublicMemberAdd();
+          // this.getPublicMemberAdd();
+          this.$router.push({name: "PublicStudyRoom"})
         }
       })
       .catch(err => {
@@ -280,42 +315,42 @@ export default {
         console.log(err)
       })
     },
-    getPublicMemberAdd(){
-      // 공개 스터디 생성 후 생성자가 바로 스터디 룸에 들어가서 공개 스터디 참가자 등록 로직 구현
-      var token = localStorage.getItem('jwt')
-      var decoded = JwtDecode(token);
-      var myId = decoded.sub;
-      this.$store.state.roomName = this.input.studyName; // 방 이름
-      this.$store.state.roomUrl = this.input.url; // 스터디룸 아이디
-      this.$store.state.participant = myId; // 내 아뒤
-      console.log("공개 스터디 룸 생성 후 데이터 디버깅 부분>>>>>>>>>>>>>>>")
-      console.log(this.input.studyName);
-      console.log(this.input.url);
-      console.log(myId);
-      http({
-        method: 'POST',
-        url: '/publicroom/register/publicMember',
-        headers: this.getHeader(),
-        data: {publicstudyroomId: this.roomUrl},
-      })
-      .then(() => {
-          this.$router.push({name: "PublicStudyRoom"})
-      })
-      .catch(err => {
-          console.log(err)
-      });  
-    },
-     regexp(){
-      const notPhoneticSymbolExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
-       if(notPhoneticSymbolExp.test(this.input.url)){ // 한글이 아니라면
-           this.regexpstate = false;
-           this.$refs.urleerorMsg.innerText = '영어로 url주소를 입력해주세요';
-       }else{
-           this.regexpstate = true;
-           this.$refs.urleerorMsg.innerText = '';
-           this.$refs.urlMsg.innerText ='';
-       }
-    },
+    // getPublicMemberAdd(){
+    //   // 공개 스터디 생성 후 생성자가 바로 스터디 룸에 들어가서 공개 스터디 참가자 등록 로직 구현
+    //   var token = localStorage.getItem('jwt')
+    //   var decoded = JwtDecode(token);
+    //   var myId = decoded.sub;
+    //   this.$store.state.roomName = this.input.studyName; // 방 이름
+    //   this.$store.state.roomUrl = this.input.url; // 스터디룸 아이디
+    //   this.$store.state.participant = myId; // 내 아뒤
+    //   console.log("공개 스터디 룸 생성 후 데이터 디버깅 부분>>>>>>>>>>>>>>>")
+    //   console.log(this.input.studyName);
+    //   console.log(this.input.url);
+    //   console.log(myId);
+    //   http({
+    //     method: 'POST',
+    //     url: '/publicroom/register/publicMember',
+    //     headers: this.getHeader(),
+    //     data: {publicstudyroomId: this.roomUrl},
+    //   })
+    //   .then(() => {
+    //       this.$router.push({name: "PublicStudyRoom"})
+    //   })
+    //   .catch(err => {
+    //       console.log(err)
+    //   });  
+    // },
+    regexp(){
+    const notPhoneticSymbolExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+      if(notPhoneticSymbolExp.test(this.input.url)){ // 한글이 아니라면
+          this.regexpstate = false;
+          this.$refs.urleerorMsg.innerText = '영어로 url주소를 입력해주세요';
+      }else{
+          this.regexpstate = true;
+          this.$refs.urleerorMsg.innerText = '';
+          this.$refs.urlMsg.innerText ='';
+      }
+  },
     checkUrl() {   
       http({
         method: 'GET',
@@ -323,10 +358,10 @@ export default {
         params: {url: this.input.defaulturl+this.input.url}
       })
       .then(res => {
-         if(res.data == false && this.regexpstate == true){
+        if(res.data == false && this.regexpstate == true){
           this.urlState = true
           this.$refs.urlMsg.innerText = '사용가능한 url주소 입니다.';
-        }else if(res.data == true && (this.regexpstate == false || this.regexpstate == false)  ){ 
+        }else if(res.data == true && (this.regexpstate == false || this.regexpstate == true)  ){ 
           this.urlState = false;
           this.$refs.urleerorMsg.innerText = '사용할 수 없는 url주소 입니다.';
         }    
