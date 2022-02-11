@@ -7,7 +7,7 @@
 		</div>
 		<div><p class="video_clientName">{{ clientData }}</p></div>
 		<div class="video_stopwatch d-flex">
-				<div class="timer_icon" v-if="this.streamManager.stream.connection.role=='PUBLISHER'">
+				<div class="timer_icon" v-if="this.streamManager.stream.connection.role=='PUBLISHER'" >
 					<b-icon v-if="!play" icon="play-fill" @click="startTimer()"></b-icon>
 					<b-icon v-else icon="pause-fill" @click="stopTimer()"></b-icon>
 				</div>
@@ -19,7 +19,7 @@
 <script>
 import "@/assets/style/PrivateStudyRoom/video.css"
 import OvVideo from './OvVideo';
-
+import http from "@/util/http-common.js";
 export default {
 	name: 'UserVideo',
 
@@ -32,6 +32,7 @@ export default {
 			timer: null,
 			time: 0,
 			play: false,
+			start_time:null
 		};
 	},
 
@@ -80,7 +81,24 @@ export default {
 			return JSON.parse(connection.data);
 		},
 
-		startTimer() {		
+		startTimer() {
+			this.start_time = this.hours+":" +this.minutes +":"+this.seconds;
+			console.log("타이머 눌러짐?");
+			console.log(this.start_time);
+			// 방에 들어온 시간 측정을 위해 rest 요청. // params로 보내주면됨
+			http({
+				method: 'POST',
+				url: `/history/register/public/starttime`,
+				headers: this.getUserToken(),
+				params:{start_time:this.start_time},
+			})
+			.then( res => {
+				console.log(res);
+			})
+			.catch(err => {
+				console.log(err)
+			});		
+
 			//1000ms = 1 second
 			this.timer = setInterval(() => this.countup(), 1000)
 			this.play = true;
