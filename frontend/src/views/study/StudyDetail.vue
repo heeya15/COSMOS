@@ -167,11 +167,11 @@
 
       <hr>
       <div class="buttongroup d-flex justify-content-between" style="width:800px;">
-        <b-button @click="togglenotice">공지사항</b-button>
-        <b-button @click="toggleapply">가입 요청 확인 </b-button>
+        <b-button :class="{noticeBtn : toggleNotice}" @click="togglenotice">공지사항</b-button>
+        <b-button :class="{applyBtn : toggleApply}" @click="toggleapply">가입 요청 확인 </b-button>
 
         <!-- 스터디장만 회원추가가능 -->
-        <b-button @click="togglemember">스터디원 정보</b-button>
+        <b-button :class="{memberBtn : toggleMember}" @click="togglemember">스터디원 정보</b-button>
       </div>
       <hr>      
         <StudyNotice v-show="toggleNotice"/>
@@ -521,19 +521,20 @@ export default {
 .enterBtn {
   border: none;
   border-radius: 8px;
-  background-color: #e4c3f1;
+  background-color: #afa2dd;
   height: 40px;
   width: 50px;
 }
 .enterBtn2 {
   border: none;
   border-radius: 8px;
-  background-color: #e4c3f1;
+  background-color: #afa2dd;
   height: 40px;
   width: 80px;
 }
 .enterBtn:hover, .enterBtn2:hover {
-  background-color: #ddaae6;
+  background-color: #c8c1e4;
+  color: #fff;
 }
 
 .cancelBtn {
@@ -546,5 +547,11 @@ export default {
 }
 .cancelBtn:hover {
   background-color: #495057;
+}
+
+.noticeBtn, .applyBtn, .memberBtn, .noticeBtn:focus, .applyBtn:focus, .memberBtn:focus {
+  background-color: #afa2dd;
+  color: black;
+  border: none;
 }
 </style>
