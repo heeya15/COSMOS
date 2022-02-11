@@ -2,7 +2,33 @@ d<template>
 	<div id="main">
 		<div id="main-container">
 			<div id="session-aside-left" v-if="session">
-				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
+				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings" @click="outMemberModal=true"></p>
+
+				<!-- 강퇴기능 모달 -->
+				<div v-if="outMemberModal" class="black-bg">
+					<div class="white-bg">
+						<h2>멤버</h2>
+						<hr>						
+						<table class="table table-bordered table-hover align-middle">
+							<thead class="table-danger">
+								<tr>
+									<th>이름(ID)</th>
+									<th>강퇴</th>
+								</tr>
+							</thead>
+							<tbody v-for="member in publicStudyMembers" :key="member.id">
+								<tr>
+								<td>{{member.user.userName}}({{member.user.userId}})</td>
+								<td><b-button variant="danger" @click="outMember(member.user.userId)">강퇴</b-button></td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="d-flex justify-content-end">
+							<button @click="outMemberModal=false" class="btn btn-secondary">닫기</button>
+						</div>
+					</div>
+				</div>
+
 			</div>
 			<div id="session-aside-right" v-if="session">
 				<div class="participant">
@@ -177,11 +203,16 @@ export default {
 
 			// 권한 여부
 			userAuthority: false,
+			
+			// 공개스터디 참가자 목록
+			publicStudyMembers: [],
 
+			// 강퇴관련
+			outMemberModal: false,
 		}
 	},
 	computed:{
-		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers"]),
+		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo"]),
 	},
 	created(){
 		// 권한 여부 확인
@@ -212,8 +243,9 @@ export default {
 		this.userId = jwt_decode(localStorage.getItem("jwt")).sub;
 		console.log(">>>>>>>>>>>>>>>>>>>> userId : ", this.userId);
 
-		// 상벌점 위한 스터디멤버 불러오기
-		this.getStudyMembers()
+		// 강퇴기능위해 공개스터디멤버 불러오기
+		this.getPublicStudyMembers(this.roomUrl)
+		console.log(this.roomUrl)
 	},
 	methods: {
 		getUserToken(){
@@ -229,8 +261,39 @@ export default {
 			const header = {
 				Authorization: `Bearer ${token}`
 			}
-      		return header
-   		 },
+      return header
+		},
+
+		// 공개스터디 멤버 불러오기
+		getPublicStudyMembers(publicstudyroomid) {
+      http({
+        method: 'GET',
+        url: '/publicroom/search/publicMember',
+        params: { publicstudyroom_id: publicstudyroomid }
+      })
+      .then(res => {
+        console.log(res)
+				this.publicStudyMembers = res.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
+		},
+		// 멤버 강퇴하기(user_id,publicstudyroom_id)
+		outMember(memberId) {
+			http({
+				method: 'DELETE',
+				url:'publicroom/remove/publicMember',
+				params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
+			})
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},	
+
 
 		
 		joinSession () {
@@ -246,6 +309,7 @@ export default {
 			this.session.on('streamCreated', ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
 				this.subscribers.push(subscriber);
+				this.getPublicStudyMembers()
 			});
 
 			// On every Stream destroyed...
@@ -275,18 +339,18 @@ export default {
 					if(this.$store.state.userId == message[0]) {
 						console.log("내가 쓴 메시지");
 						this.messages += '<div align="right">' 
-									   + 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #fff; border-radius: 10px;">'
-									   +  		'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
-									   +  		'<div class="mb-3">' + message[1] + ' </div>'
-									   +  	'</div>'
-									   + '</div>';
+										+ 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #fff; border-radius: 10px;  word-wrap: break-word;"">'
+										+  		'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
+										+  		'<div class="mb-3">' + message[1] + ' </div>'
+										+  	'</div>'
+										+ '</div>';
 					} else {
 						console.log('니가 쓴 메시지');
 						this.messages += '<div align="left">' 
-									   + 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #6363bf; color: #fff; border-radius: 10px;">'
-									   +  	'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
-									   +  	'<div class="mb-3">' + message[1] + ' </div>'
-									   +  '</div>';
+										+ 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #6363bf; color: #fff; border-radius: 10px;  word-wrap: break-word;"">'
+										+  	'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
+										+  	'<div class="mb-3">' + message[1] + ' </div>'
+										+  '</div>';
 					}
 				}
 			});
@@ -337,7 +401,7 @@ export default {
 		async removePublicRoom(){
 			await http({
 				method: 'DELETE',
-				url: `/publicroom/remove/publicRoom`,				
+				url: '/publicroom/remove/publicRoom',				
 				params: {publicstudyroom_id: this.mySessionId},
 			})
 			.then(() => {
@@ -362,7 +426,7 @@ export default {
 			window.removeEventListener('beforeunload', this.leaveSession);
 			http({
 				method: 'DELETE',
-				url: `/publicroom/remove/publicMember`,
+				url: '/publicroom/remove/publicMember',
 				headers: this.getToken_info(),
 				params: {publicstudyroom_id: this.mySessionId},
 			})
@@ -382,8 +446,7 @@ export default {
             this.mainStreamManager = undefined;
             this.sharingPublisher = undefined;
             this.OVForScreenShare = undefined;
-            window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);		
-			  	
+            window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
 		},
 
 		// 텍스트 채팅을 위한 메세지 전송하기
@@ -503,7 +566,7 @@ export default {
 				let msg = this.$refs.messages;
 
 				msg.scrollTo({ top: msg.scrollHeight, behavior: 'smooth' });
-      		});
+      });
 		},
 
 	},
