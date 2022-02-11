@@ -36,8 +36,6 @@
 export default {
 	name: 'UserList',
 
-	
-
 	props: {
 		streamManager: Object,
 	},

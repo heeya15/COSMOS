@@ -287,10 +287,10 @@ export default {
     this.getPublicStudy()
   },
 
-  mounted() {
-    setInterval(this.getPublicStudy, 5000);
-    console.log("5 second later")
-  },
+  // mounted() {
+  //   setInterval(this.getPublicStudy, 5000);
+  //   console.log("5 second later")
+  // },
 }
 </script>
 

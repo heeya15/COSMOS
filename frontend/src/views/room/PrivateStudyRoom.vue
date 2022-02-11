@@ -225,6 +225,8 @@ export default {
 			sessionForScreenShare: undefined,
 			sharingPublisher: undefined,
 			sharing:true,
+			spublisher:undefined,
+
 			OV: undefined,
 			session: undefined,
 			mainStreamManager: undefined,
@@ -421,7 +423,7 @@ export default {
 		// 	this.isChatVisible = !this.isChatVisible;
 		// },
 		
-		joinSession () {
+		 joinSession () {
 			// --- Get an OpenVidu object ---
 			this.OV = new OpenVidu();
 
@@ -542,19 +544,15 @@ export default {
 				params: {privatestudyroom_id: this.mySessionId},
 			})
 			.then(() => {
+				this.sharing = !this.sharing;
+				if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
+				this.sessionForScreenShare = undefined;	
+            	window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);		
 				this.$router.push({name:'StudyDetail', params:{studyNo: this.roomStudyNo}})
 			})
 			.catch(err => {
 				console.log(err)
-			});
-			
-			this.sharing = !this.sharing;
-			if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
-            this.sessionForScreenShare = undefined;
-            this.mainStreamManager = undefined;
-            this.sharingPublisher = undefined;
-            this.OVForScreenShare = undefined;
-            window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);		
+			});	
 		},
 
 		// 텍스트 채팅을 위한 메세지 전송하기
@@ -669,34 +667,43 @@ export default {
 		startScreenSharing () {
 			this.OVForScreenShare = new OpenVidu();
 			this.sessionForScreenShare = this.OVForScreenShare.initSession();
+			
 			var mySessionId = this.mySessionId;
+		
 			this.getToken(mySessionId).then(token => {
-				this.sessionForScreenShare.connect(token, { clientData: this.screenShareName })
+				this.sessionForScreenShare.connect(token, { clientData: this.myUserName  })
 				.then(() => {
-					let publisher = this.OVForScreenShare.initPublisher("sharingvideo", {
+					 this.spublisher = this.OVForScreenShare.initPublisher("sharingvideo", {
 						audioSource: false,
 						videoSource: "screen",      
                         publishVideo: true,  
-						resolution: "1920x1980",
-						frameRate: 10,           
+						resolution: "640x480",
+						frameRate: 30,           
                         insertMode: 'APPEND',    
                         mirror: false        
 					});
-					console.log("publisher",publisher);
-					publisher.once('accessAllowed', () => {
+					console.log("publisher",this.spublisher);
+					this.spublisher.once('accessAllowed', () => {
 						try {
 							console.log("subscriber >>>>> ", this.subscribers);
 							this.isScreenShared=true;
+							this.session.unpublish(this.publisher); // 송출하고 있는거 중단 (안하면 에러)
+							
+							this.mainStreamManager = undefined;
+							this.publisher = undefined;
+							
+							this.OV = undefined;	
 							this.session.signal({
 								data: JSON.stringify(),  // Any string (optional)
 								to: [],
 								type: 'startScreenSharing'             // The type of message (optional)
 							})
 							this.sharing = !this.sharing; // 화면 공유 버튼에서 중지 버튼으로 change toggle
-							publisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
+							this.publisher(this.spublisher);
+							this.spublisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
 								console.log('User pressed the "Stop sharing" button');
 								this.session.signal({
-									data: JSON.stringify(status),  // Any string (optional)
+									data: JSON.stringify(),  // Any string (optional)
 									to: [],
 									type: 'stopScreenSharing'             // The type of message (optional)
 								})
@@ -707,31 +714,48 @@ export default {
 							console.error('Error applying constraints: ', error);
 						}
 					});
-					publisher.once('accessDenied', () => { 
+					this.spublisher.once('accessDenied', () => { 
 						console.warn('ScreenShare: Access Denied');
 					});
-					this.mainStreamManager = publisher;
-                    this.sharingPublisher = publisher;
+					this.mainStreamManager = this.spublisher;
+                    this.sharingPublisher =this.spublisher;
                     this.sessionForScreenShare.publish(this.sharingPublisher);
 				}).catch((error => {
 					console.warn('There was an error connecting to the session:', error.code, error.message);
 				}));
 			});
-			window.addEventListener('beforeunload', this.leaveSessionForScreenSharing)
+			//window.addEventListener('beforeunload', this.leaveSessionForScreenSharing)
 		},
 		leaveSessionForScreenSharing () { // 화면 공유 중지
-			this.sharing = !this.sharing;
-			if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
+			this.sharing = !this.sharing; // 화면 공유 버튼에서 중지 버튼으로 change toggle
             this.sessionForScreenShare = undefined;
-            this.mainStreamManager = undefined;
-            this.sharingPublisher = undefined;
+
+            this.smainStreamManager = undefined;
+			this.sharingPublisher = undefined;
             this.OVForScreenShare = undefined;
-            window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
+			this.spublisher = undefined;
+			console.log("🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻")
+		
+			var mySessionId = this.mySessionId;
+			console.log("dsaaaaaaaaadwqerwqeqweqwdsadsadas")
+			console.log(mySessionId); // 제대로있고.
+		    this.session.unpublish(this.spublisher); // 송출하고 있는거 중단 (안하면 에러)
+			this.session.publish(this.publisher).then(() => {  // 송출하기 
+				//this.mainStreamManager(publisher);  // 스타 publisher 정보 바꾸기 
+				this.publisher(this.publisher);
+			});
+
+		   window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
+		
 		},
 	},
 	stopScreenShare(){
 		
 		this.sharing = !this.sharing;
+		var mySessionId = this.mySessionId;
+		console.log("dsaaaaaaaaadwqerwqeqweqwdsadsadas")
+		console.log(mySessionId);
+	
 		window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
 	},
 	watch: {
