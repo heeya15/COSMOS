@@ -46,16 +46,16 @@
                   <hr class="hrTag">
                 </div>
                 <div class="reply-content">
-                  <b-form-input v-if="editButton === true" type="text" class=" d-block" style="text-align: left; font-size: 13px; height: 30px;" v-model="comment.content" @keyup.enter="updateComment"></b-form-input>
+                  <b-form-textarea v-if="editButton === true" type="text" class=" d-block" style="text-align: left; font-size: 20px; height: 90px;" v-model="comment.content" @keyup.enter="updateComment"></b-form-textarea>
                     <span v-else class=" d-block" style="text-align: left;"> {{ comment.content }}</span>
                 </div>
                 <div class="button-tag" v-show="editButton === false">
                   <b-button variant="warning" class="button_tag" v-if="userId === loginUserId" @click="editButtonChange"><b-icon icon="pencil"></b-icon></b-button>
                   <b-button variant="danger" class="button_tag" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash"></b-icon></b-button>
                 </div>
-                <div v-show="editButton === true">
-                  <b-button variant="warning" class="button_tag" v-if="userId === loginUserId" @click="updateComment"><b-icon icon="pencil-square"></b-icon>수정</b-button>
-                  <b-button variant="danger" class="button_tag" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash-fill"></b-icon>삭제</b-button>
+                <div v-show="editButton === true" class="button-tag">
+                  <b-button variant="warning" class="button_tag" v-if="userId === loginUserId" @click="updateComment"><b-icon icon="pencil-square"></b-icon></b-button>
+                  <b-button variant="danger" class="button_tag" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash-fill"></b-icon></b-button>
                 </div>
               </div>
             </div>
