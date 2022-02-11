@@ -135,7 +135,7 @@
                           <label for="totalMember" class="mt-2">스터디 총 인원</label>
                         </b-col>
                         <b-col>
-                          <b-form-input id="totalMember" v-model="modifyInfo.totalMember"></b-form-input>
+                          <b-form-input id="totalMember" v-model="modifyInfo.totalMember" @keyup="recruitLimit" type="number"></b-form-input>
                         </b-col>
                       </b-row>
                       <hr class="mt-3">
@@ -238,6 +238,18 @@ export default {
     }
   },
   methods: {
+    // 인원 수 제한
+    recruitLimit() { 
+      if(this.modifyInfo.totalMember >= 0 && this.modifyInfo.totalMember <= 5) {
+        // if ()
+        return true;
+      } else {
+          alert('5명까지 입력이 가능합니다');
+          this.modifyInfo.totalMember = null
+          return false;
+        } 
+      },
+
     // 모달 값 셋팅
     info( button) {
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
