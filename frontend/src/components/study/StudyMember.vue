@@ -169,11 +169,12 @@ export default {
 .memberBtn {
   border: none;
   border-radius: 8px;
-  background-color: #e4c3f1;
+  background-color: #afa2dd;
   height: 40px;
   width: 100%;
 }
 .memberBtn:hover {
-  background-color: #ddaae6;
+  background-color: #c8c1e4;
+  color: white;
 }
 </style>
