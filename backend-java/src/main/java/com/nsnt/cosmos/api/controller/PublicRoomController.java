@@ -115,15 +115,13 @@ public class PublicRoomController {
 	}
 		
 	/** 해당 공개 스터디 참가자 명단 삭제 **/
-	@ApiOperation(value = "해당 공개 스터디 참가자가 방에서 나갈경우 명단 삭제(param)", notes = "해당 공개 스터디 참가자가 방에서 나갈경우 명단 삭제")
+	@ApiOperation(value = "해당 공개 스터디 참가자명단에서 해당 유저 삭제(param)", notes = "해당 공개 스터디 참가자명단에서 해당 유저 삭제")
 	@ApiResponses({ @ApiResponse(code = 200, message = "해당 비공개 스터디 참가자 명단 삭제 성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "해당 회원 없음")})
 	@DeleteMapping("/remove/publicMember")
-	public ResponseEntity<String> removePublicMember(@RequestParam String publicstudyroom_id,  @ApiIgnore Authentication authentication) throws Exception {	
-		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-		String user_id = userDetails.getUsername();
+	public ResponseEntity<String> removePublicMember(@RequestParam String publicstudyroom_id, @RequestParam String user_id) throws Exception {	
 		try {	
 			publicRoomService.deletePublicMember(publicstudyroom_id, user_id);
 		}catch(Exception e ) {
@@ -156,12 +154,15 @@ public class PublicRoomController {
 	
 	/** 공개 스터디방 강퇴 유저 히스토리 **/
 	@PostMapping("/register/bannedUser")
-	@ApiOperation(value="강퇴 유저 히스토리 등록 (param)", notes="<strong>해당 공개 스터디방으로부터 강퇴 당한 유저를 히스토리</strong>에 추가시켜줍니다.")
+	@ApiOperation(value="강퇴 유저 히스토리 등록 (token)(param)", notes="<strong>해당 공개 스터디방으로부터 강퇴 당한 유저를 히스토리</strong>에 추가시켜줍니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "원하는 정보 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	public ResponseEntity<? extends BaseResponseBody> bannedUserRegister(@RequestParam String publicstudyroom_id, @RequestParam String user_id) {
+	public ResponseEntity<? extends BaseResponseBody> bannedUserRegister(@RequestParam String publicstudyroom_id, @ApiIgnore Authentication authentication) {
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		String user_id = userDetails.getUsername();
+		
 		try {
 			publicRoomService.createBannedUser(publicstudyroom_id, user_id);
 		}catch(Exception E) {
@@ -174,7 +175,7 @@ public class PublicRoomController {
 	
 	/** 현재 유저에 대해서 해당 공개 스터디 강퇴 여부 **/
 	@GetMapping("/bannedCheck")
-	@ApiOperation(value = "회원 강퇴 여부 체크", notes = "회원 오픈 채팅방 입장시 이전 강퇴 여부 체크. 해당 오픈 채팅에 대해 강퇴된 유저라면 true, 아니라면 false를 리턴한다.")
+	@ApiOperation(value = "회원 강퇴 여부 체크(token)(param)", notes = "회원 오픈 채팅방 입장시 이전 강퇴 여부 체크. 해당 오픈 채팅에 대해 강퇴된 유저라면 true, 아니라면 false를 리턴한다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"),
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"),

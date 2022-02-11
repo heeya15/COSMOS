@@ -24,9 +24,9 @@ public class PublicMember {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)		// 해당 속성에 auto_increment 제약조건 추가
 	private int publicmemberNo;
 	
-	@Column(name = "attendance")
+	@Column(name = "leader")
 	@ColumnDefault("0")
-	private boolean attenacne;
+	private boolean leader;
 
 	@ManyToOne
 	@JoinColumn(name = "publicstudyroom_id")

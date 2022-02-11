@@ -1,11 +1,8 @@
 package com.nsnt.cosmos.db.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -20,12 +17,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "userhistory_day")
-public class UserHistoryDay {	
+@Table(name = "userhistory_year")
+public class UserHistoryYear {
 	@EmbeddedId
-	UserHistoryDayId userhistoryDayId;
-
+	UserHistoryYearId userhistoryYearId;
+	
 	@Column(name = "total_time")
 	long totalTime;
-	
 }

@@ -49,11 +49,11 @@ public class PublicRoomServiceImpl implements PublicRoomService {
 	}
 	@Override
 	public void createPublicMember(PublicMemberRegisterDto publicMemberDto, String user_id) {
-		boolean attendance  = publicMemberDto.isAttendance();
+		boolean leader  = publicMemberDto.isLeader();
 		String public_studyroom_id = publicMemberDto.getPublicstudyroomId();
 		System.out.println("공개 스터디 참가자 등록 service >>>>>>>>>>>>>>>>>>>DEBUG");
-		System.out.println(attendance +" "+ public_studyroom_id);
-		PublicRoomMemberRepository.insertPublicMember(attendance,public_studyroom_id,user_id); 	
+		System.out.println(leader +" "+ public_studyroom_id);
+		PublicRoomMemberRepository.insertPublicMember(leader,public_studyroom_id,user_id); 	
 	}
 	@Override
 	public List<PublicMember> findAllPublicMember(String publicroom_id) {

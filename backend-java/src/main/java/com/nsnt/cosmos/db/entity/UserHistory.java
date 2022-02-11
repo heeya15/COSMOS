@@ -59,17 +59,12 @@ public class UserHistory implements Serializable{
 	@JoinColumn(name="user_id")
 	private User user;
 	
-	
 	@Column(name = "user_start_time", columnDefinition = "TIMESTAMP")
 	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
-	@CreationTimestamp
 	private LocalDateTime userStartTime;
 	
 	@Column(name = "user_finish_time", columnDefinition = "TIMESTAMP")
 	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
-	@UpdateTimestamp
 	private LocalDateTime userFinishTime;
 		
 }
