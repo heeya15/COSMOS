@@ -27,6 +27,7 @@
       <div class="round_box4"></div>
       
         <div class="body_total p-5" style="width: 500px;">
+          <!-- <hr class="hrTag"> -->
           <b-row class="content_rowTag">
             <b-col cols="5" class="mt-3">
               <p>제목</p>
@@ -133,6 +134,7 @@
                 </div>
               </b-col>
             </b-row>
+          <!-- <hr> -->
           </div>
             <div style="height: 30px;">
               <p></p>
@@ -426,11 +428,11 @@ p {
 .titleHr_tag {
   width: 80%;
   background-color: #afa2dd ;
-  border: solid 2px #afa2dd;
+  border: solid 1px #afa2dd;
 }
 .hrTag {
   background-color: #afa2dd;
-  border: solid 1px #afa2dd;
+  border: solid 0.5px #afa2dd;
   width: 100%;
 }
 
@@ -438,62 +440,69 @@ p {
   height: 500px; 
 }
 
+.detail-content {
+  display: flex; 
+  justify-content: left;
+  margin-top: 3%;
+  margin-left: 3%;
+}
+
 .memo {
-  width: 150px; 
-  height: 150px; 
+  width: 10%; 
+  height: 20%; 
   background-color: rgb(252, 252, 57);
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  left: 150px;
-  top: 250px;
+  left: 15%;
+  top: 40%;
   border-radius: 4px;
   box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
 
 .memo1 {
-  width: 200px; 
-  height: 200px; 
+  width: 13%; 
+  height: 25%; 
   background-color: #f19cb0;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  right: 150px;
-  top: 550px;
+  right: 13%;
+  top: 83%;
   border-radius: 4px;
   box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
 
 .memo2 {
-  width: 300px; 
-  height: 300px; 
+  width: 17%; 
+  height: 33%; 
   background-color: #75cff3;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  left: 120px;
-  top: 470px;
+  left: 10%;
+  top: 75%;
   border-radius: 4px;
   box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
 
 .memo3 {
-  width: 250px; 
-  height: 250px; 
+  width: 15%; 
+  height: 30%; 
   background-color: #caff08;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  right: 150px;
-  top: 220px;
+  right: 13%;
+  top: 43%;
   border-radius: 4px;
   box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
@@ -506,8 +515,8 @@ p {
   overflow: hidden;
   background-color: rgb(255, 141, 10);
   position: absolute;
-  left: 220px;
-  top: 260px;
+  left: 19%;
+  top: 41%;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
@@ -531,8 +540,8 @@ p {
   overflow: hidden;
   background-color: rgb(3, 184, 3);
   position: absolute;
-  right: 240px;
-  top: 560px;
+  right: 19%;
+  top: 84%;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
@@ -543,8 +552,8 @@ p {
   overflow: hidden;
   background-color: yellow;
   position: absolute;
-  left: 260px;
-  top: 480px;
+  left: 17%;
+  top: 77%;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
@@ -555,9 +564,17 @@ p {
   overflow: hidden;
   background-color: rgb(198, 82, 252);
   position: absolute;
-  right: 270px;
-  top: 240px;
+  right: 20%;
+  top: 45%;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
+}
+
+.container {
+  width: 70%;
+  /* background-color: #fafafa; */
+  /* border: 10px solid #afa2dd; */
+  /* box-shadow: 3px 3px 1px 1px #afa2ddd0; */
+  /* margin-top: 30px; */
 }
 
 .backListBtn {
@@ -582,6 +599,7 @@ p {
   border: 30px solid;
   border-color: #afa2dd;
   background-color: #c8c1e4;
+  width: 90%;
 }
 
 .btnPart{
