@@ -47,78 +47,24 @@ public class UserHistory implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long userhistoryNo;
 
-
 	@Column(name = "date", columnDefinition = "TIMESTAMP")
 	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
 	@CreationTimestamp
 	private LocalDateTime date;
 	
-
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private User user;
 	
 	@Column(name = "user_start_time", columnDefinition = "TIMESTAMP")
 	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
 	private LocalDateTime userStartTime;
 	
 	@Column(name = "user_finish_time", columnDefinition = "TIMESTAMP")
 	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
 	private LocalDateTime userFinishTime;
 		
 }
-
-//@Entity
-//@Getter
-//@Setter
-//class UserHistoryDay {
-//
-//	@Id
-//	@Column(name = "day")
-//	long day;
-//	
-//	@Column(name = "total_time")
-//	int totalTime;
-//	
-//	@OneToOne
-//	@JoinColumn(name="userhistory_no")
-//	@JoinColumn(name="user_id")
-//	@JoinColumn(name="date")
-//	private UserHistory userHistory;
-//
-//}
-//
-//@Entity
-//@Getter
-//@Setter
-//class Week{
-//	@Id
-//	@Column(name = "week")
-//	long week;
-//	
-//	@Column(name = "total_time")
-//	int totalTime;
-//	
-//	@OneToOne
-//	@JoinColumn(name="date")
-//	@JoinColumn(name="user_id")
-//	private UserHistory userhistory;
-//}
-//
-//@Entity
-//@Getter
-//@Setter
-//class Month{
-//	@Id
-//	@Column(name = "month")
-//	long month;
-//	
-//	@Column(name = "total_time")
-//	int totalTime;
-//	
-//	@OneToOne
-//	@JoinColumn(name="date")
-//	@JoinColumn(name="user_id")
-//	private UserHistory userhistory;
-//}
