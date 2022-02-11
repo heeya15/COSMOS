@@ -4,10 +4,10 @@
     <router-view style="margin-top: 100px;"/>
 
     <!-- 맨위로 가기 버튼 부분 -->
-      <div class="back-to-top pointer" @click="scrollToTop(); return false;">
+      <!-- <div class="back-to-top pointer" @click="scrollToTop(); return false;"> -->
         <!-- <img src="main_img5.png" alt="" class="top_icon"> -->
-        <b-icon class="top_icon" icon="arrow-up-circle-fill"></b-icon>
-      </div>
+        <!-- <b-icon class="top_icon" icon="arrow-up-circle-fill"></b-icon>
+      </div> -->
       <!-- 맨위로 가기 버튼 부분 끝 -->
   </div>
 </template>
@@ -39,8 +39,7 @@ export default {
 
 <style>
 /* 맨위로 가기 버튼 */
-.back-to-top {
-  /* display: flex; */
+/* .back-to-top {
   position: fixed;
   top: 92%;
   right: 1.5%;
@@ -55,7 +54,7 @@ export default {
 .top_icon:hover {
   cursor: pointer;
   color: #9255AD;
-}
+} */
 
 @font-face {
     font-family: 'IM_Hyemin-Bold';

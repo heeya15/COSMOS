@@ -225,13 +225,15 @@ export default {
 
     // 스터디 신청
     applyStudy() {
-      console.log(this.applyMembers.length, "신청 확인")
-      for(var i=0; i < this.applyMembers.length; i++) {
-          if (this.applyMembers[i].user_id === this.loginUserId) {
-            alert('이미 신청한 스터디 입니다.')
-            return
+      console.log(this.applyMembers, "신청 확인")
+      if (this.applyMembers !== null) {
+        for(var i=0; i < this.applyMembers.length; i++) {
+            if (this.applyMembers[i].user_id === this.loginUserId) {
+              alert('이미 신청한 스터디 입니다.')
+              return
+            }
           }
-        }
+      }
       http({
         method: 'post',
         url: `/study/applyMember/register/${this.studyInfo.studyNo}`,
@@ -255,7 +257,7 @@ export default {
         url: `/study/applyMember/searchAll/${this.studyInfo.studyNo}`
       })
       .then(res =>{
-        console.log(res.data)
+        console.log(res.data, '신청 멤버 조회')
         if (res.data.length === 0) {
           this.applyMembers = null
         }
@@ -325,6 +327,7 @@ export default {
         headers: this.getToken()
       })
       .then(res =>{
+        console.log(res.data, '유저 정보 조회')
         this.loginUserId=res.data['user_id']
       })
       .catch(err =>{

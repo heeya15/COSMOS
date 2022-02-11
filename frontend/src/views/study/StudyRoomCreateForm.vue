@@ -85,7 +85,10 @@
           <label for="totalMember" class="mt-2">인원 수</label>
         </b-col>
         <b-col cols="5">
-          <b-form-input id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember"></b-form-input>
+          <!-- 비공 -->
+          <b-form-input v-if="input.study_type==='private'" id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="5" maxlength="2"></b-form-input>
+          <!-- 공개 -->
+          <b-form-input v-else id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="10" maxlength="2"></b-form-input>
         </b-col>
         <b-col cols="1" class="mt-2">명</b-col>
       </b-row>    
@@ -165,6 +168,29 @@ export default {
     }
   },
   methods: {
+    // 인원 수 제한
+    recruitLimit() { 
+      // 공개 일 때
+      if (this.input.study_type !=='private') {
+        if(this.input.totalMember >= 0 && this.input.totalMember <= 10) {
+          return true;
+        } else {
+            alert('10명까지 입력이 가능합니다');
+            this.input.totalMember = null
+            return false;
+          }
+      // 비공개 일 때
+      } else {
+          if(this.input.totalMember >= 0 && this.input.totalMember <= 5) {
+          return true;
+        } else {
+            alert('5명까지 입력이 가능합니다');
+            this.input.totalMember = null
+            return false;
+          }
+        } 
+      },
+
     getHeader(){
       const token = localStorage.getItem('jwt')
       const header = {
