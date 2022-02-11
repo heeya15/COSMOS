@@ -456,8 +456,8 @@ p {
   justify-content: center;
   align-items: center;
   position: absolute;
-  left: 15%;
-  top: 40%;
+  left: 220px;
+  top: 330px;
   border-radius: 4px;
   box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
@@ -471,8 +471,8 @@ p {
   justify-content: center;
   align-items: center;
   position: absolute;
-  right: 13%;
-  top: 83%;
+  right: 180px;
+  top: 600px;
   border-radius: 4px;
   box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
@@ -486,8 +486,8 @@ p {
   justify-content: center;
   align-items: center;
   position: absolute;
-  left: 10%;
-  top: 75%;
+  left: 170px;
+  top: 570px;
   border-radius: 4px;
   box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
@@ -501,8 +501,8 @@ p {
   justify-content: center;
   align-items: center;
   position: absolute;
-  right: 13%;
-  top: 43%;
+  right: 200px;
+  top: 280px;
   border-radius: 4px;
   box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
@@ -515,9 +515,10 @@ p {
   overflow: hidden;
   background-color: rgb(255, 141, 10);
   position: absolute;
-  left: 19%;
-  top: 41%;
+  left: 290px;
+  top: 340px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
+  z-index: 1;
 }
 
 .round_box1 {
@@ -540,8 +541,8 @@ p {
   overflow: hidden;
   background-color: rgb(3, 184, 3);
   position: absolute;
-  right: 19%;
-  top: 84%;
+  right: 270px;
+  top: 610px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
@@ -552,8 +553,8 @@ p {
   overflow: hidden;
   background-color: yellow;
   position: absolute;
-  left: 17%;
-  top: 77%;
+  left: 280px;
+  bottom: 150px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
@@ -564,8 +565,8 @@ p {
   overflow: hidden;
   background-color: rgb(198, 82, 252);
   position: absolute;
-  right: 20%;
-  top: 45%;
+  right: 300px;
+  top: 290px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
