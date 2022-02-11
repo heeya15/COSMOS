@@ -41,7 +41,7 @@
                     <span class="name">{{ comment.user_id }}</span>
                   </div>
                   <div class="column date">
-                    <span>{{ makeDate(comment.created_at) }}</span>
+                    <span>{{ comment.created_at }}</span>
                   </div>
                   <hr class="hrTag">
                 </div>

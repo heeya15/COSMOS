@@ -32,7 +32,11 @@ export default {
 			timer: null,
 			time: 0,
 			play: false,
-			start_time:null
+
+			// 히스토리 관련 변수들
+			start_time:null,
+			finish_time:null,
+			userhistory_no:0
 		};
 	},
 
@@ -76,6 +80,13 @@ export default {
 		
 	},
 	methods: {
+		getUserToken(){
+			const token = localStorage.getItem('jwt')
+			const header = {
+				Authorization: `Bearer ${token}`
+			}
+			return header
+		},	
 		getConnectionData () {
 			const { connection } = this.streamManager.stream;
 			return JSON.parse(connection.data);
@@ -83,6 +94,7 @@ export default {
 
 		startTimer() {
 			this.start_time = this.hours+":" +this.minutes +":"+this.seconds;
+			console.log(typeof(this.start_time));
 			console.log("타이머 눌러짐?");
 			console.log(this.start_time);
 			// 방에 들어온 시간 측정을 위해 rest 요청. // params로 보내주면됨
@@ -94,9 +106,12 @@ export default {
 			})
 			.then( res => {
 				console.log(res);
+				this.userhistory_no = res.data.userhistoryNo;
+				console.log(this.userhistory_no);
 			})
 			.catch(err => {
 				console.log(err)
+				this.userhistory_no
 			});		
 
 			//1000ms = 1 second
@@ -104,6 +119,23 @@ export default {
 			this.play = true;
 		},
 		stopTimer: function() {
+			this.finish_time = this.hours+":" +this.minutes +":"+this.seconds;
+			console.log(typeof(this.finish_time));
+			console.log("타이머 중지 됨?");
+			console.log(this.finish_time);
+			// 방에 들어온 시간 측정을 위해 rest 요청. // params로 보내주면됨
+			http({
+				method: 'POST',
+				url: `/history/register/public/finishtime`,
+				headers: this.getUserToken(),
+				params:{finish_time:this.finish_time, userhistory_no: this.userhistory_no},
+			})
+			.then( res => {
+				console.log(res);
+			})
+			.catch(err => {
+				console.log(err)
+			});		
 			clearInterval(this.timer)
 			this.timer = null
 			this.play = false;
