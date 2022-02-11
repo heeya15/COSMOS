@@ -108,9 +108,10 @@
 						</div>
 						-->
 						<div id="video-container" class="d-flex flex-wrap"> <!-- 참가자 화면 -->
-							<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-							<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+							<user-video v-if="!isScreenShared" :stream-manager= "publisher" @click.native="updateMainVideoStreamManager(publisher)"/> <!--자기 -->
+							<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/> <!-- 다른 참가자 -->
 						</div>
+						
 					</div>
 				</div>
 
@@ -226,6 +227,8 @@ export default {
 			sharingPublisher: undefined,
 			sharing:true,
 			spublisher:undefined,
+			sminStreamManager: undefined,
+			isScreenShared: false,
 
 			OV: undefined,
 			session: undefined,
@@ -379,7 +382,6 @@ export default {
 				console.error(error);
 			})
 		},
-
 		getToken_info(){
 			const token = localStorage.getItem('jwt')
 			const header = {
@@ -497,7 +499,7 @@ export default {
 							videoSource: undefined, // The source of video. If undefined default webcam
 							publishAudio: this.audio,  	// Whether you want to start publishing with your audio unmuted or not
 							publishVideo: this.video,  	// Whether you want to start publishing with your video enabled or not
-							resolution: '640x480',  // The resolution of your video
+							resolution: '640x680',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
 							mirror: false,       	// Whether to mirror your local video or not
@@ -673,11 +675,11 @@ export default {
 			this.getToken(mySessionId).then(token => {
 				this.sessionForScreenShare.connect(token, { clientData: this.myUserName  })
 				.then(() => {
-					 this.spublisher = this.OVForScreenShare.initPublisher("sharingvideo", {
+					 this.spublisher = this.OVForScreenShare.initPublisher(undefined, {
 						audioSource: false,
 						videoSource: "screen",      
                         publishVideo: true,  
-						resolution: "640x480",
+						resolution: "1280x720",
 						frameRate: 30,           
                         insertMode: 'APPEND',    
                         mirror: false        
@@ -687,33 +689,27 @@ export default {
 						try {
 							console.log("subscriber >>>>> ", this.subscribers);
 							this.isScreenShared=true;
-							this.session.unpublish(this.publisher); // 송출하고 있는거 중단 (안하면 에러)
+							this.session.unpublish(this.publisher); // 송출하고 있는거 중단 (안하면 에러) -- 세션을 없앤다는 뜻.
 							
 							this.mainStreamManager = undefined;
-							this.publisher = undefined;
+							// this.publisher = undefined;
 							
 							this.OV = undefined;	
-							this.session.signal({
-								data: JSON.stringify(),  // Any string (optional)
-								to: [],
-								type: 'startScreenSharing'             // The type of message (optional)
-							})
+							
 							this.sharing = !this.sharing; // 화면 공유 버튼에서 중지 버튼으로 change toggle
-							this.publisher(this.spublisher);
+							// console.log("session 확인용");
+							// 	console.log(this.session)
+							// 	this.publisher(this.spublisher);
 							this.spublisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
 								console.log('User pressed the "Stop sharing" button');
-								this.session.signal({
-									data: JSON.stringify(),  // Any string (optional)
-									to: [],
-									type: 'stopScreenSharing'             // The type of message (optional)
-								})
-								this.leaveSessionForScreenSharing()
-								this.isScreenShared=false;
-							});					
-						} catch (error) {
-							console.error('Error applying constraints: ', error);
-						}
-					});
+								  
+								   this.leaveSessionForScreenSharing()
+								   this.isScreenShared=false;
+								});					
+								} catch (error) {
+									console.error('Error applying constraints: ', error);
+								}
+							});
 					this.spublisher.once('accessDenied', () => { 
 						console.warn('ScreenShare: Access Denied');
 					});
@@ -728,23 +724,27 @@ export default {
 		},
 		leaveSessionForScreenSharing () { // 화면 공유 중지
 			this.sharing = !this.sharing; // 화면 공유 버튼에서 중지 버튼으로 change toggle
-            this.sessionForScreenShare = undefined;
-
-            this.smainStreamManager = undefined;
-			this.sharingPublisher = undefined;
-            this.OVForScreenShare = undefined;
-			this.spublisher = undefined;
+             this.isScreenShared=false;
 			console.log("🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻")
 		
 			var mySessionId = this.mySessionId;
 			console.log("dsaaaaaaaaadwqerwqeqweqwdsadsadas")
 			console.log(mySessionId); // 제대로있고.
-		    this.session.unpublish(this.spublisher); // 송출하고 있는거 중단 (안하면 에러)
+		    this.sessionForScreenShare.unpublish(this.spublisher); // 송출하고 있는거 중단 (안하면 에러)
+			//  if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
+			this.sessionForScreenShare = undefined;
+            this.smainStreamManager = undefined;
+			this.sharingPublisher = undefined;
+			this.spublisher = undefined;
+            this.OVForScreenShare = undefined;
+			
 			this.session.publish(this.publisher).then(() => {  // 송출하기 
 				//this.mainStreamManager(publisher);  // 스타 publisher 정보 바꾸기 
+				
 				this.publisher(this.publisher);
 			});
-
+			// this.joinSession();
+			// this.session.publish(this.session);
 		   window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
 		
 		},
