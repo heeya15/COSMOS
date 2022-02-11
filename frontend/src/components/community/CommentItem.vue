@@ -2,25 +2,25 @@
   <center>
         <!-- visible 넣으면 그냥 보이게 -->
       <b-collapse id="collapse-2" visible>
-      <div class="container mt-3">
+      <!-- <div class="container mt-3">
         <div class="comment_body">
             <div class="card">
               <div class="comment-widgets">
-                  <!-- Comment Row -->
+                  Comment Row
                 <div class="d-flex flex-row comment-row mt-3">
                   <div class="comment-text w-100">
-                    <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-                      <b-form-input v-if="editButton === true" type="text" class=" d-block" style="text-align: left; font-size: 13px; height: 30px;" v-model="comment.content" @keyup.enter="updateComment"></b-form-input>
-                      <span v-else class=" d-block" style="text-align: left;"> {{ comment.content }}</span>
-                      <p class="font-medium" style="font-size: 10px; text-align: right;">작성자 : {{ comment.user_id }}</p>
+                    <div style="display: flex; flex-wrap: wrap;">
+                      <p class="font-medium" style="font-size: 13px;">작성자 : {{ comment.user_id }}</p>
+                      <p class="text-muted float-right mx-3 mt-1" style="font-size: 10px"> {{ makeDate(comment.created_at) }}</p>
                     </div>
                     <div class="comment-footer"> 
-                    <span class="text-muted float-right" style="font-size: 10px"> {{ makeDate(comment.created_at) }}</span>
-                      <div v-show="editButton === false" style="display: flex; justify-content: left;">
+                      <b-form-input v-if="editButton === true" type="text" class=" d-block" style="text-align: left; font-size: 13px; height: 30px;" v-model="comment.content" @keyup.enter="updateComment"></b-form-input>
+                      <span v-else class=" d-block" style="text-align: left;"> {{ comment.content }}</span>
+                      <div v-show="editButton === false">
                         <b-button variant="warning" class="button_tag" size="sm" v-if="userId === loginUserId" @click="editButtonChange"><b-icon icon="pencil"></b-icon></b-button>
                         <b-button variant="danger" class="button_tag" size="sm" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash"></b-icon></b-button>
                       </div>
-                      <div v-show="editButton === true" style="display: flex; justify-content: left;">
+                      <div v-show="editButton === true">
                         <b-button variant="warning" class="button_tag" size="sm" v-if="userId === loginUserId" @click="updateComment"><b-icon icon="pencil-square"></b-icon>수정</b-button>
                         <b-button variant="danger" class="button_tag" size="sm" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash-fill"></b-icon>삭제</b-button>
                       </div>
@@ -29,8 +29,40 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div> -->
+        <div class="container">
+        <hr>
+          <div class="reply-list-area">
+            <div>
+              <div class="comment-body">
+                <div class="status float-base">
+                  <div class="column user-info">
+                    <span class="name">{{ comment.user_id }}</span>
+                  </div>
+                  <div class="column date">
+                    <span>{{ makeDate(comment.created_at) }}</span>
+                  </div>
+                  <hr class="hrTag">
+                </div>
+                <div class="reply-content">
+                  <b-form-input v-if="editButton === true" type="text" class=" d-block" style="text-align: left; font-size: 13px; height: 30px;" v-model="comment.content" @keyup.enter="updateComment"></b-form-input>
+                    <span v-else class=" d-block" style="text-align: left;"> {{ comment.content }}</span>
+                </div>
+                <div class="button-tag" v-show="editButton === false">
+                  <b-button variant="warning" class="button_tag" v-if="userId === loginUserId" @click="editButtonChange"><b-icon icon="pencil"></b-icon></b-button>
+                  <b-button variant="danger" class="button_tag" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash"></b-icon></b-button>
+                </div>
+                <div v-show="editButton === true">
+                  <b-button variant="warning" class="button_tag" v-if="userId === loginUserId" @click="updateComment"><b-icon icon="pencil-square"></b-icon>수정</b-button>
+                  <b-button variant="danger" class="button_tag" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash-fill"></b-icon>삭제</b-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <hr>
         </div>
-      </div>
+
       </b-collapse>
   </center>
 </template>
@@ -137,15 +169,15 @@ export default {
 </script>
 
 <style scoped>
-.container {
+/* .container {
   width: 50%;
-}
+} */
 
 .card {
   display: flex;
   flex-wrap: wrap;
   /* background: linear-gradient(to left yellow 20%, #fcfc87 80%); */
-  background: linear-gradient(to left, #fcfc87 25%, #fcfc87 25% 50%, #fcfc87 50% 75%, yellow 90% );
+  background: #fff;
   /* background: linear-gradient(to left, #c8c1e4 25%, #c8c1e4 25% 50%, #c8c1e4 50% 75%, #afa2dd 90% ); */
   /* background-color: #fff; */
   border: none;
@@ -160,7 +192,7 @@ export default {
 /* 테스트 부분 */
 .comment_body {
   /* border: 5px solid transparent; */
-  background: linear-gradient(to left, #fcfc87 25%, #fcfc87 25% 50%, #fcfc87 50% 75%, yellow 90% );
+  background: #fff;
   /* background: linear-gradient(to left, #c8c1e4 25%, #c8c1e4 25% 50%, #c8c1e4 50% 75%, #afa2dd 90% ); */
   /* background: repeating-linear-gradient(-45deg, #f45384, #f45384 5px, #f8bfd1 5px, #f8bfd1 10px); */
   /* background-color: #afa2dd; */
@@ -201,14 +233,53 @@ export default {
   margin-bottom: 15px
 }
 
+.button-tag {
+  display: flex;
+  justify-content: right;
+}
 .button_tag {
   font-size: 10px;
   border: none;
+  margin-left: 2px;
+  margin-right: 2px;
 }
-
 
 .comment-widgets .comment-row:hover {
   background: rgba(0, 0, 0, 0.05)
+}
+
+.container {
+  width: 100%;
+  /* border: 1px dotted; */
+  background-color: #fafafa;
+}
+
+.user-info {
+  display: flex;
+  text-align: left;
+  margin-left: 3%;
+  font-size: 13px;
+}
+
+.date {
+  display: flex;
+  justify-content: left;
+  text-align: left;
+  margin-left: 3%;
+  font-size: 10px;
+}
+
+.reply-content {
+  display: flex;
+  justify-content: left;
+  text-align: left;
+  margin-left: 3%;
+  margin-top: 3px;
+  font-size: 20px;
+}
+
+.reply-content {
+  height: 100px;
 }
 
 </style>
