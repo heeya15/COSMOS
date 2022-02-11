@@ -52,8 +52,8 @@ d<template>
 						</div>
 						-->
 						<div id="video-container" class="d-flex flex-wrap"> <!-- 참가자 화면 -->
-							<user-video :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-							<user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
+							<user-video :session="session" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
+							<user-video :session="session" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
 						</div>
 					</div>
 				</div>
@@ -115,7 +115,7 @@ import "@/assets/style/PrivateStudyRoom/room.css"
 import axios from 'axios';
 import http from "@/util/http-common.js";
 import { OpenVidu } from 'openvidu-browser';
-import UserVideo from '@/components/openvidu/UserVideo';
+import UserVideo from '@/components/openvidu/PublicUserVideo';
 import UserList from '@/components/openvidu/UserList';
 import jwt_decode from "jwt-decode";
 
@@ -158,8 +158,8 @@ export default {
 			mainStreamManager: undefined,
 			publisher: undefined,
 			subscribers: [],
-			mySessionId: 'SessionA',
-			myUserName: 'Participant' + Math.floor(Math.random() * 100),
+			mySessionId: null,
+			myUserName: null,
 			audioEnabled: true,
 			videoEnabled: true,
 			audio: true,
@@ -172,37 +172,16 @@ export default {
 
 
 			// 타이머
-			// timer: null,
-			// inputHour: null,
-			// inputMin: null,
-			// inputSec: null,
-			// time: 0,
-			// resetButton: false,
-			// edit: false,
+			timer: null,
+			time: 0,
 
 			// 권한 여부
 			userAuthority: false,
+
 		}
 	},
 	computed:{
 		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers"]),
-
-		// totalTime() {
-		// 	return Number(this.inputHour * 3600) + Number(this.inputMin * 60) + Number(this.inputSec)
-		// },
-		// hours(){
-		// 	const hours = Math.floor(this.time / 3600)
-		// 	return this.padTime(hours)
-		// },
-		// minutes() {
-		// 	// const minutes = Math.floor(this.time / 60)
-		// 	const minutes = Math.floor((this.time - (this.hours * 3600)) / 60)
-		// 	return this.padTime(minutes)
-		// },
-		// seconds() {
-		// 	const seconds = this.time - ((this.hours * 3600) + (this.minutes * 60))
-		// 	return this.padTime(seconds)
-		// },
 	},
 	created(){
 		// 권한 여부 확인
@@ -226,8 +205,8 @@ export default {
 		this.myUserName = this.participant;
 		this.joinSession();
 		
-		// console.log("😀😀😀😀😀")
-		// console.log(this.mySessionId)
+		console.log("😀😀😀😀😀")
+		console.log(this.myUserName)
 
 		// 텍스트 채팅에서 사용하기위한 유저 아이디(임시)
 		this.userId = jwt_decode(localStorage.getItem("jwt")).sub;
@@ -244,62 +223,6 @@ export default {
 			}
 			return header
 		},
-		// startTimer() {
-		// 	if(!this.inputHour && !this.inputMin && !this.inputSec){
-		// 		alert("시간을 설정해주세요.")
-		// 	} else{
-		// 	//1000ms = 1 second
-		// 	this.timer = setInterval(() => this.countdown(), 1000)
-		// 	this.resetButton = true
-		// 	this.edit = false
-		// 	}
-		// },
-		// stopTimer: function() {
-		// 	clearInterval(this.timer)
-		// 	this.timer = null
-		// 	this.resetButton = true
-		// },
-		// resetTimer: function() {
-		// 	// this.time = this.totalTime
-		// 	this.time = 0
-		// 	clearInterval(this.timer)
-		// 	this.timer = null
-		// 	this.resetButton = false
-		// 	this.inputHour = null
-		// 	this.inputMin = null
-		// 	this.inputSec = null
-		// },
-		// editTimer: function() {
-		// 	this.edit = !this.edit
-		// },
-		// padTime: function(time){
-		// 	return (time < 10 ? '0' : '') + time
-		// },
-		// countdown: function() {
-		// 	if(this.time>0){
-		// 		this.time--
-		// 	}else{
-		// 		this.resetTimer();
-		// 		// alert("시간이 종료되었습니다.")
-		// 	}
-		// },
-		// sendTimer(){
-		// 	// 타이머 send
-		// 	this.session.signal({
-		// 		data: this.time,
-		// 		to: [],
-		// 		type: 'study-timer',
-		// 	})
-		// 	.then(() => {
-		// 		console.log("timer success");
-		// 		if(this.time==0){
-		// 			alert("시간이 종료되었습니다.")
-		// 		}
-		// 	})
-		// 	.catch(error => {
-		// 		console.error(error);
-		// 	})
-		// },
 
 		getToken_info(){
 			const token = localStorage.getItem('jwt')
@@ -403,10 +326,26 @@ export default {
 						console.log('There was an error connecting to the session:', error.code, error.message);
 					});
 			});
-
 			
+			// 타이머 receive
+			// this.session.on('signal:study-timer', (event) => {				
+			// 	this.time = Number(event.data);
+			// })
 
 			window.addEventListener('beforeunload', this.leaveSession)
+		},
+		async removePublicRoom(){
+			await http({
+				method: 'DELETE',
+				url: `/publicroom/remove/publicRoom`,				
+				params: {publicstudyroom_id: this.mySessionId},
+			})
+			.then(() => {
+				
+			})
+			.catch(err => {
+				console.log(err)
+			});
 		},
 
 		leaveSession () {
@@ -428,11 +367,14 @@ export default {
 				params: {publicstudyroom_id: this.mySessionId},
 			})
 			.then(() => {
+				this.removePublicRoom()
 				this.$router.push({name:'MainPage'})
 			})
 			.catch(err => {
 				console.log(err)
 			});
+
+
 			
 			this.sharing = !this.sharing;
 			if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
@@ -564,12 +506,6 @@ export default {
       		});
 		},
 
-		// totalTime() {
-      	// 	this.time = this.totalTime
-    	// },
-		// time(){
-		// 	this.sendTimer();
-		// },
 	},
 }
 </script>
