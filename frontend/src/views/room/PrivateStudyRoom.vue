@@ -261,6 +261,9 @@ export default {
 
 			// 권한 여부
 			userAuthority: false,
+
+			// 시간
+			userhistoryNo :0,
 		}
 	},
 	computed:{
@@ -382,13 +385,6 @@ export default {
 				console.error(error);
 			})
 		},
-		getToken_info(){
-			const token = localStorage.getItem('jwt')
-			const header = {
-				Authorization: `Bearer ${token}`
-			}
-			return header
-		},
 		// 상벌점 기능 관련 methods
 		getStudyMembers() {
 			this.$store.dispatch('getStudyMembers', this.$store.state.roomStudyNo)
@@ -421,11 +417,22 @@ export default {
 			score -= 1
 			this.updateScore(score, studymember_no)
 		},
-		// showChat() {
-		// 	this.isChatVisible = !this.isChatVisible;
-		// },
-		
-		 joinSession () {
+	
+		joinSession () {
+			// 방에 들어온 시간 측정을 위해 rest 요청.
+			http({
+				method: 'POST',
+				url: `/history/register/private/starttime`,
+				headers: this.getUserToken(),
+			})
+			.then( res => {
+				console.log(res);
+				this.userhistoryNo = res.data.userhistoryNo;
+			})
+			.catch(err => {
+				console.log(err)
+			});
+
 			// --- Get an OpenVidu object ---
 			this.OV = new OpenVidu();
 
@@ -528,6 +535,21 @@ export default {
 		},
 
 		leaveSession () {
+			// 방 떠나기전 현재까지 공부한 시간을 history에 누적하기 위해, 방 떠날 때 userhistory_no 보내줌.
+			 http({
+				method: 'POST',
+				url: `/history/register/private/finishtime`,
+				headers: this.getUserToken(),
+				params: {userhistory_no: this.userhistoryNo}
+				})
+			.then(res => {
+				console.log("현재 까지 공부하고 방 떠남")
+				console.log(res);
+			})
+			.catch(err => {
+				console.log(err)
+			})
+			
 			// --- Leave the session by calling 'disconnect' method over the Session object ---
 			if (this.session) this.session.disconnect();
 
@@ -542,7 +564,7 @@ export default {
 			http({
 				method: 'DELETE',
 				url: `/privateroom/remove/privateMember`,
-				headers: this.getToken_info(),
+				headers: this.getUserToken(),
 				params: {privatestudyroom_id: this.mySessionId},
 			})
 			.then(() => {
@@ -760,8 +782,7 @@ export default {
 		
 		},
 	},
-	stopScreenShare(){
-		
+	stopScreenShare(){	
 		this.sharing = !this.sharing;
 		var mySessionId = this.mySessionId;
 		console.log("dsaaaaaaaaadwqerwqeqweqwdsadsadas")
@@ -775,7 +796,7 @@ export default {
 				let msg = this.$refs.messages;
 
 				msg.scrollTo({ top: msg.scrollHeight, behavior: 'smooth' });
-      });
+     		 });
 		},
 
 		totalTime() {
