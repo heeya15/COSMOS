@@ -499,7 +499,7 @@ export default {
 							videoSource: undefined, // The source of video. If undefined default webcam
 							publishAudio: this.audio,  	// Whether you want to start publishing with your audio unmuted or not
 							publishVideo: this.video,  	// Whether you want to start publishing with your video enabled or not
-							resolution: '640x680',  // The resolution of your video
+							resolution: '640x480',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
 							mirror: false,       	// Whether to mirror your local video or not
@@ -700,6 +700,17 @@ export default {
 							// console.log("session 확인용");
 							// 	console.log(this.session)
 							// 	this.publisher(this.spublisher);
+							const constraints = {
+										width: {min: 640, ideal: 1280},
+										height: {min: 480, ideal: 720},
+										advanced: [
+											{width: 1920, height: 1280},
+											{aspectRatio: 1.333}
+										]
+							};
+							this.spublisher.stream.getMediaStream().getVideoTracks()[0].applyConstraints(constraints, () => {
+							
+							}),
 							this.spublisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
 								console.log('User pressed the "Stop sharing" button');
 								  
@@ -710,17 +721,17 @@ export default {
 									console.error('Error applying constraints: ', error);
 								}
 							});
-					this.spublisher.once('accessDenied', () => { 
-						console.warn('ScreenShare: Access Denied');
+							this.spublisher.once('accessDenied', () => { 
+								console.warn('ScreenShare: Access Denied');
+							});
+							this.mainStreamManager = this.spublisher;
+							this.sharingPublisher =this.spublisher;
+							this.sessionForScreenShare.publish(this.sharingPublisher);
+						}).catch((error => {
+							console.warn('There was an error connecting to the session:', error.code, error.message);
+						}));
 					});
-					this.mainStreamManager = this.spublisher;
-                    this.sharingPublisher =this.spublisher;
-                    this.sessionForScreenShare.publish(this.sharingPublisher);
-				}).catch((error => {
-					console.warn('There was an error connecting to the session:', error.code, error.message);
-				}));
-			});
-			//window.addEventListener('beforeunload', this.leaveSessionForScreenSharing)
+					//window.addEventListener('beforeunload', this.leaveSessionForScreenSharing)
 		},
 		leaveSessionForScreenSharing () { // 화면 공유 중지
 			this.sharing = !this.sharing; // 화면 공유 버튼에서 중지 버튼으로 change toggle
