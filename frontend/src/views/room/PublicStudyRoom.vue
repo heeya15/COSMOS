@@ -1,4 +1,4 @@
-d<template>
+<template>
 	<div id="main">
 		<div id="main-container">
 			<div id="session-aside-left" v-if="session">
@@ -19,7 +19,8 @@ d<template>
 							<tbody v-for="member in publicStudyMembers" :key="member.id">
 								<tr>
 								<td>{{member.user.userName}}({{member.user.userId}})</td>
-								<td><b-button variant="danger" @click="outMember(member.user.userId)">강퇴</b-button></td>
+								<!-- <td><b-button v-if="member.user.userId!==userId && isLeader" variant="danger" @click="outMember(member.user.userId, member.id)">강퇴</b-button></td> -->
+								<td><b-button v-if="member.user.userId!==userId && isLeader" variant="danger" @click="outMember(member.id)">강퇴</b-button></td>
 								</tr>
 							</tbody>
 						</table>
@@ -209,6 +210,7 @@ export default {
 
 			// 강퇴관련
 			outMemberModal: false,
+			isLeader: null,
 		}
 	},
 	computed:{
@@ -246,6 +248,9 @@ export default {
 		// 강퇴기능위해 공개스터디멤버 불러오기
 		this.getPublicStudyMembers(this.roomUrl)
 		console.log(this.roomUrl)
+		this.getLeave()
+
+		
 	},
 	methods: {
 		getUserToken(){
@@ -274,27 +279,54 @@ export default {
       .then(res => {
         console.log(res)
 				this.publicStudyMembers = res.data
+				this.publicStudyMembers.forEach(element => {
+					if (this.userId === element.user.userId){
+						if (element.leader){
+							this.isLeader = true
+						}
+					}
+				})
       })
       .catch(err => {
         console.log(err)
       })
 		},
 		// 멤버 강퇴하기(user_id,publicstudyroom_id)
-		outMember(memberId) {
-			http({
-				method: 'DELETE',
-				url:'publicroom/remove/publicMember',
-				params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
-			})
-			.then(res => {
-				console.log(res)
-			})
-			.catch(err => {
-				console.log(err)
-			})
-		},	
-
-
+		// outMember(memberId, idx) {
+		outMember(idx) {
+			// http({
+			// 	method: 'DELETE',
+			// 	url:'publicroom/remove/publicMember',
+			// 	params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
+			// })
+			// .then(res => {
+			// 	console.log(res)
+			// 	const data = {
+			// 		leave: true,
+			// 	};
+			// 	this.publisher.session.signal({
+      //   data: JSON.stringify(data),
+      //   to: [this.this.subscribers[idx].stream.connection],
+      //   type: "kick",
+      // });
+			// })
+			// .catch(err => {
+			// 	console.log(err)
+			// })
+			const data = {
+					leave: true,
+				};
+				this.publisher.session.signal({
+        data: JSON.stringify(data),
+        to: [this.this.subscribers[idx].stream.connection],
+        type: "kick",
+				})
+    },
+    getLeave() {
+      this.session.on("signal:kick", () => {
+        this.leaveSession();
+      });
+    },
 		
 		joinSession () {
 			// --- Get an OpenVidu object ---
@@ -428,7 +460,7 @@ export default {
 				method: 'DELETE',
 				url: '/publicroom/remove/publicMember',
 				headers: this.getToken_info(),
-				params: {publicstudyroom_id: this.mySessionId},
+				params: {user_id: this.userId, publicstudyroom_id: this.mySessionId},
 			})
 			.then(() => {
 				this.removePublicRoom()
