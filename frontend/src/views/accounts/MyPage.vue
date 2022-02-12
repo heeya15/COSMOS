@@ -191,6 +191,7 @@ export default {
       }
     },
     changePassword(){
+      window.onbeforeunload = null;
       if (this.pwdRule === false){
         alert('비밀번호를 조건에 맞게 변경해주세요!')
         return 
