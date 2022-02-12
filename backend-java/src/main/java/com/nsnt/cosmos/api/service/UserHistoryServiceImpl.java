@@ -11,8 +11,12 @@ import org.springframework.stereotype.Service;
 import com.nsnt.cosmos.db.entity.User;
 import com.nsnt.cosmos.db.entity.UserHistory;
 import com.nsnt.cosmos.db.entity.UserHistoryDay;
+import com.nsnt.cosmos.db.entity.UserHistoryMonth;
+import com.nsnt.cosmos.db.entity.UserHistoryWeek;
 import com.nsnt.cosmos.db.repository.UserHistoryDayRepository;
+import com.nsnt.cosmos.db.repository.UserHistoryMonthRepository;
 import com.nsnt.cosmos.db.repository.UserHistoryRepository;
+import com.nsnt.cosmos.db.repository.UserHistoryWeekRepository;
 
 /**
  *	히스토리 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -24,7 +28,14 @@ public class UserHistoryServiceImpl implements UserHistoryService {
 	
 	@Autowired
 	UserHistoryDayRepository userhistoryDayRepository;
+	
+	@Autowired
+	UserHistoryWeekRepository userhistoryWeekRepository;
+	
+	@Autowired
+	UserHistoryMonthRepository userhistoryMonthRepository;
 
+	
 	/** 비공개 스터디 시작 시간 입력 */
 	@Override
 	public UserHistory setPrivateStartTime(String user_id) {
@@ -32,7 +43,7 @@ public class UserHistoryServiceImpl implements UserHistoryService {
 		LocalDateTime now = LocalDateTime.now();
 		User user = new User();
 		user.setUserId(user_id);
-		userhistory.setDate(now);
+		userhistory.setHistory_date(now);
 		userhistory.setUserStartTime(now);
 		userhistory.setUserFinishTime(now);
 		userhistory.setUser(user);
@@ -58,7 +69,7 @@ public class UserHistoryServiceImpl implements UserHistoryService {
 		
 		User user = new User();
 		user.setUserId(user_id);
-		userhistory.setDate(now);
+		userhistory.setHistory_date(now);
 		userhistory.setUserStartTime(user_start_time);
 		userhistory.setUserFinishTime(user_start_time);
 		userhistory.setUser(user);
@@ -71,12 +82,9 @@ public class UserHistoryServiceImpl implements UserHistoryService {
 	/** 공개 스터디 종료 시간 입력 */
 	@Override
 	public void setPublicUserFinishTime(String finish_time, Long userhistory_no, String user_id) {
-		UserHistory userhistory = new UserHistory();
-		LocalDateTime now = LocalDateTime.now();
-		
 		LocalDateTime user_finish_time = LocalDateTime.parse(LocalDate.now() + " " + finish_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		
 		System.out.println(">>>>>>>>>> 종료 시간 : " + user_finish_time);
+		
 		
 		userHistoryRepository.setFinishTime(user_id, user_finish_time, userhistory_no);
 	}
@@ -93,5 +101,29 @@ public class UserHistoryServiceImpl implements UserHistoryService {
 		
 		return userhistoryday;
 	}
+	
+	/** 주별 기록 조회 */
+	public List<UserHistoryWeek> getWeeklyUserHistory() {
+		LocalDateTime now = LocalDateTime.now();
+		List<UserHistoryWeek> userhistoryweek = userhistoryWeekRepository.findAllWeekUserHistory(now);
+		
+		for(int i=0; i<userhistoryweek.size(); i++) {
+			System.out.println(userhistoryweek.get(i).toString());
+		}
+		
+		return userhistoryweek;
+	} 
+	
+	/** 월별 기록 조회 */
+	public List<UserHistoryMonth> getMonthlyUserHistory() {
+		LocalDateTime now = LocalDateTime.now();
+		List<UserHistoryMonth> userhistorymonth = userhistoryMonthRepository.findAllMonthUserHistory(now);
+		
+		for(int i=0; i<userhistorymonth.size(); i++) {
+			System.out.println(userhistorymonth.get(i).toString());
+		}
+		
+		return userhistorymonth;
+	} 
 	
 }

@@ -23,24 +23,35 @@ public interface UserHistoryRepository extends JpaRepository<UserHistory, Long>{
 			"where user_id = :user_id and userhistory_no = :userhistory_no "
 			, nativeQuery = true)
 	void setFinishTime(@Param("user_id") String user_id, @Param("now") LocalDateTime now, @Param("userhistory_no") long userhistory_no);
-
 	
 	@Transactional
 	@Modifying
-	@Query(value = "insert into userhistory_day (day, user_id, total_time) \r\n" +
-			"select dayofyear(user_start_time) as day_no, user_id, sum(TIMESTAMPDIFF(second, user_start_time, IFNULL(user_finish_time, :now))) as total_time\r\n" + 
+	@Query(value ="insert into userhistory_day (day, user_id, total_time, day_date)\r\n" + 
+			"select dayofyear(user_start_time) as day_no, user_id, sum(TIMESTAMPDIFF(second, user_start_time, IFNULL(user_finish_time, now()))) as total_time, date(history_date) as today\r\n" + 
 			"from userhistory\r\n" + 
-			"group by day_no, user_id\r\n" + 
-			"having day_no = dayofyear(:now)\r\n" + 
-			"order by total_time desc;"
+			"group by day_no, user_id, today\r\n" + 
+			"having day_no = dayofyear(:now)"
 			, nativeQuery = true)
 	void updateUserDailyHistory(@Param("now") LocalDateTime now);
 	
-	
-	@Query(value = "select * \r\n" + 
-			"from userhistory_day ud \r\n" + 
-			"where day = dayofyear(:now) \r\n" + 
-			"order by total_time desc"
+	@Transactional
+	@Modifying
+	@Query(value = "insert into userhistory_week (week, week_date, user_id, total_time)\r\n" + 
+			"select weekofyear(day_date) as week_no, day_date, user_id, sum(total_time) as time\r\n" + 
+			"from userhistory_day\r\n" + 
+			"group by week_no, day_date, user_id\r\n" + 
+			"having week_no = weekofyear(:now)"
 			, nativeQuery = true)
-	List<UserHistoryDay> findAllDayUserHistory(@Param("now") LocalDateTime now);
+	void updateUserWeeklyHistory(@Param("now") LocalDateTime now);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "insert into userhistory_month (month, user_id, total_time)\r\n" + 
+			"select month(week_date) as month_no, user_id, sum(total_time) as time\r\n" + 
+			"from userhistory_week\r\n" + 
+			"group by month_no, user_id\r\n" + 
+			"having month_no = month(:now) "
+			, nativeQuery = true)
+	void updateUserMonthlyHistory(@Param("now") LocalDateTime now); 
+
 }

@@ -19,6 +19,8 @@ import com.nsnt.cosmos.common.auth.SsafyUserDetails;
 import com.nsnt.cosmos.common.model.response.BaseResponseBody;
 import com.nsnt.cosmos.db.entity.UserHistory;
 import com.nsnt.cosmos.db.entity.UserHistoryDay;
+import com.nsnt.cosmos.db.entity.UserHistoryMonth;
+import com.nsnt.cosmos.db.entity.UserHistoryWeek;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -116,7 +118,29 @@ public class UserHistoryController {
 		return new ResponseEntity<List<UserHistoryDay>>(userhistoryday,HttpStatus.OK);
 	}
 	
-	/** 월별 랭킹 검색 */
+	/** 주별 랭킹 검색 */
+	@GetMapping("searchAll/week")
+	@ApiOperation(value = "사용자 주별 history 전체 조회", notes = "<strong>사용자 주별 history 전체 목록</strong>을 조회합니다.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"), 
+					@ApiResponse(code = 500, message = "서버 오류")})
+	public ResponseEntity<List<UserHistoryWeek>> getWeeklyUserHistory() {
+
+		List<UserHistoryWeek> userhistoryweek = historyService.getWeeklyUserHistory();
+		return new ResponseEntity<List<UserHistoryWeek>>(userhistoryweek,HttpStatus.OK);
+	}
 	
-	/** 일별 랭킹 검색 */
+	/** 월별 랭킹 검색 */
+	@GetMapping("searchAll/month")
+	@ApiOperation(value = "사용자 월별 history 전체 조회", notes = "<strong>사용자 월별 history 전체 목록</strong>을 조회합니다.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"), 
+					@ApiResponse(code = 500, message = "서버 오류")})
+	public ResponseEntity<List<UserHistoryMonth>> getMonthlyUserHistory() {
+
+		List<UserHistoryMonth> userhistorymonth = historyService.getMonthlyUserHistory();
+		return new ResponseEntity<List<UserHistoryMonth>>(userhistorymonth,HttpStatus.OK);
+	}
 }

@@ -1,7 +1,8 @@
 package com.nsnt.cosmos.db.entity;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -19,17 +20,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class UserHistoryDayId implements Serializable {
-	@Column(name = "day")
-	int day;
+public class UserHistoryWeekId implements Serializable {
+	@Column(name = "week")
+	int week;
 	
 	@Column(name = "user_id")
 	String user_id;
 	
-	@Column(name = "day_date")
+	@Column(name = "week_date")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
 	@CreationTimestamp
-	private Date day_date;
-
+	private LocalDate week_date;
+	
 }
