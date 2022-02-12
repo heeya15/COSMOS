@@ -23,7 +23,7 @@
 							<tbody v-for="member in publicStudyMembers" :key="member.id">
 								<tr>
 								<td>{{member.user.userName}}({{member.user.userId}})</td>
-								<td><b-button v-if="member.user.userId!==userId && isLeader" variant="danger" @click="outMember(member.user.userId, member.id)">강퇴</b-button></td>
+								<td><b-button v-if="member.user.userId!==userId && isLeader" variant="danger" @click="outMember(member.user.userId)">강퇴</b-button></td>
 								<!-- <td><b-button v-if="member.user.userId!==userId && isLeader" variant="danger" @click="outMember(member.id)">강퇴</b-button></td> -->
 								</tr>
 							</tbody>
@@ -46,7 +46,7 @@
 							<user-video :stream-manager="mainStreamManager"/>
 						</div> -->
 						<div id="video-container" class="d-flex flex-wrap row"> <!-- 참가자 화면 -->
-							<user-video :session="session" class="col-md-4" v-if="!isScreenShared" :stream-manager= "publisher" @click.native="updateMainVideoStreamManager(publisher)"/> <!--자기 -->
+							<user-video :session="session" class="col-md-4" :stream-manager= "publisher" @click.native="updateMainVideoStreamManager(publisher)"/> <!--자기 -->
 							<user-video :session="session" class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/> <!-- 다른 참가자 -->
 						</div>
 						
@@ -264,7 +264,7 @@ export default {
 		// 강퇴기능위해 공개스터디멤버 불러오기
 		this.getPublicStudyMembers(this.roomUrl)
 		console.log(this.roomUrl)
-		this.getLeave()
+		// this.getLeave()
 
 		
 	},
@@ -300,33 +300,23 @@ export default {
 			})
 		},
 		// 멤버 강퇴하기(user_id,publicstudyroom_id)
-		outMember(memberId,idx) {
-			// http({
-			// 	method: 'DELETE',
-			// 	url:'publicroom/remove/publicMember',
-			// 	params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
-			// })
-			// .then(res => {
-			// 	console.log(res)
-			// 	const data = {
-			// 		leave: true,
-			// 	};
-			// 	this.publisher.session.signal({
-      //   data: JSON.stringify(data),
-      //   to: [this.this.subscribers[idx].stream.connection],
-      //   type: "kick",
-      // });
-			// })git pu
-			// .catch(err => {
-			// 	console.log(err)
-			// })
-			const data = {
-					leave: true,
-			};
+		outMember(memberId) {
+			http({
+				method: 'DELETE',
+				url:'publicroom/remove/publicMember',
+				params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
+			})
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+			
 			this.publisher.session.signal({
-			data: JSON.stringify(data),
-			to: [this.subscribers[idx].stream.connection],
-			type: "out",
+				data: memberId,
+				to: [],
+				type: "out"
 			})
 
 			// 강퇴 리스트 히스토리에 추가
@@ -384,6 +374,17 @@ export default {
 			this.session.on('exception', ({ exception }) => {
 				console.warn(exception);
 			});
+
+			// receive 강퇴 시그널
+			this.session.on("signal:out", (event) => {
+				var id = event.data;
+				console.log(this.userid);
+				if(id == this.myUserName){
+					this.leaveSession();
+				}
+
+				this.getPublicStudyMembers(this.roomUrl)
+			})
 
 			// 같은 session 내에서 텍스트 채팅을 위한 signal
 			this.session.on('signal:my-chat', (event) => {
