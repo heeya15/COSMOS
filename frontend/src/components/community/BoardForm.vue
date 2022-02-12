@@ -245,7 +245,6 @@ export default {
       console.log(this.input.header)
     },
     falseHearder() {
-      window.onbeforeunload = null;
       this.input.header = false
       console.log(this.input.header)
       this.$router.go()
