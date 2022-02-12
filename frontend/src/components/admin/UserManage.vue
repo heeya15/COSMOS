@@ -113,7 +113,6 @@ export default {
         }, 
 
         userDelete(deleteUserId) {
-            window.onbeforeunload = null;
             if(confirm('정말 삭제하시겠습니까?') == true) {
                 http({
                     method: 'get',

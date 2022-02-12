@@ -13,7 +13,6 @@
     </b-row>
     
     <table class="table table-bordered table-hover" v-show="power.leader">
-      <!-- <thead class="table-danger"> -->
       <thead style="background-color: #afa2dd;">
         <tr>
           <th>이름</th>
@@ -43,7 +42,7 @@
     </table>
 
     <table class="table table-bordered table-hover align-middle" v-show="!power.leader">
-      <thead class="table-danger">
+      <thead style="background-color: #afa2dd;">
         <tr>
           <th>이름</th>
           <th>Email</th>
