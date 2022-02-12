@@ -261,14 +261,6 @@ export default {
 			return header
 		},
 
-		getToken_info(){
-			const token = localStorage.getItem('jwt')
-			const header = {
-				Authorization: `Bearer ${token}`
-			}
-      return header
-		},
-
 		// 공개스터디 멤버 불러오기
 		getPublicStudyMembers(publicstudyroomid) {
       http({
@@ -292,8 +284,7 @@ export default {
       })
 		},
 		// 멤버 강퇴하기(user_id,publicstudyroom_id)
-		// outMember(memberId, idx) {
-		outMember(idx) {
+		outMember(memberId,idx) {
 			// http({
 			// 	method: 'DELETE',
 			// 	url:'publicroom/remove/publicMember',
@@ -309,24 +300,40 @@ export default {
       //   to: [this.this.subscribers[idx].stream.connection],
       //   type: "kick",
       // });
-			// })
+			// })git pu
 			// .catch(err => {
 			// 	console.log(err)
 			// })
 			const data = {
 					leave: true,
-				};
-				this.publisher.session.signal({
-        data: JSON.stringify(data),
-        to: [this.this.subscribers[idx].stream.connection],
-        type: "kick",
-				})
+			};
+			this.publisher.session.signal({
+			data: JSON.stringify(data),
+			to: [this.subscribers[idx].stream.connection],
+			type: "out",
+			})
+
+			// 강퇴 리스트 히스토리에 추가
+			http({
+				method: 'POST',
+				url: 'publicroom/register/bannedUser',
+				params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
+			})
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+
     },
     getLeave() {
-      this.session.on("signal:kick", () => {
+      this.session.on("signal:out", () => {
         this.leaveSession();
-      });
+      })
     },
+
+
 		
 		joinSession () {
 			// --- Get an OpenVidu object ---
@@ -459,7 +466,7 @@ export default {
 			http({
 				method: 'DELETE',
 				url: '/publicroom/remove/publicMember',
-				headers: this.getToken_info(),
+				headers: this.getUserToken(),
 				params: {user_id: this.userId, publicstudyroom_id: this.mySessionId},
 			})
 			.then(() => {
