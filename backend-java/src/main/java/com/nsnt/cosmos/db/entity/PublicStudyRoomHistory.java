@@ -12,6 +12,8 @@ import javax.persistence.JoinColumns;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -41,8 +43,7 @@ public class PublicStudyRoomHistory {
 	private LocalDateTime publicroomCloseTime;
 	
 	@OneToOne
-	@JoinColumns({
-		@JoinColumn(name = "publicstudyroom_id", referencedColumnName = "publicstudyroom_id")
-	})
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JoinColumn(name = "publicstudyroom_id", referencedColumnName = "publicstudyroom_id")
 	private PublicStudyRoom publicStudyRoom;
 }
