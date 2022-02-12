@@ -164,6 +164,7 @@ export default {
 }
 .createBtn:hover {
   background-color: #c8c1e4;
+  color: white;
 }
 .modifyBtn {
   border: none;
