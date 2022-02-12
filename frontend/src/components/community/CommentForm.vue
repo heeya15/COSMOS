@@ -41,6 +41,7 @@ export default {
       return header
     },
     createComment() {
+      window.onbeforeunload = null;
       const createCommentItem = {
         board_no: this.$store.state.boardNo,
         content: this.commentInput.content
