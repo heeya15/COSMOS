@@ -1,4 +1,5 @@
 <template>
+
   <div id="main_page">
       <!-- <b-carousel
         id="carousel-fade"
@@ -17,7 +18,27 @@
         ></b-carousel-slide>
       </b-carousel> -->
       <!-- <div class="circle"></div> -->
-
+       <!-- 모달 시작-->
+      <b-modal ref="my-modal" :id="infoModal.id" hide-footer centered hide-header>
+        <center>
+          <h4 slot="header" class="card-title">방 입장을 위한 초기 세팅</h4>
+        </center>
+        <br />
+        <b-row>
+        <b-col cols="5">초기 장치 설정</b-col>
+        <b-col>
+          <input type="checkbox" id="mic"  v-model="settings.mic">
+          <label for="mic" class="ml-1 mr-4">마이크ON</label>
+          <input type="checkbox" id="cam"  v-model="settings.cam">
+          <label for="cam" class="ml-1 mr-4">카메라ON</label>
+        </b-col>
+        </b-row>
+        <div class="text-center">
+          <button @click="hideModal" class="cancelBtn ml-3 float-right" >취소</button>
+          <button @click="goStudyRoom(infoModal.publicstudyroomId, infoModal.studyName )" type="submit" class="enterBtn ml-3 float-right" >입장</button>
+        </div>
+      </b-modal>
+      <!-- 모달 끝 -->
       <!-- MainPage Banner Start -->
       <div class="banner">
         <div class="bannerBox">
@@ -43,8 +64,6 @@
       <div class="my-5" align="center">  
         <hr class="line">
       </div>
-
-
 
       <!-- 게시판 목록 Start -->
       <center>
@@ -109,9 +128,9 @@
           :autoplay="true"
           :autoplaySpeed="2000"
         >
-            <div v-for="(publicstudy, idx) in publicStudyList" :key="idx" class="px-5 mb-lg-2">
+            <div v-for="(publicstudy, idx) in publicStudyList" :key="idx" class="px-5 mb-lg-2" @click="info(publicstudy,$event.target)">
                 <div class="hover hover-1 text-white rounded">
-                  <img class="studyImg" :src="publicstudy.image" alt="Study Image is missing... :(" @click="goStudyRoom(publicstudy)">
+                  <img class="studyImg" :src="publicstudy.image" alt="Study Image is missing... :(">
                   <div class="hover-1-number">{{ currentParticipant[idx] }} &#47; {{ publicstudy.numberOfMember }}</div>
                   <div class="hover-1-content px-5 py-4">
                     <h3 class="hover-1-title text-uppercase mb-0"><span :model="publicstudy.studyName">{{ publicstudy.studyName }}</span></h3>
@@ -147,7 +166,7 @@ import 'vue-slick-carousel/dist/vue-slick-carousel.css'
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
 
 import JwtDecode from 'jwt-decode'
-
+import { mapState } from 'vuex'
 export default {
   name: 'MainPage',
   components: { VueSlickCarousel },
@@ -174,7 +193,11 @@ export default {
 
       publicStudyList: [],
       currentParticipant: [],
-
+      infoModal: {
+        id: "info-modal",
+        publicstudyroomId:"",
+        studyName:"",
+      },
 
       slickOption: {
         arrows: true,
@@ -184,6 +207,11 @@ export default {
         slidesToShow: 3,
         slidesToScroll: 1,
         swipeToSlide: true,
+      },
+      settings: {
+        mic: false,
+        cam: false,
+        speaker: null,
       },
       // 강퇴여부
       isBanned: null,
@@ -291,24 +319,44 @@ export default {
       http({
         method: 'GET',
         url: '/publicroom/bannnedCheck',
-        params: {publicstudyroom_id: publicstudyroom_id}
+        params: {publicstudyroom_id: publicstudyroom_id},
+        headers: this.getHeader()
       })
       .then(res => {
         this.isBanned = res.data
-      })
+      }).catch(err => {
+          console.log(err)
+        })     
+      },
+     // 모달 값 셋팅
+    info(publicstudy,button) {
+      this.infoModal.publicstudyroomId = publicstudy.publicstudyroomId;
+      this.infoModal.studyName = publicstudy.studyName;
+      this.$root.$emit("bv::show::modal", this.infoModal.id, button);
+    },
+    hideModal() {
+      this.$refs["my-modal"].hide();
     },
     // 공개 방 가기(가면 공개방 멤버로 추가)
-    goStudyRoom(studyroominfo) {
+    goStudyRoom(publicstudyroomId, studyName) {
+      console.log("공개방 가기 버튼 클릭.")
+      console.log(publicstudyroomId, studyName);
       var token = localStorage.getItem('jwt')
       var decoded = JwtDecode(token);
       var myId = decoded.sub;
 
-      this.$store.state.roomUrl = studyroominfo.publicstudyroomId
-      this.$store.state.roomName = studyroominfo.studyName
+      // 마이크 캠 셋팅
+      this.$store.state.audio = this.settings.mic;
+      this.$store.state.video = this.settings.cam;
+      console.log( this.$store.state.audio)
+      console.log( this.$store.state.video)
+
+      this.$store.state.roomUrl = publicstudyroomId;
+      this.$store.state.roomName = studyName;
       this.$store.state.participant = myId
 
       // 강퇴된적 있는 유저면 입장 불가
-      this.checkBanned(studyroominfo.publicstudyroomId)
+      this.checkBanned(publicstudyroomId)
       if (this.isBanned == true){
         alert('입장이 불가능한 스터디입니다.')
         return
@@ -317,7 +365,7 @@ export default {
         http({
           method:'POST',
           url:'/publicroom/register/publicMember',
-          data: {publicstudyroomId: studyroominfo.publicstudyroomId},
+          data: {publicstudyroom_id: publicstudyroomId},
           headers: this.getHeader()
         })
         .then(res => {
@@ -327,12 +375,15 @@ export default {
         .catch(err => {
           console.log(err)
         })
-        console.log(">>>>>>>>>>> ", studyroominfo)
+        console.log(">>>>>>>>>>> ",publicstudyroomId)
       }      
     },
 
   },
-
+ computed:{
+    ...mapState([
+      'roomName', 'roomUrl', 'participant', 'audio', 'video'
+    ])},
   created() {
     this.getBoardItems()
     this.getPublicStudy()
@@ -596,5 +647,47 @@ thead {
 .slick-next::before{
   content: url(../assets/icon_next.png);
 }
+/* 모달 스타일 */
+.black-bg{
+  z-index: 2;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  height: 100vw;
+  background: rgba(0,0,0,0.5);
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 20px;
+}
+.white-bg{
+	margin-top: 10%;
+	z-index: 3;
+  width: 30%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+}
 
+* {
+  font-family:'yg-jalnan';
+}
+.enterBtn {
+  border: none;
+  border-radius: 8px;
+  background-color: #afa2dd;
+  height: 40px;
+  width: 50px;
+}
+.cancelBtn {
+  border: none;
+  border-radius: 8px;
+  color: white;
+  background-color: #6c757d;
+  height: 40px;
+  width: 50px;
+}
+.cancelBtn:hover {
+  background-color: #495057;
+}
+/** 모달 스타일 부분 끝*/
 </style>
