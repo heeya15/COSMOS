@@ -11,6 +11,8 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,10 +31,13 @@ public class PublicMember {
 	private boolean leader;
 
 	@ManyToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JoinColumn(name = "publicstudyroom_id")
 	private PublicStudyRoom publicStudyRoom;
 
 	@ManyToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JoinColumn(name = "user_id")
 	private User user;
+	
 }

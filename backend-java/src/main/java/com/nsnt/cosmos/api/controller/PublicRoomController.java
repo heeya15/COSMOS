@@ -159,10 +159,7 @@ public class PublicRoomController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "원하는 정보 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	public ResponseEntity<? extends BaseResponseBody> bannedUserRegister(@RequestParam String publicstudyroom_id, @ApiIgnore Authentication authentication) {
-		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-		String user_id = userDetails.getUsername();
-		
+	public ResponseEntity<? extends BaseResponseBody> bannedUserRegister(@RequestParam String publicstudyroom_id, @RequestParam String user_id) {
 		try {
 			publicRoomService.createBannedUser(publicstudyroom_id, user_id);
 		}catch(Exception E) {
