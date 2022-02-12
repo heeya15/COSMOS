@@ -14,6 +14,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.nsnt.cosmos.api.request.SaveStudyMemberDto;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,4 +42,8 @@ public class PublicMember {
 	@JoinColumn(name = "user_id")
 	private User user;
 	
+	
+	public void updateLeader(boolean leader){  
+	    this.leader = leader;
+	}
 }

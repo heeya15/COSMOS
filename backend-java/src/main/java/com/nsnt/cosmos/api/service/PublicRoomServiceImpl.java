@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.nsnt.cosmos.api.request.BannedUserReq;
 import com.nsnt.cosmos.api.request.PublicMemberRegisterDto;
 import com.nsnt.cosmos.api.request.PublicStudyRoomRegisterDto;
+import com.nsnt.cosmos.api.request.SavePublicStudyMemberDto;
 import com.nsnt.cosmos.db.entity.PrivateMember;
 import com.nsnt.cosmos.db.entity.PrivateStudyRoom;
 import com.nsnt.cosmos.db.entity.PublicMember;
@@ -91,5 +92,16 @@ public class PublicRoomServiceImpl implements PublicRoomService {
 		
 		if(count>0) return true;
 		else return false;
+	}
+	@Override
+	public PublicMember findOnePublicStudyMember(int studymember_no) {
+		PublicMember result = PublicRoomMemberRepository.findById(studymember_no).get();
+		return result;
+	}
+	@Transactional
+	@Override
+	public PublicMember updatePublicStudyMemberAuthority(PublicMember publicmember, SavePublicStudyMemberDto savePublicStudyMemberDto) {
+		publicmember.updateLeader(savePublicStudyMemberDto.isLeader());
+		return publicmember;
 	}
 }
