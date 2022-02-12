@@ -2,7 +2,7 @@
 	<div id="main">
 		<div id="main-container" class="d-flex">
 			<p>
-				<img v-if="!asideRight" src="@/assets/img/openvidu/menu.png" class="rightMenuImg" alt="menu" @click="asideRight=true">
+				<img v-if="!asideRight" src="https://o.remove.bg/downloads/bb7b17fb-07d6-40f9-acc1-3196d15a6a45/images-removebg-preview.png" class="rightMenuImg" alt="menu" @click="asideRight=true">
 				<img v-else src="@/assets/img/openvidu/close.png" class="rightMenuImg" alt="menu" @click="asideRight=false">
 			</p>
 			<div id="session-aside-left" v-if="session">
