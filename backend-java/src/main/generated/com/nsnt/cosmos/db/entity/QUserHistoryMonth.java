@@ -24,7 +24,7 @@ public class QUserHistoryMonth extends EntityPathBase<UserHistoryMonth> {
 
     public final NumberPath<Long> totalTime = createNumber("totalTime", Long.class);
 
-    public final QUserHistoryMonthId userhistoryMonthId;
+    public final QUserHistoryMonthId userHistoryMonthId;
 
     public QUserHistoryMonth(String variable) {
         this(UserHistoryMonth.class, forVariable(variable), INITS);
@@ -44,7 +44,7 @@ public class QUserHistoryMonth extends EntityPathBase<UserHistoryMonth> {
 
     public QUserHistoryMonth(Class<? extends UserHistoryMonth> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.userhistoryMonthId = inits.isInitialized("userhistoryMonthId") ? new QUserHistoryMonthId(forProperty("userhistoryMonthId")) : null;
+        this.userHistoryMonthId = inits.isInitialized("userHistoryMonthId") ? new QUserHistoryMonthId(forProperty("userHistoryMonthId")) : null;
     }
 
 }

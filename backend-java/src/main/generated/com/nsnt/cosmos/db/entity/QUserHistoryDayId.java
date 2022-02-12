@@ -21,6 +21,8 @@ public class QUserHistoryDayId extends BeanPath<UserHistoryDayId> {
 
     public final NumberPath<Integer> day = createNumber("day", Integer.class);
 
+    public final DatePath<java.sql.Date> day_date = createDate("day_date", java.sql.Date.class);
+
     public final StringPath user_id = createString("user_id");
 
     public QUserHistoryDayId(String variable) {

@@ -22,7 +22,7 @@ public class QUserHistory extends EntityPathBase<UserHistory> {
 
     public static final QUserHistory userHistory = new QUserHistory("userHistory");
 
-    public final DateTimePath<java.time.LocalDateTime> date = createDateTime("date", java.time.LocalDateTime.class);
+    public final DateTimePath<java.time.LocalDateTime> history_date = createDateTime("history_date", java.time.LocalDateTime.class);
 
     public final QUser user;
 
