@@ -58,7 +58,23 @@
   height: 100%;
   margin: 0 auto;
   /* padding-bottom: 80px; */
-  background: linear-gradient(#333, #555);
+  /* background: linear-gradient(rgb(104, 104, 104), rgb(167, 167, 167)); */
+  z-index: 1;
+}
+
+#main-container::after {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  content: "";
+  /* padding-bottom: 80px; */
+  /* background-color: #c8c1e4; */
+  background: url(../../../../public/배경.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1;
+  opacity: 0.6;
 }
 
 #session-center {
@@ -87,11 +103,12 @@
 #session-title {
   margin-left: 20px;
   display: inline-block;
-  color: #eee;
+  color: black;
+  /* background-color: #c8c1e4; */
 }
 
 #session-time {
-  color: #eee;
+  color: black;
 }
 
 #video-container {
@@ -105,7 +122,8 @@
   height: 100%;
   /* position: absolute;
   left: 0px; */
-  background-color: #ccc;
+  background-color: #afa2dd;
+
 }
 
 #session-aside-left p:first-child {
@@ -135,10 +153,11 @@
   /* display: inline-block; */
   margin-bottom: 20px;
   height: 10px;
+  margin-left: 10px;
 }
 #session-aside-right .participant {
   height: 35%;
-  /* background-color: black; */
+  background-color: #c8c1e4;
   /* margin-bottom: 10px; */
   padding: 5px 0;
   /* margin-bottom: 5px; */
@@ -162,13 +181,14 @@
   /* line-height: 0%; */
   display: table-cell;
   vertical-align: bottom;
-  padding-bottom: 2px;
+  padding-bottom: 5px;
+  padding-left: 10px;
 }
 
 #session-aside-right .participant .participant_list {
   width: 100%;
   /* height: 90%; */
-  /* background-color: #ccc; */
+  /* background-color: #fff; */
   border-radius: 5px;
   overflow: auto;
   padding: 0 5px;
@@ -225,6 +245,10 @@
   height: 30px;
 }
 
+.sideMenuImg:hover {
+  cursor: pointer;
+}
+
 /* 채팅방 하단 메뉴바 */
 #session-footer-wrap {
   width: 100%;
@@ -265,7 +289,7 @@ left: 15%; */
   overflow: auto;
   height: auto;
   /* background-color: #ccc; */
-  background-color: #ddd;
+  background-color: #c8c1e4;
   /* /* border: 5px #ccc solid; */
   border-radius: 5px;
   /* box-shadow: 5px 5px 5px rgb(235, 235, 235); */
@@ -345,8 +369,8 @@ left: 15%; */
 
 .rightMenuImg {
   position: absolute;
-  top: 5px;
-  right: 10px;
-  width: 30px;
+  top: 10px;
+  right: 15px;
+  width: 40px;
   cursor: pointer;
 }
