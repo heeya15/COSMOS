@@ -105,19 +105,6 @@
       </b-row>
       <hr class="mt-3">
 
-      <b-row>  
-        <b-col cols="3">초기 장치 설정</b-col>
-        <b-col>
-          <input type="checkbox" id="mic" value="mic" v-model="input.settings.mic">
-          <label for="mic" class="ml-1 mr-5">마이크</label>
-          <input type="checkbox" id="cam" value="cam" v-model="input.settings.cam">
-          <label for="cam" class="ml-1 mr-5">카메라</label>
-          <input type="checkbox" id="speaker" value="speaker" v-model="input.settings.speaker">
-          <label for="speaker" class="ml-1 mr-5">스피커</label>
-        </b-col>
-      </b-row>
-      <hr class="mt-3">
-
       <b-row>
         <b-col cols="3">
           <label for="studyRule" class="mt-2">스터디 규칙</label>
@@ -217,6 +204,7 @@ export default {
         console.log(err)
       })
     },
+
     createPrivateStudy() {
       if (this.urlState === false){
         alert("url 중복확인을 해주세요!")
@@ -262,8 +250,6 @@ export default {
           console.log(res.data);
           console.log(res.data.study_no);
           this.study_no = res.data.study_no;
-          this.$router.push({name: 'StudyDetail', params: {studyNo: this.study_no}})  
-          this.$router.push({name: 'StudyDetail', params: {studyNo: this.study_no}})  
           this.$router.push({name: 'StudyDetail', params: {studyNo: this.study_no}})  
       })
       .catch(err => {
