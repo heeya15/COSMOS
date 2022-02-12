@@ -1,6 +1,7 @@
 package com.nsnt.cosmos.api.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nsnt.cosmos.api.request.PublicMemberRegisterDto;
 import com.nsnt.cosmos.api.request.PublicStudyRoomRegisterDto;
+import com.nsnt.cosmos.api.request.SavePublicStudyMemberDto;
 import com.nsnt.cosmos.api.service.PublicRoomService;
 import com.nsnt.cosmos.common.auth.SsafyUserDetails;
 import com.nsnt.cosmos.common.model.response.BaseResponseBody;
@@ -192,4 +194,23 @@ public class PublicRoomController {
 		return ResponseEntity.status(401).body(isBanned);
 	}
 	
+	
+	@ApiOperation(value = "해당 공개 스터디 멤버에게 강퇴 임시 권한 수정 기능 (publicmember_no, leader)2개  인자 (param)", notes = "해당 공개 스터디 멤버에게 강퇴 임시 권한  수정 기능")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 500, message = "서버 오류") })
+	@PutMapping("/updateAuthority")
+	public ResponseEntity<String> updateAuthority(@RequestBody SavePublicStudyMemberDto savePublicStudyMemberDto) throws Exception {
+		PublicMember publicstudymember;
+	
+		try {
+			publicstudymember = publicRoomService.findOnePublicStudyMember(savePublicStudyMemberDto.getPublicmember_no());
+		} catch (NoSuchElementException E) {
+			return ResponseEntity.status(500).body("공개 스터디 멤버 권한 수정 실패");
+		}
+		PublicMember updateStudyMember = publicRoomService.updatePublicStudyMemberAuthority(publicstudymember, savePublicStudyMemberDto);
+		System.out.println("업데이트 됨");
+		return new ResponseEntity<String>(SUCCESS + "\n" + updateStudyMember.toString(), HttpStatus.OK);
+	}
 }
