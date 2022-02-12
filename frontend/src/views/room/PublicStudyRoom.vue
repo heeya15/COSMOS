@@ -278,26 +278,26 @@ export default {
 		},
 
 		// 공개스터디 멤버 불러오기
-		getPublicStudyMembers(publicstudyroomid) {
-      http({
-        method: 'GET',
-        url: '/publicroom/search/publicMember',
-        params: { publicstudyroom_id: publicstudyroomid }
-      })
-      .then(res => {
-        console.log(res)
+		async getPublicStudyMembers(publicstudyroomid) {
+     	await http({
+				method: 'GET',
+				url: '/publicroom/search/publicMember',
+				params: { publicstudyroom_id: publicstudyroomid }
+			})
+			.then(res => {
+				console.log(res)
 				this.publicStudyMembers = res.data
 				this.publicStudyMembers.forEach(element => {
 					if (this.userId === element.user.userId){
 						if (element.leader){
-							this.isLeader = true
+						this.isLeader = true
 						}
 					}
 				})
-      })
-      .catch(err => {
-        console.log(err)
-      })
+			})
+			.catch(err => {
+				console.log(err)
+			})
 		},
 		// 멤버 강퇴하기(user_id,publicstudyroom_id)
 		outMember(memberId,idx) {
@@ -352,6 +352,10 @@ export default {
 
 		
 		joinSession () {
+			this.getPublicStudyMembers(this.roomUrl)
+			console.log("😜😜😜😜😜😜😜😜😜😜😜😜")
+			console.log(this.publicStudyMembers)
+
 			// --- Get an OpenVidu object ---
 			this.OV = new OpenVidu();
 
@@ -364,7 +368,6 @@ export default {
 			this.session.on('streamCreated', ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
 				this.subscribers.push(subscriber);
-				this.getPublicStudyMembers()
 			});
 
 			// On every Stream destroyed...
@@ -454,20 +457,25 @@ export default {
 			window.addEventListener('beforeunload', this.leaveSession)
 		},
 		async removePublicRoom(){
-			await http({
-				method: 'DELETE',
-				url: '/publicroom/remove/publicRoom',				
-				params: {publicstudyroom_id: this.mySessionId},
-			})
-			.then(() => {
-				
-			})
-			.catch(err => {
-				console.log(err)
-			});
+				this.getPublicStudyMembers(this.roomUrl)
+				console.log("😎😎😎😎😎😎")
+				console.log(this.publicStudyMembers.length)
+				if(this.publicStudyMembers.length === 0){
+					await http({
+						method: 'DELETE',
+						url: '/publicroom/remove/publicRoom',				
+						params: {publicstudyroom_id: this.mySessionId},
+					})
+					.then(() => {
+						
+					})
+					.catch(err => {
+						console.log(err)
+					});
+				}
 		},
 
-		leaveSession () {
+		async leaveSession () {
 			// --- Leave the session by calling 'disconnect' method over the Session object ---
 			if (this.session) this.session.disconnect();
 
@@ -479,13 +487,16 @@ export default {
 			this.OVForScreenShare = undefined;
 			this.sharingPublisher = undefined;
 			window.removeEventListener('beforeunload', this.leaveSession);
-			http({
+			await http({
 				method: 'DELETE',
 				url: '/publicroom/remove/publicMember',
 				headers: this.getUserToken(),
 				params: {user_id: this.userId, publicstudyroom_id: this.mySessionId},
 			})
 			.then(() => {
+				this.getPublicStudyMembers(this.roomUrl)
+				console.log("🤑🤑🤑🤑🤑🤑")
+				console.log(this.publicStudyMembers)
 				this.removePublicRoom()
 				this.$router.push({name:'MainPage'})
 			})
@@ -493,6 +504,9 @@ export default {
 				console.log(err)
 			});
 
+			// this.getPublicStudyMembers(this.roomUrl)
+			// 	console.log("🤑🤑🤑🤑🤑🤑")
+			// 	console.log(this.publicStudyMembers)
 
 			
 			this.sharing = !this.sharing;

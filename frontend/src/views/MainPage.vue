@@ -338,7 +338,7 @@ export default {
       this.$refs["my-modal"].hide();
     },
     // 공개 방 가기(가면 공개방 멤버로 추가)
-    goStudyRoom(publicstudyroomId, studyName) {
+    async goStudyRoom(publicstudyroomId, studyName) {
       console.log("공개방 가기 버튼 클릭.")
       console.log(publicstudyroomId, studyName);
       var token = localStorage.getItem('jwt')
@@ -362,10 +362,10 @@ export default {
         return
       } else {
         // 멤버로 추가
-        http({
+        await http({
           method:'POST',
           url:'/publicroom/register/publicMember',
-          data: {publicstudyroom_id: publicstudyroomId},
+          data: {leader : false, publicstudyroomId: publicstudyroomId},
           headers: this.getHeader()
         })
         .then(res => {
