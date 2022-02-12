@@ -11,10 +11,9 @@
         <b-row>
         <b-col cols="5">초기 장치 설정</b-col>
         <b-col>
-          <input type="checkbox" id="mic"  v-model="settings.mic">
-          <label for="mic" class="ml-1 mr-5">마이크</label>
+          <label for="mic" class="ml-1 mr-4">마이크ON</label>
           <input type="checkbox" id="cam"  v-model="settings.cam">
-          <label for="cam" class="ml-1 mr-5">카메라</label>
+          <label for="cam" class="ml-1 mr-4">카메라ON</label>
         </b-col>
         </b-row>
         <table class="table table-bordered">
