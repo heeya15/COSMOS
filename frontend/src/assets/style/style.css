@@ -16,54 +16,6 @@ body {
   /* padding-top: 60px; */
 }
 
-/* nav {
-  height: 50px;
-  width: 100%;
-  z-index: 1;
-  background-color: #4d4d4d !important;
-  border-color: #4d4d4d !important;
-  border-top-right-radius: 0 !important;
-  border-top-left-radius: 0 !important;
-}
-
-.navbar-header {
-  width: 100%;
-}
-
-.nav-icon {
-  padding: 5px 15px 5px 15px;
-  float: right;
-}
-
-nav a {
-  color: #ccc !important;
-}
-
-nav i.fa {
-  font-size: 40px;
-  color: #ccc;
-}
-
-nav a:hover {
-  color: #a9a9a9 !important;
-}
-
-nav i.fa:hover {
-  color: #a9a9a9;
-} */
-
-#main-container {
-  padding-bottom: 80px;
-  height: 80%;
-}
-
-/*vertical-center {
-	position: relative;
-	top: 30%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-}*/
-
 .horizontal-center {
   margin: 0 auto;
 }
@@ -172,51 +124,7 @@ a:hover .demo-logo {
   margin-top: 15px;
 }
 
-#session-header {
-  margin-bottom: 20px;
-}
-
-#session-title {
-  margin-left: 20px;
-  display: inline-block;
-}
-
-#video-container {
-  width: 100%;
-}
-
-/* #video-container video {
-  position: relative;
-  float: left;
-  width: 30%;
-  height: 180px;
-  cursor: pointer;
-  margin: 0 5px 30px;
-} */
-
-/* #video-container video + div {
-  float: left;
-  width: 50%;
-  position: relative;
-  margin-left: -50%;
-} */
-
-/* #video-container p {
-  display: inline-block;
-  background: #f8f8f8;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #777777;
-  font-weight: bold;
-  border-bottom-right-radius: 4px;
-} */
-
-video {
-  width: 100%;
-  height: auto;
-}
-
-#main-video p {
+/* #main-video p {
   position: absolute;
   display: inline-block;
   background: #f8f8f8;
@@ -226,24 +134,24 @@ video {
   color: #777777;
   font-weight: bold;
   border-bottom-right-radius: 4px;
-}
+} */
 
-#session img {
+/* #session img {
   width: 100%;
   height: auto;
   display: inline-block;
   object-fit: contain;
   vertical-align: baseline;
-}
+} */
 
-#session #video-container img {
+/* #session #video-container img {
   position: relative;
   float: left;
   width: 50%;
   cursor: pointer;
   object-fit: cover;
   height: 180px;
-}
+} */
 
 /* xs ans md screen resolutions*/
 

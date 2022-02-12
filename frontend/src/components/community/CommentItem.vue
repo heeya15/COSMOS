@@ -118,6 +118,7 @@ export default {
       this.editButton = true
     },
     updateComment() {
+      window.onbeforeunload = null;
       const updateCommentItem = {
         board_no: this.comment.boardNo,
         comment_no: this.comment.comment_no,

@@ -1,6 +1,10 @@
 <template>
 	<div id="main">
-		<div id="main-container">
+		<div id="main-container" class="d-flex">
+			<p>
+				<img v-if="!asideRight" src="@/assets/img/openvidu/menu.png" class="rightMenuImg" alt="menu" @click="asideRight=true">
+				<img v-else src="@/assets/img/openvidu/close.png" class="rightMenuImg" alt="menu" @click="asideRight=false">
+			</p>
 			<div id="session-aside-left" v-if="session">
 				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings" @click="outMemberModal=true"></p>
 
@@ -19,8 +23,8 @@
 							<tbody v-for="member in publicStudyMembers" :key="member.id">
 								<tr>
 								<td>{{member.user.userName}}({{member.user.userId}})</td>
-								<!-- <td><b-button v-if="member.user.userId!==userId && isLeader" variant="danger" @click="outMember(member.user.userId, member.id)">강퇴</b-button></td> -->
-								<td><b-button v-if="member.user.userId!==userId && isLeader" variant="danger" @click="outMember(member.id)">강퇴</b-button></td>
+								<td><b-button v-if="member.user.userId!==userId && isLeader" variant="danger" @click="outMember(member.user.userId, member.id)">강퇴</b-button></td>
+								<!-- <td><b-button v-if="member.user.userId!==userId && isLeader" variant="danger" @click="outMember(member.id)">강퇴</b-button></td> -->
 								</tr>
 							</tbody>
 						</table>
@@ -31,61 +35,25 @@
 				</div>
 
 			</div>
-			<div id="session-aside-right" v-if="session">
-				<div class="participant">
-					<div class="right_label">
-						<span>참가자</span>
-					</div>
-					<div class="participant_list"> <!-- 참가자 리스트 화면 -->
-						<user-list :stream-manager="publisher"/>
-						<user-list v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
-					</div>
-				</div>
-
-				<!-- 채팅 기능 시작 -->
-				<!-- <p @click="showChat">채팅</p> -->
-					<!-- <div class="chat" v-show="isChatVisible"> -->
-				<div class="user_chat">
-					<div class="right_label">
-						<span>채팅</span>
-					</div>
-					<div class="chat">
-						<div class="messages" v-html="messages" ref="messages">
-							<!-- <div class="messageLoop" v-for="(message, idx) in messages" :key="idx"> -->
-								<!-- <div class="text-left" >{{ userId }} 님의 메시지:</div> -->
-								<!-- <div class="text-left message__bubble">{{ message }}</div> -->
-							<!-- </div> -->
-						</div>
-
-						<form class="chatFooter" onsubmit="return false">
-							<input class="chat_input" id="msg" type="text" autocomplete="off" placeholder="메세지를 입력하세요.">
-							<button id="submitBtn" type="submit" @click="sendMessage()">Enter</button>
-						</form>
-					</div>
-				</div>
-				<!-- 채팅 기능 끝 -->
-
-			</div>
-			<div id="session-center" style="height:100%;">
+			<div id="session-center">
 				<div id="session" v-if="session">
 					<div id="session-header" class="d-flex">
 						<h1 id="session-title">{{ this.roomName }}</h1> <!-- 방 제목 -->
 					</div>
 					
 					<div>
-						<!--
-						<div id="main-video" class="col-md-6"> 본인 화면 
+						<!-- <div id="main-video" class="col-md-6">
 							<user-video :stream-manager="mainStreamManager"/>
+						</div> -->
+						<div id="video-container" class="d-flex flex-wrap row"> <!-- 참가자 화면 -->
+							<user-video class="col-md-4" v-if="!isScreenShared" :stream-manager= "publisher" @click.native="updateMainVideoStreamManager(publisher)"/> <!--자기 -->
+							<user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/> <!-- 다른 참가자 -->
 						</div>
-						-->
-						<div id="video-container" class="d-flex flex-wrap"> <!-- 참가자 화면 -->
-							<user-video :session="session" :stream-manager="publisher" @click.native="updateMainVideoStreamManager(publisher)"/>
-							<user-video :session="session" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/>
-						</div>
+						
 					</div>
 				</div>
 
-				<div id="sesion-footer-wrap" class="d-flex justify-content-center" style="width: 70%; height:10%;">
+				<div id="session-footer-wrap" class="d-flex justify-content-center">
 					<div id="session-footer" v-if="session">
 						<div class="session-footer_btn d-flex justify-content-center">
 							<!-- microphone 버튼 설정 -->
@@ -127,9 +95,43 @@
 							</div>
 						</div>	
 					</div>
+				</div> <!-- #session-footer-wrap -->
+			</div> <!-- #session-center -->
+			<div id="session-aside-right" v-if="session && asideRight">
+				<div class="participant">
+					<div class="right_label">
+						<span>참가자</span>
+					</div>
+					<div class="participant_list"> <!-- 참가자 리스트 화면 -->
+						<user-list :stream-manager="publisher"/>
+						<user-list v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"/>
+					</div>
 				</div>
-			</div>
-		</div> <!-- #container -->
+
+				<!-- 채팅 기능 시작 -->
+				<!-- <p @click="showChat">채팅</p> -->
+					<!-- <div class="chat" v-show="isChatVisible"> -->
+				<div class="user_chat">
+					<div class="right_label">
+						<span>채팅</span>
+					</div>
+					<div class="chat">
+						<div class="messages" v-html="messages" ref="messages">
+							<!-- <div class="messageLoop" v-for="(message, idx) in messages" :key="idx"> -->
+								<!-- <div class="text-left" >{{ userId }} 님의 메시지:</div> -->
+								<!-- <div class="text-left message__bubble">{{ message }}</div> -->
+							<!-- </div> -->
+						</div>
+
+						<form class="chatFooter" onsubmit="return false">
+							<input class="chat_input" id="msg" type="text" autocomplete="off" placeholder="메세지를 입력하세요.">
+							<button id="submitBtn" type="submit" @click="sendMessage()">Enter</button>
+						</form>
+					</div>
+				</div>
+				<!-- 채팅 기능 끝 -->
+			</div> <!-- session-right -->
+		</div> <!-- #main-container -->
 		
 	</div>
 </template>
@@ -211,6 +213,9 @@ export default {
 			// 강퇴관련
 			outMemberModal: false,
 			isLeader: null,
+
+			// 오른쪽 사이드 메뉴
+			asideRight: false,
 		}
 	},
 	computed:{
