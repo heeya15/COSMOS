@@ -219,9 +219,20 @@ export default {
 		}
 	},
 	computed:{
-		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo"]),
+		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "audio","video"]),
 	},
 	created(){
+		// 초기 장치 셋팅
+		this.audioEnabled =this.$store.state.audio,
+		this.videoEnabled= this.$store.state.video;
+		this.audio= this.$store.state.audio;
+		this.video= this.$store.state.video;
+		
+		if(this.video == true) this.videoMsg = "비디오 OFF";
+		else this.videoMsg = "비디오 ON";
+
+		if(this.audio == true) this.audioMsg = "마이크 OFF";
+		else this.audioMsg = "마이크 ON";
 		// 권한 여부 확인
 		http({
             method: 'GET',
@@ -267,26 +278,26 @@ export default {
 		},
 
 		// 공개스터디 멤버 불러오기
-		getPublicStudyMembers(publicstudyroomid) {
-      http({
-        method: 'GET',
-        url: '/publicroom/search/publicMember',
-        params: { publicstudyroom_id: publicstudyroomid }
-      })
-      .then(res => {
-        console.log(res)
+		async getPublicStudyMembers(publicstudyroomid) {
+     	await http({
+				method: 'GET',
+				url: '/publicroom/search/publicMember',
+				params: { publicstudyroom_id: publicstudyroomid }
+			})
+			.then(res => {
+				console.log(res)
 				this.publicStudyMembers = res.data
 				this.publicStudyMembers.forEach(element => {
 					if (this.userId === element.user.userId){
 						if (element.leader){
-							this.isLeader = true
+						this.isLeader = true
 						}
 					}
 				})
-      })
-      .catch(err => {
-        console.log(err)
-      })
+			})
+			.catch(err => {
+				console.log(err)
+			})
 		},
 		// 멤버 강퇴하기(user_id,publicstudyroom_id)
 		outMember(memberId,idx) {
@@ -340,7 +351,11 @@ export default {
 
 
 		
-		joinSession () {
+		async joinSession () {
+			await this.getPublicStudyMembers(this.roomUrl)
+			console.log("😜😜😜😜😜😜😜😜😜😜😜😜")
+			console.log(this.publicStudyMembers)
+
 			// --- Get an OpenVidu object ---
 			this.OV = new OpenVidu();
 
@@ -350,10 +365,10 @@ export default {
 			// --- Specify the actions when events take place in the session ---
 
 			// On every new Stream received...
-			this.session.on('streamCreated', ({ stream }) => {
+			this.session.on('streamCreated',  ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
 				this.subscribers.push(subscriber);
-				this.getPublicStudyMembers()
+				this.getPublicStudyMembers(this.roomUrl)
 			});
 
 			// On every Stream destroyed...
@@ -362,6 +377,7 @@ export default {
 				if (index >= 0) {
 					this.subscribers.splice(index, 1);
 				}
+				this.getPublicStudyMembers(this.roomUrl)
 			});
 
 			// On every asynchronous exception...
@@ -413,8 +429,8 @@ export default {
 						let publisher = this.OV.initPublisher(undefined, {
 							audioSource: undefined, // The source of audio. If undefined default microphone
 							videoSource: undefined, // The source of video. If undefined default webcam
-							publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
-							publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
+							publishAudio: this.audio,  	// Whether you want to start publishing with your audio unmuted or not
+							publishVideo: this.video,  	// Whether you want to start publishing with your video enabled or not
 							resolution: '640x480',  // The resolution of your video
 							frameRate: 30,			// The frame rate of your video
 							insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
@@ -443,20 +459,25 @@ export default {
 			window.addEventListener('beforeunload', this.leaveSession)
 		},
 		async removePublicRoom(){
-			await http({
-				method: 'DELETE',
-				url: '/publicroom/remove/publicRoom',				
-				params: {publicstudyroom_id: this.mySessionId},
-			})
-			.then(() => {
-				
-			})
-			.catch(err => {
-				console.log(err)
-			});
+				this.getPublicStudyMembers(this.roomUrl)
+				console.log("😎😎😎😎😎😎")
+				console.log(this.publicStudyMembers.length)
+				if(this.publicStudyMembers.length === 0){
+					await http({
+						method: 'DELETE',
+						url: '/publicroom/remove/publicRoom',				
+						params: {publicstudyroom_id: this.mySessionId},
+					})
+					.then(() => {
+						
+					})
+					.catch(err => {
+						console.log(err)
+					});
+				}
 		},
 
-		leaveSession () {
+		async leaveSession () {
 			// --- Leave the session by calling 'disconnect' method over the Session object ---
 			if (this.session) this.session.disconnect();
 
@@ -468,13 +489,16 @@ export default {
 			this.OVForScreenShare = undefined;
 			this.sharingPublisher = undefined;
 			window.removeEventListener('beforeunload', this.leaveSession);
-			http({
+			await http({
 				method: 'DELETE',
 				url: '/publicroom/remove/publicMember',
 				headers: this.getUserToken(),
 				params: {user_id: this.userId, publicstudyroom_id: this.mySessionId},
 			})
-			.then(() => {
+			.then(async () => {
+				await this.getPublicStudyMembers(this.roomUrl)
+				console.log("🤑🤑🤑🤑🤑🤑")
+				console.log(this.publicStudyMembers)
 				this.removePublicRoom()
 				this.$router.push({name:'MainPage'})
 			})

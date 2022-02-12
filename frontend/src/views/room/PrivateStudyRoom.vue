@@ -297,7 +297,14 @@ export default {
 		this.videoEnabled= this.$store.state.video;
 		this.audio= this.$store.state.audio;
 		this.video= this.$store.state.video;
-	
+
+		if(this.video == true) this.videoMsg = "비디오 OFF";
+		else this.videoMsg = "비디오 ON";
+
+		if(this.audio == true) this.audioMsg = "마이크 OFF";
+		else this.audioMsg = "마이크 ON";
+		// this.muteVideo();
+		// this.muteAudio();
 		// 권한 여부 확인
 		http({
             method: 'GET',
