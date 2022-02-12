@@ -346,8 +346,8 @@ export default {
 
 
 		
-		joinSession () {
-			this.getPublicStudyMembers(this.roomUrl)
+		async joinSession () {
+			await this.getPublicStudyMembers(this.roomUrl)
 			console.log("😜😜😜😜😜😜😜😜😜😜😜😜")
 			console.log(this.publicStudyMembers)
 
@@ -360,9 +360,10 @@ export default {
 			// --- Specify the actions when events take place in the session ---
 
 			// On every new Stream received...
-			this.session.on('streamCreated', ({ stream }) => {
+			this.session.on('streamCreated',  ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
 				this.subscribers.push(subscriber);
+				this.getPublicStudyMembers(this.roomUrl)
 			});
 
 			// On every Stream destroyed...
@@ -371,6 +372,7 @@ export default {
 				if (index >= 0) {
 					this.subscribers.splice(index, 1);
 				}
+				this.getPublicStudyMembers(this.roomUrl)
 			});
 
 			// On every asynchronous exception...
@@ -488,8 +490,8 @@ export default {
 				headers: this.getUserToken(),
 				params: {user_id: this.userId, publicstudyroom_id: this.mySessionId},
 			})
-			.then(() => {
-				this.getPublicStudyMembers(this.roomUrl)
+			.then(async () => {
+				await this.getPublicStudyMembers(this.roomUrl)
 				console.log("🤑🤑🤑🤑🤑🤑")
 				console.log(this.publicStudyMembers)
 				this.removePublicRoom()
@@ -499,9 +501,6 @@ export default {
 				console.log(err)
 			});
 
-			// this.getPublicStudyMembers(this.roomUrl)
-			// 	console.log("🤑🤑🤑🤑🤑🤑")
-			// 	console.log(this.publicStudyMembers)
 
 			
 			this.sharing = !this.sharing;
