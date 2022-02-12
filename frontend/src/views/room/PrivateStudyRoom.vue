@@ -333,7 +333,19 @@ export default {
 		// 상벌점 위한 스터디멤버 불러오기
 		this.getStudyMembers()
 	},
+	mounted() {
+    	window.addEventListener('beforeunload', this.unLoadEvent);
+  	},
+	beforeUnmount() {
+		window.removeEventListener('beforeunload', this.unLoadEvent);
+	},
 	methods: {
+		unLoadEvent: function (event) {
+			if (this.canLeaveSite) return;
+
+			event.preventDefault();
+			event.returnValue = '';
+		},
 		getUserToken(){
 			const token = localStorage.getItem('jwt')
 			const header = {
