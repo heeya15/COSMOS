@@ -58,6 +58,7 @@ export default {
 
   methods: {
     logOut() {
+      window.onbeforeunload = null;
       console.log(">>>>>>>>>>>>> Nav: ",);
       this.$store.dispatch('logOut')
       this.$router.push({ name: 'LogIn' })
