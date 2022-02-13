@@ -333,22 +333,26 @@ export default {
 				console.log(err)
 			})
 		},
-		// 멤버 강퇴하기(user_id,publicstudyroom_id)
-		outMember(memberId) {
-			http({
-				method: 'DELETE',
-				url:'publicroom/remove/publicMember',
-				params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
-			})
-			.then(res => {
-				console.log(res)
-			})
-			.catch(err => {
-				console.log(err)
-			})
+		
+		outUser(memberId) {
+			// http({
+			// 		method: 'DELETE',
+			// 		url:'publicroom/remove/publicMember',
+			// 		params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
+			// 	})
+			// 	.then(res => {
+			// 		console.log(res)
+			// 	})
+			// 	.catch(err => {
+			// 		console.log(err)
+			// 	})
+			console.log("🥵🥵🥵")
+			const { connection } = memberId.stream;
+			const {clientData} = JSON.parse(connection.data);
+			console.log(clientData);
 			
 			this.publisher.session.signal({
-				data: memberId,
+				data: clientData,
 				to: [],
 				type: "out"
 			})
@@ -357,7 +361,7 @@ export default {
 			http({
 				method: 'POST',
 				url: 'publicroom/register/bannedUser',
-				params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
+				params: { publicstudyroom_id: this.roomUrl,user_id: clientData}
 			})
 			.then(res => {
 				console.log(res)
@@ -365,35 +369,8 @@ export default {
 			.catch(err => {
 				console.log(err)
 			})
-
     },
-	outUser(memberId) {
-	
-		console.log("🥵🥵🥵")
-		const { connection } = memberId.stream;
-		const {clientData} = JSON.parse(connection.data);
-		console.log(clientData);
-		
-		this.publisher.session.signal({
-			data: clientData,
-			to: [],
-			type: "out"
-		})
 
-		// 강퇴 리스트 히스토리에 추가
-		http({
-			method: 'POST',
-			url: 'publicroom/register/bannedUser',
-			params: { publicstudyroom_id: this.roomUrl,user_id: clientData}
-		})
-		.then(res => {
-			console.log(res)
-		})
-		.catch(err => {
-			console.log(err)
-		})
-
-    },
     getLeave() {
       this.session.on("signal:out", () => {
         this.leaveSession();
@@ -419,7 +396,7 @@ export default {
 			.catch(err => {
 				console.log(err)
 			})
-			 this.publisher.session.signal({
+			this.publisher.session.signal({
                 data: '',
                 to: [],
                 type: "leader"
@@ -470,9 +447,10 @@ export default {
 				this.getPublicStudyMembers(this.roomUrl)
 			})
 
+			// 권한 넘기는 시그널
 			this.session.on("signal:leader", async() => {
-                await this.getPublicStudyMembers(this.roomUrl)
-            })
+        await this.getPublicStudyMembers(this.roomUrl)
+      })
 
 			// 같은 session 내에서 텍스트 채팅을 위한 signal
 			this.session.on('signal:my-chat', (event) => {
