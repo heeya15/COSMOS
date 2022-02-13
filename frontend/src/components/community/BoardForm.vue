@@ -245,7 +245,6 @@ export default {
       console.log(this.input.header)
     },
     falseHearder() {
-      window.onbeforeunload = null;
       this.input.header = false
       console.log(this.input.header)
       this.$router.go()
@@ -319,6 +318,7 @@ marquee {
 
 .backImg {
   background-image: url('https://t1.daumcdn.net/cfile/blog/1532170949754B963C');
+  /* background-color: #afa2dd; */
 }
 
 .btnTag {

@@ -1,10 +1,10 @@
 <template>
 	<div id="main">
 		<div id="main-container" class="d-flex">
-			<p>
-				<img v-if="!asideRight" src="https://o.remove.bg/downloads/bb7b17fb-07d6-40f9-acc1-3196d15a6a45/images-removebg-preview.png" class="rightMenuImg" alt="menu" @click="asideRight=true">
+			<!-- <div>
+				<div v-if="!asideRight" @click="asideRight=true"><b-icon class="rightMenuImg" icon="chat-right-dots"></b-icon></div>
 				<img v-else src="@/assets/img/openvidu/close.png" class="rightMenuImg" alt="menu" @click="asideRight=false">
-			</p>
+			</div> -->
 			<div id="session-aside-left" v-if="session">
 				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
 				<p v-if="userAuthority"><img src="@/assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="scoreModal=true"></p>
@@ -51,7 +51,8 @@
 							<div>
 								<h3 id="session-time"> {{ hours }} : {{ minutes }} : {{ seconds }} </h3>
 							</div>
-							<div id="timerBtn" v-if="this.userAuthority">
+							<!-- <div id="timerBtn" v-if="this.userAuthority"> -->
+							<div id="timerBtn" v-if="power.authority">
 								<b-button v-if="!timer" variant="primary" @click="startTimer()">시작</b-button>
 								<b-button v-else variant="danger" @click="stopTimer">
 									정지
@@ -72,9 +73,9 @@
 					</div>
 					
 					<div>
-						<!-- <div id="main-video" class="col-md-6">
-							<user-video :stream-manager="mainStreamManager"/>
-						</div> -->
+						<div id="main-video" class="col-md-8">
+							<user-video v-if="mainOnOff" :stream-manager="mainStreamManager"  :mainStream="true"  @click.native="deleteMainVideoStreamManager()"/>
+						</div>
 						<div id="video-container" class="d-flex flex-wrap row"> <!-- 참가자 화면 -->
 							<user-video class="col-md-4" v-if="!isScreenShared" :stream-manager= "publisher" @click.native="updateMainVideoStreamManager(publisher)"/> <!--자기 -->
 							<user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/> <!-- 다른 참가자 -->
@@ -131,7 +132,21 @@
 									<span class="footerBtnText">공유중지</span>
 								</button> <!-- 나가기 버튼 -->
 							</div>
-							
+
+							<!-- 채팅 버튼 -->
+							<div v-if="!asideRight" class="buttomMenu">
+								<b-button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="asideRight=true">
+									<b-icon icon="chat-right-dots-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+									<span class="footerBtnText">채팅보기</span>
+								</b-button>
+							</div>
+							<div v-else class="buttomMenu">
+								<b-button  class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="asideRight=false">
+									<b-icon icon="chat-right-dots" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+									<span class="footerBtnText">채팅닫기</span>
+								</b-button>
+							</div>
+
 							<!-- 나가기 버튼 설정 -->
 							<div class="buttomMenu">
 								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSession">
@@ -145,7 +160,7 @@
 			</div> <!-- #session-center -->
 			<div id="session-aside-right" v-if="session && asideRight">
 				<div class="participant">
-					<div class="right_label">
+					<div class="right_label_participant">
 						<span>참가자</span>
 					</div>
 					<div class="participant_list"> <!-- 참가자 리스트 화면 -->
@@ -231,6 +246,7 @@ export default {
 			spublisher:undefined,
 			sminStreamManager: undefined,
 			isScreenShared: false,
+			mainOnOff: false,
 
 			OV: undefined,
 			session: undefined,
@@ -262,7 +278,7 @@ export default {
 			edit: false,
 
 			// 권한 여부
-			userAuthority: false,
+			// userAuthority: false,
 
 			// 시간
 			userhistoryNo :0,
@@ -272,7 +288,7 @@ export default {
 		}
 	},
 	computed:{
-		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers", "audio","video"]),
+		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers", "audio","video","power"]),
 
 		totalTime() {
 			return Number(this.inputHour * 3600) + Number(this.inputMin * 60) + Number(this.inputSec)
@@ -306,21 +322,21 @@ export default {
 		// this.muteVideo();
 		// this.muteAudio();
 		// 권한 여부 확인
-		http({
-            method: 'GET',
-            url: `/user/leader`,
-            headers: this.getUserToken(),
-			params: {study_no: this.roomStudyNo},
-			// params: {study_no: 25},
-          })
-        .then((res) => {
-            this.userAuthority = res.data.authority;
-			// console.log("😉😉")
-			// console.log(res);
-          })
-          .catch(err => {
-            console.log(err)
-		});  
+		// http({
+    //         method: 'GET',
+    //         url: `/user/leader`,
+    //         headers: this.getUserToken(),
+		// 	params: {study_no: this.roomStudyNo},
+		// 	// params: {study_no: 25},
+    //       })
+    //     .then((res) => {
+    //         this.userAuthority = res.data.authority;
+		// 	// console.log("😉😉")
+		// 	// console.log(res);
+    //       })
+    //       .catch(err => {
+    //         console.log(err)
+		// });  
 
 		this.mySessionId = this.roomUrl;
 		this.myUserName = this.participant;
@@ -333,7 +349,19 @@ export default {
 		// 상벌점 위한 스터디멤버 불러오기
 		this.getStudyMembers()
 	},
+	mounted() {
+    	window.addEventListener('beforeunload', this.unLoadEvent);
+  	},
+	beforeUnmount() {
+		window.removeEventListener('beforeunload', this.unLoadEvent);
+	},
 	methods: {
+		unLoadEvent: function (event) {
+			if (this.canLeaveSite) return;
+
+			event.preventDefault();
+			event.returnValue = '';
+		},
 		getUserToken(){
 			const token = localStorage.getItem('jwt')
 			const header = {
@@ -636,9 +664,17 @@ export default {
 		},
 		
 		updateMainVideoStreamManager (stream) {
+			this.mainOnOff = true;
 			if (this.mainStreamManager === stream) return;
-			this.mainStreamManager = stream;
+			 	this.mainStreamManager = stream;
+				// this.mainStreamManager.stream.videoDimensions = {
+				// 	width:2000,
+				// 	height:2000
+				// };
 		},
+		deleteMainVideoStreamManager() { // 해당 화면 크게 한거 지우기.
+    	  this.mainOnOff = false;
+    	},
 
 		/**
 		 * --------------------------

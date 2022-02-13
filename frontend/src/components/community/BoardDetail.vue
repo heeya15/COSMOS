@@ -105,16 +105,16 @@
 
               <b-col cols="12" class="btnPart mt-2" v-show="this.boardInfo.header === false">
                 <div v-show="editButton === false">
-                  <b-button v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit" >수정</b-button>
-                  <b-button v-else  @click="applyStudy" variant="warning" size="sm">스터디 신청</b-button>
+                  <b-button class="updateBtn" v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit" >수정</b-button>
+                  <b-button class="updateBtn" v-else  @click="applyStudy" variant="warning" size="sm">스터디 신청</b-button>
                   <b-button class="backListBtn mx-1" size="sm" @click="goBoardMain">목록</b-button>
-                  <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
+                  <b-button class="deleteBtn" v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
                 <div v-show="editButton === true" cols="3" class="btnPart mt-2">
-                  <b-button v-if="editButton === true" variant="warning" size="sm" @click="updateForm">수정</b-button>
+                  <b-button class="updateBtn" v-if="editButton === true" variant="warning" size="sm" @click="updateForm">수정</b-button>
                   <b-button class="backListBtn mx-1" size="sm" @click="goBoardMain">목록</b-button>
                   <b-button v-if="userInfo.user_id === loginUserId" size="sm" @click="updatedCancel" class="cancelBtn mr-1">취소</b-button>
-                  <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
+                  <b-button class="deleteBtn" v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
               </b-col>
 
@@ -122,15 +122,15 @@
           <!-- 스터디 구할 때 수정 부분 -->
               <b-col cols="12" class="btnPart mt-2" v-show="this.boardInfo.header !== false">
                 <div v-show="editButton === false">
-                  <b-button v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit">수정</b-button>
+                  <b-button class="updateBtn" v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit">수정</b-button>
                   <b-button class="backListBtn mx-1" size="sm" @click="goBoardMain">목록</b-button>
-                  <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
+                  <b-button class="deleteBtn" v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
                 <div v-show="editButton === true" class="btnPart mt-2">
-                  <b-button v-if="editButton === true" variant="warning" size="sm" @click="studyWantBoardFormEdit">수정</b-button>
+                  <b-button class="updateBtn" v-if="editButton === true" variant="warning" size="sm" @click="studyWantBoardFormEdit">수정</b-button>
                   <b-button class="backListBtn mx-1" size="sm" @click="goBoardMain">목록</b-button>
                   <b-button v-if="userInfo.user_id === loginUserId" size="sm" @click="updatedCancel" class="cancelBtn mr-1">취소</b-button>
-                  <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
+                  <b-button class="deleteBtn" v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
               </b-col>
             </b-row>
@@ -148,6 +148,7 @@
 <script>
 import http from "@/util/http-common.js";
 import Comment from '@/components/community/Comment.vue'
+import {mapState} from 'vuex'
 
 export default {
   name: 'BoardDetail',
@@ -191,6 +192,8 @@ export default {
         studyType: null,
       },
       applyMembers: [],
+      studyTotalMember: null,
+      nowStudyMember: null,
     }
   },
   methods: {
@@ -225,9 +228,16 @@ export default {
       this.editButton = true
     },
 
+    
+      
     // 스터디 신청
     applyStudy() {
-      console.log(this.applyMembers, "신청 확인")
+      console.log(this.studyTotalMember, "신청 확인")
+      console.log(this.nowStudyMember, '현재 멤버 수')
+      if (this.studyTotalMember <= this.nowStudyMember) {
+        alert('이미 인원이 가득찬 스터디입니다.')
+        return
+      }
       if (this.applyMembers !== null) {
         for(var i=0; i < this.applyMembers.length; i++) {
             if (this.applyMembers[i].user_id === this.loginUserId) {
@@ -242,13 +252,35 @@ export default {
         headers: this.getToken(),
       })
       .then(() => {
+        this.getApplyMember()
         // 스터디장이 만든 스터디 이름 조회
         alert('신청이 완료되었습니다.')
+        
         
       })
       .catch((err) => {
         console.log(err)
         console.log(this.studyInfo.studyNo)
+      })
+    },
+    // 스터디 멤버 확인
+    getStudyMembers() {
+      this.$store.dispatch('getStudyMembers', this.studyInfo.studyNo)
+    },
+
+    getStudyInfo() {
+      http({
+        method: 'GET',
+        url: `/study/search/${this.studyInfo.studyNo}`
+      })
+      .then(res => {
+        console.log(this.studyTotalMember, '멤버 확인')
+        this.studyTotalMember = res.data.totalMember
+        this.nowStudyMember = res.data.numberOfMember
+        console.log(this.nowStudyMember, '>>>>작동확인<<<<')        
+      })
+      .catch(err => {
+        console.log(err)
       })
     },
 
@@ -298,7 +330,9 @@ export default {
         this.userInfo.user_id = res.data.user['userId']
         this.studyInfo.studyNo = res.data['studyNo']
         if (this.boardInfo.header === false) {
+          this.getStudyInfo()
           this.getApplyMember()
+          this.getStudyMembers()
         }
       })
       .catch(err => {
@@ -329,7 +363,6 @@ export default {
         headers: this.getToken()
       })
       .then(res =>{
-        console.log(res.data, '유저 정보 조회')
         this.loginUserId=res.data['user_id']
       })
       .catch(err =>{
@@ -411,10 +444,18 @@ export default {
       })
     },
   },
+  computed: {
+      ...mapState([
+        'studyMembers',
+      ])
+    },
+
   created() {
     this.getBoard()
     this.getUserInfo()
     this.getStudyType()
+    // this.getStudyMembers()
+    // this.getStudyInfo()
   },
 }
 </script>
@@ -518,7 +559,7 @@ p {
   left: 290px;
   top: 340px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
-  z-index: 1;
+
 }
 
 .round_box1 {
@@ -583,6 +624,8 @@ p {
   height: 31px;
   background-color: #f45384 !important;
   border: none;
+  /* color: black; */
+  color: white;
 }
 
 .backListBtn:hover {
@@ -615,11 +658,26 @@ p {
   height: 31px;
   background-color: rgb(71, 166, 255);
   border: none;
+  /* color: black; */
+  color: white;
 }
 
 .cancelBtn:hover {
   width: 47px;
   height: 31px;
   background-color: rgb(112, 184, 252);
+}
+
+.deleteBtn {
+  /* color: black; */
+  color: white;
+}
+
+.updateBtn {
+  color: white;
+}
+
+.updateBtn:hover {
+  color: white;
 }
 </style>

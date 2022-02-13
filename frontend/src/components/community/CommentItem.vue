@@ -1,36 +1,6 @@
 <template>
   <center>
-        <!-- visible 넣으면 그냥 보이게 -->
       <b-collapse id="collapse-2" visible>
-      <!-- <div class="container mt-3">
-        <div class="comment_body">
-            <div class="card">
-              <div class="comment-widgets">
-                  Comment Row
-                <div class="d-flex flex-row comment-row mt-3">
-                  <div class="comment-text w-100">
-                    <div style="display: flex; flex-wrap: wrap;">
-                      <p class="font-medium" style="font-size: 13px;">작성자 : {{ comment.user_id }}</p>
-                      <p class="text-muted float-right mx-3 mt-1" style="font-size: 10px"> {{ makeDate(comment.created_at) }}</p>
-                    </div>
-                    <div class="comment-footer"> 
-                      <b-form-input v-if="editButton === true" type="text" class=" d-block" style="text-align: left; font-size: 13px; height: 30px;" v-model="comment.content" @keyup.enter="updateComment"></b-form-input>
-                      <span v-else class=" d-block" style="text-align: left;"> {{ comment.content }}</span>
-                      <div v-show="editButton === false">
-                        <b-button variant="warning" class="button_tag" size="sm" v-if="userId === loginUserId" @click="editButtonChange"><b-icon icon="pencil"></b-icon></b-button>
-                        <b-button variant="danger" class="button_tag" size="sm" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash"></b-icon></b-button>
-                      </div>
-                      <div v-show="editButton === true">
-                        <b-button variant="warning" class="button_tag" size="sm" v-if="userId === loginUserId" @click="updateComment"><b-icon icon="pencil-square"></b-icon>수정</b-button>
-                        <b-button variant="danger" class="button_tag" size="sm" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash-fill"></b-icon>삭제</b-button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
         <div class="container">
         <hr>
           <div class="reply-list-area">
@@ -118,7 +88,6 @@ export default {
       this.editButton = true
     },
     updateComment() {
-      window.onbeforeunload = null;
       const updateCommentItem = {
         board_no: this.comment.boardNo,
         comment_no: this.comment.comment_no,

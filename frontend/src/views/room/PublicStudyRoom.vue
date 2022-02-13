@@ -1,10 +1,10 @@
 <template>
 	<div id="main">
 		<div id="main-container" class="d-flex">
-			<p>
+			<!-- <p>
 				<img v-if="!asideRight" src="@/assets/img/openvidu/menu.png" class="rightMenuImg" alt="menu" @click="asideRight=true">
 				<img v-else src="@/assets/img/openvidu/close.png" class="rightMenuImg" alt="menu" @click="asideRight=false">
-			</p>
+			</p> -->
 			<div id="session-aside-left" v-if="session">
 				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings" @click="outMemberModal=true"></p>
 
@@ -23,8 +23,10 @@
 							<tbody v-for="member in publicStudyMembers" :key="member.id">
 								<tr>
 								<td>{{member.user.userName}}({{member.user.userId}})</td>
-								<td><b-button v-if="member.user.userId!==userId && isLeader" variant="danger" @click="outMember(member.user.userId, member.id)">강퇴</b-button></td>
-								<!-- <td><b-button v-if="member.user.userId!==userId && isLeader" variant="danger" @click="outMember(member.id)">강퇴</b-button></td> -->
+								<td v-if="isLeader">
+									<b-button v-if="member.user.userId!==userId" variant="danger" @click="outMember(member.user.userId)">강퇴</b-button>
+									<b-button v-if="member.user.userId!==userId" variant="info" @click="giveAuthority(member.publicmemberNo, member.leader)">권한</b-button>
+								</td>
 								</tr>
 							</tbody>
 						</table>
@@ -45,8 +47,12 @@
 						<!-- <div id="main-video" class="col-md-6">
 							<user-video :stream-manager="mainStreamManager"/>
 						</div> -->
-						<div id="video-container" class="d-flex flex-wrap row"> <!-- 참가자 화면 -->
-							<user-video :session="session" class="col-md-4" v-if="!isScreenShared" :stream-manager= "publisher" @click.native="updateMainVideoStreamManager(publisher)"/> <!--자기 -->
+						<div v-if="isLeader" id="video-container" class="d-flex flex-wrap row"> <!-- 참가자 화면 -->
+							<user-video :session="session" class="col-md-4" :stream-manager= "publisher" @click.native="updateMainVideoStreamManager(publisher)"/> <!--자기 -->
+							<user-video-publisher :session="session" class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub), outUser(sub)"/> <!-- 다른 참가자 -->
+						</div>
+						<div v-else id="video-container" class="d-flex flex-wrap row"> <!-- 참가자 화면 -->
+							<user-video :session="session" class="col-md-4" :stream-manager= "publisher" @click.native="updateMainVideoStreamManager(publisher)"/> <!--자기 -->
 							<user-video :session="session" class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/> <!-- 다른 참가자 -->
 						</div>
 						
@@ -86,6 +92,20 @@
 								</button>
 							</div>
 
+							<!-- 채팅 버튼 -->
+							<div v-if="!asideRight" class="buttomMenu">
+								<b-button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="asideRight=true">
+									<b-icon icon="chat-right-dots-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+									<span class="footerBtnText">채팅보기</span>
+								</b-button>
+							</div>
+							<div v-else class="buttomMenu">
+								<b-button  class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="asideRight=false">
+									<b-icon icon="chat-right-dots" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+									<span class="footerBtnText">채팅닫기</span>
+								</b-button>
+							</div>
+
 							<!-- 나가기 버튼 설정 -->
 							<div class="buttomMenu">
 								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSession">
@@ -99,7 +119,7 @@
 			</div> <!-- #session-center -->
 			<div id="session-aside-right" v-if="session && asideRight">
 				<div class="participant">
-					<div class="right_label">
+					<div class="right_label_participant">
 						<span>참가자</span>
 					</div>
 					<div class="participant_list"> <!-- 참가자 리스트 화면 -->
@@ -145,6 +165,7 @@ import axios from 'axios';
 import http from "@/util/http-common.js";
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from '@/components/openvidu/PublicUserVideo';
+import UserVideoPublisher from '@/components/openvidu/PublicUserVideoPublisher';
 import UserList from '@/components/openvidu/UserList';
 import jwt_decode from "jwt-decode";
 
@@ -161,6 +182,7 @@ export default {
 	components: {
 		UserVideo,
 		UserList,
+		UserVideoPublisher
 	},
 	metaInfo: {
 		// title 입력하기
@@ -264,11 +286,23 @@ export default {
 		// 강퇴기능위해 공개스터디멤버 불러오기
 		this.getPublicStudyMembers(this.roomUrl)
 		console.log(this.roomUrl)
-		this.getLeave()
+		// this.getLeave()
 
 		
 	},
+	mounted() {
+		window.addEventListener('beforeunload', this.unLoadEvent);
+  },
+	beforeUnmount() {
+		window.removeEventListener('beforeunload', this.unLoadEvent);
+	},
 	methods: {
+		unLoadEvent: function (event) {
+			if (this.canLeaveSite) return;
+
+			event.preventDefault();
+			event.returnValue = '';
+		},
 		getUserToken(){
 			const token = localStorage.getItem('jwt')
 			const header = {
@@ -279,7 +313,7 @@ export default {
 
 		// 공개스터디 멤버 불러오기
 		async getPublicStudyMembers(publicstudyroomid) {
-     	await http({
+			await http({
 				method: 'GET',
 				url: '/publicroom/search/publicMember',
 				params: { publicstudyroom_id: publicstudyroomid }
@@ -300,33 +334,23 @@ export default {
 			})
 		},
 		// 멤버 강퇴하기(user_id,publicstudyroom_id)
-		outMember(memberId,idx) {
-			// http({
-			// 	method: 'DELETE',
-			// 	url:'publicroom/remove/publicMember',
-			// 	params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
-			// })
-			// .then(res => {
-			// 	console.log(res)
-			// 	const data = {
-			// 		leave: true,
-			// 	};
-			// 	this.publisher.session.signal({
-      //   data: JSON.stringify(data),
-      //   to: [this.this.subscribers[idx].stream.connection],
-      //   type: "kick",
-      // });
-			// })git pu
-			// .catch(err => {
-			// 	console.log(err)
-			// })
-			const data = {
-					leave: true,
-			};
+		outMember(memberId) {
+			http({
+				method: 'DELETE',
+				url:'publicroom/remove/publicMember',
+				params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
+			})
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+			
 			this.publisher.session.signal({
-			data: JSON.stringify(data),
-			to: [this.subscribers[idx].stream.connection],
-			type: "out",
+				data: memberId,
+				to: [],
+				type: "out"
 			})
 
 			// 강퇴 리스트 히스토리에 추가
@@ -343,12 +367,69 @@ export default {
 			})
 
     },
+	outUser(memberId) {
+		http({
+			method: 'DELETE',
+			url:'publicroom/remove/publicMember',
+			params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
+		})
+		.then(res => {
+			console.log(res)
+		})
+		.catch(err => {
+			console.log(err)
+		})
+		console.log("🥵🥵🥵")
+		const { connection } = memberId.stream;
+		const {clientData} = JSON.parse(connection.data);
+		console.log(clientData);
+		
+		this.publisher.session.signal({
+			data: clientData,
+			to: [],
+			type: "out"
+		})
+
+		// 강퇴 리스트 히스토리에 추가
+		http({
+			method: 'POST',
+			url: 'publicroom/register/bannedUser',
+			params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
+		})
+		.then(res => {
+			console.log(res)
+		})
+		.catch(err => {
+			console.log(err)
+		})
+
+    },
     getLeave() {
       this.session.on("signal:out", () => {
         this.leaveSession();
       })
     },
 
+		// 권한부여 기능
+		giveAuthority(publicmember_no,leader) {
+			if (leader === true){
+        var memberLeader = false
+      } else {
+        memberLeader = true
+      }
+			http({
+				method: 'PUT',
+				url: 'publicroom/updateAuthority',
+				data: {publicmember_no: publicmember_no, leader: memberLeader}
+			})
+			.then(res => {
+				console.log(res)
+				this.getPublicStudyMembers(this.roomUrl)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
 
 		
 		async joinSession () {
@@ -384,6 +465,17 @@ export default {
 			this.session.on('exception', ({ exception }) => {
 				console.warn(exception);
 			});
+
+			// receive 강퇴 시그널
+			this.session.on("signal:out", async (event) => {
+				var id = event.data;
+				console.log(this.userid);
+				if(id == this.myUserName){
+					await this.leaveSession();
+					alert("방에서 추방당하셨습니다.")
+				}
+				this.getPublicStudyMembers(this.roomUrl)
+			})
 
 			// 같은 session 내에서 텍스트 채팅을 위한 signal
 			this.session.on('signal:my-chat', (event) => {

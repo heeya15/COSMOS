@@ -84,12 +84,9 @@ export default {
     methods: {
         paginate (page_size, page_number) {
             let itemsToParse = this.users
-            console.log(itemsToParse.slice(0, 5))
-            console.log(page_number * page_size, (page_number + 1) * page_size)
             this.paginatedItems = itemsToParse.slice(page_number * page_size, (page_number + 1) * page_size);
         },
         onPageChanged() {
-            console.log(this.currentPage)
             this.paginate(10, this.currentPage - 1)
         },
 
@@ -113,7 +110,6 @@ export default {
         }, 
 
         userDelete(deleteUserId) {
-            window.onbeforeunload = null;
             if(confirm('정말 삭제하시겠습니까?') == true) {
                 http({
                     method: 'get',
@@ -121,7 +117,6 @@ export default {
                 })
                 .then(res => {
                     console.log(res)
-                    console.log(">>>>>>>>>> 유저 삭제 : ", deleteUserId)
                     this.$router.go();
                 })
                 .catch(err => {

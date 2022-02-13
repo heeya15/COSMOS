@@ -23,8 +23,10 @@
         <b-col cols="6">
           <b-form-input id="url" v-model="input.defaulturl" disabled></b-form-input>
           <b-form-input id="url" v-model="input.url" placeholder="URL을 입력하세요" @keydown="regexp()"></b-form-input>
-            <div ref="urlMsg" v-if="this.urlState==true && this.regexpstate == true" style="color:#3C77C9"></div>
-            <div ref="urleerorMsg" v-if="this.urlState==false || this.regexpstate==false" style="color:rgb(207, 1, 1);"></div>
+            <!-- <div ref="urlMsg" v-if="this.urlState==true && this.regexpstate == true" style="color:#3C77C9"></div> -->
+            <div v-text="urlMsg" v-if="this.urlState==true && this.regexpstate == true" style="color:#3C77C9"></div>
+            <!-- <div ref="urleerorMsg" v-if="this.urlState==false || this.regexpstate==false" style="color:rgb(207, 1, 1);"></div> -->
+            <div v-text="urlerrorMsg" v-if="this.urlState==false || this.regexpstate==false" style="color:rgb(207, 1, 1);"></div>
         </b-col>
         <b-col cols="3">
           <b-button @click="checkUrl" class="mt-4">중복확인</b-button>
@@ -53,15 +55,43 @@
           <div v-else>선택된 이미지가 없습니다.</div>
           
           <b-button class="mt-3" @click="$bvModal.show('bv-modal-studyImg')">이미지변경</b-button>
-          <b-modal id="bv-modal-studyImg" size="lg" centered hide-footer>
+          <b-modal id="bv-modal-studyImg" size="xl" centered hide-footer>
             <template #modal-title>
             <h3>스터디 이미지 선택</h3>
             </template>
-            <b-row class="ml-2">
+            <VueSlickCarousel ref="slick"
+              :arrows="true"
+              :dots="true"
+              :infinite="true" 
+              :speed="500"
+              :slidesToShow="4"
+              :slidesToScroll="1"
+              :swipeToSlide="true"
+              :adaptiveHeight="true"
+              :autoplay="true"
+              :autoplaySpeed="2000"
+              class="mb-5 mx-3"
+              style="margin-left: 10px; margin-right: 10px;"
+              align="center"
+            >
+              <div v-for="(images, idx) in studyImages" :key="idx" class="px-5 mb-lg-2" @click="info(publicstudy,$event.target)">
+                <button class="imgBtn" @click="[getImageSrc(idx+1),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg" for="studyWithMe" :src="studyImages[idx]" alt="study_with_me"></button>
+              </div>
+              <template #prevArrow>
+                <button>
+                </button>
+              </template>
+              <template #nextArrow>
+                <button>                  
+                </button>
+              </template>
+            </VueSlickCarousel>
+
+            <!-- <b-row class="ml-2">
               <b-col><button class="imgBtn" @click="[getImageSrc(1),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg1" for="studyWithMe" src="@/assets/img/study/studywithme.jpg" alt="study_with_me"></button></b-col>
               <b-col><button class="imgBtn" @click="[getImageSrc(2),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg2" for="study2" src="@/assets/cosmos_bg.png" alt="study2"></button></b-col>
               <b-col><button class="imgBtn" @click="[getImageSrc(3),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg3" for="study3" src="@/../public/테마6.jpg" alt="study3"></button></b-col>
-            </b-row>
+            </b-row> -->
           </b-modal>
         </b-col>
       </b-row>
@@ -84,11 +114,11 @@
         <b-col cols="3">
           <label for="totalMember" class="mt-2">인원 수</label>
         </b-col>
-        <b-col cols="5">
+        <b-col cols="4">
           <!-- 비공 -->
-          <b-form-input v-if="input.study_type==='private'" id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="5" maxlength="2"></b-form-input>
+          <b-form-input v-if="input.study_type==='private'" id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="6" min="2" maxlength="2"></b-form-input>
           <!-- 공개 -->
-          <b-form-input v-else id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="10" maxlength="2"></b-form-input>
+          <b-form-input v-else id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="10" min="2" maxlength="2"></b-form-input>
         </b-col>
         <b-col cols="1" class="mt-2">명</b-col>
       </b-row>    
@@ -126,8 +156,14 @@ import http from "@/util/http-common.js";
 import JwtDecode from 'jwt-decode'
 import { mapState } from 'vuex'
 
+import VueSlickCarousel from 'vue-slick-carousel'
+import 'vue-slick-carousel/dist/vue-slick-carousel.css'
+import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+
+
 export default {
   name: 'StudyRoomCreateForm',
+  components: { VueSlickCarousel },
   data() {
     return {
       input: {
@@ -152,6 +188,41 @@ export default {
       urlState: false,
       regexpstate:false,
       study_no:"",
+      urlMsg: '',
+      urlerrorMsg: '',
+      studyImages: [
+        'https://cdn.inflearn.com/public/files/courses/325806/3550090c-f665-48b1-a016-018120c3a35b/325806-1.png',
+        'https://javatutorial.net/wp-content/uploads/2017/12/spring-featured-image.png',
+        'https://www.freecodecamp.org/news/content/images/2020/05/Python-language.png',
+        'https://www.logolynx.com/images/logolynx/d5/d5cf47480225d049daf0050e4e1214cc.jpeg',
+        'https://media.vlpt.us/images/kim-jaemin420/post/235e8739-0f2a-48fe-8690-a51c6065fa45/c%E1%84%8B%E1%85%A5%E1%86%AB%E1%84%8B%E1%85%A5%20%E1%84%8A%E1%85%A5%E1%86%B7%E1%84%82%E1%85%A6%E1%84%8B%E1%85%B5%E1%86%AF.png',
+        'https://miro.medium.com/max/1400/0*Zn_HDykxaSmwBcEq.png',
+        'https://media.vlpt.us/images/codernineteen/post/092724ac-8b2a-47a3-bc36-5a49e0cc04bc/react%20thumb.png',
+        'https://i.ibb.co/gg6hwsG/studywithme.jpg',
+        'https://i.ibb.co/N1gPh3J/working-at-home.png',
+        'https://i.ibb.co/PNzm2Cw/artificial-intelligence-4111582-1920.jpg',
+        'https://i.ibb.co/qMMbw5D/android.png',
+        'https://i.ibb.co/LrxNMLY/angularjs.jpg',
+        'https://i.ibb.co/17GKTVr/arduino.png',
+        'https://i.ibb.co/JcmCC0T/Blockchain.jpg',
+        'https://i.ibb.co/CQmhf14/bigdata.jpg',
+        'https://i.ibb.co/KxD9SzZ/C.png',
+        'https://i.ibb.co/jz2xT5n/css.webp',
+        'https://i.ibb.co/MBV2BhD/html.webp',
+        'https://i.ibb.co/BN882vj/javascript.jpg',
+        'https://i.ibb.co/hWpp2FS/database.jpg',
+        'https://i.ibb.co/k30ywt0/django.png',
+        'https://i.ibb.co/8x1Bj1S/oracle.png',
+        'https://i.ibb.co/Tg2cF9M/php.jpg',
+        'https://i.ibb.co/xsMy3wt/cs.jpg',
+        'https://i.ibb.co/QQ6TrHB/mysql.png',
+        'https://i.ibb.co/Bfq3WVR/kotlin.png',
+        'https://i.ibb.co/BGLHv1j/raspberrypi.gif',
+        'https://i.ibb.co/Z200ZZR/ruby.jpg',
+        'https://i.ibb.co/JHCL6sY/swift.png',
+        'https://i.ibb.co/HtwM0Wx/study1.jpg',
+        'https://i.ibb.co/B6dP6Rh/study2.gif',
+      ],
     }
   },
   methods: {
@@ -168,10 +239,10 @@ export default {
           }
       // 비공개 일 때
       } else {
-          if(this.input.totalMember >= 0 && this.input.totalMember <= 5) {
+          if(this.input.totalMember >= 0 && this.input.totalMember <= 6) {
           return true;
         } else {
-            alert('5명까지 입력이 가능합니다');
+            alert('6명까지 입력이 가능합니다');
             this.input.totalMember = null
             return false;
           }
@@ -186,7 +257,8 @@ export default {
       return header
     },
     getImageSrc(num) {
-      var image = document.getElementById(`studyImg${num}`).src
+      // var image = document.getElementById(`studyImg${num}`).src
+      var image = this.studyImages[num-1]
       this.input.image = image
     },
     getStudyType() {
@@ -327,14 +399,15 @@ export default {
     //   });  
     // },
     regexp(){
-    const notPhoneticSymbolExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+      const notPhoneticSymbolExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
       if(notPhoneticSymbolExp.test(this.input.url)){ // 한글이 아니라면
           this.regexpstate = false;
-          this.$refs.urleerorMsg.innerText = '영어로 url주소를 입력해주세요';
+          this.urlState = false;
+          this.urlerrorMsg = '영어로 url주소를 입력해주세요';
       }else{
           this.regexpstate = true;
-          this.$refs.urleerorMsg.innerText = '';
-          this.$refs.urlMsg.innerText ='';
+          this.urlerrorMsg = '';
+          this.urlMsg ='';
       }
   },
     checkUrl() {   
@@ -344,12 +417,13 @@ export default {
         params: {url: this.input.defaulturl+this.input.url}
       })
       .then(res => {
+        console.log('요청보냄',res.data)
         if(res.data == false && this.regexpstate == true){
           this.urlState = true
-          this.$refs.urlMsg.innerText = '사용가능한 url주소 입니다.';
+          this.urlMsg = '사용가능한 url주소 입니다.';
         }else if(res.data == true && (this.regexpstate == false || this.regexpstate == true)  ){ 
           this.urlState = false;
-          this.$refs.urleerorMsg.innerText = '사용할 수 없는 url주소 입니다.';
+          this.urlerrorMsg = '사용할 수 없는 url주소 입니다.';
         }    
       })
       .catch(err => {
@@ -399,7 +473,8 @@ export default {
 .studyImg {
   height: 150px;
   width: 200px;
-  border-radius: 8px;
+  border-radius: 10px;
+  border: 3px solid #c8c1e4;
 }
 .study_password {
   height:34px;
@@ -419,4 +494,13 @@ export default {
 .imgBtn:focus {
   border-radius: 8px;
 }
+
+/* 스터디 이미지 슬라이드 좌,우 화살표 */
+.slick-prev::before{
+  content: url("https://i.ibb.co/JkGwjx0/icon-prev.png");
+}
+.slick-next::before{
+  content: url("https://i.ibb.co/q1kCmY6/icon-next.png");
+}
+
 </style>

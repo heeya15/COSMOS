@@ -134,8 +134,8 @@
                         <b-col cols="3">
                           <label for="totalMember" class="mt-2">스터디 총 인원</label>
                         </b-col>
-                        <b-col>
-                          <b-form-input id="totalMember" v-model="modifyInfo.totalMember" @keyup="recruitLimit" type="number"></b-form-input>
+                        <b-col cols="4">
+                          <b-form-input id="totalMember" v-model="modifyInfo.totalMember" @keyup="recruitLimit" type="number" max="10" min="2"></b-form-input>
                         </b-col>
                       </b-row>
                       <hr class="mt-3">
@@ -166,10 +166,15 @@
       </div>
 
       <hr>
-      <div class="buttongroup d-flex justify-content-between" style="width:800px;">
+      <div v-if="power.leader" class="buttongroup d-flex justify-content-between" style="width:800px;">
         <b-button :class="{noticeBtn : toggleNotice}" @click="togglenotice">공지사항</b-button>
         <b-button :class="{applyBtn : toggleApply}" @click="toggleapply">가입 요청 확인 </b-button>
 
+        <!-- 스터디장만 회원추가가능 -->
+        <b-button :class="{memberBtn : toggleMember}" @click="togglemember">스터디원 정보</b-button>
+      </div>
+      <div v-else class="buttongroup" style="width:800px;">
+        <b-button class="mr-5" :class="{noticeBtn : toggleNotice}" @click="togglenotice">공지사항</b-button>
         <!-- 스터디장만 회원추가가능 -->
         <b-button :class="{memberBtn : toggleMember}" @click="togglemember">스터디원 정보</b-button>
       </div>
@@ -240,11 +245,10 @@ export default {
   methods: {
     // 인원 수 제한
     recruitLimit() { 
-      if(this.modifyInfo.totalMember >= 0 && this.modifyInfo.totalMember <= 5) {
-        // if ()
+      if(this.modifyInfo.totalMember >= 0 && this.modifyInfo.totalMember <= 10) {
         return true;
       } else {
-          alert('5명까지 입력이 가능합니다');
+          alert('10명까지 입력이 가능합니다');
           this.modifyInfo.totalMember = null
           return false;
         } 

@@ -1,24 +1,7 @@
 <template>
 
   <div id="main_page">
-      <!-- <b-carousel
-        id="carousel-fade"
-        style="text-shadow: 0px 0px 2px #000"
-        fade
-        indicators
-        :interval="3000"
-        img-width="1024"
-        img-height="480"
-      >
-        <b-carousel-slide
-          img-src="https://i.ibb.co/Vqz7Dcf/main-img1.png.jpg"
-        ></b-carousel-slide>
-        <b-carousel-slide
-          img-src="https://i.ibb.co/1Msjgmz/main-img2.jpg"
-        ></b-carousel-slide>
-      </b-carousel> -->
-      <!-- <div class="circle"></div> -->
-       <!-- 모달 시작-->
+      <!-- 모달 시작-->
       <b-modal ref="my-modal" :id="infoModal.id" hide-footer centered hide-header>
         <center>
           <h4 slot="header" class="card-title">방 입장을 위한 초기 세팅</h4>
@@ -35,7 +18,7 @@
         </b-row>
         <div class="text-center">
           <button @click="hideModal" class="cancelBtn ml-3 float-right" >취소</button>
-          <button @click="goStudyRoom(infoModal.publicstudyroomId, infoModal.studyName )" type="submit" class="enterBtn ml-3 float-right" >입장</button>
+          <button @click="goStudyRoom(infoModal.publicstudyroomId, infoModal.studyName , infoModal.numberOfMember )" type="submit" class="enterBtn ml-3 float-right" >입장</button>
         </div>
       </b-modal>
       <!-- 모달 끝 -->
@@ -43,7 +26,8 @@
       <div class="banner">
         <div class="bannerBox">
           <div class="leftBox">
-            <img class="cosmos" src="@/assets/main_img7.png" alt="코스모스">
+            <img class="cosmos" src="https://i.ibb.co/nm8jZHr/main-img7.png" alt="main-img7" border="0"><br/>
+
           </div>
           <div class="rightBox" align="center">
             <div class="wrapper" >
@@ -65,10 +49,80 @@
         <hr class="line">
       </div>
 
+      <!-- 랭킹 Start -->
+      <div align="center" style="margin-bottom: 80px;">
+        <div id="rank_section">
+          <h1 class="text-center mb-5">랭킹</h1>
+          <!-- <h1 class="text-center mb-5">{{ counter }}</h1> -->
+          
+          <div class="text-right">
+            <!-- <b-dropdown id="dropdown-left" variant="warning" text="랭킹기준" class="m-2">
+              <b-dropdown-item href="#">일 (Day)</b-dropdown-item>
+              <b-dropdown-item href="#">주 (Week)</b-dropdown-item>
+              <b-dropdown-item href="#">월 (Month)</b-dropdown-item>
+            </b-dropdown> -->
+            <p class="mt-3" style="font-family: BMJual; color: #828282;">{{ date }}({{ day }}) 06:00 AM UPDATED</p>
+          </div>
+          <div v-show="shortRank">
+            <div class="rolling_box d-flex">
+              <ul id ="rolling_box">
+                <li class="card_sliding" id ="first"></li>
+                <li class="" id ="second"></li>
+                <li class="" id ="third"></li>
+              </ul>
+              <img id="downArrowBtn" src="https://i.ibb.co/p1jKdLj/down-filled-triangular-arrow.png" alt="down-filled-triangular-arrow" border="0" @click="rankClick"/>
+            </div>
+          </div>
+          <div class="rankTable" v-show="longRank">
+            <table class="table border table-hover scrollTable">
+              <col style="width:100%">
+              <thead>
+                <tr col-span="2">
+                  <th><p></p></th>
+                  <th class="rankHeader">
+                    <img class="flex-fill" id="exitBtn" src="https://i.ibb.co/GWXqhqv/close.png" alt="close" border="0" @click="rankClick">
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody v-for="(data, idx) in dailyRank" :key="idx">
+                <tr>
+                  <div v-if="idx==0">
+                    <td><img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                    <td><p class="ml-5 mt-3"> {{ data.userhistoryDayId.user_id }} </p></td>
+                  </div>
+                  <div v-if="idx==1">
+                    <td><img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                    <td><p class="ml-5 mt-3"> {{ data.userhistoryDayId.user_id }} </p></td>
+                  </div>
+                  <div v-if="idx==2">
+                    <td><img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                    <td><p class="ml-5 mt-3"> {{ data.userhistoryDayId.user_id }} </p></td>
+                  </div>
+                  <div v-if="idx > 2">
+                    <td><p class="mx-4 mt-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
+                    <td><p class=" mt-3" style="margin-left: 35px;"> {{ data.userhistoryDayId.user_id }} </p></td>
+                  </div>
+                </tr>
+              </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+      <!-- 랭킹 End -->
+
+      <div class="my-5" align="center">  
+        <hr class="line">
+      </div>
+
       <!-- 게시판 목록 Start -->
       <center>
-        <h1 class="text-center mb-5">모집 중인 스터디</h1>
         <div id="board_section">
+        <div class="d-flex justify-content-between studyHeader">
+          <div></div>
+          <h1 class="mb-3">모집 중인 스터디</h1>
+          <img class="mr-2" id="plusBtn" src="https://i.ibb.co/fFmxj3J/plus.png" alt="plus" border="0" @click="goToBoardList">
+        </div>
           <table class="table table-boardered table-hover">
             <col style="width:70%">
             <col style="width:30%">
@@ -78,8 +132,10 @@
               <th>🌼 분류 🌼</th>
             </thead>
             <tbody v-for="(board, idx) in boardList" :key="idx" @click="goBoardDetail(board.boardNo)">
-              <td><p class="mx-3">🌷 {{ board.contentTitle }} 🌷</p></td>
-              <td align="center"><p>🌷 {{ board.studytypeName }} 🌷</p></td>
+              <!-- <td><p class="mx-3">🌷 {{ board.contentTitle }} 🌷</p></td> -->
+              <!-- <td align="center"><p>🌷 {{ board.studytypeName }} 🌷</p></td> -->
+                <td><p class="mx-3"> {{ board.contentTitle }} </p></td>
+                <td align="center"><p> {{ board.studytypeName }} </p></td>
               <p></p>
             </tbody>
           </table>
@@ -94,59 +150,40 @@
       <!-- 오픈(공개) 스터디 목록 Start -->
       <div>
         <h1 class="text-center">오픈 스터디</h1>
-        <!-- <div class="my-5 p-5" align="center">  
-          <div v-if="publicStudyList.length >= 1" >
-            <div class="row">
-              <div v-for="publicstudy in publicStudyList" :key="publicstudy.publicstudyroomId" class="col-md-4 mb-3 mb-lg-2">
-                <div class="hover hover-1 text-white rounded"><img src="https://bootstrapious.com/i/snippets/sn-img-hover/hoverSet-3.jpg" alt="" @mouseover="getPublicStudyMember(publicstudy.publicstudyroomId)">
-                  <div class="hover-overlay"></div>
-                  <div class="hover-1-content px-5 py-4">
-                    <h3 class="hover-1-title text-uppercase font-weight-bold mb-0"><span class="font-weight-light">{{ publicstudy.studyName }}</span></h3>
-                    <p class="hover-1-description font-weight-light mb-0">{{ publicstudy.studyType.studytypeName }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-else>아직 가입한 스터디가 없습니다.</div>
-        </div>
-      </div>
-
-      <div> -->
         <div class="my-5 p-5" align="center">  
           <div v-if="publicStudyList.length >= 1" >
         <!-- <VueSlickCarousel ref="slick" :options="slickOption"> -->
-        <VueSlickCarousel ref="slick" 
-          :arrows="true"
-          :dots="true"
-          :infinite="true" 
-          :speed="500"
-          :slidesToShow="3"
-          :slidesToScroll="1"
-          :swipeToSlide="true"
-          :adaptiveHeight="true"
-          :autoplay="true"
-          :autoplaySpeed="2000"
-        >
-            <div v-for="(publicstudy, idx) in publicStudyList" :key="idx" class="px-5 mb-lg-2" @click="info(publicstudy,$event.target)">
-                <div class="hover hover-1 text-white rounded">
-                  <img class="studyImg" :src="publicstudy.image" alt="Study Image is missing... :(">
-                  <div class="hover-1-number">{{ currentParticipant[idx] }} &#47; {{ publicstudy.numberOfMember }}</div>
-                  <div class="hover-1-content px-5 py-4">
-                    <h3 class="hover-1-title text-uppercase mb-0"><span :model="publicstudy.studyName">{{ publicstudy.studyName }}</span></h3>
-                    <p class="hover-1-description mb-1">{{ publicstudy.studyType.studytypeName }}</p>
+          <VueSlickCarousel ref="slick" 
+            :arrows="true"
+            :dots="true"
+            :infinite="true" 
+            :speed="500"
+            :slidesToShow="3"
+            :slidesToScroll="1"
+            :swipeToSlide="true"
+            :adaptiveHeight="true"
+            :autoplay="true"
+            :autoplaySpeed="2000"
+          >
+              <div v-for="(publicstudy, idx) in publicStudyList" :key="idx" class="px-5 mb-lg-2" @click="info(publicstudy,$event.target)">
+                  <div class="hover hover-1 text-white rounded">
+                    <img class="studyImg" :src="publicstudy.image" alt="Study Image is missing... :(">
+                    <div class="hover-1-number">{{ currentParticipant[idx] }} &#47; {{ publicstudy.numberOfMember }}</div>
+                    <div class="hover-1-content px-5 py-4">
+                      <h3 class="hover-1-title text-uppercase mb-0"><span :model="publicstudy.studyName">{{ publicstudy.studyName }}</span></h3>
+                      <p class="hover-1-description mb-1">{{ publicstudy.studyType.studytypeName }}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <template #prevArrow>
-                <button>
-                </button>
-              </template>
-              <template #nextArrow>
-                <button>                  
-                </button>
-              </template>
-            </VueSlickCarousel>
+                <template #prevArrow>
+                  <button>
+                  </button>
+                </template>
+                <template #nextArrow>
+                  <button>                  
+                  </button>
+                </template>
+              </VueSlickCarousel>
             </div>
           <div v-else>아직 가입한 스터디가 없습니다.</div>
         </div>
@@ -164,6 +201,9 @@ import http from "@/util/http-common.js";
 import VueSlickCarousel from 'vue-slick-carousel'
 import 'vue-slick-carousel/dist/vue-slick-carousel.css'
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+import Vue from 'vue'
+import VueCrontab from 'vue-crontab'
+Vue.use(VueCrontab)
 
 import JwtDecode from 'jwt-decode'
 import { mapState } from 'vuex'
@@ -173,23 +213,23 @@ export default {
 
   data() {
     return {
-      // slide: 0,
-      // sliding: null
-      // board_no: this.$store.state.boardNo,
       boardItems: null,
       boardList: [],
-      // publicStudyList: [{
-      //   image: '',
-      //   numberOfMember: 0,
-      //   publicstudyroomId: '',
-      //   studyName: '',
-      //   studyRule: '',
-      //   studyType: {
-      //     studyTypeName: '',
-      //     studyTypeNo: '',
-      //   },
-      //   url: '',
-      // }],
+
+      // 랭킹 변수
+      date: '',
+      day: '',
+
+      dataCnt: 0,
+      dailyRank: [],
+      weeklyRank: [],
+      monthlyRank: [],
+      shortRank: true,
+      longRank: false,
+      move: 2,
+      listCnt: 1,
+      rankType: 0,      // 랭킹 시간 기준을 나타내는 수치
+      rankingType: '',  // 랭킹 시간(일, 주, 월) 기준을 나타내는 메시지
 
       publicStudyList: [],
       currentParticipant: [],
@@ -197,6 +237,7 @@ export default {
         id: "info-modal",
         publicstudyroomId:"",
         studyName:"",
+        numberOfMember:""
       },
 
       slickOption: {
@@ -208,6 +249,7 @@ export default {
         slidesToScroll: 1,
         swipeToSlide: true,
       },
+      // 마이크, 캠 설정.
       settings: {
         mic: false,
         cam: false,
@@ -215,6 +257,8 @@ export default {
       },
       // 강퇴여부
       isBanned: null,
+      // 인원수 사용 여부
+      count : 0
     }
   },
 
@@ -226,16 +270,7 @@ export default {
       }
       return header
     },
-    // carousel 메소드
-    // onSlideStart(slide) {
-    //   console.log(slide)
-    //   this.sliding = true
-    // },
 
-    // onSlideEnd(slide) {
-    //   console.log(slide)
-    //   this.sliding = false
-    // },
     start() {
       if (this.$store.state.isLogin){
         this.$router.push({name: 'StudyRoomCreateForm'})
@@ -313,7 +348,19 @@ export default {
         console.log(err)
       })
     },
-
+     async getPublicStudyMemberCount(publicstudyroomid) {
+      await http({
+        method: 'GET',
+        url: '/publicroom/search/publicMember',
+        params: { publicstudyroom_id: publicstudyroomid }
+      })
+      .then(res => {
+        this.count  = res.data.length;
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
     // 이전 강퇴 여부 체크
     checkBanned(publicstudyroom_id){
       http({
@@ -329,18 +376,29 @@ export default {
         })     
       },
      // 모달 값 셋팅
-    info(publicstudy,button) {
+   async info(publicstudy,button) {
       this.infoModal.publicstudyroomId = publicstudy.publicstudyroomId;
       this.infoModal.studyName = publicstudy.studyName;
+      this.infoModal.numberOfMember = publicstudy.numberOfMember; 
+      await this.getPublicStudyMemberCount(this.infoModal.publicstudyroomId); // 해당 스터디룸 멤버 참가자 수 들고옴.
+      console.log("모달창 들어옴?")
+      console.log(this.count);
+      console.log(this.infoModal.numberOfMember);
+      if(this.count == this.infoModal.numberOfMember){
+          alert("현재 해당 공개 스터디룸에 최대 인원으로 가득 차 있습니다.");
+        return;
+      }
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
     },
     hideModal() {
       this.$refs["my-modal"].hide();
     },
     // 공개 방 가기(가면 공개방 멤버로 추가)
-    async goStudyRoom(publicstudyroomId, studyName) {
+    async goStudyRoom(publicstudyroomId, studyName ) {
+     
       console.log("공개방 가기 버튼 클릭.")
       console.log(publicstudyroomId, studyName);
+     
       var token = localStorage.getItem('jwt')
       var decoded = JwtDecode(token);
       var myId = decoded.sub;
@@ -358,8 +416,8 @@ export default {
       // 강퇴된적 있는 유저면 입장 불가
       this.checkBanned(publicstudyroomId)
       if (this.isBanned == true){
-        alert('입장이 불가능한 스터디입니다.')
-        return
+        alert('입장이 불가능한 스터디입니다.');
+        return;
       } else {
         // 멤버로 추가
         await http({
@@ -377,6 +435,92 @@ export default {
         })
         console.log(">>>>>>>>>>> ",publicstudyroomId)
       }      
+      
+    },
+
+    goToBoardList() {
+      this.$router.push({name: 'MainBoard'})
+    },
+
+    // 일별 랭킹
+    getDailyRank() {
+      http({
+        method: 'GET', 
+        url: '/history/searchAll/day',
+      })
+      .then(res => {
+        var today = new Date()
+        var year = today.getFullYear()
+        var month = today.getMonth()
+        var date = today.getDate()
+
+        month = month.length == 1 ? "0" + month : month
+        date = date.length == 1 ? "0" + date : date
+
+        this.date = year + "-" + month + "-" + date
+        this.day = today.toString().substring(0,3)
+        this.dailyRank = []   // 이전 데이터 비우기
+        this.dailyRank = res.data        
+      })
+      .error(err => {
+        console.log(err)
+      })
+    },
+
+    // 주별 랭킹
+    getWeeklyRank() {
+      http({
+        method: 'GET', 
+        url: '/history/searchAll/week',
+      })
+      .then(res => {
+        var today = new Date()
+        var year = today.getFullYear()
+        var month = today.getMonth()
+        var date = today.getDate()
+
+        month = month.length == 1 ? "0" + month : month
+        date = date.length == 1 ? "0" + date : date
+
+        this.date = year + "-" + month + "-" + date
+        this.day = today.toString().substring(0,3)
+        this.weeklyRank = []   // 이전 데이터 비우기
+        this.weeklyRank = res.data        
+      })
+      .error(err => {
+        console.log(err)
+      })
+    },
+
+    // 월별 랭킹
+    getmonthlyRank() {
+      http({
+        method: 'GET', 
+        url: '/history/searchAll/month',
+      })
+      .then(res => {
+        var today = new Date()
+        var year = today.getFullYear()
+        var month = today.getMonth()
+        var date = today.getDate()
+
+        month = month.length == 1 ? "0" + month : month
+        date = date.length == 1 ? "0" + date : date
+
+        this.date = year + "-" + month + "-" + date
+        this.day = today.toString().substring(0,3)
+        this.monthlyRank = []   // 이전 데이터 비우기
+        this.monthlyRank = res.data        
+      })
+      .error(err => {
+        console.log(err)
+      })
+    },
+
+    rankClick() {
+      this.shortRank = !this.shortRank;
+      this.longRank = !this.longRank;
+      console.log("shortRank : ", this.shortRank, " longRank: ", this.longRank)
     },
 
   },
@@ -389,10 +533,140 @@ export default {
     this.getPublicStudy()
   },
 
-  // mounted() {
-  //   setInterval(this.getPublicStudy, 5000);
-  //   console.log("5 second later")
-  // },
+  mounted() {
+    // 오픈 스터디 접속 멤버 수 5초마다 새로 불러오기
+    // setInterval(this.getPublicStudy, 5000);
+    //   console.log("5 second later")
+  
+    // 매일 오전 6시마다 일별 랭킹 값을 새로 가져옴
+    this.$crontab.addJob({
+      name: 'dailyrank',
+      interval: {
+        seconds: '0', 
+        minutes:'33', 
+        hours: '18',
+      },
+      job: this.getDailyRank
+    })
+
+    // 매주 월요일 오전 6시마다 주별 랭킹 값을 새로 가져옴
+    this.$crontab.add({
+      name: 'weeklyrank',
+      interval: {
+        week: '1',
+        seconds: '0',
+        minutes: '0',
+        hours: '6',
+      },
+      job: this.getWeeklyRank
+    })
+
+    // 매월 1일 6시마다 월별랭킹 값을 새로 가져옴
+    this.$crontab.add({
+      name: 'monthlyrank',
+      interval: {
+        day: '1',
+        seconds: '0',
+        minutes: '0',
+        hours: '6',
+      },
+      job: this.getmonthlyRank
+    })
+  },
+
+  updated() {
+    // setInterval(this.getPublicStudy, 5000);
+    // console.log("5 second later")
+    
+    let first = document.getElementById('first'),
+        second = document.getElementById('second'),
+        third = document.getElementById('third')
+
+    if(this.dataCnt==0 || this.dataCnt == this.dailyRank.length) {
+      first.innerHTML = '<img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;">'
+                                      + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[0].userhistoryDayId.user_id + '</span>'
+      this.dataCnt++
+    } else first.innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + this.dataCnt + " " + this.dailyRank[0].userhistoryDayId.user_id + '</span>'
+    
+    setInterval(() => {
+      if(this.move == 2){
+          first.classList.remove('card_sliding')
+          first.classList.add('card_sliding_after')
+
+          second.classList.remove('card_sliding_after')
+          second.classList.add('card_sliding')
+
+          third.classList.remove('card_sliding_after')
+          third.classList.remove('card_sliding')
+
+          this.move = 0
+      } else if (this.move == 1){
+          first.classList.remove('card_sliding_after')
+          first.classList.add('card_sliding')
+
+          second.classList.remove('card_sliding_after')
+          second.classList.remove('card_sliding')
+
+          third.classList.remove('card_sliding')
+          third.classList.add('card_sliding_after')
+
+          this.move = 2
+      } else if (this.move == 0) {
+          first.classList.remove('card_sliding_after')
+          first.classList.remove('card_sliding')
+
+          second.classList.remove('card_sliding')
+          second.classList.add('card_sliding_after')
+
+          third.classList.remove('card_sliding_after')
+          third.classList.add('card_sliding')
+
+          this.move = 1
+      }
+      console.log(">>>>>>>>>>>>>>> dataCnt : ", this.dataCnt)
+
+      if(this.dataCnt < (this.dailyRank.length - 1)) {
+        if(this.dataCnt==0 || this.dataCnt == this.dailyRank.length) {
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;">'
+                                          + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + '</span>'
+        } else if(this.dataCnt==1) {
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
+                                                                                + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + '</span>'
+        } else if(this.dataCnt==2) {
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
+                                                                                + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + '</span>'
+        } else {
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id +'</span>'
+        }
+        this.dataCnt++
+        console.log("증가!!")
+      } else if(this.dataCnt == this.dailyRank.length - 1) {
+        if(this.dataCnt==2) {
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
+                                                                                + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + '</span>'
+        } else {
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id  +'</span>'
+        }
+        this.dataCnt = 0
+        console.log("리셋!!")
+      }
+
+      // if(this.dataCnt < (this.dailyRank.length - 1)) {
+      //   document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id  +'</span>'
+      //   this.dataCnt++;
+      // } else if(this.dataCnt == this.dailyRank.length - 1) {
+      //   document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id  +'</span>'
+      //   this.dataCnt = 0
+      // }
+
+      if(this.listCnt < 2) {
+        this.listCnt++
+        } else if (this.listCnt == 2) {
+            this.listCnt = 0
+        }
+      }, 5000);
+  },
+
 }
 </script>
 
@@ -405,7 +679,12 @@ export default {
   height: 30%;
 }
 
-#board_section {
+#rank_section {
+  height: 30%;
+  width: 70%;
+}
+
+#board_section{
   height: 30%;
   width: 50%;
 }
@@ -690,4 +969,118 @@ thead {
   background-color: #495057;
 }
 /** 모달 스타일 부분 끝*/
+
+/** 랭킹 스타일 */
+.rolling_box{
+    width: 100%;
+    height: 70px;
+    text-align: left;
+    padding-left: 15px;
+    border: 3px solid #afa2dd;
+    /* box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.25); */
+    border-radius: 5px;
+}
+
+.rolling_box ul {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.rolling_box ul li {
+  width: 100%;
+  height: 100%;
+  line-height: 50px;
+  transition: .5s;
+  position:absolute;
+  transition: top .75s;
+  top: 100%;
+  z-index: 1;
+  background-color: #ffffff;
+}
+
+.card_sliding{
+    top: 0 !important;
+    z-index: 100 !important;
+} 
+
+.card_sliding_after{
+    top: -100% !important;
+    z-index: 10 !important;
+}
+
+.rolling_box ul li p {
+    font-size: 30px;
+    line-height: 40px;
+    font-weight: bold;
+}
+
+.before_slide {
+    transform: translateY(100%);
+}
+
+.after_slide {
+    transform: translateY(0);
+}
+
+#downArrowBtn {
+  width: 30px;
+  height: 30px;
+  margin-top: 18px;
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+#exitBtn{ 
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.rankTable {
+  height: 300px;
+  overflow: auto;
+}
+
+.scrollTable {
+  width: 100%;
+}
+
+.rankHeader {
+  text-align: right;
+}
+
+.rankTable::-webkit-scrollbar {
+  width: 20px;
+}
+
+.rankTable::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+
+.rankTable::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  border: 6px solid rgba(0, 0, 0, 0.18);
+  border-left: 0;
+  border-right: 0;
+  background-color: #afa2dd;
+}
+
+.rankCategory {
+  font-size: 18pt;
+  color: #8b2d9e;
+}
+
+#plusBtn {
+  width: 20px;
+  height: 20px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.studyHeader {
+  margin-bottom: 20px;
+}
 </style>
