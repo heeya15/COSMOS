@@ -6,11 +6,11 @@
     <h1>스터디 모집 게시판</h1>
     <hr style="width: 80%">
     <h3>글생성</h3>
-    <img class="head_Img" src="가랜드.png" alt="" >
-    <img class="head_Img2" src="가랜드.png" alt="" >
+    <img class="head_Img" src="https://i.ibb.co/5TfmRGF/image.png" alt="image" border="0" >
+    <img class="head_Img2" src="https://i.ibb.co/5TfmRGF/image.png" alt="image" border="0" >
     <marquee behavior=alternate  scrolldelay="50">Hello World!</marquee>
-    <img class="sideImg" src="사람2.png">
-    <img class="sideImg2" src="사람.png">
+    <img class="sideImg" src="https://i.ibb.co/nMJbfC2/2.png" alt="2" border="0">
+    <img class="sideImg2" src="https://i.ibb.co/zRXJt08/image.png" alt="image" border="0">
       <div class="form_body_tag p-5" style="width: 40%;">
         <b-row style="height: 600px; background-color: white;">
           <b-col cols="3" class="header_label mt-2">
@@ -92,10 +92,6 @@
 
 </template>
 
-// 스터디 구함을 누르면 스터디원 페이지, 스터디원 구하면 스터디장으로
-// 게시글 생성 버튼 - 스터디원이 스터디원 구함에서 게시글 생성 버튼을 누르면 알림창
-// 떠서 스터디장만 가능하다고 하거나 못 누르게
-
 
 <script>
 // import http from 'http'
@@ -132,8 +128,7 @@ export default {
   },
   methods: {
     // 인원 수 제한
-    recruitLimit(event) { 
-      console.log(event)
+    recruitLimit(event) {
       if(event.key >= 0 && event.key <= 5) {
         return true;
       } else if (event.key !== 'Backspace' && event.key !== 'F5' && event.key !== 'Enter') {
@@ -175,11 +170,8 @@ export default {
         data: createBoardItem,
         headers: this.getToken()
       })
-      .then(res => {
-        console.log(res.data)
+      .then(() => {
         this.$router.push({name: "MainBoard"})
-        console.log('스터디옵션 확인')
-        // console.log(this.studyno[this.studyNameInfo.indexOf(this.nameSelected)], '여기 확인')
       })
       .catch(err => {
         console.log(err)
@@ -202,11 +194,8 @@ export default {
         data: createBoardItem,
         headers: this.getToken()
       })
-      .then(res => {
-        console.log(res.data)
+      .then(() => {
         this.$router.push({name: "MainBoard"})
-        console.log('스터디옵션 확인')
-        console.log(this.index)
       })
       .catch(err => {
         console.log(err)
@@ -221,9 +210,6 @@ export default {
         headers: this.getToken()
       })
       .then(res => {
-        console.log('스터디이름 받아오기')
-        // console.log(this.input.header)
-        console.log(this.studyNameInfo)
         res.data.forEach(element => {
           this.titleOptions.push({value: element.study_name, text: element.study_name})
           this.temps.push({value: element.study_name, text: element.studytype_name, num: element.study_no})
@@ -231,8 +217,6 @@ export default {
           this.typeInfo.push(element.studytype_name)
           this.studyno.push(element.study_no)
         });
-        console.log(res.data)
-        console.log(res)
       })
       .catch(err => {
         console.log(err)
@@ -391,6 +375,84 @@ marquee {
 .titel_label {
   display: flex;
   justify-content: center;
+}
+
+.sideImg2{
+  transform-origin: 50% 50%;
+  animation-name: shake;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-delay: 1s;
+}
+    
+@keyframes shake{
+  0%{
+      transform: rotate(0deg);
+    }
+    10%{
+      transform: rotate(5deg);
+    }
+    20%{
+      transform: rotate(-5deg);
+    }
+    30%{
+      transform: rotate(5deg);
+    }
+    40%{
+      transform: rotate(-5deg);
+    }
+    50%{
+      transform: rotate(5deg);
+    }
+    60%{
+      transform: rotate(-5deg);
+    }
+    70%{
+      transform: rotate(0deg);
+    }
+    100%{
+      transform: rotate(0deg);
+    }
+}
+
+
+
+.sideImg{
+  transform-origin: 50% 50%;
+  animation-name: shake;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-delay: 1s;
+}
+    
+@keyframes shake{
+  0%{
+      transform: rotate(0deg);
+    }
+    10%{
+      transform: rotate(5deg);
+    }
+    20%{
+      transform: rotate(-5deg);
+    }
+    30%{
+      transform: rotate(5deg);
+    }
+    40%{
+      transform: rotate(-5deg);
+    }
+    50%{
+      transform: rotate(5deg);
+    }
+    60%{
+      transform: rotate(-5deg);
+    }
+    70%{
+      transform: rotate(0deg);
+    }
+    100%{
+      transform: rotate(0deg);
+    }
 }
 
 </style>
