@@ -118,12 +118,11 @@
   margin: 0 1px;
 }
 #session-aside-left {
-  width: 41px;
+  width: 55px;
   height: 100%;
   /* position: absolute;
   left: 0px; */
   background-color: #afa2dd;
-
 }
 
 #session-aside-left p:first-child {
@@ -135,8 +134,8 @@
 }
 
 #session-aside-left p img {
-  width: 25px;
-  height: 25px;
+  width: 40px;
+  height: 40px;
 }
 
 #session-aside-right {

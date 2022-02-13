@@ -8,10 +8,15 @@ import jwtDecode from 'jwt-decode';
 
 Vue.use(Vuex)
 
+import publicStudyStore from './modules/publicStudyStore';
+
 export default new Vuex.Store({
+  modules: {
+    publicStudyStore,
+  },
   plugins: [
     // 브라우저 종료시 제거하기 위해 localStorage가 아닌 sessionStorage로 변경. (default: localStorage)
-    createPersistedState({ storage: sessionStorage })  // 새로고침 초기화 방지
+    createPersistedState({ storage: window.sessionStorage })  // 새로고침 초기화 방지 
   ],
   state: {
     saveCurrentPage: null,
@@ -28,10 +33,10 @@ export default new Vuex.Store({
     userId: "",
 
     // 비공개 스터디룸 state
-    roomName: "",
-    roomUrl: "",
-    participant: "",
-    roomStudyNo: 0,
+    // roomName: "",
+    // roomUrl: "",
+    // participant: "",
+    // roomStudyNo: 0,
 
   },
   mutations: {
@@ -185,6 +190,5 @@ export default new Vuex.Store({
   //     return state.studyMembers
   //   }
   // },
-  modules: {
-  }
+  
 })

@@ -12,7 +12,7 @@
 </div>
 </template>
 <script>
-import "@/assets/style/PrivateStudyRoom/userList.css"
+import "@/assets/style/StudyRoom/userList.css"
 
 export default {
 	name: 'UserList',

@@ -25,7 +25,7 @@
 </div>
 </template>
 <script>
-import "@/assets/style/PrivateStudyRoom/video.css"
+import "@/assets/style/StudyRoom/video.css"
 import OvVideo from './OvVideo';
 import http from "@/util/http-common.js";
 export default {

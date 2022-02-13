@@ -68,7 +68,7 @@
 					</div>
 					
 					<div>
-						<div id="main-video" class="col-md-8">
+						<div id="main-video" style="width:60%; margin: 0 auto;">
 							<user-video v-if="mainOnOff" :stream-manager="mainStreamManager"  :mainStream="true"  @click.native="deleteMainVideoStreamManager()"/>
 						</div>
 						<div id="video-container" class="d-flex flex-wrap row"> <!-- 참가자 화면 -->
@@ -188,11 +188,11 @@
 </style>
 <script>
 import "@/assets/style/style.css";
-import "@/assets/style/PrivateStudyRoom/room.css"
+import "@/assets/style/StudyRoom/room.css"
 import axios from 'axios';
 import http from "@/util/http-common.js";
 import { OpenVidu } from 'openvidu-browser';
-import UserVideo from '@/components/openvidu/UserVideo';
+import UserVideo from '@/components/openvidu/PrivateUserVideo';
 import UserList from '@/components/openvidu/UserList';
 import jwt_decode from "jwt-decode";
 
