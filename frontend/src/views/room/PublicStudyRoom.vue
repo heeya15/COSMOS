@@ -115,7 +115,7 @@
 			</div> <!-- #session-center -->
 			<div id="session-aside-right" v-if="session && asideRight">
 				<div class="participant">
-					<div class="right_label">
+					<div class="right_label_participant">
 						<span>참가자</span>
 					</div>
 					<div class="participant_list"> <!-- 참가자 리스트 화면 -->
