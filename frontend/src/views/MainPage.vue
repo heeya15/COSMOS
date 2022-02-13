@@ -35,7 +35,7 @@
         </b-row>
         <div class="text-center">
           <button @click="hideModal" class="cancelBtn ml-3 float-right" >취소</button>
-          <button @click="goStudyRoom(infoModal.publicstudyroomId, infoModal.studyName )" type="submit" class="enterBtn ml-3 float-right" >입장</button>
+          <button @click="goStudyRoom(infoModal.publicstudyroomId, infoModal.studyName , infoModal.numberOfMember )" type="submit" class="enterBtn ml-3 float-right" >입장</button>
         </div>
       </b-modal>
       <!-- 모달 끝 -->
@@ -271,6 +271,7 @@ export default {
         id: "info-modal",
         publicstudyroomId:"",
         studyName:"",
+        numberOfMember:""
       },
 
       slickOption: {
@@ -282,6 +283,7 @@ export default {
         slidesToScroll: 1,
         swipeToSlide: true,
       },
+      // 마이크, 캠 설정.
       settings: {
         mic: false,
         cam: false,
@@ -289,6 +291,8 @@ export default {
       },
       // 강퇴여부
       isBanned: null,
+      // 인원수 사용 여부
+      count : 0
     }
   },
 
@@ -387,7 +391,19 @@ export default {
         console.log(err)
       })
     },
-
+     async getPublicStudyMemberCount(publicstudyroomid) {
+      await http({
+        method: 'GET',
+        url: '/publicroom/search/publicMember',
+        params: { publicstudyroom_id: publicstudyroomid }
+      })
+      .then(res => {
+        this.count  = res.data.length;
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
     // 이전 강퇴 여부 체크
     checkBanned(publicstudyroom_id){
       http({
@@ -403,18 +419,29 @@ export default {
         })     
       },
      // 모달 값 셋팅
-    info(publicstudy,button) {
+   async info(publicstudy,button) {
       this.infoModal.publicstudyroomId = publicstudy.publicstudyroomId;
       this.infoModal.studyName = publicstudy.studyName;
+      this.infoModal.numberOfMember = publicstudy.numberOfMember; 
+      await this.getPublicStudyMemberCount(this.infoModal.publicstudyroomId); // 해당 스터디룸 멤버 참가자 수 들고옴.
+      console.log("모달창 들어옴?")
+      console.log(this.count);
+      console.log(this.infoModal.numberOfMember);
+      if(this.count == this.infoModal.numberOfMember){
+          alert("현재 해당 공개 스터디룸에 최대 인원으로 가득 차 있습니다.");
+        return;
+      }
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
     },
     hideModal() {
       this.$refs["my-modal"].hide();
     },
     // 공개 방 가기(가면 공개방 멤버로 추가)
-    async goStudyRoom(publicstudyroomId, studyName) {
+    async goStudyRoom(publicstudyroomId, studyName ) {
+     
       console.log("공개방 가기 버튼 클릭.")
       console.log(publicstudyroomId, studyName);
+     
       var token = localStorage.getItem('jwt')
       var decoded = JwtDecode(token);
       var myId = decoded.sub;
@@ -432,8 +459,8 @@ export default {
       // 강퇴된적 있는 유저면 입장 불가
       this.checkBanned(publicstudyroomId)
       if (this.isBanned == true){
-        alert('입장이 불가능한 스터디입니다.')
-        return
+        alert('입장이 불가능한 스터디입니다.');
+        return;
       } else {
         // 멤버로 추가
         await http({
@@ -451,6 +478,7 @@ export default {
         })
         console.log(">>>>>>>>>>> ",publicstudyroomId)
       }      
+      
     },
 
     // 일별 랭킹
