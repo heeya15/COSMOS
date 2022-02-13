@@ -51,7 +51,8 @@
 							<div>
 								<h3 id="session-time"> {{ hours }} : {{ minutes }} : {{ seconds }} </h3>
 							</div>
-							<div id="timerBtn" v-if="this.userAuthority">
+							<!-- <div id="timerBtn" v-if="this.userAuthority"> -->
+							<div id="timerBtn" v-if="power.authority">
 								<b-button v-if="!timer" variant="primary" @click="startTimer()">시작</b-button>
 								<b-button v-else variant="danger" @click="stopTimer">
 									정지
@@ -72,9 +73,9 @@
 					</div>
 					
 					<div>
-						<!-- <div id="main-video" class="col-md-6">
-							<user-video :stream-manager="mainStreamManager"/>
-						</div> -->
+						<div id="main-video" class="col-md-8">
+							<user-video v-if="mainOnOff" :stream-manager="mainStreamManager"  :mainStream="true"  @click.native="deleteMainVideoStreamManager()"/>
+						</div>
 						<div id="video-container" class="d-flex flex-wrap row"> <!-- 참가자 화면 -->
 							<user-video class="col-md-4" v-if="!isScreenShared" :stream-manager= "publisher" @click.native="updateMainVideoStreamManager(publisher)"/> <!--자기 -->
 							<user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/> <!-- 다른 참가자 -->
@@ -231,6 +232,7 @@ export default {
 			spublisher:undefined,
 			sminStreamManager: undefined,
 			isScreenShared: false,
+			mainOnOff: false,
 
 			OV: undefined,
 			session: undefined,
@@ -262,7 +264,7 @@ export default {
 			edit: false,
 
 			// 권한 여부
-			userAuthority: false,
+			// userAuthority: false,
 
 			// 시간
 			userhistoryNo :0,
@@ -272,7 +274,7 @@ export default {
 		}
 	},
 	computed:{
-		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers", "audio","video"]),
+		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers", "audio","video","power"]),
 
 		totalTime() {
 			return Number(this.inputHour * 3600) + Number(this.inputMin * 60) + Number(this.inputSec)
@@ -306,21 +308,21 @@ export default {
 		// this.muteVideo();
 		// this.muteAudio();
 		// 권한 여부 확인
-		http({
-            method: 'GET',
-            url: `/user/leader`,
-            headers: this.getUserToken(),
-			params: {study_no: this.roomStudyNo},
-			// params: {study_no: 25},
-          })
-        .then((res) => {
-            this.userAuthority = res.data.authority;
-			// console.log("😉😉")
-			// console.log(res);
-          })
-          .catch(err => {
-            console.log(err)
-		});  
+		// http({
+    //         method: 'GET',
+    //         url: `/user/leader`,
+    //         headers: this.getUserToken(),
+		// 	params: {study_no: this.roomStudyNo},
+		// 	// params: {study_no: 25},
+    //       })
+    //     .then((res) => {
+    //         this.userAuthority = res.data.authority;
+		// 	// console.log("😉😉")
+		// 	// console.log(res);
+    //       })
+    //       .catch(err => {
+    //         console.log(err)
+		// });  
 
 		this.mySessionId = this.roomUrl;
 		this.myUserName = this.participant;
@@ -648,9 +650,17 @@ export default {
 		},
 		
 		updateMainVideoStreamManager (stream) {
+			this.mainOnOff = true;
 			if (this.mainStreamManager === stream) return;
-			this.mainStreamManager = stream;
+			 	this.mainStreamManager = stream;
+				// this.mainStreamManager.stream.videoDimensions = {
+				// 	width:2000,
+				// 	height:2000
+				// };
 		},
+		deleteMainVideoStreamManager() { // 해당 화면 크게 한거 지우기.
+    	  this.mainOnOff = false;
+    	},
 
 		/**
 		 * --------------------------

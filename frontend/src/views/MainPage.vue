@@ -65,6 +65,68 @@
         <hr class="line">
       </div>
 
+      <!-- 랭킹 Start -->
+      <div align="center">
+        <div id="rank_section">
+          <h1 class="text-center mb-5">랭킹</h1>
+          <div class="d-flex justify-content-between">
+            <b-dropdown id="dropdown-left" variant="warning" text="랭킹기준" class="m-2">
+              <b-dropdown-item href="#">일 (Day)</b-dropdown-item>
+              <b-dropdown-item href="#">주 (Week)</b-dropdown-item>
+              <b-dropdown-item href="#">월 (Month)</b-dropdown-item>
+            </b-dropdown>
+            <p>2022.02.12(SAT) 06:00 AM UPDATED</p>
+          </div>
+          <div v-show="shortRank">
+            <div class="rolling_box d-flex">
+              <ul id ="rolling_box">
+                <li class="card_sliding" id ="first"></li>
+                <li class="" id ="second"></li>
+                <li class="" id ="third"></li>
+              </ul>
+              <img id="downArrowBtn" src="https://i.ibb.co/p1jKdLj/down-filled-triangular-arrow.png" alt="down-filled-triangular-arrow" border="0" @click="rankClick"/>
+            </div>
+          </div>
+          <div class="rankTable" v-show="longRank">
+            <table class="table border table-hover scrollTable">
+              <col style="width:100%">
+              <thead>
+                <tr col-span="2">
+                  <th><p></p></th>
+                  <th class="rankHeader"><img class="flex-fill" id="exitBtn" src="@/assets/img/openvidu/close.png" alt="458595-removebg-preview" border="0" @click="rankClick"/></th>
+                </tr>
+              </thead>
+
+              <tbody v-for="(data, idx) in dailyRank" :key="idx">
+                <tr>
+                  <div v-if="idx==0">
+                    <td><img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                    <td><p class="ml-5 mt-3"> {{ data.userhistoryDayId.user_id }} </p></td>
+                  </div>
+                  <div v-if="idx==1">
+                    <td><img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                    <td><p class="ml-5 mt-3"> {{ data.userhistoryDayId.user_id }} </p></td>
+                  </div>
+                  <div v-if="idx==2">
+                    <td><img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                    <td><p class="ml-5 mt-3"> {{ data.userhistoryDayId.user_id }} </p></td>
+                  </div>
+                  <div v-if="idx > 2">
+                    <td><p class="mx-4 mt-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
+                    <td><p class=" mt-3" style="margin-left: 35px;"> {{ data.userhistoryDayId.user_id }} </p></td>
+                  </div>
+                </tr>
+              </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+      <!-- 랭킹 End -->
+
+      <div class="my-5" align="center">  
+        <hr class="line">
+      </div>
+
       <!-- 게시판 목록 Start -->
       <center>
         <h1 class="text-center mb-5">모집 중인 스터디</h1>
@@ -190,6 +252,18 @@ export default {
       //   },
       //   url: '',
       // }],
+
+      // 랭킹 변수
+      dataCnt: 0,
+      dailyRank: [],
+      weeklyRank: [],
+      monthlyRank: [],
+      shortRank: true,
+      longRank: false,
+      move: 2,
+      listCnt: 1,
+      rankType: 0,      // 랭킹 시간 기준을 나타내는 수치
+      rankingType: '',  // 랭킹 시간(일, 주, 월) 기준을 나타내는 메시지
 
       publicStudyList: [],
       currentParticipant: [],
@@ -379,6 +453,27 @@ export default {
       }      
     },
 
+    // 일별 랭킹
+    getDailyRank() {
+      http({
+        method: 'GET', 
+        url: '/history/searchAll/day',
+      })
+      .then(res => {
+        console.log(">>>>>>>>>> 일별 랭킹 : ", res.data)
+        this.dailyRank = res.data
+      })
+      .error(err => {
+        console.log(err)
+      })
+    },
+
+    rankClick() {
+      this.shortRank = !this.shortRank;
+      this.longRank = !this.longRank;
+      console.log("shortRank : ", this.shortRank, " longRank: ", this.longRank)
+    },
+
   },
  computed:{
     ...mapState([
@@ -387,6 +482,100 @@ export default {
   created() {
     this.getBoardItems()
     this.getPublicStudy()
+    this.getDailyRank()
+  },
+
+  updated() {
+    // setInterval(this.getPublicStudy, 5000);
+    // console.log("5 second later")
+    
+    let first = document.getElementById('first'),
+        second = document.getElementById('second'),
+        third = document.getElementById('third')
+
+    if(this.dataCnt==0 || this.dataCnt == this.dailyRank.length) {
+      first.innerHTML = '<img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;">'
+                                      + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[0].userhistoryDayId.user_id + '</span>'
+      // this.dataCnt++
+    } else first.innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + this.dataCnt + " " + this.dailyRank[0].userhistoryDayId.user_id + '</span>'
+    
+    setInterval(() => {
+      if(this.move == 2){
+          first.classList.remove('card_sliding')
+          first.classList.add('card_sliding_after')
+
+          second.classList.remove('card_sliding_after')
+          second.classList.add('card_sliding')
+
+          third.classList.remove('card_sliding_after')
+          third.classList.remove('card_sliding')
+
+          this.move = 0
+      } else if (this.move == 1){
+          first.classList.remove('card_sliding_after')
+          first.classList.add('card_sliding')
+
+          second.classList.remove('card_sliding_after')
+          second.classList.remove('card_sliding')
+
+          third.classList.remove('card_sliding')
+          third.classList.add('card_sliding_after')
+
+          this.move = 2
+      } else if (this.move == 0) {
+          first.classList.remove('card_sliding_after')
+          first.classList.remove('card_sliding')
+
+          second.classList.remove('card_sliding')
+          second.classList.add('card_sliding_after')
+
+          third.classList.remove('card_sliding_after')
+          third.classList.add('card_sliding')
+
+          this.move = 1
+      }
+      console.log(">>>>>>>>>>>>>>> dataCnt : ", this.dataCnt)
+
+      if(this.dataCnt < (this.dailyRank.length - 1)) {
+        if(this.dataCnt==0 || this.dataCnt == this.dailyRank.length) {
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;">'
+                                          + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + '</span>'
+        } else if(this.dataCnt==1) {
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
+                                                                                + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + '</span>'
+        } else if(this.dataCnt==2) {
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
+                                                                                + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + '</span>'
+        } else {
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id +'</span>'
+        }
+        this.dataCnt++
+        console.log("증가!!")
+      } else if(this.dataCnt == this.dailyRank.length - 1) {
+        if(this.dataCnt==2) {
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
+                                                                                + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + '</span>'
+        } else {
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id  +'</span>'
+        }
+        this.dataCnt = 0
+        console.log("리셋!!")
+      }
+
+      // if(this.dataCnt < (this.dailyRank.length - 1)) {
+      //   document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id  +'</span>'
+      //   this.dataCnt++;
+      // } else if(this.dataCnt == this.dailyRank.length - 1) {
+      //   document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id  +'</span>'
+      //   this.dataCnt = 0
+      // }
+
+      if(this.listCnt < 2) {
+        this.listCnt++
+        } else if (this.listCnt == 2) {
+            this.listCnt = 0
+        }
+      }, 5000);
   },
 
   // mounted() {
@@ -405,7 +594,12 @@ export default {
   height: 30%;
 }
 
-#board_section {
+#rank_section {
+  height: 30%;
+  width: 70%;
+}
+
+#board_section{
   height: 30%;
   width: 50%;
 }
@@ -690,4 +884,107 @@ thead {
   background-color: #495057;
 }
 /** 모달 스타일 부분 끝*/
+
+/** 랭킹 스타일 */
+.rolling_box{
+    width: 100%;
+    height: 60px;
+    text-align: left;
+    padding-left: 15px;
+    border: 1px solid #ccc;
+    /* box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.25); */
+    border-radius: 5px;
+}
+
+.rolling_box ul {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.rolling_box ul li {
+  width: 100%;
+  height: 100%;
+  line-height: 50px;
+  transition: .5s;
+  position:absolute;
+  transition: top .75s;
+  top: 100%;
+  z-index: 1;
+  background-color: #ffffff;
+}
+
+.card_sliding{
+    top: 0 !important;
+    z-index: 100 !important;
+} 
+
+.card_sliding_after{
+    top: -100% !important;
+    z-index: 10 !important;
+}
+
+.rolling_box ul li p {
+    font-size: 30px;
+    line-height: 40px;
+    font-weight: bold;
+}
+
+.before_slide {
+    transform: translateY(100%);
+}
+
+.after_slide {
+    transform: translateY(0);
+}
+
+#downArrowBtn {
+  width: 30px;
+  height: 30px;
+  margin-top: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+#exitBtn{ 
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.rankTable {
+  height: 300px;
+  overflow: auto;
+}
+
+.scrollTable {
+  width: 100%;
+}
+
+.rankHeader {
+  text-align: right;
+}
+
+.rankTable::-webkit-scrollbar {
+  width: 20px;
+}
+
+.rankTable::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+
+.rankTable::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  border: 6px solid rgba(0, 0, 0, 0.18);
+  border-left: 0;
+  border-right: 0;
+  background-color: #afa2dd;
+}
+
+.rankCategory {
+  font-size: 18pt;
+  color: #8b2d9e;
+}
 </style>

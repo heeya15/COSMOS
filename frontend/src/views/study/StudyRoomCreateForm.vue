@@ -86,9 +86,9 @@
         </b-col>
         <b-col cols="5">
           <!-- 비공 -->
-          <b-form-input v-if="input.study_type==='private'" id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="5" maxlength="2"></b-form-input>
+          <b-form-input v-if="input.study_type==='private'" id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="6" min="2" maxlength="2"></b-form-input>
           <!-- 공개 -->
-          <b-form-input v-else id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="10" maxlength="2"></b-form-input>
+          <b-form-input v-else id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="10" min="2" maxlength="2"></b-form-input>
         </b-col>
         <b-col cols="1" class="mt-2">명</b-col>
       </b-row>    
@@ -168,10 +168,10 @@ export default {
           }
       // 비공개 일 때
       } else {
-          if(this.input.totalMember >= 0 && this.input.totalMember <= 5) {
+          if(this.input.totalMember >= 0 && this.input.totalMember <= 6) {
           return true;
         } else {
-            alert('5명까지 입력이 가능합니다');
+            alert('6명까지 입력이 가능합니다');
             this.input.totalMember = null
             return false;
           }

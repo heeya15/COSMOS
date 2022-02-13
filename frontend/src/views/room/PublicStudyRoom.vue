@@ -23,8 +23,10 @@
 							<tbody v-for="member in publicStudyMembers" :key="member.id">
 								<tr>
 								<td>{{member.user.userName}}({{member.user.userId}})</td>
-								<td><b-button v-if="member.user.userId!==userId && isLeader" variant="danger" @click="outMember(member.user.userId)">강퇴</b-button></td>
-								<!-- <td><b-button v-if="member.user.userId!==userId && isLeader" variant="danger" @click="outMember(member.id)">강퇴</b-button></td> -->
+								<td v-if="isLeader">
+									<b-button v-if="member.user.userId!==userId" variant="danger" @click="outMember(member.user.userId)">강퇴</b-button>
+									<b-button v-if="member.user.userId!==userId" variant="info" @click="giveAuthority(member.publicmemberNo, member.leader)">권한</b-button>
+								</td>
 								</tr>
 							</tbody>
 						</table>
@@ -269,8 +271,8 @@ export default {
 		
 	},
 	mounted() {
-    	window.addEventListener('beforeunload', this.unLoadEvent);
-  	},
+		window.addEventListener('beforeunload', this.unLoadEvent);
+  },
 	beforeUnmount() {
 		window.removeEventListener('beforeunload', this.unLoadEvent);
 	},
@@ -291,7 +293,7 @@ export default {
 
 		// 공개스터디 멤버 불러오기
 		async getPublicStudyMembers(publicstudyroomid) {
-     	await http({
+			await http({
 				method: 'GET',
 				url: '/publicroom/search/publicMember',
 				params: { publicstudyroom_id: publicstudyroomid }
@@ -351,6 +353,26 @@ export default {
       })
     },
 
+		// 권한부여 기능
+		giveAuthority(publicmember_no,leader) {
+			if (leader === true){
+        var memberLeader = false
+      } else {
+        memberLeader = true
+      }
+			http({
+				method: 'PUT',
+				url: 'publicroom/updateAuthority',
+				data: {publicmember_no: publicmember_no, leader: memberLeader}
+			})
+			.then(res => {
+				console.log(res)
+				this.getPublicStudyMembers(this.roomUrl)
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
 
 		
 		async joinSession () {
