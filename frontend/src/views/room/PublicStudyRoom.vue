@@ -47,7 +47,11 @@
 						<!-- <div id="main-video" class="col-md-6">
 							<user-video :stream-manager="mainStreamManager"/>
 						</div> -->
-						<div id="video-container" class="d-flex flex-wrap row"> <!-- 참가자 화면 -->
+						<div v-if="isLeader" id="video-container" class="d-flex flex-wrap row"> <!-- 참가자 화면 -->
+							<user-video :session="session" class="col-md-4" :stream-manager= "publisher" @click.native="updateMainVideoStreamManager(publisher)"/> <!--자기 -->
+							<user-video-publisher :session="session" class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub), outUser(sub)"/> <!-- 다른 참가자 -->
+						</div>
+						<div v-else id="video-container" class="d-flex flex-wrap row"> <!-- 참가자 화면 -->
 							<user-video :session="session" class="col-md-4" :stream-manager= "publisher" @click.native="updateMainVideoStreamManager(publisher)"/> <!--자기 -->
 							<user-video :session="session" class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/> <!-- 다른 참가자 -->
 						</div>
@@ -161,6 +165,7 @@ import axios from 'axios';
 import http from "@/util/http-common.js";
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from '@/components/openvidu/PublicUserVideo';
+import UserVideoPublisher from '@/components/openvidu/PublicUserVideoPublisher';
 import UserList from '@/components/openvidu/UserList';
 import jwt_decode from "jwt-decode";
 
@@ -177,6 +182,7 @@ export default {
 	components: {
 		UserVideo,
 		UserList,
+		UserVideoPublisher
 	},
 	metaInfo: {
 		// title 입력하기
@@ -361,6 +367,43 @@ export default {
 			})
 
     },
+	outUser(memberId) {
+		http({
+			method: 'DELETE',
+			url:'publicroom/remove/publicMember',
+			params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
+		})
+		.then(res => {
+			console.log(res)
+		})
+		.catch(err => {
+			console.log(err)
+		})
+		console.log("🥵🥵🥵")
+		const { connection } = memberId.stream;
+		const {clientData} = JSON.parse(connection.data);
+		console.log(clientData);
+		
+		this.publisher.session.signal({
+			data: clientData,
+			to: [],
+			type: "out"
+		})
+
+		// 강퇴 리스트 히스토리에 추가
+		http({
+			method: 'POST',
+			url: 'publicroom/register/bannedUser',
+			params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
+		})
+		.then(res => {
+			console.log(res)
+		})
+		.catch(err => {
+			console.log(err)
+		})
+
+    },
     getLeave() {
       this.session.on("signal:out", () => {
         this.leaveSession();
@@ -424,13 +467,13 @@ export default {
 			});
 
 			// receive 강퇴 시그널
-			this.session.on("signal:out", (event) => {
+			this.session.on("signal:out", async (event) => {
 				var id = event.data;
 				console.log(this.userid);
 				if(id == this.myUserName){
-					this.leaveSession();
+					await this.leaveSession();
+					alert("방에서 추방당하셨습니다.")
 				}
-
 				this.getPublicStudyMembers(this.roomUrl)
 			})
 
