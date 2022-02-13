@@ -23,8 +23,10 @@
         <b-col cols="6">
           <b-form-input id="url" v-model="input.defaulturl" disabled></b-form-input>
           <b-form-input id="url" v-model="input.url" placeholder="URL을 입력하세요" @keydown="regexp()"></b-form-input>
-            <div ref="urlMsg" v-if="this.urlState==true && this.regexpstate == true" style="color:#3C77C9"></div>
-            <div ref="urleerorMsg" v-if="this.urlState==false || this.regexpstate==false" style="color:rgb(207, 1, 1);"></div>
+            <!-- <div ref="urlMsg" v-if="this.urlState==true && this.regexpstate == true" style="color:#3C77C9"></div> -->
+            <div v-text="urlMsg" v-if="this.urlState==true && this.regexpstate == true" style="color:#3C77C9"></div>
+            <!-- <div ref="urleerorMsg" v-if="this.urlState==false || this.regexpstate==false" style="color:rgb(207, 1, 1);"></div> -->
+            <div v-text="urlerrorMsg" v-if="this.urlState==false || this.regexpstate==false" style="color:rgb(207, 1, 1);"></div>
         </b-col>
         <b-col cols="3">
           <b-button @click="checkUrl" class="mt-4">중복확인</b-button>
@@ -84,7 +86,7 @@
         <b-col cols="3">
           <label for="totalMember" class="mt-2">인원 수</label>
         </b-col>
-        <b-col cols="5">
+        <b-col cols="4">
           <!-- 비공 -->
           <b-form-input v-if="input.study_type==='private'" id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="6" min="2" maxlength="2"></b-form-input>
           <!-- 공개 -->
@@ -152,6 +154,8 @@ export default {
       urlState: false,
       regexpstate:false,
       study_no:"",
+      urlMsg: '',
+      urlerrorMsg: '',
     }
   },
   methods: {
@@ -327,14 +331,15 @@ export default {
     //   });  
     // },
     regexp(){
-    const notPhoneticSymbolExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+      const notPhoneticSymbolExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
       if(notPhoneticSymbolExp.test(this.input.url)){ // 한글이 아니라면
           this.regexpstate = false;
-          this.$refs.urleerorMsg.innerText = '영어로 url주소를 입력해주세요';
+          this.urlState = false;
+          this.urlerrorMsg = '영어로 url주소를 입력해주세요';
       }else{
           this.regexpstate = true;
-          this.$refs.urleerorMsg.innerText = '';
-          this.$refs.urlMsg.innerText ='';
+          this.urlerrorMsg = '';
+          this.urlMsg ='';
       }
   },
     checkUrl() {   
@@ -344,12 +349,13 @@ export default {
         params: {url: this.input.defaulturl+this.input.url}
       })
       .then(res => {
+        console.log('요청보냄',res.data)
         if(res.data == false && this.regexpstate == true){
           this.urlState = true
-          this.$refs.urlMsg.innerText = '사용가능한 url주소 입니다.';
+          this.urlMsg = '사용가능한 url주소 입니다.';
         }else if(res.data == true && (this.regexpstate == false || this.regexpstate == true)  ){ 
           this.urlState = false;
-          this.$refs.urleerorMsg.innerText = '사용할 수 없는 url주소 입니다.';
+          this.urlerrorMsg = '사용할 수 없는 url주소 입니다.';
         }    
       })
       .catch(err => {

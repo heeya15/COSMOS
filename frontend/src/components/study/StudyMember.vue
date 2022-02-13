@@ -17,7 +17,7 @@
         <tr>
           <th>이름</th>
           <th>Email</th>
-          <th>출석여부</th>
+          <!-- <th>출석여부</th> -->
           <th>공부시간</th>
           <th>점수</th>
           <th></th>
@@ -29,7 +29,7 @@
         <td v-else-if="!member.leader && member.authority">🌸{{member.user_name}}({{member.user_id}})</td>
         <td v-else>{{member.user_name}}({{member.user_id}})</td>
         <td>{{member.user_email}}</td>
-        <td>{{member.attendance}}</td>
+        <!-- <td>{{member.attendance}}</td> -->
         <td>{{member.studytime}}</td>
         <td>{{member.score}}</td>
         <td v-if="member.user_id!==myId">
@@ -46,7 +46,7 @@
         <tr>
           <th>이름</th>
           <th>Email</th>
-          <th>출석여부</th>
+          <!-- <th>출석여부</th> -->
           <th>공부시간</th>
           <th>점수</th>          
         </tr>
@@ -57,7 +57,7 @@
         <td v-else-if="!member.leader && member.authority">🌸{{member.user_name}}({{member.user_id}})</td>
         <td v-else>{{member.user_name}}({{member.user_id}})</td>
         <td>{{member.user_email}}</td>
-        <td>{{member.attendance}}</td>
+        <!-- <td>{{member.attendance}}</td> -->
         <td>{{member.studytime}}</td>
         <td>{{member.score}}</td>
         </tr>
@@ -78,6 +78,7 @@ export default {
       studyNo: this.$route.params.studyNo,
       newMemberId: null,
       myId: '',
+      studyTotalMember: ''
     }
   },
   methods: {
@@ -91,8 +92,24 @@ export default {
     getStudyMembers() {
       this.$store.dispatch('getStudyMembers', this.studyNo)
     },
-    
+    getStudyInfo() {
+      http({
+        method: 'GET',
+        url: `/study/search/${this.studyNo}`
+      })
+      .then(res => {        
+        this.studyTotalMember = res.data.totalMember
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+
     addMember() {
+      if (this.studyTotalMember === this.studyMembers.length) {
+        alert('더이상 인원을 추가할 수 없습니다.')
+        return
+      }
       const memberInfo = {
         authority: this.$store.state.power.leader,
         leader: this.$store.state.power.leader,
@@ -156,6 +173,7 @@ export default {
   created() {
     this.getStudyMembers()
     this.getMyId()
+    this.getStudyInfo()
   }
 }
 </script>
