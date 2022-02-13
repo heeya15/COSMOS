@@ -11,7 +11,7 @@
         </b-col>
         <b-col cols="6" class="mr-3">
           <b-form-input id="studyName" v-model="input.studyName"></b-form-input>
-        </b-col>  
+        </b-col>
       </b-row>
       <hr class="mt-3">
         <!-- url은 스터디만드는 사람에게 직접 입력받음 -->
@@ -71,11 +71,10 @@
               :autoplay="true"
               :autoplaySpeed="2000"
               class="mb-5 mx-3"
-              style="margin-left: 10px; margin-right: 10px;"
               align="center"
             >
-              <div v-for="(images, idx) in studyImages" :key="idx" class="px-5 mb-lg-2" @click="info(publicstudy,$event.target)">
-                <button class="imgBtn" @click="[getImageSrc(idx+1),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg" for="studyWithMe" :src="studyImages[idx]" alt="study_with_me"></button>
+              <div v-for="(images, idx) in studyImages" :key="idx" class="mb-lg-2" align="center">
+                <button class="imgBtn" @click="[getImageSrc(idx),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg" for="studyWithMe" :src="studyImages[idx]" alt="study_with_me"></button>
               </div>
               <template #prevArrow>
                 <button>
@@ -86,12 +85,6 @@
                 </button>
               </template>
             </VueSlickCarousel>
-
-            <!-- <b-row class="ml-2">
-              <b-col><button class="imgBtn" @click="[getImageSrc(1),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg1" for="studyWithMe" src="@/assets/img/study/studywithme.jpg" alt="study_with_me"></button></b-col>
-              <b-col><button class="imgBtn" @click="[getImageSrc(2),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg2" for="study2" src="@/assets/cosmos_bg.png" alt="study2"></button></b-col>
-              <b-col><button class="imgBtn" @click="[getImageSrc(3),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg3" for="study3" src="@/../public/테마6.jpg" alt="study3"></button></b-col>
-            </b-row> -->
           </b-modal>
         </b-col>
       </b-row>
@@ -190,14 +183,15 @@ export default {
       study_no:"",
       urlMsg: '',
       urlerrorMsg: '',
+
       studyImages: [
-        'https://cdn.inflearn.com/public/files/courses/325806/3550090c-f665-48b1-a016-018120c3a35b/325806-1.png',
-        'https://javatutorial.net/wp-content/uploads/2017/12/spring-featured-image.png',
-        'https://www.freecodecamp.org/news/content/images/2020/05/Python-language.png',
-        'https://www.logolynx.com/images/logolynx/d5/d5cf47480225d049daf0050e4e1214cc.jpeg',
-        'https://media.vlpt.us/images/kim-jaemin420/post/235e8739-0f2a-48fe-8690-a51c6065fa45/c%E1%84%8B%E1%85%A5%E1%86%AB%E1%84%8B%E1%85%A5%20%E1%84%8A%E1%85%A5%E1%86%B7%E1%84%82%E1%85%A6%E1%84%8B%E1%85%B5%E1%86%AF.png',
-        'https://miro.medium.com/max/1400/0*Zn_HDykxaSmwBcEq.png',
-        'https://media.vlpt.us/images/codernineteen/post/092724ac-8b2a-47a3-bc36-5a49e0cc04bc/react%20thumb.png',
+        'https://i.ibb.co/NZ4vqMw/algorithm.jpg',
+        'https://i.ibb.co/Jpf8cjs/python.jpg',
+        'https://i.ibb.co/3vdLtWV/C.png',
+        'https://i.ibb.co/YXrWmN9/react.jpg',
+        'https://i.ibb.co/TT3sVMd/java.png',
+        'https://i.ibb.co/J2Jwsdc/spring.png',
+        'https://i.ibb.co/H48fwjg/c.jpg',
         'https://i.ibb.co/gg6hwsG/studywithme.jpg',
         'https://i.ibb.co/N1gPh3J/working-at-home.png',
         'https://i.ibb.co/PNzm2Cw/artificial-intelligence-4111582-1920.jpg',
@@ -222,6 +216,7 @@ export default {
         'https://i.ibb.co/JHCL6sY/swift.png',
         'https://i.ibb.co/HtwM0Wx/study1.jpg',
         'https://i.ibb.co/B6dP6Rh/study2.gif',
+        'https://i.ibb.co/0yXpH3X/dog.jpg',
       ],
     }
   },
@@ -258,7 +253,8 @@ export default {
     },
     getImageSrc(num) {
       // var image = document.getElementById(`studyImg${num}`).src
-      var image = this.studyImages[num-1]
+      console.log(">>>>>>>>>>>>> image src : ", this.studyImages[num])
+      var image = this.studyImages[num]
       this.input.image = image
     },
     getStudyType() {
@@ -471,8 +467,8 @@ export default {
   background-color: #c8c1e4;
 }
 .studyImg {
-  height: 150px;
-  width: 200px;
+  height: 180px;
+  width: 250px;
   border-radius: 10px;
   border: 3px solid #c8c1e4;
 }

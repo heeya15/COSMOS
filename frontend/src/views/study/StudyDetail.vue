@@ -47,7 +47,7 @@
       <!-- 스터디 정보 받아오기 -->
       <div class="studyContainer my-2 py-5 pr-5">
         <b-row class="mx-0">
-          <b-col cols="5">
+          <b-col cols="5" class="pl-5">
             <!-- <img src="@/assets/img/nophoto.png" alt="이미지없음" class="studyImg" v-if="studyInfo.image.length<24"> -->
             <img src="https://bootstrapious.com/i/snippets/sn-img-hover/hoverSet-3.jpg" alt="이미지없음" class="studyImg" v-if="studyInfo.image.length<24">
             <img :src="studyInfo.image" alt="스터디 이미지" class="studyImg" v-else>
@@ -96,15 +96,36 @@
                           <img :src="modifyInfo.image" alt="대표이미지" class="studyImg">
                         </div>
                         <b-button class="mt-3" @click="$bvModal.show('bv-modal-studyImg')">이미지변경</b-button>
-                          <b-modal id="bv-modal-studyImg" size="lg" centered hide-footer>
+                          <b-modal id="bv-modal-studyImg" size="xl" centered hide-footer>
                             <template #modal-title>
                             <h3>스터디 이미지 선택</h3>
                             </template>
-                            <b-row class="ml-2">
-                              <b-col><button class="imgBtn" @click="[getImageSrc(1),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg1" for="studyWithMe" src="@/assets/img/study/studywithme.jpg" alt="study_with_me"></button></b-col>
-                              <b-col><button class="imgBtn" @click="[getImageSrc(2),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg2" for="study2" src="@/assets/cosmos_bg.png" alt="study2"></button></b-col>
-                              <b-col><button class="imgBtn" @click="[getImageSrc(3),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg3" for="study3" src="@/../public/테마6.jpg" alt="study3"></button></b-col>
-                            </b-row>
+                            <VueSlickCarousel ref="slick"
+                              :arrows="true"
+                              :dots="true"
+                              :infinite="true" 
+                              :speed="500"
+                              :slidesToShow="4"
+                              :slidesToScroll="1"
+                              :swipeToSlide="true"
+                              :adaptiveHeight="true"
+                              :autoplay="true"
+                              :autoplaySpeed="2000"
+                              class="mb-5 mx-3"
+                              align="center"
+                            >
+                              <div v-for="(images, idx) in studyImages" :key="idx" class="mb-lg-2" align="center">
+                                <button class="imgBtn" @click="[getImageSrc(idx+1),$bvModal.hide('bv-modal-studyImg')]"><img class="studyImg" id="studyImg" for="studyWithMe" :src="studyImages[idx]" alt="study_with_me"></button>
+                              </div>
+                              <template #prevArrow>
+                                <button>
+                                </button>
+                              </template>
+                              <template #nextArrow>
+                                <button>                  
+                                </button>
+                              </template>
+                            </VueSlickCarousel>
                           </b-modal>
                         </b-col>
                       </b-row>
@@ -196,12 +217,17 @@ import JwtDecode from 'jwt-decode'
 import http from "@/util/http-common.js";
 import { mapState } from 'vuex'
 
+import VueSlickCarousel from 'vue-slick-carousel'
+import 'vue-slick-carousel/dist/vue-slick-carousel.css'
+import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+
 export default {
   name: 'StudyDetail',
   components: {
     StudyNotice,
     StudyApply,
-    StudyMember
+    StudyMember,
+    VueSlickCarousel,
   },
   data(){
     return {
@@ -240,6 +266,41 @@ export default {
       options:[],
       modal: false,
       pwd: "",
+
+      studyImages: [
+        'https://i.ibb.co/NZ4vqMw/algorithm.jpg',
+        'https://i.ibb.co/Jpf8cjs/python.jpg',
+        'https://i.ibb.co/3vdLtWV/C.png',
+        'https://i.ibb.co/YXrWmN9/react.jpg',
+        'https://i.ibb.co/TT3sVMd/java.png',
+        'https://i.ibb.co/J2Jwsdc/spring.png',
+        'https://i.ibb.co/H48fwjg/c.jpg',
+        'https://i.ibb.co/gg6hwsG/studywithme.jpg',
+        'https://i.ibb.co/N1gPh3J/working-at-home.png',
+        'https://i.ibb.co/PNzm2Cw/artificial-intelligence-4111582-1920.jpg',
+        'https://i.ibb.co/qMMbw5D/android.png',
+        'https://i.ibb.co/LrxNMLY/angularjs.jpg',
+        'https://i.ibb.co/17GKTVr/arduino.png',
+        'https://i.ibb.co/JcmCC0T/Blockchain.jpg',
+        'https://i.ibb.co/CQmhf14/bigdata.jpg',
+        'https://i.ibb.co/KxD9SzZ/C.png',
+        'https://i.ibb.co/jz2xT5n/css.webp',
+        'https://i.ibb.co/MBV2BhD/html.webp',
+        'https://i.ibb.co/BN882vj/javascript.jpg',
+        'https://i.ibb.co/hWpp2FS/database.jpg',
+        'https://i.ibb.co/k30ywt0/django.png',
+        'https://i.ibb.co/8x1Bj1S/oracle.png',
+        'https://i.ibb.co/Tg2cF9M/php.jpg',
+        'https://i.ibb.co/xsMy3wt/cs.jpg',
+        'https://i.ibb.co/QQ6TrHB/mysql.png',
+        'https://i.ibb.co/Bfq3WVR/kotlin.png',
+        'https://i.ibb.co/BGLHv1j/raspberrypi.gif',
+        'https://i.ibb.co/Z200ZZR/ruby.jpg',
+        'https://i.ibb.co/JHCL6sY/swift.png',
+        'https://i.ibb.co/HtwM0Wx/study1.jpg',
+        'https://i.ibb.co/B6dP6Rh/study2.gif',
+        'https://i.ibb.co/0yXpH3X/dog.jpg',
+      ],
     }
   },
   methods: {
@@ -305,10 +366,13 @@ export default {
         console.log(err)
       })
     },
+
     getImageSrc(num) {
-      var image = document.getElementById(`studyImg${num}`).src
+      // var image = document.getElementById(`studyImg${num}`).src
+      var image = this.studyImages[num-1]
       this.modifyInfo.image = image
     },
+
     cancelModify() {
       this.modifyInfo.studyName = this.studyInfo.studyName
       this.modifyInfo.image = this.studyInfo.image
@@ -469,9 +533,10 @@ export default {
 }
 
 .studyImg {
-  height: 200px;
-  width: 300px;
-  border-radius: 4px;
+  height: 180px;
+  width: 250px;
+  border-radius: 10px;
+  border: 3px solid #c8c1e4;
 }
 .imgBtn {
   outline-width: 5px;
@@ -557,5 +622,13 @@ export default {
   background-color: #afa2dd;
   color: black;
   border: none;
+}
+
+/* 스터디 이미지 슬라이드 좌,우 화살표 */
+.slick-prev::before{
+  content: url("https://i.ibb.co/JkGwjx0/icon-prev.png");
+}
+.slick-next::before{
+  content: url("https://i.ibb.co/q1kCmY6/icon-next.png");
 }
 </style>

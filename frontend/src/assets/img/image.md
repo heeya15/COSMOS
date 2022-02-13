@@ -27,13 +27,14 @@
 
 
 ## 언어
-[Algorithm] <img src="https://cdn.inflearn.com/public/files/courses/325806/3550090c-f665-48b1-a016-018120c3a35b/325806-1.png" alt="" border="0"> <br/>
-[Spring] <img src="https://javatutorial.net/wp-content/uploads/2017/12/spring-featured-image.png" alt="" border="0"> <br/>
-[Python] <img src="https://www.freecodecamp.org/news/content/images/2020/05/Python-language.png" alt="" border="0"> <br/>
-[Java] <img src= "https://www.logolynx.com/images/logolynx/d5/d5cf47480225d049daf0050e4e1214cc.jpeg" alt="" border="0">  <br/>
-[C] <img src="https://media.vlpt.us/images/kim-jaemin420/post/235e8739-0f2a-48fe-8690-a51c6065fa45/ c%E1%84%8B%E1%85%A5%E1%86%AB%E1%84%8B%E1%85%A5%20%E1%84%8A%E1%85%A5%E1%86%B7%E1%84%82%E1%85%A6%E1%84%8B%E1%85%B5%E1%86%AF.png" alt="" border="0"> <br/>
-[C++] <img src="https://miro.medium.com/max/1400/0*Zn_HDykxaSmwBcEq.png" alt="" border="0"> <br/>
-[React] <img src="https://media.vlpt.us/images/codernineteen/post/092724ac-8b2a-47a3-bc36-5a49e0cc04bc/react%20thumb.png" alt="" border="0"><br/>
+[Algorithm] <img src="https://i.ibb.co/NZ4vqMw/algorithm.jpg" alt="algorithm" border="0">
+[Python] <img src="https://i.ibb.co/Jpf8cjs/python.jpg" alt="python" border="0">
+[C++] <img src="https://i.ibb.co/3vdLtWV/C.png" alt="C" border="0">
+[React] <img src="https://i.ibb.co/YXrWmN9/react.jpg" alt="react" border="0">
+[Java] <img src="https://i.ibb.co/TT3sVMd/java.png" alt="java" border="0">
+[Spring] <img src="https://i.ibb.co/J2Jwsdc/spring.png" alt="spring" border="0">
+[C] <img src="https://i.ibb.co/H48fwjg/c.jpg" alt="c" border="0">
+
 [studywithme] <img src="https://i.ibb.co/gg6hwsG/studywithme.jpg" alt="studywithme" border="0"> <br/>
 [working_at_home] <img src="https://i.ibb.co/N1gPh3J/working-at-home.png" alt="working-at-home" border="0"><br/>
 [AI] <img src="https://i.ibb.co/PNzm2Cw/artificial-intelligence-4111582-1920.jpg" alt="artificial-intelligence-4111582-1920" border="0"><br/>
@@ -58,6 +59,9 @@
 [Swift] <img src="https://i.ibb.co/JHCL6sY/swift.png" alt="swift" border="0"><br/>
 [스터디1] <img src="https://i.ibb.co/HtwM0Wx/study1.jpg" alt="study1" border="0"><br/>
 [스터디2] <img src="https://i.ibb.co/B6dP6Rh/study2.gif" alt="study2" border="0"><br/>
+
+[dog] <img src="https://i.ibb.co/0yXpH3X/dog.jpg" alt="dog" border="0">
+
 
 
 ## 스터디 룸
