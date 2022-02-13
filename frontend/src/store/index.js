@@ -31,6 +31,7 @@ export default new Vuex.Store({
     roomUrl: "",
     participant: "",
     roomStudyNo: 0,
+
   },
   mutations: {
     SIGNUP(state, credentials){
