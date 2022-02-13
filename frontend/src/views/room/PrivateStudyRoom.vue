@@ -1,10 +1,10 @@
 <template>
 	<div id="main">
 		<div id="main-container" class="d-flex">
-			<p>
-				<img v-if="!asideRight" src="https://o.remove.bg/downloads/bb7b17fb-07d6-40f9-acc1-3196d15a6a45/images-removebg-preview.png" class="rightMenuImg" alt="menu" @click="asideRight=true">
+			<!-- <div>
+				<div v-if="!asideRight" @click="asideRight=true"><b-icon class="rightMenuImg" icon="chat-right-dots"></b-icon></div>
 				<img v-else src="@/assets/img/openvidu/close.png" class="rightMenuImg" alt="menu" @click="asideRight=false">
-			</p>
+			</div> -->
 			<div id="session-aside-left" v-if="session">
 				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
 				<p v-if="userAuthority"><img src="@/assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="scoreModal=true"></p>
@@ -132,7 +132,21 @@
 									<span class="footerBtnText">공유중지</span>
 								</button> <!-- 나가기 버튼 -->
 							</div>
-							
+
+							<!-- 채팅 버튼 -->
+							<div v-if="!asideRight" class="buttomMenu">
+								<b-button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="asideRight=true">
+									<b-icon icon="chat-right-dots-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+									<span class="footerBtnText">채팅보기</span>
+								</b-button>
+							</div>
+							<div v-else class="buttomMenu">
+								<b-button  class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="asideRight=false">
+									<b-icon icon="chat-right-dots" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+									<span class="footerBtnText">채팅닫기</span>
+								</b-button>
+							</div>
+
 							<!-- 나가기 버튼 설정 -->
 							<div class="buttomMenu">
 								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSession">
