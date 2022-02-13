@@ -43,7 +43,8 @@
 [설정] <img src="https://i.ibb.co/wrgGKpS/asideimg01.png" alt="asideimg01" border="0"><br/>
 [상벌점] <img src="https://i.ibb.co/x2JRqqX/asideimg02.png" alt="asideimg02" border="0"><br/>
 [달력] <img src="https://i.ibb.co/nBMF7Vb/asideimg03.png" alt="asideimg03" border="0"><br/>
-[엑스 박스] <img src="https://i.ibb.co/PChQfZQ/458595-removebg-preview.png" alt="458595-removebg-preview" border="0"> <br/>
+[엑스 X - 회색] <img src="https://i.ibb.co/PChQfZQ/458595-removebg-preview.png" alt="458595-removebg-preview" border="0"> <br/>
+[엑스 X - 검정색] <img src="https://i.ibb.co/GWXqhqv/close.png" alt="close" border="0"> <br/>
 [방 나가기] <img src="https://i.ibb.co/pZGC4jY/exitimg.png" alt="exitimg" border="0"><br/>
 [삼선 메뉴] <img src="https://i.ibb.co/ZmPJksH/menu.png" alt="menu" border="0"> <br/>
 [마이크] <img src="https://i.ibb.co/4J7SH5Z/micimg.png" alt="micimg" border="0"> <br/>
