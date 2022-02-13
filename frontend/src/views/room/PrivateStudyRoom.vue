@@ -1,19 +1,15 @@
 <template>
 	<div id="main">
 		<div id="main-container" class="d-flex">
-			<!-- <div>
-				<div v-if="!asideRight" @click="asideRight=true"><b-icon class="rightMenuImg" icon="chat-right-dots"></b-icon></div>
-				<img v-else src="@/assets/img/openvidu/close.png" class="rightMenuImg" alt="menu" @click="asideRight=false">
-			</div> -->
 			<div id="session-aside-left" v-if="session">
 				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
-				<p v-if="userAuthority"><img src="@/assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="scoreModal=true"></p>
+				<p v-if="power.leader"><img src="@/assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="scoreModal=true"></p>
 				
 				<!-- 상벌점기능 모달 -->
 				<div v-if="scoreModal" class="black-bg">
 					<div class="white-bg">
 						<h2>멤버 (점수는 즉시 반영됩니다.)</h2>
-						<hr>						
+						<hr>
 						<table class="table table-bordered table-hover align-middle">
 							<thead class="table-danger">
 								<tr>
@@ -51,7 +47,6 @@
 							<div>
 								<h3 id="session-time"> {{ hours }} : {{ minutes }} : {{ seconds }} </h3>
 							</div>
-							<!-- <div id="timerBtn" v-if="this.userAuthority"> -->
 							<div id="timerBtn" v-if="power.authority">
 								<b-button v-if="!timer" variant="primary" @click="startTimer()">시작</b-button>
 								<b-button v-else variant="danger" @click="stopTimer">
@@ -80,7 +75,6 @@
 							<user-video class="col-md-4" v-if="!isScreenShared" :stream-manager= "publisher" @click.native="updateMainVideoStreamManager(publisher)"/> <!--자기 -->
 							<user-video class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub)"/> <!-- 다른 참가자 -->
 						</div>
-						
 					</div>
 				</div>
 
@@ -104,7 +98,6 @@
 
 							<!-- video 버튼 설정 -->
 							<div v-if="video === true" class="buttomMenu">
-								<!-- <input class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" :value="video" @click="muteVideo()"> 비디오 on/off 버튼 -->
 								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteVideo()"> 
 									<b-icon icon="camera-video-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
 									<span class="footerBtnText">{{ videoMsg }}</span>
@@ -170,18 +163,12 @@
 				</div>
 
 				<!-- 채팅 기능 시작 -->
-				<!-- <p @click="showChat">채팅</p> -->
-					<!-- <div class="chat" v-show="isChatVisible"> -->
 				<div class="user_chat">
 					<div class="right_label">
 						<span>채팅</span>
 					</div>
 					<div class="chat">
 						<div class="messages" v-html="messages" ref="messages">
-							<!-- <div class="messageLoop" v-for="(message, idx) in messages" :key="idx"> -->
-								<!-- <div class="text-left" >{{ userId }} 님의 메시지:</div> -->
-								<!-- <div class="text-left message__bubble">{{ message }}</div> -->
-							<!-- </div> -->
 						</div>
 
 						<form class="chatFooter" onsubmit="return false">
@@ -277,9 +264,6 @@ export default {
 			resetButton: false,
 			edit: false,
 
-			// 권한 여부
-			// userAuthority: false,
-
 			// 시간
 			userhistoryNo :0,
 
@@ -288,7 +272,7 @@ export default {
 		}
 	},
 	computed:{
-		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers", "audio","video","power"]),
+		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "studyMembers", "audio", "video", "power"]),
 
 		totalTime() {
 			return Number(this.inputHour * 3600) + Number(this.inputMin * 60) + Number(this.inputSec)
@@ -321,22 +305,7 @@ export default {
 		else this.audioMsg = "마이크 ON";
 		// this.muteVideo();
 		// this.muteAudio();
-		// 권한 여부 확인
-		// http({
-    //         method: 'GET',
-    //         url: `/user/leader`,
-    //         headers: this.getUserToken(),
-		// 	params: {study_no: this.roomStudyNo},
-		// 	// params: {study_no: 25},
-    //       })
-    //     .then((res) => {
-    //         this.userAuthority = res.data.authority;
-		// 	// console.log("😉😉")
-		// 	// console.log(res);
-    //       })
-    //       .catch(err => {
-    //         console.log(err)
-		// });  
+		
 
 		this.mySessionId = this.roomUrl;
 		this.myUserName = this.participant;
@@ -350,8 +319,8 @@ export default {
 		this.getStudyMembers()
 	},
 	mounted() {
-    	window.addEventListener('beforeunload', this.unLoadEvent);
-  	},
+    window.addEventListener('beforeunload', this.unLoadEvent);
+  },
 	beforeUnmount() {
 		window.removeEventListener('beforeunload', this.unLoadEvent);
 	},
@@ -385,7 +354,6 @@ export default {
 			this.resetButton = true
 		},
 		resetTimer: function() {
-			// this.time = this.totalTime
 			this.time = 0
 			clearInterval(this.timer)
 			this.timer = null
@@ -405,7 +373,6 @@ export default {
 				this.time--
 			}else{
 				this.resetTimer();
-				// alert("시간이 종료되었습니다.")
 			}
 		},
 		sendTimer(){
@@ -539,8 +506,6 @@ export default {
 					.then(() => {
 
 						// --- Get your own camera stream with the desired properties ---
-						// console.log("Dasdasdasdasdasdasdasdasdasdasdasdasdqwrqwrqw");
-						// console.log(this.session)
 						let publisher = this.OV.initPublisher(undefined, {
 							audioSource: undefined, // The source of audio. If undefined default microphone
 							videoSource: undefined, // The source of video. If undefined default webcam
@@ -558,8 +523,6 @@ export default {
 						// --- Publish your stream ---
 
 						this.session.publish(this.publisher);
-						console.log("Dasdasdasdasdasdasdasdasdasdasdasdasdqwrqwrqw");
-						console.log(this.session)
 					})
 					.catch(error => {
 						console.log('There was an error connecting to the session:', error.code, error.message);
@@ -576,7 +539,7 @@ export default {
 
 		leaveSession () {
 			// 방 떠나기전 현재까지 공부한 시간을 history에 누적하기 위해, 방 떠날 때 userhistory_no 보내줌.
-			 http({
+			http({
 				method: 'POST',
 				url: `/history/register/private/finishtime`,
 				headers: this.getUserToken(),
@@ -603,7 +566,7 @@ export default {
 			window.removeEventListener('beforeunload', this.leaveSession);
 			http({
 				method: 'DELETE',
-				url: `/privateroom/remove/privateMember`,
+				url: '/privateroom/remove/privateMember',
 				headers: this.getUserToken(),
 				params: {privatestudyroom_id: this.mySessionId},
 			})
@@ -611,7 +574,7 @@ export default {
 				this.sharing = !this.sharing;
 				if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
 				this.sessionForScreenShare = undefined;	
-            	window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);		
+        window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);		
 				this.$router.push({name:'StudyDetail', params:{studyNo: this.roomStudyNo}})
 			})
 			.catch(err => {
@@ -666,15 +629,15 @@ export default {
 		updateMainVideoStreamManager (stream) {
 			this.mainOnOff = true;
 			if (this.mainStreamManager === stream) return;
-			 	this.mainStreamManager = stream;
+			this.mainStreamManager = stream;
 				// this.mainStreamManager.stream.videoDimensions = {
 				// 	width:2000,
 				// 	height:2000
 				// };
 		},
 		deleteMainVideoStreamManager() { // 해당 화면 크게 한거 지우기.
-    	  this.mainOnOff = false;
-    	},
+			this.mainOnOff = false;
+    },
 
 		/**
 		 * --------------------------
@@ -745,14 +708,14 @@ export default {
 			this.getToken(mySessionId).then(token => {
 				this.sessionForScreenShare.connect(token, { clientData: this.myUserName  })
 				.then(() => {
-					 this.spublisher = this.OVForScreenShare.initPublisher(undefined, {
+					this.spublisher = this.OVForScreenShare.initPublisher(undefined, {
 						audioSource: false,
 						videoSource: "screen",      
-                        publishVideo: true,  
+            publishVideo: true,  
 						resolution: "1280x720",
 						frameRate: 30,           
-                        insertMode: 'APPEND',    
-                        mirror: false        
+            insertMode: 'APPEND',    
+            mirror: false        
 					});
 					console.log("publisher",this.spublisher);
 					this.spublisher.once('accessAllowed', () => {
@@ -771,69 +734,67 @@ export default {
 							// 	console.log(this.session)
 							// 	this.publisher(this.spublisher);
 							const constraints = {
-										width: {min: 640, ideal: 1280},
-										height: {min: 480, ideal: 720},
-										advanced: [
-											{width: 1920, height: 1280},
-											{aspectRatio: 1.333}
-										]
+								width: {min: 640, ideal: 1280},
+								height: {min: 480, ideal: 720},
+								advanced: [
+									{width: 1920, height: 1280},
+									{aspectRatio: 1.333}
+								]
 							};
 							this.spublisher.stream.getMediaStream().getVideoTracks()[0].applyConstraints(constraints, () => {
 							
 							}),
 							this.spublisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
 								console.log('User pressed the "Stop sharing" button');
-								  
-								   this.leaveSessionForScreenSharing()
-								   this.isScreenShared=false;
+								this.leaveSessionForScreenSharing()
+								this.isScreenShared=false;
 								});					
-								} catch (error) {
+						} catch (error) {
 									console.error('Error applying constraints: ', error);
 								}
-							});
-							this.spublisher.once('accessDenied', () => { 
-								console.warn('ScreenShare: Access Denied');
-							});
-							this.mainStreamManager = this.spublisher;
-							this.sharingPublisher =this.spublisher;
-							this.sessionForScreenShare.publish(this.sharingPublisher);
-						}).catch((error => {
-							console.warn('There was an error connecting to the session:', error.code, error.message);
-						}));
 					});
-					//window.addEventListener('beforeunload', this.leaveSessionForScreenSharing)
+					this.spublisher.once('accessDenied', () => { 
+						console.warn('ScreenShare: Access Denied');
+					});
+					this.mainStreamManager = this.spublisher;
+					this.sharingPublisher =this.spublisher;
+					this.sessionForScreenShare.publish(this.sharingPublisher);
+					}).catch((error => {
+						console.warn('There was an error connecting to the session:', error.code, error.message);
+					}));
+			});
+			//window.addEventListener('beforeunload', this.leaveSessionForScreenSharing)
 		},
 		leaveSessionForScreenSharing () { // 화면 공유 중지
 			this.sharing = !this.sharing; // 화면 공유 버튼에서 중지 버튼으로 change toggle
-             this.isScreenShared=false;
+      this.isScreenShared=false;
 			console.log("🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻")
 		
 			var mySessionId = this.mySessionId;
 			console.log("dsaaaaaaaaadwqerwqeqweqwdsadsadas")
 			console.log(mySessionId); // 제대로있고.
-		    this.sessionForScreenShare.unpublish(this.spublisher); // 송출하고 있는거 중단 (안하면 에러)
+		  this.sessionForScreenShare.unpublish(this.spublisher); // 송출하고 있는거 중단 (안하면 에러)
 			//  if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
 			this.sessionForScreenShare = undefined;
-            this.smainStreamManager = undefined;
+      this.smainStreamManager = undefined;
 			this.sharingPublisher = undefined;
 			this.spublisher = undefined;
-            this.OVForScreenShare = undefined;
+      this.OVForScreenShare = undefined;
 			
 			this.session.publish(this.publisher).then(() => {  // 송출하기 
 				//this.mainStreamManager(publisher);  // 스타 publisher 정보 바꾸기 
 				
-				this.publisher(this.publisher);
+			this.publisher(this.publisher);
 			});
 			// this.joinSession();
 			// this.session.publish(this.session);
-		   window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
+			window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
 		
 		},
 	},
 	stopScreenShare(){	
 		this.sharing = !this.sharing;
 		var mySessionId = this.mySessionId;
-		console.log("dsaaaaaaaaadwqerwqeqweqwdsadsadas")
 		console.log(mySessionId);
 	
 		window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
@@ -844,7 +805,7 @@ export default {
 				let msg = this.$refs.messages;
 
 				msg.scrollTo({ top: msg.scrollHeight, behavior: 'smooth' });
-     		 });
+			});
 		},
 
 		totalTime() {
