@@ -1,10 +1,10 @@
 <template>
 	<div id="main">
 		<div id="main-container" class="d-flex">
-			<p>
+			<!-- <p>
 				<img v-if="!asideRight" src="@/assets/img/openvidu/menu.png" class="rightMenuImg" alt="menu" @click="asideRight=true">
 				<img v-else src="@/assets/img/openvidu/close.png" class="rightMenuImg" alt="menu" @click="asideRight=false">
-			</p>
+			</p> -->
 			<div id="session-aside-left" v-if="session">
 				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings" @click="outMemberModal=true"></p>
 
@@ -86,6 +86,20 @@
 									<b-icon icon="camera-video-off-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
 									<span class="footerBtnText">{{ videoMsg }}</span>
 								</button>
+							</div>
+
+							<!-- 채팅 버튼 -->
+							<div v-if="!asideRight" class="buttomMenu">
+								<b-button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="asideRight=true">
+									<b-icon icon="chat-right-dots-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+									<span class="footerBtnText">채팅보기</span>
+								</b-button>
+							</div>
+							<div v-else class="buttomMenu">
+								<b-button  class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="asideRight=false">
+									<b-icon icon="chat-right-dots" class="buttomMenuIcon" aria-hidden="true"></b-icon>
+									<span class="footerBtnText">채팅닫기</span>
+								</b-button>
 							</div>
 
 							<!-- 나가기 버튼 설정 -->
