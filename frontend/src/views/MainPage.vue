@@ -165,7 +165,7 @@
             :autoplay="true"
             :autoplaySpeed="2000"
           >
-              <div v-for="(publicstudy, idx) in publicStudyList" :key="idx" class="px-5 mb-lg-2" @click="[info(publicstudy,$event.target),checkBanned(publicstudy.publicstudyroomId)]">
+              <div v-for="(publicstudy, idx) in publicStudyList" :key="idx" class="px-5 mb-lg-2" @click="info(publicstudy,$event.target)">
                   <div class="hover hover-1 text-white rounded">
                     <img class="studyImg" :src="publicstudy.image" alt="Study Image is missing... :(">
                     <div class="hover-1-number">{{ currentParticipant[idx] }} &#47; {{ publicstudy.numberOfMember }}</div>
@@ -207,6 +207,7 @@ Vue.use(VueCrontab)
 
 import JwtDecode from 'jwt-decode'
 import { mapState } from 'vuex'
+
 export default {
   name: 'MainPage',
   components: { VueSlickCarousel },
@@ -365,19 +366,22 @@ export default {
     checkBanned(publicstudyroom_id){
       http({
         method: 'GET',
-        url: '/publicroom/bannnedCheck',
+        url: '/publicroom/bannedCheck',
         params: {publicstudyroom_id: publicstudyroom_id},
         headers: this.getHeader()
       })
       .then(res => {
+        console.log('checkbanned 되는지 확인!!!', res)
         this.isBanned = res.data
       })
       .catch(err => {
           console.log(err)
         })     
       },
-     // 모달 값 셋팅
-  async info(publicstudy,button) {
+    
+    // 모달 값 셋팅
+    async info(publicstudy,button) {
+      this.checkBanned(publicstudy.publicstudyroomId)
       this.infoModal.publicstudyroomId = publicstudy.publicstudyroomId;
       this.infoModal.studyName = publicstudy.studyName;
       this.infoModal.numberOfMember = publicstudy.numberOfMember; 
@@ -434,8 +438,7 @@ export default {
           console.log(err)
         })
         console.log(">>>>>>>>>>> ",publicstudyroomId)
-      }      
-      
+      }    
     },
 
     goToBoardList() {
@@ -524,10 +527,11 @@ export default {
     },
 
   },
-computed:{
+  computed:{
     ...mapState([
       'roomName', 'roomUrl', 'participant', 'audio', 'video'
-    ])},
+    ])
+  },
   created() {
     this.getBoardItems()
     this.getPublicStudy()
