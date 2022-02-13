@@ -318,6 +318,7 @@ marquee {
 
 .backImg {
   background-image: url('https://t1.daumcdn.net/cfile/blog/1532170949754B963C');
+  /* background-color: #afa2dd; */
 }
 
 .btnTag {
