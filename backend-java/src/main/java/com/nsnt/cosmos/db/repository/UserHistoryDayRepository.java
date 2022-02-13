@@ -19,7 +19,7 @@ public interface UserHistoryDayRepository extends JpaRepository<UserHistoryDay, 
 
 	@Query(value = "select * \r\n" + 
 			"from userhistory_day ud \r\n" + 
-			"where day = dayofyear(:now) \r\n" + 
+			"where day = dayofyear(:now) - 1 \r\n" + 
 			"order by total_time desc"
 			, nativeQuery = true)
 	List<UserHistoryDay> findAllDayUserHistory(@Param("now") LocalDateTime now);
