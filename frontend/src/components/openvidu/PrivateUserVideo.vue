@@ -9,7 +9,7 @@
 </div>
 </template>
 <script>
-import "@/assets/style/PrivateStudyRoom/video.css"
+import "@/assets/style/StudyRoom/video.css"
 import OvVideo from './OvVideo';
 
 export default {

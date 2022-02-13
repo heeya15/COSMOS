@@ -206,7 +206,9 @@ import VueCrontab from 'vue-crontab'
 Vue.use(VueCrontab)
 
 import JwtDecode from 'jwt-decode'
-import { mapState } from 'vuex'
+
+import { mapState, mapMutations } from 'vuex'
+const publicStudyStore = "publicStudyStore"
 
 export default {
   name: 'MainPage',
@@ -264,6 +266,7 @@ export default {
   },
 
   methods: {
+    ...mapMutations(publicStudyStore,["GET_ROOM_NAME", "GET_ROOM_URL","GET_PARTICIPANT","GET_ROOM_STUDY_NO"]),
     getHeader(){
       const token = localStorage.getItem('jwt')
       const header = {
@@ -414,9 +417,13 @@ export default {
       console.log( this.$store.state.audio)
       console.log( this.$store.state.video)
 
-      this.$store.state.roomUrl = publicstudyroomId;
-      this.$store.state.roomName = studyName;
-      this.$store.state.participant = myId
+      this.GET_ROOM_NAME(studyName);
+      this.GET_ROOM_URL(publicstudyroomId);
+      this.GET_PARTICIPANT(myId);
+
+      // this.$store.state.roomUrl = publicstudyroomId;
+      // this.$store.state.roomName = studyName;
+      // this.$store.state.participant = myId
 
       // 강퇴된적 있는 유저면 입장 불가
       if (this.isBanned === true){
@@ -528,9 +535,8 @@ export default {
 
   },
   computed:{
-    ...mapState([
-      'roomName', 'roomUrl', 'participant', 'audio', 'video'
-    ])
+    ...mapState(['audio', 'video']),
+    ...mapState(publicStudyStore,['roomName', 'roomUrl', 'participant'])
   },
   created() {
     this.getBoardItems()

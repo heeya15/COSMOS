@@ -160,7 +160,7 @@
 </style>
 <script>
 import "@/assets/style/style.css";
-import "@/assets/style/PrivateStudyRoom/room.css"
+import "@/assets/style/StudyRoom/room.css"
 import axios from 'axios';
 import http from "@/util/http-common.js";
 import { OpenVidu } from 'openvidu-browser';
@@ -170,6 +170,7 @@ import UserList from '@/components/openvidu/UserList';
 import jwt_decode from "jwt-decode";
 
 import { mapState } from "vuex";
+const publicStudyStore = "publicStudyStore" //수정
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
@@ -241,7 +242,8 @@ export default {
 		}
 	},
 	computed:{
-		...mapState(["roomName", "roomUrl", "participant", "roomStudyNo", "audio","video"]),
+		...mapState(["audio","video"]),
+		...mapState(publicStudyStore,['roomName', 'roomUrl', 'participant',"roomStudyNo"])
 	},
 	created(){
 		// 초기 장치 셋팅
