@@ -24,8 +24,8 @@
 								<tr>
 								<td>{{member.user.userName}}({{member.user.userId}})</td>
 								<td v-if="isLeader">
-									<b-button v-if="member.user.userId!==userId" variant="danger" @click="outMember(member.user.userId)">강퇴</b-button>
-									<b-button v-if="member.user.userId!==userId" variant="info" @click="giveAuthority(member.publicmemberNo, member.leader)">권한</b-button>
+									<!-- <b-button v-if="member.user.userId!==userId" variant="danger" @click="outMember(member.user.userId)">강퇴</b-button> -->
+									<b-button v-if=" member.leader === false && member.user.userId!==userId" variant="info" @click="giveAuthority(member.publicmemberNo, member.leader)">권한</b-button>
 								</td>
 								</tr>
 							</tbody>
@@ -368,17 +368,7 @@ export default {
 
     },
 	outUser(memberId) {
-		http({
-			method: 'DELETE',
-			url:'publicroom/remove/publicMember',
-			params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
-		})
-		.then(res => {
-			console.log(res)
-		})
-		.catch(err => {
-			console.log(err)
-		})
+	
 		console.log("🥵🥵🥵")
 		const { connection } = memberId.stream;
 		const {clientData} = JSON.parse(connection.data);
@@ -394,7 +384,7 @@ export default {
 		http({
 			method: 'POST',
 			url: 'publicroom/register/bannedUser',
-			params: {user_id: memberId, publicstudyroom_id: this.roomUrl}
+			params: { publicstudyroom_id: this.roomUrl,user_id: clientData}
 		})
 		.then(res => {
 			console.log(res)
@@ -411,12 +401,12 @@ export default {
     },
 
 		// 권한부여 기능
-		giveAuthority(publicmember_no,leader) {
+	giveAuthority(publicmember_no,leader) {
 			if (leader === true){
-        var memberLeader = false
-      } else {
-        memberLeader = true
-      }
+				var memberLeader = false
+			} else {
+				memberLeader = true
+			}
 			http({
 				method: 'PUT',
 				url: 'publicroom/updateAuthority',
@@ -429,9 +419,12 @@ export default {
 			.catch(err => {
 				console.log(err)
 			})
-		},
-
-		
+			 this.publisher.session.signal({
+                data: '',
+                to: [],
+                type: "leader"
+            })
+		},	
 		async joinSession () {
 			await this.getPublicStudyMembers(this.roomUrl)
 			console.log("😜😜😜😜😜😜😜😜😜😜😜😜")
@@ -476,6 +469,10 @@ export default {
 				}
 				this.getPublicStudyMembers(this.roomUrl)
 			})
+
+			this.session.on("signal:leader", async() => {
+                await this.getPublicStudyMembers(this.roomUrl)
+            })
 
 			// 같은 session 내에서 텍스트 채팅을 위한 signal
 			this.session.on('signal:my-chat', (event) => {
