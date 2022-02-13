@@ -468,9 +468,10 @@ export default {
 }
 .studyImg {
   height: 180px;
-  width: 250px;
+  width: 250px;  
+  box-shadow: 4px 4px 4px 2px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
-  border: 3px solid #c8c1e4;
+  /* border: 3px solid #c8c1e4; */
 }
 .study_password {
   height:34px;
