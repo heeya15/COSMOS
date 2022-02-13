@@ -837,6 +837,12 @@ thead {
   padding-bottom: 60%;
 }
 
+
+.hover-1 {
+  box-shadow: 4px 4px 4px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+
 .hover-overlay {
   width: 100%;
   height: 100%;
