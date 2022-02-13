@@ -181,6 +181,8 @@ public class PublicRoomController {
 					@ApiResponse(code = 500, message = "서버 오류") 
 					})
 	public ResponseEntity<Boolean> bannedCheck(@RequestParam("publicstudyroom_id") String publicstudyroom_id, @ApiIgnore Authentication authentication) throws Exception {	
+		if(authentication==null) return  ResponseEntity.status(401).body(false);
+		
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		String user_id = userDetails.getUsername();
 		
@@ -188,10 +190,10 @@ public class PublicRoomController {
 		
 		if (isBanned == true) {
 			System.out.println("이전에 강퇴된 유저입니다. 해당 채팅방에 들어갈 수 없습니다.");
-			return ResponseEntity.status(200).body(isBanned);
-		} else
+		} else {
 			System.out.println("이전에 강퇴된 기록이 없습니다. 해당 채팅방에 들어갈 수 있습니다.");
-		return ResponseEntity.status(401).body(isBanned);
+		}
+		return ResponseEntity.status(200).body(isBanned);
 	}
 	
 	
