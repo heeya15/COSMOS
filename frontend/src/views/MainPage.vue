@@ -165,7 +165,7 @@
             :autoplay="true"
             :autoplaySpeed="2000"
           >
-              <div v-for="(publicstudy, idx) in publicStudyList" :key="idx" class="px-5 mb-lg-2" @click="info(publicstudy,$event.target)">
+              <div v-for="(publicstudy, idx) in publicStudyList" :key="idx" class="px-5 mb-lg-2" @click="[info(publicstudy,$event.target),checkBanned(publicstudy.publicstudyroomId)]">
                   <div class="hover hover-1 text-white rounded">
                     <img class="studyImg" :src="publicstudy.image" alt="Study Image is missing... :(">
                     <div class="hover-1-number">{{ currentParticipant[idx] }} &#47; {{ publicstudy.numberOfMember }}</div>
@@ -348,7 +348,7 @@ export default {
         console.log(err)
       })
     },
-     async getPublicStudyMemberCount(publicstudyroomid) {
+    async getPublicStudyMemberCount(publicstudyroomid) {
       await http({
         method: 'GET',
         url: '/publicroom/search/publicMember',
@@ -371,12 +371,13 @@ export default {
       })
       .then(res => {
         this.isBanned = res.data
-      }).catch(err => {
+      })
+      .catch(err => {
           console.log(err)
         })     
       },
      // 모달 값 셋팅
-   async info(publicstudy,button) {
+  async info(publicstudy,button) {
       this.infoModal.publicstudyroomId = publicstudy.publicstudyroomId;
       this.infoModal.studyName = publicstudy.studyName;
       this.infoModal.numberOfMember = publicstudy.numberOfMember; 
@@ -395,10 +396,10 @@ export default {
     },
     // 공개 방 가기(가면 공개방 멤버로 추가)
     async goStudyRoom(publicstudyroomId, studyName ) {
-     
+    
       console.log("공개방 가기 버튼 클릭.")
       console.log(publicstudyroomId, studyName);
-     
+    
       var token = localStorage.getItem('jwt')
       var decoded = JwtDecode(token);
       var myId = decoded.sub;
@@ -414,8 +415,7 @@ export default {
       this.$store.state.participant = myId
 
       // 강퇴된적 있는 유저면 입장 불가
-      this.checkBanned(publicstudyroomId)
-      if (this.isBanned == true){
+      if (this.isBanned === true){
         alert('입장이 불가능한 스터디입니다.');
         return;
       } else {
@@ -524,7 +524,7 @@ export default {
     },
 
   },
- computed:{
+computed:{
     ...mapState([
       'roomName', 'roomUrl', 'participant', 'audio', 'video'
     ])},
@@ -1083,4 +1083,5 @@ thead {
 .studyHeader {
   margin-bottom: 20px;
 }
+
 </style>
