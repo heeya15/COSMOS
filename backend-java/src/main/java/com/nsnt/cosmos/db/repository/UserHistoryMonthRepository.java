@@ -16,7 +16,7 @@ public interface UserHistoryMonthRepository extends JpaRepository<UserHistoryMon
 
 	@Query(value = "select *\r\n" + 
 			"from userhistory_month\r\n" + 
-			"where month = month(:now) \r\n" + 
+			"where month = month(:now) - 1 \r\n" + 
 			"order by total_time desc"
 			, nativeQuery = true)
 	List<UserHistoryMonth> findAllMonthUserHistory(@Param("now") LocalDateTime now);

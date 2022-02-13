@@ -15,7 +15,7 @@ public interface UserHistoryWeekRepository extends JpaRepository<UserHistoryWeek
 
 	@Query(value = "select *\r\n" + 
 			"from userhistory_week\r\n" + 
-			"where week = weekofyear(:now)\r\n" + 
+			"where week = weekofyear(:now) - 1 \r\n" + 
 			"order by total_time desc"
 			, nativeQuery = true)
 	List<UserHistoryWeek> findAllWeekUserHistory(@Param("now") LocalDateTime now);
