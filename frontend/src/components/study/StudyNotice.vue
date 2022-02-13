@@ -7,7 +7,7 @@
     <div v-if="notice.studyManageNo">
       <div v-show="!notice.modify">
         <p style="text-align:right;">변경일: {{notice.createdAt}}</p>
-        <div class="noticeContainer" style="background-color:#c8c1e4;">
+        <div class="noticeContainer" style="background-color:#ededed;">
           {{notice.studymanageNotice}}
         </div>
         <!-- 스터디장만 수정,삭제 보이게 -->

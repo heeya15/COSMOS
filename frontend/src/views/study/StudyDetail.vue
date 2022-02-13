@@ -166,10 +166,15 @@
       </div>
 
       <hr>
-      <div class="buttongroup d-flex justify-content-between" style="width:800px;">
+      <div v-if="power.leader" class="buttongroup d-flex justify-content-between" style="width:800px;">
         <b-button :class="{noticeBtn : toggleNotice}" @click="togglenotice">공지사항</b-button>
         <b-button :class="{applyBtn : toggleApply}" @click="toggleapply">가입 요청 확인 </b-button>
 
+        <!-- 스터디장만 회원추가가능 -->
+        <b-button :class="{memberBtn : toggleMember}" @click="togglemember">스터디원 정보</b-button>
+      </div>
+      <div v-else class="buttongroup" style="width:800px;">
+        <b-button class="mr-5" :class="{noticeBtn : toggleNotice}" @click="togglenotice">공지사항</b-button>
         <!-- 스터디장만 회원추가가능 -->
         <b-button :class="{memberBtn : toggleMember}" @click="togglemember">스터디원 정보</b-button>
       </div>

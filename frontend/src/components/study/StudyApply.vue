@@ -3,12 +3,15 @@
     <h3>가입 요청 회원</h3>
     <div v-show="applyMembers===null" class="m-5">가입 요청한 회원이 없습니다.</div>
     <b-row v-for="member in applyMembers" :key="member.id" class="m-5 align-items-center">    
-      <b-col style="background-color:#c8c1e4;">{{ member.user_name }}</b-col>
-      <b-col style="background-color:#c8c1e4;">{{ member.user_id }}</b-col>
-      <b-col v-if="power.leader">
+      <!-- <b-col style="background-color:#D3D0D2; height: 50px; line-height:50px;">{{ member.user_name }}</b-col>
+      <b-col style="background-color:#D3D0D2; height: 50px; line-height:50px;">{{ member.user_id }}</b-col> -->
+      <b-col cols="2"></b-col>
+      <b-col cols="4" style="background-color: #ededed; height: 50px; line-height:50px; border-radius:8px;">{{ member.user_name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;({{ member.user_id }})</b-col>
+      <b-col cols="4" v-if="power.leader">
         <button class="okBtn" @click="addApplyMember(member)">승인</button>
         <button class="deleteBtn" @click="deleteApplyMember(member.applymember_no)">거절</button>
       </b-col>
+      <b-col cols="2"></b-col>
     </b-row>
   </div>
 </template>
