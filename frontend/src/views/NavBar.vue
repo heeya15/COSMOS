@@ -9,8 +9,6 @@
         </router-link>
       </b-navbar-brand>
 
-      <router-link :to="{ name:'PublicStudyRoom' }" class="nav-text text-decoration-none">openviduTest</router-link>
-
       <b-navbar-toggle target="nav-collapse" style="background-color: #c8c1e4"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <!-- 로그인 했을 때 -->
