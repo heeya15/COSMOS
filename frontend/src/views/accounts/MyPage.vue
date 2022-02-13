@@ -254,9 +254,14 @@ export default {
 .checkBtn {
   border: none;
   border-radius: 8px;
-  background-color: #e4c3f1;
+  background-color: #afa2dd;
   height: 40px;
   width: 50px;
+}
+
+.checkBtn:hover {
+  background-color: #c8c1e4;
+  color: #fff;
 }
 
 /* 스터디 이미지 */
