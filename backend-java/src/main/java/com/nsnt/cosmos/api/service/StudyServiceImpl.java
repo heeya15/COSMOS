@@ -59,7 +59,8 @@ public class StudyServiceImpl implements StudyService {
 		study.setStudyPassword(studyRegisterInfo.getStudyPassword());
 		StudyType studyType = new StudyType();
 		studyType.setStudytypeNo(studyRegisterInfo.getStudytypeNo());
-		study.setStudyType(studyType);
+		study.setStudyType(studyType); // 스터디 분류
+		System.out.println(study.toString());
 		studyRepository.save(study); // 1. 스터디 생성
 		
 		StudyMember studyMember = new StudyMember();

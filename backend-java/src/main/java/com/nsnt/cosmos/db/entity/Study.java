@@ -54,7 +54,7 @@ public class Study {
 	@Column(name="study_name",length = 100)
 	String studyName;
 	
-	@Column(name="url", length = 100)
+	@Column(name="url")
 	String url;
 	
 	
