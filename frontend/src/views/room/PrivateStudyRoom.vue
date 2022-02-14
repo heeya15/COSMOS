@@ -53,7 +53,7 @@
 									정지
 								</b-button>
 								<b-button v-if="resetButton" variant="success" @click="resetTimer">
-									리셋
+									종료
 								</b-button>
 								<b-button v-if="!timer" variant="warning" @click="editTimer">
 									시간 설정
@@ -384,7 +384,7 @@ export default {
 			})
 			.then(() => {
 				console.log("timer success");
-				if(this.time==0 && this.resetButton){
+				if(this.time==0){
 					alert("시간이 종료되었습니다.")
 				}
 			})
