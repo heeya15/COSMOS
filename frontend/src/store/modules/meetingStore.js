@@ -1,10 +1,21 @@
 const meetingStore = {
-  publishAudio: false, 
-  publishVideo: false,  
-  audioEnabled: false, // 오디오 버튼 활성화
-  videoEnabled: false, 
-  audio: false,
-  video: false,
+  namespaced: true,
+  state: {
+    isaudio: false,
+    isvideo: false,
+  },
+  mutations: {
+    SET_ROOM_SETTIG_ISAUDIO(state, audio) {
+      state.isaudio = audio;
+      // 공개방 들어오면서 셋팅 값 뭐임?
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>dsadsadwqrwqrwqrwq")
+      console.log(state.isaudio);
+    },
+    SET_ROOM_SETTIG_ISVIDIO(state, video) {
+      state.isvideo = video;
+      console.log(state.isvideo);
+    },
+  }
 };
 
 export default meetingStore;

@@ -285,7 +285,7 @@ import JwtDecode from 'jwt-decode'
 
 import { mapState, mapMutations } from 'vuex'
 const publicStudyStore = "publicStudyStore"
-
+const meetingStore = "meetingStore"
 export default {
   name: 'MainPage',
   components: {
@@ -352,7 +352,8 @@ export default {
   },
 
   methods: {
-    ...mapMutations(publicStudyStore,["GET_ROOM_NAME", "GET_ROOM_URL","GET_PARTICIPANT","GET_ROOM_STUDY_NO"]),
+     ...mapMutations(publicStudyStore,["SET_ROOM_NAME", "SET_ROOM_URL","SET_PARTICIPANT","SET_ROOM_STUDY_NO"]),
+    ...mapMutations(meetingStore,["SET_ROOM_SETTIG_ISAUDIO", "SET_ROOM_SETTIG_ISVIDIO"]),
     getHeader(){
       const token = localStorage.getItem('jwt')
       const header = {
@@ -496,7 +497,7 @@ export default {
     hideModal() {
       this.$refs["my-modal"].hide();
     },
-    // 공개 방 가기(가면 공개방 멤버로 추가)
+   // 공개 방 가기(가면 공개방 멤버로 추가)
     async goStudyRoom(publicstudyroomId, studyName ) {
     
       console.log("공개방 가기 버튼 클릭.")
@@ -505,16 +506,16 @@ export default {
       var token = localStorage.getItem('jwt')
       var decoded = JwtDecode(token);
       var myId = decoded.sub;
-
-      // 마이크 캠 셋팅
-      this.$store.state.audio = this.settings.mic;
-      this.$store.state.video = this.settings.cam;
-      console.log( this.$store.state.audio)
-      console.log( this.$store.state.video)
-
-      this.GET_ROOM_NAME(studyName);
-      this.GET_ROOM_URL(publicstudyroomId);
-      this.GET_PARTICIPANT(myId);
+      console.log("들어가기전 셋팅 값 확인")
+      console.log( this.settings.mic)
+      console.log( this.settings.cam)
+       // 마이크 캠 셋팅
+      this.SET_ROOM_SETTIG_ISAUDIO(this.settings.mic);
+      this.SET_ROOM_SETTIG_ISVIDIO(this.settings.cam);
+      // 방 입장을 위한 셋팅
+      this.SET_ROOM_NAME(studyName);
+      this.SET_ROOM_URL(publicstudyroomId);
+      this.SET_PARTICIPANT(myId);
 
       // this.$store.state.roomUrl = publicstudyroomId;
       // this.$store.state.roomName = studyName;

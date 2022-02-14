@@ -9,10 +9,11 @@ import jwtDecode from 'jwt-decode';
 Vue.use(Vuex)
 
 import publicStudyStore from './modules/publicStudyStore';
-
+import meetingStore from './modules/meetingStore';
 export default new Vuex.Store({
   modules: {
     publicStudyStore,
+    meetingStore
   },
   plugins: [
     // 브라우저 종료시 제거하기 위해 localStorage가 아닌 sessionStorage로 변경. (default: localStorage)

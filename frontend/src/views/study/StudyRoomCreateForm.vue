@@ -147,7 +147,7 @@
 import http from "@/util/http-common.js";
 
 import JwtDecode from 'jwt-decode'
-import { mapState, mapMutations } from 'vuex'
+import { mapMutations } from 'vuex'
 const publicStudyStore = "publicStudyStore"
 
 import VueSlickCarousel from 'vue-slick-carousel'
@@ -222,7 +222,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(publicStudyStore,["GET_ROOM_NAME", "GET_ROOM_URL","GET_PARTICIPANT","GET_ROOM_STUDY_NO"]),
+    ...mapMutations(publicStudyStore,["SET_ROOM_NAME", "SET_ROOM_URL","SET_PARTICIPANT","SET_ROOM_STUDY_NO"]),
     // 인원 수 제한
     recruitLimit() { 
       // 공개 일 때
@@ -341,9 +341,9 @@ export default {
       var decoded = JwtDecode(token);
       var myId = decoded.sub;
 
-      this.GET_ROOM_NAME(this.input.studyName);
-      this.GET_ROOM_URL(this.input.url);
-      this.GET_PARTICIPANT(myId);
+      this.SET_ROOM_NAME(this.input.studyName);
+      this.SET_ROOM_URL(this.input.url);
+      this.SET_PARTICIPANT(myId);
       // this.$store.state.roomName = this.input.studyName; // 방 이름
       // this.$store.state.roomUrl = this.input.url; // 스터디룸 아이디
       // this.$store.state.participant = myId; // 내 아뒤
@@ -435,11 +435,6 @@ export default {
         console.log(err)
       })
     }
-  },
-  computed:{
-     ...mapState(publicStudyStore,[ // store state 접근
-      'roomName', 'roomUrl', 'participant'
-    ])
   },
   created() {
     this.getStudyType()

@@ -171,7 +171,7 @@ import jwt_decode from "jwt-decode";
 
 import { mapState } from "vuex";
 const publicStudyStore = "publicStudyStore" //수정
-
+const meetingStore ="meetingStore"
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const OPENVIDU_SERVER_URL = "https://i6e103.p.ssafy.io:8084";
@@ -242,16 +242,17 @@ export default {
 		}
 	},
 	computed:{
-		...mapState(["audio","video"]),
+		...mapState(meetingStore,["isaudio","isvideo"]),
 		...mapState(publicStudyStore,['roomName', 'roomUrl', 'participant',"roomStudyNo"])
 	},
 	created(){
 		// 초기 장치 셋팅
-		this.audioEnabled =this.$store.state.audio,
-		this.videoEnabled= this.$store.state.video;
-		this.audio= this.$store.state.audio;
-		this.video= this.$store.state.video;
-		
+		this.audioEnabled =this.isaudio,
+		this.videoEnabled= this.isvideo;
+		this.audio= this.isaudio;
+		this.video= this.isvideo;
+		console.log(this.isaudio)
+		console.log(this.isvideo)
 		if(this.video == true) this.videoMsg = "비디오 OFF";
 		else this.videoMsg = "비디오 ON";
 
