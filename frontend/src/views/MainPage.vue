@@ -352,8 +352,9 @@ export default {
   },
 
   methods: {
-     ...mapMutations(publicStudyStore,["SET_ROOM_NAME", "SET_ROOM_URL","SET_PARTICIPANT","SET_ROOM_STUDY_NO"]),
-    ...mapMutations(meetingStore,["SET_ROOM_SETTIG_ISAUDIO", "SET_ROOM_SETTIG_ISVIDIO"]),
+    ...mapMutations(publicStudyStore,["SET_ROOM_NAME", "SET_ROOM_URL","SET_PARTICIPANT","SET_ROOM_STUDY_NO"]),
+    // ...mapMutations(meetingStore,["SET_ROOM_SETTIG_ISAUDIO", "SET_ROOM_SETTIG_ISVIDIO"]),
+    ...mapMutations(meetingStore,["SET_ROOM_SETTING"]),
     getHeader(){
       const token = localStorage.getItem('jwt')
       const header = {
@@ -509,9 +510,10 @@ export default {
       console.log("들어가기전 셋팅 값 확인")
       console.log( this.settings.mic)
       console.log( this.settings.cam)
-       // 마이크 캠 셋팅
-      this.SET_ROOM_SETTIG_ISAUDIO(this.settings.mic);
-      this.SET_ROOM_SETTIG_ISVIDIO(this.settings.cam);
+      // 마이크 캠 셋팅
+      // this.SET_ROOM_SETTIG_ISAUDIO(this.settings.mic);
+      // this.SET_ROOM_SETTIG_ISVIDIO(this.settings.cam);
+      this.SET_ROOM_SETTING(this.settings)
       // 방 입장을 위한 셋팅
       this.SET_ROOM_NAME(studyName);
       this.SET_ROOM_URL(publicstudyroomId);
