@@ -45,7 +45,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor /** Cannot construct instance of~ error를 해결해주었다.  파라미터가 없는 생성자 만들어줌* */ 
 public class Study {
-
 	@Id
 	@Column(name = "study_no")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
