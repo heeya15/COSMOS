@@ -60,18 +60,15 @@
 
     <b-pagination
       @page-click="pageClick"
-      
       v-model="currentPage"
       :total-rows="rowws"
       :per-page="perPage"
       aria-controls="test-table"
       align="center"
+      style="margin-bottom: 40px;"
     >
     </b-pagination>
-
-    
   </div>
-
 </template>
 
 <script>

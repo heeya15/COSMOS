@@ -25,8 +25,9 @@
       <div class="round_box2"></div>
       <div class="round_box3"></div>
       <div class="round_box4"></div>
-      
-        <div class="body_total p-5" style="width: 600px; height: 65vh;">
+
+      <div class="container" style="height: 100%">
+        <div class="body_total p-5" style="width: 630px; height: 100vh;">
           <!-- <hr class="hrTag"> -->
           <b-row class="content_rowTag mt-3">
             <b-col cols="3" class="mt-3">
@@ -35,7 +36,7 @@
             </b-col>
             <b-col cols="9" class="mt-3">
               <b-form-input v-if="editButton === true" type="text" v-model="boardInfo.contentTitle" style="height: 35px; text-align: center;" maxlength="30"></b-form-input>
-              <p v-else>{{ boardInfo.contentTitle }}</p>
+              <p v-else class="inputs">{{ boardInfo.contentTitle }}</p>
               <hr class="hrTag">
             </b-col>
 
@@ -44,7 +45,7 @@
                 <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
               <b-col v-show="this.boardInfo.header === false" cols="9" class="mt-2">
-                <p>{{ boardInfo.studyName }}</p>
+                <p class="inputs">{{ boardInfo.studyName }}</p>
                 <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
 
@@ -63,7 +64,7 @@
                   @keypress="recruitLimit"
                   >
                 </b-form-input>
-                <p v-else v-show="this.boardInfo.header === false">{{ boardInfo.recruitNumber }}</p>
+                <p v-else v-show="this.boardInfo.header === false" class="inputs">{{ boardInfo.recruitNumber }}</p>
                 <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
 
@@ -72,7 +73,7 @@
               <hr class="hrTag">
             </b-col>
             <b-col cols="9" class="mt-2">
-              <p>{{ boardInfo.studytypeName }}</p>
+              <p class="inputs">{{ boardInfo.studytypeName }}</p>
               <!-- 수정을 눌렀을 때 값 타입 가져오고 원래는 생성될때의 값 불러와야 함 -->
               <b-form-select v-if="editButton === true" v-show="this.boardInfo.header === true" v-model="studyTypeSelected" :options="options" id="studytype_name"></b-form-select>
               <hr class="hrTag" >
@@ -96,7 +97,7 @@
             </b-col>
             <b-col cols="9" class="mt-2">
               <b-textarea v-if="editButton === true" type="text" v-model="boardInfo.content" style="height: 80px;"></b-textarea>
-              <p v-else style="white-space: pre-wrap; text-align: justify;">{{ boardInfo.content }}</p>
+              <p v-else style="white-space: pre-wrap; text-align: justify;" class="inputs">{{ boardInfo.content }}</p>
               <hr class="hrTag">
             </b-col>
           
@@ -136,6 +137,7 @@
             </b-row>
           <!-- <hr> -->
           </div>
+      </div>
             <div style="height: 30px;">
               <p></p>
             </div>
@@ -680,5 +682,10 @@ p {
 
 .updateBtn:hover {
   color: white;
+}
+
+.inputs {
+  font-size: 12pt;
+  font-family: "BMJua";
 }
 </style>

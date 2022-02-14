@@ -23,11 +23,10 @@
       </b-modal>
       <!-- 모달 끝 -->
       <!-- MainPage Banner Start -->
-      <div class="banner">
+      <div class="banner" id="banner">
         <div class="bannerBox">
           <div class="leftBox">
             <img class="cosmos" src="https://i.ibb.co/nm8jZHr/main-img7.png" alt="main-img7" border="0"><br/>
-
           </div>
           <div class="rightBox" align="center">
             <div class="wrapper" >
@@ -50,7 +49,7 @@
       </div>
 
       <!-- 랭킹 Start -->
-      <div align="center" style="margin-bottom: 80px;">
+      <div id="rank" align="center" style="margin-bottom: 80px;">
         <div id="rank_section">
           <h1 class="text-center mb-4">랭킹</h1>
           
@@ -202,7 +201,6 @@
           <table class="table table-boardered table-hover">
             <col style="width:70%">
             <col style="width:30%">
-
             <thead align="center">
               <th>🌼 게시글 제목 🌼</th>
               <th>🌼 분류 🌼</th>
@@ -210,8 +208,10 @@
             <tbody v-for="(board, idx) in boardList" :key="idx" @click="goBoardDetail(board.boardNo)">
               <!-- <td><p class="mx-3">🌷 {{ board.contentTitle }} 🌷</p></td> -->
               <!-- <td align="center"><p>🌷 {{ board.studytypeName }} 🌷</p></td> -->
-                <td><p class="mx-3"> {{ board.contentTitle }} </p></td>
-                <td align="center"><p> {{ board.studytypeName }} </p></td>
+                <td><p class="mx-3 studyboard"> {{ board.contentTitle }} </p></td>
+                <td align="center"><p class="studyboard"> {{ board.studytypeName }} </p></td>
+                <!-- <td><p class="mx-3"> {{ board.contentTitle }} </p></td> -->
+                <!-- <td align="center"><p> {{ board.studytypeName }} </p></td> -->
               <p></p>
             </tbody>
           </table>
@@ -261,14 +261,12 @@
                 </template>
               </VueSlickCarousel>
             </div>
-          <div v-else>아직 가입한 스터디가 없습니다.</div>
+          <div v-else><p id="nostudy">아직 가입한 스터디가 없습니다.</p></div>
         </div>
       </div>
       <!-- 오픈(공개) 스터디 목록 End -->
-
-      <div class="my-5" align="center">  
-        <hr class="line">
-      </div>
+      <Footer/>
+      <div class="mb-4"></div>
   </div>
 </template>
 
@@ -281,6 +279,8 @@ import Vue from 'vue'
 import VueCrontab from 'vue-crontab'
 Vue.use(VueCrontab)
 
+import Footer from '@/views/Footer.vue'
+
 import JwtDecode from 'jwt-decode'
 
 import { mapState, mapMutations } from 'vuex'
@@ -288,7 +288,10 @@ const publicStudyStore = "publicStudyStore"
 
 export default {
   name: 'MainPage',
-  components: { VueSlickCarousel },
+  components: {
+    VueSlickCarousel,
+    Footer,
+  },
 
   data() {
     return {
@@ -1239,5 +1242,14 @@ thead {
 .studyHeader {
   margin-bottom: 20px;
 }
+
+.studyboard {
+  font-size: 13pt;
+}
+
+#nostudy {
+  color: #495c6e;
+}
+
 
 </style>
