@@ -26,7 +26,7 @@
       <div class="banner" id="banner">
         <div class="bannerBox">
           <div class="leftBox">
-            <img class="cosmos" src="https://i.ibb.co/nm8jZHr/main-img7.png" alt="main-img7" border="0"><br/>
+            <img class="cosmos" src="https://i.ibb.co/3YTRz73/logo.gif" alt="main-img7" border="0"><br/>
           </div>
           <div class="rightBox" align="center">
             <div class="wrapper" >
