@@ -26,7 +26,7 @@
       <div class="round_box3"></div>
       <div class="round_box4"></div>
       
-        <div class="body_total p-5" style="width: 600px; height: auto;">
+        <div class="body_total p-5" style="width: 600px; height: 65vh;">
           <!-- <hr class="hrTag"> -->
           <b-row class="content_rowTag mt-3">
             <b-col cols="3" class="mt-3">
