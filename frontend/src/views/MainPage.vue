@@ -75,12 +75,13 @@
           </div>
           <div class="rankTable" v-show="longRank">
             <table class="table border table-hover scrollTable">
-              <col style="width:100%">
               <thead>
-                <tr col-span="2">
-                  <th><p></p></th>
-                  <th class="rankHeader">
-                    <img class="flex-fill" id="exitBtn" src="https://i.ibb.co/GWXqhqv/close.png" alt="close" border="0" @click="rankClick">
+                <tr>
+                  <th class="col-2"><p style="margin-bottom: 0;">순위</p></th>
+                  <th class="col-4"><p style="margin-bottom: 0;">아이디</p></th>
+                  <th class="col-4"><p style="margin-bottom: 0;">누적 공부시간</p></th>
+                  <th class="rankHeader col-2">
+                    <img id="exitBtn" src="https://i.ibb.co/GWXqhqv/close.png" alt="close" border="0" @click="rankClick">
                   </th>
                 </tr>
               </thead>
@@ -88,21 +89,20 @@
               <tbody v-for="(data, idx) in dailyRank" :key="idx">
                 <tr>
                   <div v-if="idx==0">
-                    <td><img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
-                    <td><p class="ml-5 mt-3"> {{ data.userhistoryDayId.user_id }} </p></td>
+                    <td class="col-2"><img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
                   </div>
                   <div v-if="idx==1">
-                    <td><img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
-                    <td><p class="ml-5 mt-3"> {{ data.userhistoryDayId.user_id }} </p></td>
+                    <td class="col-2"><img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
                   </div>
                   <div v-if="idx==2">
-                    <td><img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
-                    <td><p class="ml-5 mt-3"> {{ data.userhistoryDayId.user_id }} </p></td>
+                    <td class="col-2"><img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
                   </div>
                   <div v-if="idx > 2">
-                    <td><p class="mx-4 mt-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
-                    <td><p class=" mt-3" style="margin-left: 35px;"> {{ data.userhistoryDayId.user_id }} </p></td>
-                  </div>
+                    <td class="col-2"><p class="ml-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
+                  </div> 
+                    <td class="col-4"><p> {{ data.userhistoryDayId.user_id }} </p></td>
+                    <td class="col-4"><p> {{ userTime[idx] }} </p></td>
+                    <td class="col-2"></td>
                 </tr>
               </tbody>
           </table>
@@ -233,6 +233,7 @@ export default {
       listCnt: 1,
       rankType: 0,      // 랭킹 시간 기준을 나타내는 수치
       rankingType: '',  // 랭킹 시간(일, 주, 월) 기준을 나타내는 메시지
+      userTime: [],
 
       publicStudyList: [],
       currentParticipant: [],
@@ -459,6 +460,7 @@ export default {
         url: '/history/searchAll/day',
       })
       .then(res => {
+        
         var today = new Date()
         var year = today.getFullYear()
         var month = today.getMonth()
@@ -470,7 +472,13 @@ export default {
         this.date = year + "-" + month + "-" + date
         this.day = today.toString().substring(0,3)
         this.dailyRank = []   // 이전 데이터 비우기
-        this.dailyRank = res.data        
+        this.dailyRank = res.data   
+        for(var i=0; i<res.data.length; i++) {
+          var sec = res.data[i].totalTime
+          var time = new Date(sec * 1000).toISOString().slice(11, 19)
+
+          this.userTime[i] = time
+        }
       })
       .error(err => {
         console.log(err)
@@ -553,8 +561,8 @@ export default {
       name: 'dailyrank',
       interval: {
         seconds: '0', 
-        minutes:'40', 
-        hours: '10',
+        minutes:'26', 
+        hours: '12',
       },
       job: this.getDailyRank
     })
@@ -594,9 +602,9 @@ export default {
 
     if(this.dataCnt==0 || this.dataCnt == this.dailyRank.length) {
       first.innerHTML = '<img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;">'
-                                      + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[0].userhistoryDayId.user_id + '</span>'
+                                      + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5">' + this.dailyRank[0].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] + '</span>'
       this.dataCnt++
-    } else first.innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + this.dataCnt + " " + this.dailyRank[0].userhistoryDayId.user_id + '</span>'
+    } else first.innerHTML = '<span style="font-size: 20pt; line-height: 60px;">' + this.dataCnt + " " + this.dailyRank[0].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] + '</span>'
     
     setInterval(() => {
       if(this.move == 2){
@@ -638,24 +646,24 @@ export default {
       if(this.dataCnt < (this.dailyRank.length - 1)) {
         if(this.dataCnt==0 || this.dataCnt == this.dailyRank.length) {
           document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;">'
-                                          + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + '</span>'
+                                          + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5">' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
         } else if(this.dataCnt==1) {
           document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
-                                                                                + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + '</span>'
+                                                                                + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5">' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
         } else if(this.dataCnt==2) {
           document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
-                                                                                + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + '</span>'
+                                                                                + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5">' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
         } else {
-          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id +'</span>'
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;">' + (this.dataCnt+1) + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
         }
         this.dataCnt++
         console.log("증가!!")
       } else if(this.dataCnt == this.dailyRank.length - 1) {
         if(this.dataCnt==2) {
           document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
-                                                                                + '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; &nbsp;' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + '</span>'
+                                                                                + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5" >' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
         } else {
-          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id  +'</span>'
+          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;">' + (this.dataCnt+1) + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] + '</span>'
         }
         this.dataCnt = 0
         console.log("리셋!!")
