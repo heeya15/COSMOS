@@ -6,7 +6,7 @@
       <div class="banner">
         <b-row>
           <b-col>
-            <img src="@/assets/img/study/working_at_home.png" alt="프로필" style="height: 200px; width:200px;">
+            <img src="https://i.ibb.co/N1gPh3J/working-at-home.png" alt="프로필" style="height: 200px; width:200px;">
           </b-col>
           <b-col class="p-4">
             <b-row class="my-2">

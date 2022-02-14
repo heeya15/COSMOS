@@ -5,7 +5,7 @@
       <!-- 메인 로고 -->
       <b-navbar-brand class="d-flex justify-content-start">
         <router-link class="header_nav_home" :to="{ name: 'MainPage' }">
-          <img id="logo" src="@/assets/cosmos_logo3.png" alt="cosmos">
+          <img id="logo" src="https://i.ibb.co/LJfmXpX/cosmos-logo3.png" alt="cosmos">
         </router-link>
       </b-navbar-brand>
 

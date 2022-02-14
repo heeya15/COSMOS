@@ -2,8 +2,8 @@
 	<div id="main">
 		<div id="main-container" class="d-flex">
 			<div id="session-aside-left" v-if="session">
-				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings"></p>
-				<p v-if="power.leader"><img src="@/assets/img/openvidu/asideimg02.png" class="sideMenuImg" alt="score" @click="scoreModal=true"></p>
+				<!-- <p><img src="https://i.ibb.co/wrgGKpS/asideimg01.png" class="sideMenuImg" alt="settings"></p> -->
+				<p v-if="power.leader"><img src="https://i.ibb.co/x2JRqqX/asideimg02.png" class="sideMenuImg" alt="score" @click="scoreModal=true"></p>
 				
 				<!-- 상벌점기능 모달 -->
 				<div v-if="scoreModal" class="black-bg">
@@ -36,7 +36,7 @@
 					</div>
 				</div>
 
-				<p v-if="userAuthority"><img src="@/assets/img/openvidu/asideimg03.png" class="sideMenuImg" alt="calendar"></p>
+				<p v-if="userAuthority"><img src="https://i.ibb.co/nBMF7Vb/asideimg03.png" class="sideMenuImg" alt="calendar"></p>
 			</div>
 			
 			<div id="session-center">

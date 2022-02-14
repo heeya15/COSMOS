@@ -6,7 +6,7 @@
 				<img v-else src="@/assets/img/openvidu/close.png" class="rightMenuImg" alt="menu" @click="asideRight=false">
 			</p> -->
 			<div id="session-aside-left" v-if="session">
-				<p><img src="@/assets/img/openvidu/asideimg01.png" class="sideMenuImg" alt="settings" @click="outMemberModal=true"></p>
+				<p><img src="https://i.ibb.co/wrgGKpS/asideimg01.png" class="sideMenuImg" alt="settings" @click="outMemberModal=true"></p>
 
 				<!-- 강퇴기능 모달 -->
 				<div v-if="outMemberModal" class="black-bg">

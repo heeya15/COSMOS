@@ -12,6 +12,7 @@
 [좌측_화살표] <img src="https://i.ibb.co/JkGwjx0/icon-prev.png" alt="icon-prev" border="0"><br/>
 [우측_화살표] <img src="https://i.ibb.co/q1kCmY6/icon-next.png" alt="icon-next" border="0"><br/>
 
+[코스모스 로고] <img src="https://i.ibb.co/LJfmXpX/cosmos-logo3.png" alt="cosmos-logo3" border="0">
 [코스모스1] <img src="https://i.ibb.co/nm8jZHr/main-img7.png" alt="main-img7" border="0"><br/>
 [코스모스2] <img src="https://i.ibb.co/cF718Nx/main-img8.png" alt="main-img8" border="0"><br/>
 [코스모스3] <img src="https://i.ibb.co/JsBNKxz/main-img9.png" alt="main-img9" border="0"><br/>
@@ -74,7 +75,7 @@
 [삼선_메뉴] <img src="https://i.ibb.co/ZmPJksH/menu.png" alt="menu" border="0"> <br/>
 [마이크] <img src="https://i.ibb.co/4J7SH5Z/micimg.png" alt="micimg" border="0"> <br/>
 [비디오] <img src="https://i.ibb.co/JCSPVZv/videoimg.png" alt="videoimg" border="0"> <br/>
-
+[금지] <img src="https://i.ibb.co/X20qhKK/forbidden.png" alt="forbidden" border="0">
 
 
 # 그 외

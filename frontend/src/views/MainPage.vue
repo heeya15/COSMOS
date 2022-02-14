@@ -553,8 +553,8 @@ export default {
       name: 'dailyrank',
       interval: {
         seconds: '0', 
-        minutes:'33', 
-        hours: '18',
+        minutes:'40', 
+        hours: '10',
       },
       job: this.getDailyRank
     })

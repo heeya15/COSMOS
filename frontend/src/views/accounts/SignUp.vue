@@ -18,13 +18,15 @@
           <div class="mt-1 message" :class="{ completeCheck: idDuplicate }">{{ idMsg }}</div>
         </div>
         <div class="input-box mt-4">
-          <input id="password" type="text" ref="password" name="password" v-model="credentials.userPassword" placeholder="비밀번호" @keydown="resetpwdDouble" @blur="passwordRuleCheck" required/>
+          <input id="password" type="password" ref="password1" name="password" v-model="credentials.userPassword" placeholder="비밀번호" @keydown="resetpwdDouble" @blur="passwordRuleCheck" required/>
           <label for="password">비밀번호</label>
+          <b-icon icon="eye-slash-fill" id="pwdIcon" ref="pwdIcon" aria-hidden="true" @click="pwdPeek1"></b-icon>
           <div class="mt-1 message">{{ pwdMsg1 }}</div>
         </div>
         <div class="input-box mt-4">
-          <input id="passwordRule" type="password" name="passwordRule" v-model="passwordRule" placeholder="비밀번호 확인" @blur="doublePasswordCheck" required/>
+          <input id="passwordRule" type="password" ref="password2" name="passwordRule" v-model="passwordRule" placeholder="비밀번호 확인" @blur="doublePasswordCheck" required/>
           <label for="passwordRule">비밀번호 확인</label>
+          <b-icon icon="eye-slash-fill" id="pwdIcon" ref="pwdIcon" aria-hidden="true" @click="pwdPeek2"></b-icon>
           <div class="mt-1 message">{{ pwdMsg2 }}</div>
         </div>
         <div class="input-box mt-4">
@@ -209,6 +211,7 @@ export default {
 
     // 이메일 전송
     sendEmail() {
+      alert("인증 이메일이 전송되었습니다. 인증번호를 확인해주세요!!")
       this.emailRuleCheck();
       this.emailDuplicateCheck();
 
@@ -242,6 +245,27 @@ export default {
         this.emailAuthMsg = '인증코드가 틀렸습니다.';
       }
     },
+
+    // 비밀번호 엿보기
+    pwdPeek1() {
+      if(this.$refs.password1.type == "password") {
+        this.$refs.password1.type = "text";
+        this.$refs.pwdIcon.icon = "eye-fill";
+      } else if(this.$refs.password1.type == "text") {
+        this.$refs.password1.type = "password";
+        this.$refs.pwdIcon.icon = "eye-fill";
+      } 
+    },
+
+    pwdPeek2() {
+      if(this.$refs.password2.type == "password" ) {
+        this.$refs.password2.type = "text";
+        this.$refs.pwdIcon.icon = "eye-fill";
+      } else {
+        this.$refs.password2.type = "password";
+        this.$refs.pwdIcon.icon = "eye-fill";
+      }
+    },
   },
 }
 </script>
@@ -260,7 +284,7 @@ p {
 }
 
 #signupBox {
-  height: 90%;
+  height: 80%;
   width: 600px;
   background-color: rgb(255, 255, 255);
   box-shadow: 10px 10px 10px rgb(235, 235, 235);
@@ -350,6 +374,13 @@ input:focus, input:not(:placeholder-shown){
 /* 중복 확인 성공 안내 메시지 */
 .completeCheck {
   color: #3C77C9;
+}
+
+#pwdIcon {
+  position: absolute;
+  cursor: pointer;
+  right: 5%;
+  top: 35%;
 }
 
 </style>

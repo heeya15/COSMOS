@@ -90,6 +90,7 @@ export default new Vuex.Store({
         // console.log(res)
         if(res.status === 200) {
           commit('SIGNUP', res.data)
+          alert("🌸🌸 Welcome to COSMOS!! 🌸🌸")
           router.push({name:'LogIn'})
         }
       })
