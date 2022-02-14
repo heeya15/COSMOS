@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="my-4">
     <CommentForm/>
     <div class="commentBg">
       <CommentItem v-for="(comment, idx) in comments" :key="idx" :comment="comment"/>

@@ -5,6 +5,10 @@
 [은] <img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0"> <br/>
 [동] <img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0"> <br/>
 
+[GitHub] <img src="https://img.icons8.com/ios-glyphs/30/000000/github.png" alt="git" border="0">
+[Instagram] <img src="https://img.icons8.com/fluency/48/000000/instagram-new.png" alt="insta-removebg-preview" border="0">
+[WebSite] <img src="https://i.ibb.co/bB6Z6Wv/world-wide-web-removebg-preview.png" alt="world-wide-web-removebg-preview" border="0">
+
 [플러스] <img src="https://i.ibb.co/fFmxj3J/plus.png" alt="plus" border="0"> <br/>
 [화살표_아래] <img src="https://i.ibb.co/p1jKdLj/down-filled-triangular-arrow.png" alt="down-filled-triangular-arrow" border="0"> <br/>
 [화살표_아래_보라색] <img src="https://i.ibb.co/4Mj5brX/tri.jpg" alt="tri" border="0"> <br/>

@@ -9,11 +9,15 @@
         <!-- <b-icon class="top_icon" icon="arrow-up-circle-fill"></b-icon>
       </div> -->
       <!-- 맨위로 가기 버튼 부분 끝 -->
+      <Footer v-if="($route.name !== 'PrivateStudyRoom') && ($route.name !== 'PublicStudyRoom')
+        && ($route.name !== 'SignUp') && ($route.name !== 'LogIn') && ($route.name !== 'StudyRoomCreateForm')
+        && ($route.name !== 'MainPage')"/>
   </div>
 </template>
 
 <script>
 import NavBar from '@/views/NavBar.vue'
+import Footer from '@/views/Footer.vue'
 
 export default {
   name: 'App',
@@ -24,6 +28,7 @@ export default {
   },
   components:{
     NavBar,
+    Footer,
   },
   methods: {
     scrollToTop() {

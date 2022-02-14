@@ -1,7 +1,7 @@
 <template>
   <center>
     <h1>MY PAGE</h1>
-    <div class="profile">
+    <div class="profile mb-4">
     <hr>
       <div class="banner">
         <b-row>
