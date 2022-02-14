@@ -381,30 +381,30 @@ export default {
     },
 
 		// 권한부여 기능
-	giveAuthority(publicmember_no,leader) {
+	async giveAuthority(publicmember_no,leader) {
 			if (leader === true){
 				var memberLeader = false
 			} else {
 				memberLeader = true
 			}
-			http({
+			await http({
 				method: 'PUT',
 				url: 'publicroom/updateAuthority',
 				data: {publicmember_no: publicmember_no, leader: memberLeader}
 			})
-			.then(res => {
+			.then( async (res) => {
 				console.log(res)
-				this.getPublicStudyMembers(this.roomUrl)
+				await this.getPublicStudyMembers(this.roomUrl)
 			})
 			.catch(err => {
 				console.log(err)
 			})
-			this.publisher.session.signal({
+			await this.publisher.session.signal({
                 data: '',
                 to: [],
                 type: "leader"
             })
-		},	
+	},	
 		async joinSession () {
 			await this.getPublicStudyMembers(this.roomUrl)
 			console.log("😜😜😜😜😜😜😜😜😜😜😜😜")
