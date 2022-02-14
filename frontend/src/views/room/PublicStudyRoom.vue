@@ -569,7 +569,7 @@ export default {
 				await this.getPublicStudyMembers(this.roomUrl)
 				console.log("🤑🤑🤑🤑🤑🤑")
 				console.log(this.publicStudyMembers)
-				this.removePublicRoom()
+				await this.removePublicRoom()
 				this.$router.push({name:'MainPage'})
 			})
 			.catch(err => {
