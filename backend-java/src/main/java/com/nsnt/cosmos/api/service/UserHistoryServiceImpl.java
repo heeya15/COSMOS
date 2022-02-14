@@ -124,6 +124,13 @@ public class UserHistoryServiceImpl implements UserHistoryService {
 		}
 		
 		return userhistorymonth;
-	} 
+	}
+	
+	/** 유저별 총 누적 시간 조회 */
+	@Override
+	public int getUserTotalTime(String user_id) {
+		int total_time = userhistoryDayRepository.getTotalTime(user_id);
+		return total_time;
+	}
 	
 }

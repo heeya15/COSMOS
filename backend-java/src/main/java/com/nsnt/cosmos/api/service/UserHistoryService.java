@@ -27,4 +27,7 @@ public interface UserHistoryService {
 	
 	/** 월별 랭킹 정보 조회 */
 	List<UserHistoryMonth> getMonthlyUserHistory();
+	
+	/** 유저별 총 누적 시간 조회 */
+	int getUserTotalTime(String user_id);
 }

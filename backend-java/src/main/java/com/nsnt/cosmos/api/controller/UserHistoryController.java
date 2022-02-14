@@ -106,7 +106,7 @@ public class UserHistoryController {
 	}
 	
 	/** 일별 랭킹 검색 */
-	@GetMapping("searchAll/day")
+	@GetMapping("/searchAll/day")
 	@ApiOperation(value = "사용자 일별 history 전체 조회", notes = "<strong>사용자 일별 history 전체 목록</strong>을 조회합니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
@@ -119,7 +119,7 @@ public class UserHistoryController {
 	}
 	
 	/** 주별 랭킹 검색 */
-	@GetMapping("searchAll/week")
+	@GetMapping("/searchAll/week")
 	@ApiOperation(value = "사용자 주별 history 전체 조회", notes = "<strong>사용자 주별 history 전체 목록</strong>을 조회합니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
@@ -132,7 +132,7 @@ public class UserHistoryController {
 	}
 	
 	/** 월별 랭킹 검색 */
-	@GetMapping("searchAll/month")
+	@GetMapping("/searchAll/month")
 	@ApiOperation(value = "사용자 월별 history 전체 조회", notes = "<strong>사용자 월별 history 전체 목록</strong>을 조회합니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
@@ -142,5 +142,21 @@ public class UserHistoryController {
 
 		List<UserHistoryMonth> userhistorymonth = historyService.getMonthlyUserHistory();
 		return new ResponseEntity<List<UserHistoryMonth>>(userhistorymonth,HttpStatus.OK);
+	}
+	
+	/** 유저별 누적 시간 */
+	@GetMapping("/totalTime")
+	@ApiOperation(value = "사용자별 누적 시간 조회", notes = "<strong>사용자별 누적 시간</strong>을 조회합니다.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"), 
+					@ApiResponse(code = 500, message = "서버 오류")})
+	public ResponseEntity<Integer> getTotalTime(@ApiIgnore Authentication authentication) {
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		String user_id = userDetails.getUsername();
+		
+		int total_time = historyService.getUserTotalTime(user_id);
+		
+		return ResponseEntity.status(200).body(total_time);
 	}
 }
