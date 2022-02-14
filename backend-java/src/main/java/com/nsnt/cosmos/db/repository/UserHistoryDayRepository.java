@@ -23,4 +23,10 @@ public interface UserHistoryDayRepository extends JpaRepository<UserHistoryDay, 
 			"order by total_time desc"
 			, nativeQuery = true)
 	List<UserHistoryDay> findAllDayUserHistory(@Param("now") LocalDateTime now);
+	
+	@Query(value = "select sum(total_time)\r\n" + 
+			"from userhistory_day\r\n" + 
+			"where user_id = :user_id"
+			, nativeQuery = true)
+	int getTotalTime(@Param("user_id") String user_id);
 }
