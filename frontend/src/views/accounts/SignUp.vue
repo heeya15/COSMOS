@@ -32,9 +32,9 @@
         <div class="input-box mt-4">
           <b-row>
             <b-col cols="8">
-              <input id="email" type="text" name="email" :disabled="inputDisabled" v-model="credentials.userEmail" placeholder="이메일" required @blur="emailDuplicateCheck" />
+              <input id="email" type="text" name="email" :disabled="inputDisabled" v-model="credentials.userEmail" placeholder="이메일" required />
               <label for="useremailname" style="left: 15px;">이메일</label>
-              <div class="mt-1 message">{{ emailMsg }}</div>
+              <!-- <div class="mt-1 message">{{ emailMsg }}</div> -->
             </b-col>
             <b-col cols="4" class="pl-0"><b-button class="mt-3" @click="sendEmail" id="emailBtn">인증</b-button></b-col>
           </b-row>
@@ -190,6 +190,7 @@ export default {
         this.emailMsg = ''
       })
       .catch(err => {
+        this.emailDuplicate = false; 
         this.emailMsg = '사용할 수 없는 이메일 입니다.'
         console.log(err)
       })
@@ -211,11 +212,19 @@ export default {
 
     // 이메일 전송
     sendEmail() {
-      alert("인증 이메일이 전송되었습니다. 인증번호를 확인해주세요!!")
       this.emailRuleCheck();
       this.emailDuplicateCheck();
-
-      console.log(">>>>>>>>>>>>>>>> here/")
+      if(this.emailRule == false) {
+        alert("유효하지 않은 이메일 형식입니다. 다시 입력해주세요")
+        document.getElementById('email').value = ''
+        document.getElementById('email').focus()
+      } else if(this.emailDuplicate == false) {
+        alert('사용할 수 없는 이메일 입니다.')
+        document.getElementById('email').value = ''
+        document.getElementById('email').focus()
+      } else if(this.emailRule == true && this.emailDuplicate == true) {
+        alert("인증 이메일이 전송되었습니다. 인증번호를 확인해주세요!!")
+      }
 
       if(this.emailDuplicate == true && this.emailRule == true) {
         this.email = true;

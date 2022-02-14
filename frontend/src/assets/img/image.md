@@ -1,6 +1,6 @@
 # 이미지 URL
 [움직이는_로고] <img src="https://i.ibb.co/3YTRz73/logo.gif" alt="logo" border="0">
-
+[포스트잇] <img src="https://i.ibb.co/s5LZX94/littledeep-memo-style1-removebg-preview.png" alt="littledeep-memo-style1-removebg-preview" border="0"></a><br />
 ## 메인페이지
 [금] <img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0"> <br/>
 [은] <img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0"> <br/>

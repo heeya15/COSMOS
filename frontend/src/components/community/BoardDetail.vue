@@ -27,7 +27,7 @@
       <div class="round_box4"></div>
 
       <div class="container" style="height: 100%">
-        <div class="body_total p-5" style="width: 630px; height: 100vh;">
+        <div class="body_total p-5" style="width: 630px; height: auto;">
           <!-- <hr class="hrTag"> -->
           <b-row class="content_rowTag mt-3">
             <b-col cols="3" class="mt-3">
@@ -480,7 +480,7 @@ p {
 }
 
 .content_rowTag {
-  height: 500px; 
+  height: auto; 
 }
 
 .detail-content {
@@ -515,7 +515,7 @@ p {
   align-items: center;
   position: absolute;
   right: 180px;
-  top: 600px;
+  top: 470px;
   border-radius: 4px;
   box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
@@ -537,7 +537,7 @@ p {
 
 .memo3 {
   width: 15%; 
-  height: 30%; 
+  height: 25%; 
   background-color: #caff08;
   text-align: center;
   display: flex;
@@ -545,7 +545,7 @@ p {
   align-items: center;
   position: absolute;
   right: 200px;
-  top: 280px;
+  top: 220px;
   border-radius: 4px;
   box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
@@ -584,8 +584,8 @@ p {
   overflow: hidden;
   background-color: rgb(3, 184, 3);
   position: absolute;
-  right: 280px;
-  top: 610px;
+  right: 275px;
+  top: 490px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
@@ -609,7 +609,7 @@ p {
   background-color: rgb(198, 82, 252);
   position: absolute;
   right: 310px;
-  top: 290px;
+  top: 240px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
