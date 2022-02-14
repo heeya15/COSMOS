@@ -301,7 +301,8 @@ export default {
         if (res.status !== 200){
           alert('입력사항을 모두 입력하였는지 확인해주세요.')
         }else {
-          this.getStudyNo()// 가장 최근에 생긴 스터디 번호 들고오는 함수
+          this.$router.push({ name: 'MyPage' })  
+          // this.getStudyNo()// 가장 최근에 생긴 스터디 번호 들고오는 함수
         }
       })
       .catch(err => {
@@ -309,25 +310,27 @@ export default {
         console.log(err)
       })
     },
-    getStudyNo(){ // 가장 최근에 생긴 스터디 번호 들고오는 함수
-      http({
-        method: 'GET',
-        url: '/studymember/resent/search',
-        headers: this.getHeader(),
-      })
-      .then(res => {
-          console.log("가장 최근에 생긴 스터디 번호는?")
-          console.log(res.data);
-          console.log(res.data.study_no);
-          this.study_no = res.data.study_no;
-          this.$router.push({name: 'StudyDetail', params: {studyNo: this.study_no}})  
-      })
-      .catch(err => {
-        alert('요청을 다시 한 번 확인하세요.')
-        console.log(err)
-      })
-    }
-    ,
+
+    // getStudyNo(){ // 가장 최근에 생긴 스터디 번호 들고오는 함수
+    //   http({
+    //     method: 'GET',
+    //     url: '/studymember/resent/search',
+    //     headers: this.getHeader(),
+    //   })
+    //   .then(res => {
+    //       console.log("가장 최근에 생긴 스터디 번호는?")
+    //       console.log(res.data);
+    //       console.log(res.data.study_no);
+    //       this.study_no = res.data.study_no;
+    //       // this.$router.push({name: 'StudyDetail', params: {studyNo: this.study_no}})  
+          
+    //   })
+    //   .catch(err => {
+    //     alert('요청을 다시 한 번 확인하세요.')
+    //     console.log(err)
+    //   })
+    // },
+
     async createPublicStudy(){ // 공개 스터디룸 생성(백엔드에서 생성시 바로 공개스터디 멤버 테이블에 추가)
       if (this.urlState === false){
         alert("url 중복확인을 해주세요!")

@@ -57,7 +57,7 @@
           
           <!-- 스터디 구할 때 -->
           <b-col v-show="this.input.header !== false" cols="9" class="mt-2">
-            <b-form-select class="studyTypeTag" v-model="studyTypeSelected" :options="options" style="width: 100%; height: 35px; font-size: 15px;" id="studytype_name"></b-form-select>
+            <b-form-select class="studyTypeTag" v-model="studyTypeSelected" :options="options" style="width: 100%; height: 35px; line-height: 35px; font-size: 15px;" id="studytype_name"></b-form-select>
           </b-col>
 
 
@@ -72,7 +72,7 @@
             <label for="content">내용</label>
           </b-col>
           <b-col cols="9" class="mt-2">
-            <b-form-textarea v-model="input.content" id="content" row="8" max-rows="10" style="height: 100px;"></b-form-textarea>
+            <b-form-textarea v-model="input.content" id="content" row="8" max-rows="10" style="height: 100px; word-break:break-all; "></b-form-textarea>
           </b-col>
           <!-- 스터디원 구함 -->
           <b-col v-show="this.input.header == false">
@@ -332,6 +332,7 @@ marquee {
   background-color: #d7cff7;
   width: 370px;
   height: 35px;
+  line-height: 35px;
   border-radius: 4px;
   text-align: center;
 }
@@ -356,10 +357,6 @@ marquee {
 .study_title {
   color: black;
   font-size: 1rem;
-}
-
-#studytype_name {
-  padding: 6px;
 }
 
 .selectag {
@@ -414,8 +411,6 @@ marquee {
       transform: rotate(0deg);
     }
 }
-
-
 
 .sideImg{
   transform-origin: 50% 50%;

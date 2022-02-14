@@ -45,23 +45,24 @@
       <h1>STUDY DETAIL</h1>
       <hr>
       <!-- 스터디 정보 받아오기 -->
-      <div class="studyContainer my-2 py-5 pr-5">
-        <b-row class="mx-0">
-          <b-col cols="5" class="pl-5">
+      <div class="studyContainer my-2 py-5">
+        <b-row class="mx-5">
+          <b-col cols="5">
             <!-- <img src="@/assets/img/nophoto.png" alt="이미지없음" class="studyImg" v-if="studyInfo.image.length<24"> -->
             <img src="https://bootstrapious.com/i/snippets/sn-img-hover/hoverSet-3.jpg" alt="이미지없음" class="studyImg" v-if="studyInfo.image.length<24">
             <img :src="studyInfo.image" alt="스터디 이미지" class="studyImg" v-else>
           </b-col>
           <b-col>
             <b-row align="left">
-              <b-col cols="5">
+              <b-col cols="8">
               <h2>{{studyInfo.studyName}}</h2>
               </b-col>
               <b-col cols="2">
               <button class="enterBtn2 ml-3" @click="info($event.target)">방 입장</button>
               </b-col>
             </b-row>
-              <div class="my-2" align="left">
+              <div class="my-2" align="left" style="font-family: BMJua">
+                <hr>
                 {{studyInfo.studyRule}}
               </div>
             <b-row class="my-2">

@@ -52,18 +52,17 @@
       <!-- 랭킹 Start -->
       <div align="center" style="margin-bottom: 80px;">
         <div id="rank_section">
-          <h1 class="text-center mb-5">랭킹</h1>
-          <!-- <h1 class="text-center mb-5">{{ counter }}</h1> -->
+          <h1 class="text-center mb-4">랭킹</h1>
           
-          <div class="text-right">
-            <!-- <b-dropdown id="dropdown-left" variant="warning" text="랭킹기준" class="m-2">
-              <b-dropdown-item href="#">일 (Day)</b-dropdown-item>
-              <b-dropdown-item href="#">주 (Week)</b-dropdown-item>
-              <b-dropdown-item href="#">월 (Month)</b-dropdown-item>
-            </b-dropdown> -->
+          <div class="text-right d-flex justify-content-between">
+            <b-dropdown id="dropdown-left" variant="warning" text="랭킹기준" class="m-2">
+              <b-dropdown-item id="dayTab" @click="changeTabl(dayTab)" href="#">일 (Day)</b-dropdown-item>
+              <b-dropdown-item id="weekTab" @click="changeTabl(weekTab)" href="#">주 (Week)</b-dropdown-item>
+              <b-dropdown-item id="monthTab" @click="changeTabl(monthTab)" href="#">월 (Month)</b-dropdown-item>
+            </b-dropdown>
             <p class="mt-3" style="font-family: BMJual; color: #828282;">{{ date }}({{ day }}) 06:00 AM UPDATED</p>
           </div>
-          <div v-show="shortRank">
+          <!-- <div v-show="shortRank">
             <div class="rolling_box d-flex">
               <ul id ="rolling_box">
                 <li class="card_sliding" id ="first"></li>
@@ -73,36 +72,42 @@
               <img id="downArrowBtn" src="https://i.ibb.co/p1jKdLj/down-filled-triangular-arrow.png" alt="down-filled-triangular-arrow" border="0" @click="rankClick"/>
             </div>
           </div>
-          <div class="rankTable" v-show="longRank">
+          <div class="rankTable" v-show="longRank"> -->
+          <div class="rankTable" >
             <table class="table border table-hover scrollTable">
               <thead>
                 <tr>
-                  <th class="col-2"><p style="margin-bottom: 0;">순위</p></th>
-                  <th class="col-4"><p style="margin-bottom: 0;">아이디</p></th>
-                  <th class="col-4"><p style="margin-bottom: 0;">누적 공부시간</p></th>
+                  <!-- <th class="col-1"></th> -->
+                  <th class="col-2"><p style="text-align: center; margin-bottom: 0;">순위</p></th>
+                  <th class="col-4"><p style="text-align: center; margin-bottom: 0;">아이디</p></th>
+                  <th class="col-4"><p style="text-align: center; margin-bottom: 0;">누적 공부시간</p></th>
                   <th class="rankHeader col-2">
                     <img id="exitBtn" src="https://i.ibb.co/GWXqhqv/close.png" alt="close" border="0" @click="rankClick">
                   </th>
                 </tr>
               </thead>
 
+              <!-- <div v-if="dayTab">
+                <tbody v-for="(data, idx) in dailyRank" :key="idx">
+              </div> -->
               <tbody v-for="(data, idx) in dailyRank" :key="idx">
                 <tr>
+                  <!-- <td class="col-1"></td> -->
                   <div v-if="idx==0">
-                    <td class="col-2"><img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                    <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
                   </div>
                   <div v-if="idx==1">
-                    <td class="col-2"><img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                    <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
                   </div>
                   <div v-if="idx==2">
-                    <td class="col-2"><img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                    <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
                   </div>
                   <div v-if="idx > 2">
-                    <td class="col-2"><p class="ml-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
+                    <td class="col-2" style="text-align: center;"><p class="ml-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
                   </div> 
-                    <td class="col-4"><p> {{ data.userhistoryDayId.user_id }} </p></td>
-                    <td class="col-4"><p> {{ userTime[idx] }} </p></td>
-                    <td class="col-2"></td>
+                  <td class="col-4" style="text-align: center;"><p> {{ data.userhistoryDayId.user_id }} </p></td>
+                  <td class="col-4" style="text-align: center;"><p> {{ userTime[idx] }} </p></td>
+                  <td class="col-1" style="text-align: center;"></td>
                 </tr>
               </tbody>
           </table>
@@ -234,6 +239,9 @@ export default {
       rankType: 0,      // 랭킹 시간 기준을 나타내는 수치
       rankingType: '',  // 랭킹 시간(일, 주, 월) 기준을 나타내는 메시지
       userTime: [],
+      dayTab: true,
+      weekTab: false,
+      monthtab: false,
 
       publicStudyList: [],
       currentParticipant: [],
@@ -549,6 +557,7 @@ export default {
   created() {
     this.getBoardItems()
     this.getPublicStudy()
+    this.getDailyRank()
   },
 
   mounted() {
