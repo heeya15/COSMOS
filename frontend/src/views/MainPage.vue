@@ -359,7 +359,7 @@ export default {
     },
 
     start() {
-      if (this.$store.state.isLogin){
+      if (this.isLogin){
         this.$router.push({name: 'StudyRoomCreateForm'})
       } else {
         this.$router.push({name: 'SignUp'})
@@ -368,7 +368,11 @@ export default {
 
     // 상세보기로
     goBoardDetail(boardItemsIdx) {
-      console.log(boardItemsIdx)
+      if (!this.isLogin) {
+        alert('로그인 후 이용가능 합니다😊')
+        this.$router.push({name: 'LogIn'})
+        return
+      }
       this.$store.dispatch('getBoardNo', boardItemsIdx)
       this.$router.push({ name: 'BoardDetail', query: { pageId: this.currentPage }})
     },
@@ -467,6 +471,11 @@ export default {
     
     // 모달 값 셋팅
     async info(publicstudy,button) {
+      if (!this.isLogin){
+        alert('로그인 후 이용가능 합니다😊')
+        this.$router.push({name: 'LogIn'})
+        return
+      }
       this.checkBanned(publicstudy.publicstudyroomId)
       this.infoModal.publicstudyroomId = publicstudy.publicstudyroomId;
       this.infoModal.studyName = publicstudy.studyName;
@@ -532,6 +541,11 @@ export default {
     },
 
     goToBoardList() {
+      if (!this.isLogin) {
+        alert('로그인 후 이용가능 합니다😊')
+        this.$router.push({name: 'LogIn'})
+        return
+      }
       this.$router.push({name: 'MainBoard'})
     },
 
@@ -660,7 +674,7 @@ export default {
 
   },
   computed:{
-    ...mapState(['audio', 'video']),
+    ...mapState(['audio', 'video','isLogin']),
     ...mapState(publicStudyStore,['roomName', 'roomUrl', 'participant'])
   },
   created() {
