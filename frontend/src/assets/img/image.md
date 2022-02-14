@@ -1,4 +1,5 @@
 # 이미지 URL
+[움직이는_로고] <img src="https://i.ibb.co/3YTRz73/logo.gif" alt="logo" border="0">
 
 ## 메인페이지
 [금] <img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0"> <br/>
