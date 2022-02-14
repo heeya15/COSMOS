@@ -56,12 +56,14 @@
           
           <div class="text-right d-flex justify-content-between">
             <b-dropdown id="dropdown-left" variant="warning" text="랭킹기준" class="m-2">
-              <b-dropdown-item id="dayTab" @click="changeTabl(dayTab)" href="#">일 (Day)</b-dropdown-item>
-              <b-dropdown-item id="weekTab" @click="changeTabl(weekTab)" href="#">주 (Week)</b-dropdown-item>
-              <b-dropdown-item id="monthTab" @click="changeTabl(monthTab)" href="#">월 (Month)</b-dropdown-item>
+              <b-dropdown-item id="dayTab" @click="changeTab('dayTab')" href="#">일 (Day)</b-dropdown-item>
+              <b-dropdown-item id="weekTab" @click="changeTab('weekTab')" href="#">주 (Week)</b-dropdown-item>
+              <b-dropdown-item id="monthTab" @click="changeTab('monthTab')" href="#">월 (Month)</b-dropdown-item>
             </b-dropdown>
-            <p class="mt-3" style="font-family: BMJual; color: #828282;">{{ date }}({{ day }}) 06:00 AM UPDATED</p>
+            <p class="mt-3" style="font-family: BMJual; color: #828282;">{{ date }} 06:00 AM UPDATED</p>
           </div>
+
+          <!-- 랭킹 슬라이드 -->
           <!-- <div v-show="shortRank">
             <div class="rolling_box d-flex">
               <ul id ="rolling_box">
@@ -73,7 +75,9 @@
             </div>
           </div>
           <div class="rankTable" v-show="longRank"> -->
-          <div class="rankTable" >
+
+          <!-- 일별 랭킹 -->
+          <div v-if="dayTab" class="rankTable">
             <table class="table border table-hover scrollTable">
               <thead>
                 <tr>
@@ -86,13 +90,8 @@
                   </th>
                 </tr>
               </thead>
-
-              <!-- <div v-if="dayTab">
-                <tbody v-for="(data, idx) in dailyRank" :key="idx">
-              </div> -->
               <tbody v-for="(data, idx) in dailyRank" :key="idx">
                 <tr>
-                  <!-- <td class="col-1"></td> -->
                   <div v-if="idx==0">
                     <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
                   </div>
@@ -109,9 +108,81 @@
                   <td class="col-4" style="text-align: center;"><p> {{ userTime[idx] }} </p></td>
                   <td class="col-1" style="text-align: center;"></td>
                 </tr>
-              </tbody>
-          </table>
+              </tbody>              
+            </table>
           </div>
+
+          <!-- 주별 랭킹 -->
+          <div v-if="weekTab" class="rankTable">
+            <table class="table border table-hover scrollTable">
+              <thead>
+                <tr>
+                  <!-- <th class="col-1"></th> -->
+                  <th class="col-2"><p style="text-align: center; margin-bottom: 0;">순위</p></th>
+                  <th class="col-4"><p style="text-align: center; margin-bottom: 0;">아이디</p></th>
+                  <th class="col-4"><p style="text-align: center; margin-bottom: 0;">누적 공부시간</p></th>
+                  <th class="rankHeader col-2">
+                    <img id="exitBtn" src="https://i.ibb.co/GWXqhqv/close.png" alt="close" border="0" @click="rankClick">
+                  </th>
+                </tr>
+              </thead>
+              <tbody v-for="(data, idx) in weeklyRank" :key="idx">
+                <tr>
+                  <div v-if="idx==0">
+                    <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                  </div>
+                  <div v-if="idx==1">
+                    <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                  </div>
+                  <div v-if="idx==2">
+                    <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                  </div>
+                  <div v-if="idx > 2">
+                    <td class="col-2" style="text-align: center;"><p class="ml-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
+                  </div> 
+                  <td class="col-4" style="text-align: center;"><p> {{ data.userHistoryWeekId.user_id }} </p></td>
+                  <td class="col-4" style="text-align: center;"><p> {{ userTime[idx] }} </p></td>
+                  <td class="col-1" style="text-align: center;"></td>
+                </tr>
+              </tbody>              
+            </table>
+          </div>
+
+          <!-- 월별 랭킹 -->
+          <div v-if="monthTab" class="rankTable">
+            <table class="table border table-hover scrollTable">
+              <thead>
+                <tr>
+                  <!-- <th class="col-1"></th> -->
+                  <th class="col-2"><p style="text-align: center; margin-bottom: 0;">순위</p></th>
+                  <th class="col-4"><p style="text-align: center; margin-bottom: 0;">아이디</p></th>
+                  <th class="col-4"><p style="text-align: center; margin-bottom: 0;">누적 공부시간</p></th>
+                  <th class="rankHeader col-2">
+                    <img id="exitBtn" src="https://i.ibb.co/GWXqhqv/close.png" alt="close" border="0" @click="rankClick">
+                  </th>
+                </tr>
+              </thead>
+              <tbody v-for="(data, idx) in monthlyRank" :key="idx">
+                <tr>
+                  <div v-if="idx==0">
+                    <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                  </div>
+                  <div v-if="idx==1">
+                    <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                  </div>
+                  <div v-if="idx==2">
+                    <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
+                  </div>
+                  <div v-if="idx > 2">
+                    <td class="col-2" style="text-align: center;"><p class="ml-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
+                  </div> 
+                  <td class="col-4" style="text-align: center;"><p> {{ data.userHistoryMonthId.user_id }} </p></td>
+                  <td class="col-4" style="text-align: center;"><p> {{ userTime[idx] }} </p></td>
+                  <td class="col-1" style="text-align: center;"></td>
+                </tr>
+              </tbody>    
+            </table>
+          </div>          
         </div>
       </div>
       <!-- 랭킹 End -->
@@ -225,6 +296,9 @@ export default {
       boardList: [],
 
       // 랭킹 변수
+      daydate: '',
+      weekdate: '',
+      monthdate: '',
       date: '',
       day: '',
 
@@ -241,7 +315,7 @@ export default {
       userTime: [],
       dayTab: true,
       weekTab: false,
-      monthtab: false,
+      monthTab: false,
 
       publicStudyList: [],
       currentParticipant: [],
@@ -468,17 +542,21 @@ export default {
         url: '/history/searchAll/day',
       })
       .then(res => {
-        
-        var today = new Date()
-        var year = today.getFullYear()
-        var month = today.getMonth()
-        var date = today.getDate()
+        // 업데이트 기준 시간
+        // var today = new Date()
+        // var year = today.getFullYear()
+        // var month = today.getMonth()
+        // var date = today.getDate()
 
-        month = month.length == 1 ? "0" + month : month
-        date = date.length == 1 ? "0" + date : date
+        // month = month.length == 1 ? "0" + month : month
+        // date = date.length == 1 ? "0" + date : date
 
-        this.date = year + "-" + month + "-" + date
-        this.day = today.toString().substring(0,3)
+        // this.date = year + "-" + month + "-" + date
+        // this.day = today.toString().substring(0,3)
+
+        this.date = res.data[0].userhistoryDayId.day_date.substring(0,10)
+        console.log(">>>>>>>>>>>>>>>>>> 일별 랭킹 : ", res.data)
+
         this.dailyRank = []   // 이전 데이터 비우기
         this.dailyRank = res.data   
         for(var i=0; i<res.data.length; i++) {
@@ -500,18 +578,23 @@ export default {
         url: '/history/searchAll/week',
       })
       .then(res => {
-        var today = new Date()
-        var year = today.getFullYear()
-        var month = today.getMonth()
-        var date = today.getDate()
+        // this.weekdate = res.data[0].userHistoryWeekId.week_date
 
-        month = month.length == 1 ? "0" + month : month
-        date = date.length == 1 ? "0" + date : date
+        // 이번주 월요일
+        var today = new Date();
+        var day = today.getDay();
+        var diff = today.getDate() - day + (day == 0 ? -6 : 1);
+        this.date = new Date(today.setDate(diff)).toISOString().substring(0, 10);
 
-        this.date = year + "-" + month + "-" + date
-        this.day = today.toString().substring(0,3)
         this.weeklyRank = []   // 이전 데이터 비우기
-        this.weeklyRank = res.data        
+        this.weeklyRank = res.data 
+        this.userTime = []
+        for(var i=0; i<res.data.length; i++) {
+          var sec = res.data[i].totalTime
+          var time = new Date(sec * 1000).toISOString().slice(11, 19)
+
+          this.userTime[i] = time
+        }  
       })
       .error(err => {
         console.log(err)
@@ -519,24 +602,28 @@ export default {
     },
 
     // 월별 랭킹
-    getmonthlyRank() {
+    getMonthlyRank() {
       http({
         method: 'GET', 
         url: '/history/searchAll/month',
       })
       .then(res => {
-        var today = new Date()
-        var year = today.getFullYear()
-        var month = today.getMonth()
-        var date = today.getDate()
+        var date = new Date()
+        var year = date.getFullYear()
+        var month = res.data[0].userHistoryMonthId.month+1 > 12 ? 1 : res.data[0].userHistoryMonthId.month+1
 
-        month = month.length == 1 ? "0" + month : month
-        date = date.length == 1 ? "0" + date : date
+        this.date = year + "-" + (month <= 10 ? '0' + month : month) + "-01"
 
-        this.date = year + "-" + month + "-" + date
-        this.day = today.toString().substring(0,3)
         this.monthlyRank = []   // 이전 데이터 비우기
-        this.monthlyRank = res.data        
+        this.monthlyRank = res.data       
+        
+        this.userTime = []
+        for(var i=0; i<res.data.length; i++) {
+          var sec = res.data[i].totalTime
+          var time = new Date(sec * 1000).toISOString().slice(11, 19)
+
+          this.userTime[i] = time
+        }  
       })
       .error(err => {
         console.log(err)
@@ -546,8 +633,30 @@ export default {
     rankClick() {
       this.shortRank = !this.shortRank;
       this.longRank = !this.longRank;
-      console.log("shortRank : ", this.shortRank, " longRank: ", this.longRank)
     },
+
+    changeTab(tab) {
+
+      if(tab == 'dayTab') {
+        this.dayTab = true;
+        this.weekTab = false;
+        this.monthTab = false;
+        this.date = this.daydate
+        this.getDailyRank()
+      } else if (tab == 'weekTab') {
+        this.dayTab = false
+        this.weekTab = true
+        this.monthTab = false
+        this.date = this.weekdate
+        this.getWeeklyRank()
+      } else if(tab == 'monthTab') {
+        this.dayTab = false
+        this.weekTab = false
+        this.monthTab = true
+        this.date = this.monthdate
+        this.getMonthlyRank()
+      }
+    }
 
   },
   computed:{
@@ -565,134 +674,134 @@ export default {
     // setInterval(this.getPublicStudy, 5000);
     //   console.log("5 second later")
   
-    // 매일 오전 6시마다 일별 랭킹 값을 새로 가져옴
-    this.$crontab.addJob({
-      name: 'dailyrank',
-      interval: {
-        seconds: '0', 
-        minutes:'26', 
-        hours: '12',
-      },
-      job: this.getDailyRank
-    })
+    // // 매일 오전 6시마다 일별 랭킹 값을 새로 가져옴
+    // this.$crontab.addJob({
+    //   name: 'dailyrank',
+    //   interval: {
+    //     seconds: '0', 
+    //     minutes:'26', 
+    //     hours: '12',
+    //   },
+    //   job: this.getDailyRank
+    // })
 
-    // 매주 월요일 오전 6시마다 주별 랭킹 값을 새로 가져옴
-    this.$crontab.add({
-      name: 'weeklyrank',
-      interval: {
-        week: '1',
-        seconds: '0',
-        minutes: '0',
-        hours: '6',
-      },
-      job: this.getWeeklyRank
-    })
+    // // 매주 월요일 오전 6시마다 주별 랭킹 값을 새로 가져옴
+    // this.$crontab.add({
+    //   name: 'weeklyrank',
+    //   interval: {
+    //     week: '1',
+    //     seconds: '0',
+    //     minutes: '0',
+    //     hours: '6',
+    //   },
+    //   job: this.getWeeklyRank
+    // })
 
-    // 매월 1일 6시마다 월별랭킹 값을 새로 가져옴
-    this.$crontab.add({
-      name: 'monthlyrank',
-      interval: {
-        day: '1',
-        seconds: '0',
-        minutes: '0',
-        hours: '6',
-      },
-      job: this.getmonthlyRank
-    })
+    // // 매월 1일 6시마다 월별랭킹 값을 새로 가져옴
+    // this.$crontab.add({
+    //   name: 'monthlyrank',
+    //   interval: {
+    //     day: '1',
+    //     seconds: '0',
+    //     minutes: '0',
+    //     hours: '6',
+    //   },
+    //   job: this.getmonthlyRank
+    // })
   },
 
-  updated() {
-    // setInterval(this.getPublicStudy, 5000);
-    // console.log("5 second later")
+  // updated() {
+  //   // setInterval(this.getPublicStudy, 5000);
+  //   // console.log("5 second later")
     
-    let first = document.getElementById('first'),
-        second = document.getElementById('second'),
-        third = document.getElementById('third')
+  //   let first = document.getElementById('first'),
+  //       second = document.getElementById('second'),
+  //       third = document.getElementById('third')
 
-    if(this.dataCnt==0 || this.dataCnt == this.dailyRank.length) {
-      first.innerHTML = '<img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;">'
-                                      + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5">' + this.dailyRank[0].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] + '</span>'
-      this.dataCnt++
-    } else first.innerHTML = '<span style="font-size: 20pt; line-height: 60px;">' + this.dataCnt + " " + this.dailyRank[0].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] + '</span>'
+  //   if(this.dataCnt==0 || this.dataCnt == this.dailyRank.length) {
+  //     first.innerHTML = '<img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;">'
+  //                                     + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5">' + this.dailyRank[0].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] + '</span>'
+  //     this.dataCnt++
+  //   } else first.innerHTML = '<span style="font-size: 20pt; line-height: 60px;">' + this.dataCnt + " " + this.dailyRank[0].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] + '</span>'
     
-    setInterval(() => {
-      if(this.move == 2){
-          first.classList.remove('card_sliding')
-          first.classList.add('card_sliding_after')
+  //   setInterval(() => {
+  //     if(this.move == 2){
+  //         first.classList.remove('card_sliding')
+  //         first.classList.add('card_sliding_after')
 
-          second.classList.remove('card_sliding_after')
-          second.classList.add('card_sliding')
+  //         second.classList.remove('card_sliding_after')
+  //         second.classList.add('card_sliding')
 
-          third.classList.remove('card_sliding_after')
-          third.classList.remove('card_sliding')
+  //         third.classList.remove('card_sliding_after')
+  //         third.classList.remove('card_sliding')
 
-          this.move = 0
-      } else if (this.move == 1){
-          first.classList.remove('card_sliding_after')
-          first.classList.add('card_sliding')
+  //         this.move = 0
+  //     } else if (this.move == 1){
+  //         first.classList.remove('card_sliding_after')
+  //         first.classList.add('card_sliding')
 
-          second.classList.remove('card_sliding_after')
-          second.classList.remove('card_sliding')
+  //         second.classList.remove('card_sliding_after')
+  //         second.classList.remove('card_sliding')
 
-          third.classList.remove('card_sliding')
-          third.classList.add('card_sliding_after')
+  //         third.classList.remove('card_sliding')
+  //         third.classList.add('card_sliding_after')
 
-          this.move = 2
-      } else if (this.move == 0) {
-          first.classList.remove('card_sliding_after')
-          first.classList.remove('card_sliding')
+  //         this.move = 2
+  //     } else if (this.move == 0) {
+  //         first.classList.remove('card_sliding_after')
+  //         first.classList.remove('card_sliding')
 
-          second.classList.remove('card_sliding')
-          second.classList.add('card_sliding_after')
+  //         second.classList.remove('card_sliding')
+  //         second.classList.add('card_sliding_after')
 
-          third.classList.remove('card_sliding_after')
-          third.classList.add('card_sliding')
+  //         third.classList.remove('card_sliding_after')
+  //         third.classList.add('card_sliding')
 
-          this.move = 1
-      }
-      console.log(">>>>>>>>>>>>>>> dataCnt : ", this.dataCnt)
+  //         this.move = 1
+  //     }
+  //     console.log(">>>>>>>>>>>>>>> dataCnt : ", this.dataCnt)
 
-      if(this.dataCnt < (this.dailyRank.length - 1)) {
-        if(this.dataCnt==0 || this.dataCnt == this.dailyRank.length) {
-          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;">'
-                                          + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5">' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
-        } else if(this.dataCnt==1) {
-          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
-                                                                                + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5">' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
-        } else if(this.dataCnt==2) {
-          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
-                                                                                + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5">' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
-        } else {
-          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;">' + (this.dataCnt+1) + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
-        }
-        this.dataCnt++
-        console.log("증가!!")
-      } else if(this.dataCnt == this.dailyRank.length - 1) {
-        if(this.dataCnt==2) {
-          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
-                                                                                + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5" >' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
-        } else {
-          document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;">' + (this.dataCnt+1) + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] + '</span>'
-        }
-        this.dataCnt = 0
-        console.log("리셋!!")
-      }
+  //     if(this.dataCnt < (this.dailyRank.length - 1)) {
+  //       if(this.dataCnt==0 || this.dataCnt == this.dailyRank.length) {
+  //         document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;">'
+  //                                         + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5">' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
+  //       } else if(this.dataCnt==1) {
+  //         document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
+  //                                                                               + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5">' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
+  //       } else if(this.dataCnt==2) {
+  //         document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
+  //                                                                               + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5">' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
+  //       } else {
+  //         document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;">' + (this.dataCnt+1) + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
+  //       }
+  //       this.dataCnt++
+  //       console.log("증가!!")
+  //     } else if(this.dataCnt == this.dailyRank.length - 1) {
+  //       if(this.dataCnt==2) {
+  //         document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"/>' 
+  //                                                                               + '<span style="font-size: 20pt; line-height: 60px;" class="ml-5" >' + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] +'</span>'
+  //       } else {
+  //         document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;">' + (this.dataCnt+1) + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id + "</span><span class='ml-5' style='font-size: 20pt; line-height: 60px;'>" + this.userTime[this.dataCnt] + '</span>'
+  //       }
+  //       this.dataCnt = 0
+  //       console.log("리셋!!")
+  //     }
 
-      // if(this.dataCnt < (this.dailyRank.length - 1)) {
-      //   document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id  +'</span>'
-      //   this.dataCnt++;
-      // } else if(this.dataCnt == this.dailyRank.length - 1) {
-      //   document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id  +'</span>'
-      //   this.dataCnt = 0
-      // }
+  //     // if(this.dataCnt < (this.dailyRank.length - 1)) {
+  //     //   document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id  +'</span>'
+  //     //   this.dataCnt++;
+  //     // } else if(this.dataCnt == this.dailyRank.length - 1) {
+  //     //   document.getElementById('rolling_box').children[this.listCnt].innerHTML = '<span style="font-size: 20pt; line-height: 60px;"> &nbsp; ' + (this.dataCnt+1) + "&nbsp; &nbsp; &nbsp;" + this.dailyRank[this.dataCnt].userhistoryDayId.user_id  +'</span>'
+  //     //   this.dataCnt = 0
+  //     // }
 
-      if(this.listCnt < 2) {
-        this.listCnt++
-        } else if (this.listCnt == 2) {
-            this.listCnt = 0
-        }
-      }, 5000);
-  },
+  //     if(this.listCnt < 2) {
+  //       this.listCnt++
+  //       } else if (this.listCnt == 2) {
+  //           this.listCnt = 0
+  //       }
+  //     }, 5000);
+  // },
 
 }
 </script>
