@@ -11,7 +11,7 @@
                     <span class="name">{{ comment.user_id }}</span>
                   </div>
                   <div class="column date">
-                    <span>{{ comment.created_at }}</span>
+                    <span>{{ makeDate(comment.created_at) }}</span>
                   </div>
                   <hr class="hrTag">
                 </div>
@@ -46,7 +46,7 @@ export default {
   props: {
     comment: {
       type: Object,
-    }
+    },
   },
   data() {
     return {
@@ -56,6 +56,7 @@ export default {
       loginUserId: null,
       created_at: null,
       idx: null,
+      createdTime: [],
     }
   },
   methods: {
@@ -121,8 +122,8 @@ export default {
       })
     },
     makeDate(datetime) {
-      const old = ''+datetime
-      return old.substring(0, 10)
+      const old = datetime.replace("T", " ")
+      return old.substring(0, 19)
     },
   },
   created() {

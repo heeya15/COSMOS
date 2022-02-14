@@ -20,7 +20,7 @@
           <!-- <th>출석여부</th> -->
           <th>공부시간</th>
           <th>점수</th>
-          <th></th>
+          <th>강퇴/권한</th>
         </tr>
       </thead>
       <tbody v-for="member in studyMembers" :key="member.id" class="info">
@@ -33,7 +33,7 @@
         <td>{{member.studytime}}</td>
         <td>{{member.score}}</td>
         <td v-if="member.user_id!==myId">
-          <b-button class="me-3" variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button>
+          <b-button class="me-3 mr-1" variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button>
           <!-- 권한이 true=>false, false=>true 바뀌게 설정 -->
           <b-button variant="info" @click="giveAuthority(member.studymember_no, member.authority)">권한</b-button>
         </td>

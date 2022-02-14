@@ -1,7 +1,7 @@
 <template>
   <div>
     <center>
-    <div class="total_body">
+    <div class="total_body" style="heigt: 100%"> 
       <h1>스터디 모집 게시판</h1>
       <hr class="titleHr_tag">
       <h3 v-if="editButton === true">글 수정</h3>
@@ -26,33 +26,33 @@
       <div class="round_box3"></div>
       <div class="round_box4"></div>
       
-        <div class="body_total p-5" style="width: 500px;">
+        <div class="body_total p-5" style="width: 600px; height: auto;">
           <!-- <hr class="hrTag"> -->
-          <b-row class="content_rowTag">
-            <b-col cols="5" class="mt-3">
+          <b-row class="content_rowTag mt-3">
+            <b-col cols="3" class="mt-3">
               <p>제목</p>
               <hr class="hrTag">
             </b-col>
-            <b-col cols="7" class="mt-3">
+            <b-col cols="9" class="mt-3">
               <b-form-input v-if="editButton === true" type="text" v-model="boardInfo.contentTitle" style="height: 35px; text-align: center;" maxlength="30"></b-form-input>
               <p v-else>{{ boardInfo.contentTitle }}</p>
               <hr class="hrTag">
             </b-col>
 
-              <b-col v-show="this.boardInfo.header === false" cols="5" class="mt-2">
+              <b-col v-show="this.boardInfo.header === false" cols="3" class="mt-2">
                 <p v-show="this.boardInfo.header === false" >스터디 이름</p>
                 <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
-              <b-col v-show="this.boardInfo.header === false" cols="7" class="mt-2">
+              <b-col v-show="this.boardInfo.header === false" cols="9" class="mt-2">
                 <p>{{ boardInfo.studyName }}</p>
                 <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
 
-              <b-col v-show="this.boardInfo.header === false" cols="5" class="mt-2">
-                <p v-show="this.boardInfo.header === false">스터디 인원</p>
+              <b-col v-show="this.boardInfo.header === false" cols="3" class="mt-2">
+                <p v-show="this.boardInfo.header === false">모집 인원</p>
                 <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
-              <b-col v-show="this.boardInfo.header === false" cols="7" class="mt-2" >
+              <b-col v-show="this.boardInfo.header === false" cols="9" class="mt-2" >
                 <b-form-input 
                   class="recruit_input"
                   v-show="this.boardInfo.header === false" 
@@ -67,11 +67,11 @@
                 <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
 
-            <b-col cols="5" class="mt-2">
+            <b-col cols="3" class="mt-2">
               <p>스터디 분류</p>
               <hr class="hrTag">
             </b-col>
-            <b-col cols="7" class="mt-2">
+            <b-col cols="9" class="mt-2">
               <p>{{ boardInfo.studytypeName }}</p>
               <!-- 수정을 눌렀을 때 값 타입 가져오고 원래는 생성될때의 값 불러와야 함 -->
               <b-form-select v-if="editButton === true" v-show="this.boardInfo.header === true" v-model="studyTypeSelected" :options="options" id="studytype_name"></b-form-select>
@@ -90,13 +90,13 @@
               </div>
             </b-col>
 
-            <b-col cols="5" class="mt-2">
+            <b-col cols="3" class="mt-3">
               <p>내용</p>
               <hr class="hrTag">
             </b-col>
-            <b-col cols="7" class="mt-2">
+            <b-col cols="9" class="mt-2">
               <b-textarea v-if="editButton === true" type="text" v-model="boardInfo.content" style="height: 80px;"></b-textarea>
-              <p v-else>{{ boardInfo.content }}</p>
+              <p v-else style="white-space: pre-wrap; text-align: justify;">{{ boardInfo.content }}</p>
               <hr class="hrTag">
             </b-col>
           
@@ -518,7 +518,7 @@ p {
   box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
 
-.memo2 {
+/* .memo2 {
   width: 17%; 
   height: 33%; 
   background-color: #75cff3;
@@ -531,7 +531,7 @@ p {
   top: 570px;
   border-radius: 4px;
   box-shadow: 3px 2px 2px 1px #a8a8a8;
-}
+} */
 
 .memo3 {
   width: 15%; 
@@ -570,7 +570,7 @@ p {
   background-color: rgb(248, 64, 64);
   position: absolute;
   left: 50%;
-  top: 260px;
+  top: 300px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
   z-index: 1;
 }
@@ -582,22 +582,22 @@ p {
   overflow: hidden;
   background-color: rgb(3, 184, 3);
   position: absolute;
-  right: 270px;
+  right: 280px;
   top: 610px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
-.round_box3 {
+/* .round_box3 {
   width: 18px;
   height: 18px; 
   border-radius: 70%;
   overflow: hidden;
   background-color: yellow;
   position: absolute;
-  left: 280px;
-  bottom: 150px;
+  left: 300px;
+  bottom: 320px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
-}
+} */
 
 .round_box4 {
   width: 18px;
@@ -606,7 +606,7 @@ p {
   overflow: hidden;
   background-color: rgb(198, 82, 252);
   position: absolute;
-  right: 300px;
+  right: 310px;
   top: 290px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
@@ -644,6 +644,7 @@ p {
   border-color: #afa2dd;
   background-color: #c8c1e4;
   width: 90%;
+  height: 100%;
 }
 
 .btnPart{
