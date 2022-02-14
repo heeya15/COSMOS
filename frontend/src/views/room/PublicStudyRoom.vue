@@ -8,7 +8,7 @@
 			<div id="session-aside-left" v-if="session">
 				<p><img src="https://i.ibb.co/wrgGKpS/asideimg01.png" class="sideMenuImg" alt="settings" @click="outMemberModal=true"></p>
 
-				<!-- 강퇴기능 모달 -->
+				<!-- 권한기능 모달 -->
 				<div v-if="outMemberModal" class="black-bg">
 					<div class="white-bg">
 						<h2>멤버</h2>
@@ -17,7 +17,7 @@
 							<thead class="table-danger">
 								<tr>
 									<th>이름(ID)</th>
-									<th>강퇴</th>
+									<th>권한</th>
 								</tr>
 							</thead>
 							<tbody v-for="member in publicStudyMembers" :key="member.id">
@@ -170,7 +170,7 @@ import UserList from '@/components/openvidu/UserList';
 import jwt_decode from "jwt-decode";
 
 import { mapState } from "vuex";
-const publicStudyStore = "publicStudyStore" //수정
+const publicStudyStore = "publicStudyStore"
 const meetingStore ="meetingStore"
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
@@ -374,11 +374,11 @@ export default {
 			})
     },
 
-    getLeave() {
-      this.session.on("signal:out", () => {
-        this.leaveSession();
-      })
-    },
+    // getLeave() {
+    //   this.session.on("signal:out", () => {
+    //     this.leaveSession();
+    //   })
+    // },
 
 		// 권한부여 기능
 	async giveAuthority(publicmember_no,leader) {
@@ -399,7 +399,7 @@ export default {
 			.catch(err => {
 				console.log(err)
 			})
-			await this.publisher.session.signal({
+			this.publisher.session.signal({
                 data: '',
                 to: [],
                 type: "leader"
@@ -419,19 +419,21 @@ export default {
 			// --- Specify the actions when events take place in the session ---
 
 			// On every new Stream received...
-			this.session.on('streamCreated',  ({ stream }) => {
+			this.session.on('streamCreated', async ({ stream }) => {
 				const subscriber = this.session.subscribe(stream);
 				this.subscribers.push(subscriber);
-				this.getPublicStudyMembers(this.roomUrl)
+				await this.getPublicStudyMembers(this.roomUrl)
 			});
 
 			// On every Stream destroyed...
-			this.session.on('streamDestroyed', ({ stream }) => {
+			this.session.on('streamDestroyed',  ({ stream }) => {
 				const index = this.subscribers.indexOf(stream.streamManager, 0);
 				if (index >= 0) {
 					this.subscribers.splice(index, 1);
 				}
-				this.getPublicStudyMembers(this.roomUrl)
+				setTimeout(() => {
+					this.getPublicStudyMembers(this.roomUrl)
+				}, 300);
 			});
 
 			// On every asynchronous exception...
