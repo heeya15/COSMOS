@@ -38,6 +38,8 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final NumberPath<Integer> recruitNumber = createNumber("recruitNumber", Integer.class);
 
+    public final NumberPath<Integer> replyCnt = createNumber("replyCnt", Integer.class);
+
     public final StringPath studyName = createString("studyName");
 
     public final NumberPath<Long> studyNo = createNumber("studyNo", Long.class);
