@@ -26,7 +26,7 @@
 								<td>{{member.user_email}}</td>
 								<td>{{member.attendance}}</td>
 								<td>{{member.studytime}}</td>
-								<td><button class="score-btn" @click="minusScore(member.score, member.studymember_no)">-</button>{{member.score}}<button class="score-btn" @click="plusScore(member.score, member.studymember_no)">+</button></td>
+								<td style="width:75px;"><button class="score-btn1" @click="minusScore(member.score, member.studymember_no)">-</button><span class="ml-4">{{member.score}}</span><button class="score-btn2" @click="plusScore(member.score, member.studymember_no)">+</button></td>
 								</tr>
 							</tbody>
 						</table>
@@ -36,7 +36,7 @@
 					</div>
 				</div>
 
-				<p v-if="userAuthority"><img src="https://i.ibb.co/nBMF7Vb/asideimg03.png" class="sideMenuImg" alt="calendar"></p>
+				<!-- <p v-if="power.authority"><img src="https://i.ibb.co/nBMF7Vb/asideimg03.png" class="sideMenuImg" alt="calendar"></p> -->
 			</div>
 			
 			<div id="session-center">
@@ -142,7 +142,7 @@
 
 							<!-- 나가기 버튼 설정 -->
 							<div class="buttomMenu">
-								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="leaveSession">
+								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="[leaveSession(), toggleAttendance()]">
 									<b-icon icon="door-open-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
 									<span class="footerBtnText">나가기</span>
 								</button> <!-- 나가기 버튼 -->
@@ -536,6 +536,35 @@ export default {
 
 			window.addEventListener('beforeunload', this.leaveSession)
 		},
+
+		// 방 나가기하면 출석원상복귀
+    toggleAttendance() {
+			const attendanceData = {
+				studymember_no: null,
+				attendance: null
+			}
+			this.studyMembers.forEach(member => {
+				if (member.user_id === this.userId) {
+					attendanceData.studymember_no = member.studymember_no
+					attendanceData.attendance = member.attendance
+				}
+			})
+      if (attendanceData.attendance === true) {
+        attendanceData.attendance = false
+      }
+			console.log(attendanceData)
+      http({
+        method: 'PUT',
+        url: 'studymember/update/attendance/',
+        data: attendanceData
+      })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
 
 		leaveSession () {
 			// 방 떠나기전 현재까지 공부한 시간을 history에 누적하기 위해, 방 떠날 때 userhistory_no 보내줌.

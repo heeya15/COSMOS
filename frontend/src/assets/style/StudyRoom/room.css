@@ -20,8 +20,12 @@
 }
 
 /* 상벌점 기능 스타일 */
-.score-btn {
+.score-btn1, .score-btn2 {
   border: none;
+}
+.score-btn2 {
+  /* float: right; */
+  margin-left: 15px;
 }
 .black-bg {
   width: 100vw;
@@ -38,7 +42,7 @@
   /* margin-left:35%; */
   z-index: 3;
   /* width: 30%; */
-  width: 500px;
+  width: 700px;
   margin: 10% auto 0;
   background: white;
   border-radius: 8px;

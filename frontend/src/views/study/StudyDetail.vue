@@ -37,7 +37,7 @@
         </table>
         <div class="text-center">
           <button @click="hideModal" class="cancelBtn ml-3 float-right" >취소</button>
-          <button @click="[pwdCheck(),toggleAttendance(myStudyMemberNo)]" type="submit" class="enterBtn ml-3 float-right">입장</button>
+          <button @click="[pwdCheck(),toggleAttendance()]" type="submit" class="enterBtn ml-3 float-right">입장</button>
         </div>
       </b-modal>
       <!-- 모달 끝 -->
@@ -504,14 +504,17 @@ export default {
     },
 
     // 방 입장하면 출석
-    toggleAttendance(studymember_no) {
+    toggleAttendance() {
+      if (this.myAttendance === false) {
+        var modiAttendance = true
+      }
       http({
         method: 'PUT',
         url: 'studymember/update/attendance/',
-        data: {studymember_no: studymember_no, attendance: this.myAttendance}
+        data: {studymember_no: this.myStudyMemberNo, attendance: modiAttendance}
       })
-      .then(res => {
-        console.log(res)
+      .then(() => {
+        // console.log(res)
       })
       .catch(err => {
         console.log(err)
