@@ -48,7 +48,7 @@
             </b-col> -->
             <b-col cols="4"></b-col>
             <b-col cols="2" class="pt-3">
-                <a><img class="sitesImg mr-2" id="github" src="https://img.icons8.com/ios-glyphs/30/000000/github.png" alt="git" border="0"></a>
+                <a href="https://lab.ssafy.com/s06-webmobile1-sub2/S06P12E103"><img class="sitesImg mr-2" id="github" src="https://img.icons8.com/ios-glyphs/30/000000/github.png" alt="git" border="0"></a>
                 <a href="https://www.instagram.com/hellossafy/channel/?hl=en"><img class="sitesImg mr-2" id="instagram" src="https://img.icons8.com/fluency/48/000000/instagram-new.png" alt="insta-removebg-preview" border="0"></a>
                 <a href="https://www.ssafy.com/ksp/jsp/swp/swpMain.jsp"><img class="sitesImg"  id="website" src="https://i.ibb.co/bB6Z6Wv/world-wide-web-removebg-preview.png" alt="world-wide-web-removebg-preview" border="0"></a>
             </b-col>
