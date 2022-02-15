@@ -73,6 +73,9 @@ public class Board{
 	@Column(name = "study_no")
 	Long studyNo; // 스터디 넘버 번호
 	
+	@Column(name = "hit")
+	int hit; // 조회수
+	
 	@ManyToOne
 	@JoinColumn(name = "user_id")	
 	@OnDelete(action = OnDeleteAction.CASCADE)

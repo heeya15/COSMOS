@@ -1,7 +1,8 @@
 package com.nsnt.cosmos.db.repository;
 
 import java.util.List;
-
+import javax.transaction.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,5 +27,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> { // 제네�
 			"order by study_no;"        
             ,nativeQuery = true)
     List<StudyNameSearchDtoRes> findStudyName(@Param("user_id") String user_id);
+	
+	@Transactional
+	@Modifying
+	@Query(value ="update board set hit = hit + 1 where board_no = :board_no", nativeQuery = true)
+	void updateView(@Param("board_no") Long board_no);
 	
 }

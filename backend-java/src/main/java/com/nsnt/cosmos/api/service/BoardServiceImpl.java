@@ -27,6 +27,7 @@ public class BoardServiceImpl implements BoardService {
 	/** 게시글 하나의 정보를 가져오는 findByBoardId 입니다. */
 	@Override
 	public Board findByBoardId(Long board_no) {
+	    boardRepository.updateView(board_no); // 상세 게시글 클릭시 조회수 1 증가.
 		Board board = boardRepository.findById(board_no).get();
 		return board;
 	}
@@ -57,4 +58,5 @@ public class BoardServiceImpl implements BoardService {
 		List<StudyNameSearchDtoRes> list = boardRepository.findStudyName(user_id);
 	    return list;
 	}
+	
 }
