@@ -28,9 +28,22 @@ public interface BoardRepository extends JpaRepository<Board, Long> { // 제네�
             ,nativeQuery = true)
     List<StudyNameSearchDtoRes> findStudyName(@Param("user_id") String user_id);
 	
+	// 조회 수 증가.
 	@Transactional
 	@Modifying
 	@Query(value ="update board set hit = hit + 1 where board_no = :board_no", nativeQuery = true)
 	void updateView(@Param("board_no") Long board_no);
 	
+	// 댓글 추가 시 댓글 수 증가 .
+	@Transactional
+	@Modifying
+	@Query(value ="update board set reply_cnt = reply_cnt + 1 where board_no = :board_no", nativeQuery = true)
+	void updateReplyCntPlus(@Param("board_no") Long board_no);
+	
+	
+	// 댓글 삭제 시 댓글 수 감소 .
+	@Transactional
+	@Modifying
+	@Query(value ="update board set reply_cnt = reply_cnt - 1 where board_no = :board_no", nativeQuery = true)
+	void updateReplyCntMinus(@Param("board_no") Long board_no);
 }
