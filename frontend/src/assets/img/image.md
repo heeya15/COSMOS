@@ -1,6 +1,27 @@
 # 이미지 URL
 [움직이는_로고] <img src="https://i.ibb.co/3YTRz73/logo.gif" alt="logo" border="0">
 [포스트잇] <img src="https://i.ibb.co/s5LZX94/littledeep-memo-style1-removebg-preview.png" alt="littledeep-memo-style1-removebg-preview" border="0"></a><br />
+
+## 레벨
+<img src="https://d2gd6pc034wcta.cloudfront.net/tier/1-a.svg" class="solvedac-tier">
+<img src="https://d2gd6pc034wcta.cloudfront.net/tier/6-a.svg" class="solvedac-tier">
+<img src="https://d2gd6pc034wcta.cloudfront.net/tier/11-a.svg" class="solvedac-tier">
+<img src="https://d2gd6pc034wcta.cloudfront.net/tier/16-a.svg" class="solvedac-tier">
+<img src="https://d2gd6pc034wcta.cloudfront.net/tier/21-a.svg" class="solvedac-tier">
+<img src="https://d2gd6pc034wcta.cloudfront.net/tier/26-a.svg" class="solvedac-tier">
+[코린이] <img src="https://i.ibb.co/mtdCMsg/baby.png" alt="baby" border="0"><br/>
+
+[물음표_동그라미] <img src="https://i.ibb.co/tsY4tg4/question.png" alt="question" border="0">
+
+## 레벨_코스모스
+<img src="https://i.ibb.co/2npFXgF/sunflower-seed.png" alt="sunflower-seed" border="0"><br/>
+<img src="https://i.ibb.co/WxJ29bG/seeds.png" alt="seeds" border="0"><br/>
+<img src="https://i.ibb.co/hdDCDZc/seed.png" alt="seed" border="0"><br/>
+<img src="https://i.ibb.co/cw1MCFg/plant.png" alt="plant" border="0"><br/>
+<img src="https://i.ibb.co/9ty51BP/plant-1.png" alt="plant-1" border="0"><br/>
+<img src="https://i.ibb.co/dQcCZ3D/plant-pot.png" alt="plant-pot" border="0"><br/>
+
+
 ## 메인페이지
 [금] <img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0"> <br/>
 [은] <img src="https://i.ibb.co/wYypVVB/medal-silver.png" alt="medal-silver" border="0"> <br/>
