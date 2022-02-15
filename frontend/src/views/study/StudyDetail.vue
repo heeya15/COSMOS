@@ -37,7 +37,7 @@
         </table>
         <div class="text-center">
           <button @click="hideModal" class="cancelBtn ml-3 float-right" >취소</button>
-          <button @click="pwdCheck()" type="submit" class="enterBtn ml-3 float-right" >입장</button>
+          <button @click="[pwdCheck(),toggleAttendance(myStudyMemberNo)]" type="submit" class="enterBtn ml-3 float-right">입장</button>
         </div>
       </b-modal>
       <!-- 모달 끝 -->
@@ -237,6 +237,7 @@ export default {
       toggleMember: false,
       studyNo: this.$route.params.studyNo,
       myStudyMemberNo: '',
+      myAttendance: null,
       studyInfo: {
         studyType:{},
         image:'',
@@ -429,7 +430,7 @@ export default {
        // 비밀번호 치고 방 입장 성공 시 비공개 스터디 참가자 등록 시킴
         http({
             method: 'POST',
-            url: `/privateroom/register`,
+            url: '/privateroom/register',
             headers: this.getToken(),
             params: {privatestudyroom_id: this.roomUrl},
           })
@@ -482,6 +483,7 @@ export default {
       this.studyMembers.forEach(member => {
         if(member.user_id === myId){
           this.myStudyMemberNo = member.studymember_no
+          this.myAttendance = member.attendance
         }
       })
     },
@@ -498,6 +500,22 @@ export default {
         console.log(err)
       })
     },
+
+    // 방 입장하면 출석
+    toggleAttendance(studymember_no) {
+      http({
+        method: 'PUT',
+        url: 'studymember/update/attendance/',
+        data: {studymember_no: studymember_no, attendance: this.myAttendance}
+      })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
+
     // preventNav(event) {
     //   event.preventDefault()
     //   event.returnValue = ""
