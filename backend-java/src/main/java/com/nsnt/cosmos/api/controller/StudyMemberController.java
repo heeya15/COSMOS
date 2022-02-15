@@ -187,4 +187,25 @@ public class StudyMemberController {
 		return ResponseEntity.status(200).body(studymember.getStudymemberNo() + "번 : 해당 "
 				+ studymember.getUser().getUserId() + " 라는 아이디인 멤버 삭제 " + SUCCESS);
 	}
+	
+	
+	
+	@ApiOperation(value = "해당 스터디 멤버 출석 수정 기능 (studymember_no, attendance) 2개 인자", notes = "해당 스터디 멤버 출석 수정 기능 studymember_no")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 500, message = "서버 오류") })
+	@PutMapping("/update/attendance")
+	public ResponseEntity<String> updateAttendance(@RequestBody SaveStudyMemberDto saveStudyMemberDto) throws Exception {
+		StudyMember studymember;
+	
+		try {
+			studymember = studyMeberService.findOneStudyMember(saveStudyMemberDto.getStudymember_no());
+		} catch (NoSuchElementException E) {
+			return ResponseEntity.status(500).body("스터디 멤버 참석 여부 수정 실패");
+		}
+		StudyMember updateStudyMember = studyMeberService.updateStudyMemberAttendance(studymember,saveStudyMemberDto );
+		System.out.println("업데이트 됨");
+		return new ResponseEntity<String>(SUCCESS + "\n" + updateStudyMember.toString(), HttpStatus.OK);
+	}
 }

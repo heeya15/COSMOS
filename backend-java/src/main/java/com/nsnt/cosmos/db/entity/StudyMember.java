@@ -78,6 +78,9 @@ public class StudyMember{
 	    this.authority = saveStudyMemberDto.isAuthority();
 	}
 
+	public void updateAttendance(SaveStudyMemberDto saveStudyMemberDto){  
+	    this.attendance = saveStudyMemberDto.isAttendance();
+	}
 	@Override
 	public String toString() {
 		return "StudyMember [studymemberNo=" + studymemberNo + ", score=" + score + ", attendance=" + attendance

@@ -18,6 +18,9 @@ public class SaveStudyMemberDto {
 	@ApiModelProperty(name = "스터디멤버 번호")
 	private Long studymember_no;
 	
+	@ApiModelProperty(name = "출석여부")
+	private boolean attendance;
+	
 	@ApiModelProperty(name = "스터디 장")
 	private boolean leader;
 	
