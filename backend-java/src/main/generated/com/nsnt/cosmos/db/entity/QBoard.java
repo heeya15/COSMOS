@@ -34,6 +34,8 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final BooleanPath header = createBoolean("header");
 
+    public final NumberPath<Integer> hit = createNumber("hit", Integer.class);
+
     public final NumberPath<Integer> recruitNumber = createNumber("recruitNumber", Integer.class);
 
     public final StringPath studyName = createString("studyName");
