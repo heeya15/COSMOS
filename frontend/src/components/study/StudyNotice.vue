@@ -28,7 +28,6 @@
       <button @click="registNotice" class="createBtn m-2">등록</button>
     </div>
     <div v-else-if="(!power.leader) && noNotice">등록된 공지사항이 없습니다.</div> 
-    
   </div>
   </center>
 </template>

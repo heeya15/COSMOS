@@ -107,10 +107,10 @@
                     <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
                   </div>
                   <div v-if="idx > 2">
-                    <td class="col-2" style="text-align: center;"><p class="ml-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
+                    <td class="col-2" style="text-align: center;"><p class="table-content ml-3"> {{ idx+1 }} </p></td>
                   </div> 
-                  <td class="col-4" style="text-align: center;"><p> {{ data.userhistoryDayId.user_id }} </p></td>
-                  <td class="col-4" style="text-align: center;"><p> {{ userTime[idx] }} </p></td>
+                  <td class="col-4" style="text-align: center;"><p class="table-content ml-5"> {{ data.userhistoryDayId.user_id }} </p></td>
+                  <td class="col-4" style="text-align: center;"><p class="table-content ml-5"> {{ userTime[idx] }} </p></td>
                   <td class="col-1" style="text-align: center;"></td>
                 </tr>
               </tbody>              
@@ -120,7 +120,7 @@
           <!-- 주별 랭킹 -->
           <div v-if="weekTab" class="rankTable">
             <table class="table border table-hover scrollTable">
-              <tbody v-for="(data, idx) in weeklyRank" :key="idx">
+              <tbody v-for="(data, idx) in weeklyRank" :key="idx" class="tbl-list">
                 <tr>
                   <div v-if="idx==0">
                     <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
@@ -132,10 +132,10 @@
                     <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
                   </div>
                   <div v-if="idx > 2">
-                    <td class="col-2" style="text-align: center;"><p class="ml-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
+                    <td class="col-2" style="text-align: center;"><p class="table-content ml-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
                   </div> 
-                  <td class="col-4" style="text-align: center;"><p> {{ data.userHistoryWeekId.user_id }} </p></td>
-                  <td class="col-4" style="text-align: center;"><p> {{ userTime[idx] }} </p></td>
+                  <td class="col-4" style="text-align: center;"><p class="table-content ml-5"> {{ data.userHistoryWeekId.user_id }} </p></td>
+                  <td class="col-4" style="text-align: center;"><p class="table-content ml-5"> {{ userTime[idx] }} </p></td>
                   <td class="col-1" style="text-align: center;"></td>
                 </tr>
               </tbody>              
@@ -145,7 +145,7 @@
           <!-- 월별 랭킹 -->
           <div v-if="monthTab" class="rankTable">
             <table class="table border table-hover scrollTable">
-              <tbody v-for="(data, idx) in monthlyRank" :key="idx">
+              <tbody v-for="(data, idx) in monthlyRank" :key="idx" class="tbl-list">
                 <tr>
                   <div v-if="idx==0">
                     <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
@@ -157,10 +157,10 @@
                     <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/rcVSCsd/medal-bronze.png" alt="medal-bronze" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
                   </div>
                   <div v-if="idx > 2">
-                    <td class="col-2" style="text-align: center;"><p class="ml-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
+                    <td class="col-2" style="text-align: center;"><p class="table-content ml-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
                   </div> 
-                  <td class="col-4" style="text-align: center;"><p> {{ data.userHistoryMonthId.user_id }} </p></td>
-                  <td class="col-4" style="text-align: center;"><p> {{ userTime[idx] }} </p></td>
+                  <td class="col-4" style="text-align: center;"><p class="table-content ml-5"> {{ data.userHistoryMonthId.user_id }} </p></td>
+                  <td class="col-4" style="text-align: center;"><p class="table-content ml-5" > {{ userTime[idx] }} </p></td>
                   <td class="col-1" style="text-align: center;"></td>
                 </tr>
               </tbody>    
@@ -570,7 +570,7 @@ export default {
           this.userTime[i] = time
         }
       })
-      .error(err => {
+      .catch(err => {
         console.log(err)
       })
     },
@@ -600,7 +600,7 @@ export default {
           this.userTime[i] = time
         }  
       })
-      .error(err => {
+      .catch(err => {
         console.log(err)
       })
     },
@@ -629,7 +629,7 @@ export default {
           this.userTime[i] = time
         }  
       })
-      .error(err => {
+      .catch(err => {
         console.log(err)
       })
     },
@@ -1274,6 +1274,10 @@ tbody td {
   width: 100%;
   background-color: #afa2dd;
   padding: 15px 8px 8px 8px;
+}
+
+.table-content {
+  font-size: 15pt;
 }
 
 </style>
