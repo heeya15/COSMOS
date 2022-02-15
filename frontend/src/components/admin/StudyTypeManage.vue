@@ -35,7 +35,7 @@
                 </table>
                 </b-col>
             </b-row>
-            <!-- 목록 Start -->
+            <!-- 목록 End -->
 
             <b-modal ref="myModal" id="modal-lg" hide-header hide-footer size="lg">
                 <div style='font-family: "yg-jalnan";'>

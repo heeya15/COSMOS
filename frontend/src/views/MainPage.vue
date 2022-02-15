@@ -75,12 +75,18 @@
           </div>
           <div class="rankTable" v-show="longRank"> -->
 
+          <div class="row rankRow">
+            <!-- <div class="col-1"></div> -->
+            <div class="col-2 ml-5"><p style="text-align: center;">순위</p></div>
+            <div class="col-4 ml-5"><p style="text-align: center; margin-left: 20px;">아이디</p></div>
+            <div class="col-4 ml-3"><p style="text-align: center;">누적 공부시간</p></div>
+          </div>
+          
           <!-- 일별 랭킹 -->
-          <div v-if="dayTab" class="rankTable">
+          <div v-if="dayTab" class="rankTable scroll-area tableheader">
             <table class="table border table-hover scrollTable">
-              <thead>
+              <!-- <thead>
                 <tr>
-                  <!-- <th class="col-1"></th> -->
                   <th class="col-2"><p style="text-align: center; margin-bottom: 0;">순위</p></th>
                   <th class="col-4"><p style="text-align: center; margin-bottom: 0;">아이디</p></th>
                   <th class="col-4"><p style="text-align: center; margin-bottom: 0;">누적 공부시간</p></th>
@@ -88,8 +94,8 @@
                     <img id="exitBtn" src="https://i.ibb.co/GWXqhqv/close.png" alt="close" border="0" @click="rankClick">
                   </th>
                 </tr>
-              </thead>
-              <tbody v-for="(data, idx) in dailyRank" :key="idx">
+              </thead> -->
+              <tbody v-for="(data, idx) in dailyRank" :key="idx" class="tbl-list">
                 <tr>
                   <div v-if="idx==0">
                     <td class="col-2" style="text-align: center;"><img src="https://i.ibb.co/LS0sbGF/medal-gold.png" alt="medal-gold" border="0" style="width: 40px; height: 40px; margin-left: 5px; margin-bottom: 5px;"></td>
@@ -114,17 +120,6 @@
           <!-- 주별 랭킹 -->
           <div v-if="weekTab" class="rankTable">
             <table class="table border table-hover scrollTable">
-              <thead>
-                <tr>
-                  <!-- <th class="col-1"></th> -->
-                  <th class="col-2"><p style="text-align: center; margin-bottom: 0;">순위</p></th>
-                  <th class="col-4"><p style="text-align: center; margin-bottom: 0;">아이디</p></th>
-                  <th class="col-4"><p style="text-align: center; margin-bottom: 0;">누적 공부시간</p></th>
-                  <th class="rankHeader col-2">
-                    <img id="exitBtn" src="https://i.ibb.co/GWXqhqv/close.png" alt="close" border="0" @click="rankClick">
-                  </th>
-                </tr>
-              </thead>
               <tbody v-for="(data, idx) in weeklyRank" :key="idx">
                 <tr>
                   <div v-if="idx==0">
@@ -150,17 +145,6 @@
           <!-- 월별 랭킹 -->
           <div v-if="monthTab" class="rankTable">
             <table class="table border table-hover scrollTable">
-              <thead>
-                <tr>
-                  <!-- <th class="col-1"></th> -->
-                  <th class="col-2"><p style="text-align: center; margin-bottom: 0;">순위</p></th>
-                  <th class="col-4"><p style="text-align: center; margin-bottom: 0;">아이디</p></th>
-                  <th class="col-4"><p style="text-align: center; margin-bottom: 0;">누적 공부시간</p></th>
-                  <th class="rankHeader col-2">
-                    <img id="exitBtn" src="https://i.ibb.co/GWXqhqv/close.png" alt="close" border="0" @click="rankClick">
-                  </th>
-                </tr>
-              </thead>
               <tbody v-for="(data, idx) in monthlyRank" :key="idx">
                 <tr>
                   <div v-if="idx==0">
@@ -676,7 +660,17 @@ export default {
         this.date = this.monthdate
         this.getMonthlyRank()
       }
-    }
+    },
+
+    scrollTable() { 
+      const wrapper = document.querySelector(".scroll-area"); 
+      setInterval(() => { 
+        wrapper.scrollTop = wrapper.scrollTop + 100; 
+        if (wrapper.offsetHeight + wrapper.scrollTop >= wrapper.scrollHeight) { 
+          wrapper.scrollTop = 0; 
+          } 
+        }, 2000);
+    },
 
   },
   computed:{
@@ -690,6 +684,7 @@ export default {
   },
 
   mounted() {
+    this.scrollTable()
     // 오픈 스터디 접속 멤버 수 5초마다 새로 불러오기
     // setInterval(this.getPublicStudy, 5000);
     //   console.log("5 second later")
@@ -1254,5 +1249,31 @@ thead {
   color: #495c6e;
 }
 
+.scroll-area { 
+  width: 100%; 
+  max-height: 24vh; 
+  overflow-y: scroll; 
+  -ms-overflow-style: none; 
+  /* IE and Edge */ 
+  scrollbar-width: none; 
+  /* Firefox */ 
+  scroll-behavior: smooth; 
+} 
+
+.scroll-area::-webkit-scrollbar { 
+  display: none; 
+  /* Chrome, Safari, Opera*/ 
+} 
+
+tbody td {
+  font-size: 1.5vmin; 
+  height: 1.5vh; 
+}
+
+.rankRow {
+  width: 100%;
+  background-color: #afa2dd;
+  padding: 15px 8px 8px 8px;
+}
 
 </style>
