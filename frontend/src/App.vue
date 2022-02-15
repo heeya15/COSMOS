@@ -9,6 +9,7 @@
         <!-- <b-icon class="top_icon" icon="arrow-up-circle-fill"></b-icon>
       </div> -->
       <!-- 맨위로 가기 버튼 부분 끝 -->
+      <div class="my-5"></div>
       <Footer v-if="($route.name !== 'PrivateStudyRoom') && ($route.name !== 'PublicStudyRoom')
         && ($route.name !== 'SignUp') && ($route.name !== 'LogIn') && ($route.name !== 'StudyRoomCreateForm')
         && ($route.name !== 'MainPage')"/>

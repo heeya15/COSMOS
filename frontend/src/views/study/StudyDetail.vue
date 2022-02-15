@@ -571,6 +571,7 @@ export default {
 .imgBtn:hover {
   border: none;
   filter: brightness(70%);
+  border-radius: 8px;
 }
 .imgBtn:focus {
   border-radius: 8px;
