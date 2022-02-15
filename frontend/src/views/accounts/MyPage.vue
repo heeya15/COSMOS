@@ -455,21 +455,21 @@ export default {
 
         this.myTotalTime = day + "일 " + (hour < 10 ? "0" + hour : hour) + ":" + (min < 10 ? "0" + min : min) 
                           + ":" + (sec < 10 ? "0" + sec : sec)
-
+        
         if(res.data >= 157680000) {     // 5년
-          this.myInfoIdx = 6
+          this.myInfoIdx = 0
         } else if(res.data >= 94608000) {   // 3년
-          this.myInfoIdx = 5
+          this.myInfoIdx = 1
         } else if(res.data >= 47260800) {   // 1년 6개월 (547일)
-          this.myInfoIdx = 4
+          this.myInfoIdx = 2
         } else if(res.data >= 23328000) {   // 9개월 (270일)
           this.myInfoIdx = 3
         } else if(res.data >= 7776000) {    // 3개월 (90일)
-          this.myInfoIdx = 2
+          this.myInfoIdx = 4
         } else if(res.data >= 2592000) {    // 1개월 (30일)
-          this.myInfoIdx = 1
+          this.myInfoIdx = 5
         } else {
-          this.myInfoIdx = 0
+          this.myInfoIdx = 6
         }
       })
       .catch(err =>
