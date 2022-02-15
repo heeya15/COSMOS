@@ -11,14 +11,11 @@
             <input id="password" type="password" ref="pwd" name="password" v-model="credentials.password" placeholder="비밀번호" required/>
             <label for="password">비밀번호</label>
             <b-icon icon="eye-slash-fill" id="pwdIcon" ref="pwdIcon" aria-hidden="true" @click="pwdPeek"></b-icon>
-            <!-- <b-button id="passwordBtn" @click="pwdPeek">확인</b-button> -->
           </div>
           <div class="input-box">
             <div class="mt-4" id="message" :value="msg">{{ msg }}</div>
           </div>
-          <a href="/signup" style="color: #afa2dd;">아직 COSMOS에 회원이 아니신가요?</a>
-          <!-- <b-form-input class="mt-3"  id="id" v-model="credentials.id" required placeholder="아이디"></b-form-input>
-          <b-form-input class="mt-3" id="password" v-model="credentials.password" type="password" placeholder="비밀번호"></b-form-input> -->
+          <a href="/signup" style="color: #afa2dd;">아직 COSMOS 회원이 아니신가요?</a>
           <b-button id="loginBtn" type="submit" @keydown.enter="logIn" @click="logIn">LOGIN</b-button>
         </b-form>
       </div>
