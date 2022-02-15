@@ -215,6 +215,7 @@ export default {
         'https://i.ibb.co/BGLHv1j/raspberrypi.gif',
         'https://i.ibb.co/Z200ZZR/ruby.jpg',
         'https://i.ibb.co/JHCL6sY/swift.png',
+        'https://i.ibb.co/47bWKZM/docker.png',
         'https://i.ibb.co/HtwM0Wx/study1.jpg',
         'https://i.ibb.co/B6dP6Rh/study2.gif',
         'https://i.ibb.co/0yXpH3X/dog.jpg',
