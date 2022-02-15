@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavBar v-if="($route.name !== 'PrivateStudyRoom') && ($route.name !== 'PublicStudyRoom')"/>
-    <router-view style="margin-top: 100px;"/>
+    <router-view style="margin-top: 100px; height:auto; min-height:100%"/>
 
     <!-- 맨위로 가기 버튼 부분 -->
       <!-- <div class="back-to-top pointer" @click="scrollToTop(); return false;"> -->

@@ -24,6 +24,7 @@
                 <th>분류</th>
                 <th>작성자 (ID)</th>
                 <th>등록일</th>
+                <th>조회수</th>
               </tr>
             </thead>
             <tbody id="test-table" v-for="(boardItem, idx) in paginatedItems" :key="idx"  @click="goBoardDetail(boardItem.boardNo)" style="text-align: center;">
@@ -38,16 +39,19 @@
               <!-- <td >{{ boardItem.boardNo }}</td> -->
 
 
-            <td style="width: 100px" v-if="boardItem.contentStatus === false"><span class="boardnum_tag" style="color: #d5648a;">[진행중]</span></td>
+            <td v-if="boardItem.contentStatus === false"><span class="boardnum_tag" style="color: #d5648a;">[진행중]</span></td>
             <td v-else><p class="boardnum_tag">[완료]</p></td>
 
-
-            <td style="width: 150px;" v-if="boardItem.header === false"><span  class="boardnum_tag" style="color: #d5648a;">[스터디원 구함]</span></td>
-            <td style="width: 150px;" v-else><span class="boardnum_tag" style="color: #afa2dd;">[스터디 구함]</span></td>
-            <td style="width: 300px;"><p class="content_title_tag">{{ boardItem.contentTitle }}</p></td>
-            <td style="width: 150px;"><p class="boardnum_tag">{{ boardItem.studytypeName }}</p></td>
+            <td v-if="boardItem.header === false"><span  class="boardnum_tag" style="color: #d5648a;">[스터디원 구함]</span></td>
+            <td v-else><span class="boardnum_tag" style="color: #afa2dd;">[스터디 구함]</span></td>
+            <td class="d-flex justify-content-between">
+              <p class="content_title_tag">{{ boardItem.contentTitle }}</p>
+              <span class="comment_count">[{{boardItem.replyCnt}}]</span>
+            </td>
+            <td><p class="boardnum_tag">{{ boardItem.studytypeName }}</p></td>
             <td><p class="boardnum_tag">{{ boardItem.user.userName }} ({{ boardItem.user.userId }})</p></td>
             <td><p class="boardnum_tag">{{ makeDate(boardItem.createdAt) }}</p></td>
+            <td><p>{{boardItem.hit}}</p></td>
             </tr>
             </tbody>
           </table>
@@ -353,6 +357,13 @@ tbody:hover {
   white-space: nowrap;
   position: relative;
   left: 30px;
+}
+
+.comment_count{
+  /* font-size: 16px; */
+  color: #aaa;
+  margin-left: 13px;
+  line-height: 25px;
 }
 
 .content_title_tag:hover {

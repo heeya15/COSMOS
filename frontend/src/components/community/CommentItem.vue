@@ -75,7 +75,7 @@ export default {
       this.$store.state.comments.splice(commentIdx, 1)
       http({
         method: 'delete',
-        url: `/comment/remove/${this.comment_no}`,
+        url: `/comment/remove/${this.comment_no}/${this.comment.board_no}/`,
         headers: this.getToken()
       })
       .then(() => {
@@ -90,7 +90,7 @@ export default {
     },
     updateComment() {
       const updateCommentItem = {
-        board_no: this.comment.boardNo,
+        board_no: this.comment.board_no,
         comment_no: this.comment.comment_no,
         content: this.comment.content,
       }
