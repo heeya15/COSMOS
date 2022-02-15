@@ -117,16 +117,27 @@
           <b-col cols="4" id="rank">
             <div class="d-flex justify-content-center">
               <div class="mt-2" align="center" style="font-size: 15pt;">My 랭킹</div>
-              <div class="ml-2" style="margin-top: 10px;"></div>
+              <div class="ml-2" style="margin-top: 10px;">
+                <img class="question" src="https://i.ibb.co/tsY4tg4/question.png" title="전날 공부 데이터를 활용한 일별 랭킹입니다." v-b-modal.modal-rank>
+              </div>
             </div>
-            
-            <div v-if="myInfoIdx == -1" style="margin-top: 40px;">
+            <div v-if="myRank == -1" style="margin-top: 40px;">
               <span>전날 놀았네요? 😛</span>
             </div>
             <div v-else style="margin-top: 10px;">
               <span style="font-size: 40pt;">{{ myRank }}</span><span> 위</span>
             </div>
             <div>{{ myDailyTime }}</div>
+            <b-modal ref="myModal" id="modal-rank" hide-header hide-footer size="m">
+              <div class="pt-2 px-3 d-flex justify-content-between" style='font-family: "yg-jalnan";'>
+                <h3>일별 랭킹</h3>
+                <img id="exitBtn" src="https://i.ibb.co/GWXqhqv/close.png" alt="close" border="0" @click="$bvModal.hide('modal-rank')">
+              </div>
+              <hr>
+              <div class="px-2">
+                <p style="font-family: BMJua">My 랭킹은 전날 공부 데이터를 활용한 일별(데일리) 랭킹입니다. <br/>높은 순위권을 위해서 열공해주세요!! 📖</p>
+              </div>
+            </b-modal>
           </b-col>
           <b-col cols="4" id="cosmos">
             <div class="d-flex justify-content-center">
@@ -242,8 +253,8 @@ export default {
       user_password2: null,
 
       userRank: [],
-      myInfoIdx: -1,
-      myRank: 0,
+      myInfoIdx: 0,
+      myRank: -1,
       myScore: 0,
       myTotalTime: '',
       myDailyTime: '',
