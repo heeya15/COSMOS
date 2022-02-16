@@ -10,7 +10,7 @@
           <label for="studyName" class="mt-1">스터디 이름</label>
         </b-col>
         <b-col cols="6" class="mr-3">
-          <b-form-input id="studyName" v-model="input.studyName"></b-form-input>
+          <b-form-input id="studyName" v-model="input.studyName" autocomplete="off"></b-form-input>
         </b-col>
       </b-row>
       <hr class="mt-3">
@@ -22,7 +22,7 @@
         </b-col>
         <b-col cols="6">
           <b-form-input id="url" v-model="input.defaulturl" disabled></b-form-input>
-          <b-form-input id="url" v-model="input.url" placeholder="URL을 입력하세요" @keydown="regexp()"></b-form-input>
+          <b-form-input id="url" v-model="input.url" placeholder="URL을 입력하세요" @keydown="regexp()" autocomplete="off"></b-form-input>
             <!-- <div ref="urlMsg" v-if="this.urlState==true && this.regexpstate == true" style="color:#3C77C9"></div> -->
             <div v-text="urlMsg" v-if="this.urlState==true && this.regexpstate == true" style="color:#3C77C9"></div>
             <!-- <div ref="urleerorMsg" v-if="this.urlState==false || this.regexpstate==false" style="color:rgb(207, 1, 1);"></div> -->
@@ -109,9 +109,9 @@
         </b-col>
         <b-col cols="4">
           <!-- 비공 -->
-          <b-form-input v-if="input.study_type==='private'" id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="6" min="2" maxlength="2"></b-form-input>
+          <b-form-input v-if="input.study_type==='private'" id="totalMember" placeholder="인원 수를 입력하세요." autocomplete="off" v-model="input.totalMember" @keyup="recruitLimit" type="number" max="6" min="2" maxlength="2" ></b-form-input>
           <!-- 공개 -->
-          <b-form-input v-else id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="10" min="2" maxlength="2"></b-form-input>
+          <b-form-input v-else id="totalMember" placeholder="인원 수를 입력하세요." v-model="input.totalMember" @keyup="recruitLimit" type="number" max="10" min="2" maxlength="2" autocomplete="off"></b-form-input>
         </b-col>
         <b-col cols="1" class="mt-2">명</b-col>
       </b-row>    
@@ -122,7 +122,7 @@
           <label for="studyPassword" class="mt-1">비밀번호</label>
         </b-col>
         <b-col>
-          <b-form-input id="studyPassword" v-model="input.studyPassword" v-if="input.study_type==='private'" placeholder="4~10자리 숫자만 입력하세요."></b-form-input>
+          <b-form-input id="studyPassword" v-model="input.studyPassword" v-if="input.study_type==='private'" placeholder="4~10자리 숫자만 입력하세요." autocomplete="off" ></b-form-input>
           <div v-else class="studyPassword mt-1">공개스터디는 비밀번호가 필요하지 않습니다.</div>
         </b-col>
       </b-row>
