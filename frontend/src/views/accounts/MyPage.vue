@@ -253,7 +253,7 @@ export default {
       user_password2: null,
 
       userRank: [],
-      myInfoIdx: 0,
+      myInfoIdx: 6,
       myRank: -1,
       myScore: 0,
       myTotalTime: '',
