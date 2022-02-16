@@ -715,7 +715,7 @@ export default {
 				this.sessionForScreenShare.connect(token, { clientData: this.myUserName  })
 				.then(() => {
 					this.spublisher = this.OVForScreenShare.initPublisher(undefined, {
-						audioSource: false,
+						audioSource: true,
 						videoSource: "screen",      
             publishVideo: true,  
 						resolution: "1280x720",
