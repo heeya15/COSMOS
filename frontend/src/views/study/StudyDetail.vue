@@ -23,7 +23,7 @@
               <td class="table-danger">방 비밀번호 입력</td>
               <td>
                 <input
-                  type="text"
+                  type="password"
                   name="room_pwd"
                   id="room_pwd"
                   class="form-control bd-control"

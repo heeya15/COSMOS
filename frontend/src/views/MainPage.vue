@@ -18,7 +18,7 @@
         </b-row>
         <div class="text-center">
           <button @click="hideModal" class="cancelBtn ml-3 float-right" >취소</button>
-          <button @click="goStudyRoom(infoModal.publicstudyroomId, infoModal.studyName , infoModal.numberOfMember )" type="submit" class="enterBtn ml-3 float-right" >입장</button>
+          <button @click="goStudyRoom(infoModal.publicstudyroomId, infoModal.studyName , infoModal.studyRule )" type="submit" class="enterBtn ml-3 float-right" >입장</button>
         </div>
       </b-modal>
       <!-- 모달 끝 -->
@@ -310,7 +310,8 @@ export default {
         id: "info-modal",
         publicstudyroomId:"",
         studyName:"",
-        numberOfMember:""
+        numberOfMember:"",
+        studyRule: "",
       },
 
       slickOption: {
@@ -336,7 +337,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(publicStudyStore,["SET_ROOM_NAME", "SET_ROOM_URL","SET_PARTICIPANT","SET_ROOM_STUDY_NO"]),
+    ...mapMutations(publicStudyStore,["SET_ROOM_NAME", "SET_ROOM_URL","SET_PARTICIPANT","SET_ROOM_STUDY_NO","SET_STUDYRULE"]),
     // ...mapMutations(meetingStore,["SET_ROOM_SETTIG_ISAUDIO", "SET_ROOM_SETTIG_ISVIDIO"]),
     ...mapMutations(meetingStore,["SET_ROOM_SETTING"]),
     getHeader(){
@@ -466,13 +467,14 @@ export default {
         return
       }
       this.checkBanned(publicstudy.publicstudyroomId)
-      this.infoModal.publicstudyroomId = publicstudy.publicstudyroomId;
-      this.infoModal.studyName = publicstudy.studyName;
-      this.infoModal.numberOfMember = publicstudy.numberOfMember; 
-      await this.getPublicStudyMemberCount(this.infoModal.publicstudyroomId); // 해당 스터디룸 멤버 참가자 수 들고옴.
-      console.log("모달창 들어옴?")
-      console.log(this.count);
-      console.log(this.infoModal.numberOfMember);
+      this.infoModal.publicstudyroomId = publicstudy.publicstudyroomId
+      this.infoModal.studyName = publicstudy.studyName
+      this.infoModal.numberOfMember = publicstudy.numberOfMember
+      this.infoModal.studyRule = publicstudy.studyRule
+      await this.getPublicStudyMemberCount(this.infoModal.publicstudyroomId) // 해당 스터디룸 멤버 참가자 수 들고옴.
+      // console.log("모달창 들어옴?")
+      // console.log(this.count)
+      // console.log(this.infoModal.numberOfMember)
       if(this.count == this.infoModal.numberOfMember){
           alert("현재 해당 공개 스터디룸에 최대 인원으로 가득 차 있습니다.");
         return;
@@ -480,17 +482,17 @@ export default {
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
     },
     hideModal() {
-      this.$refs["my-modal"].hide();
+      this.$refs["my-modal"].hide()
     },
    // 공개 방 가기(가면 공개방 멤버로 추가)
-    async goStudyRoom(publicstudyroomId, studyName ) {
+    async goStudyRoom(publicstudyroomId, studyName, studyRule ) {
     
       console.log("공개방 가기 버튼 클릭.")
-      console.log(publicstudyroomId, studyName);
+      console.log(publicstudyroomId, studyName, studyRule)
     
       var token = localStorage.getItem('jwt')
-      var decoded = JwtDecode(token);
-      var myId = decoded.sub;
+      var decoded = JwtDecode(token)
+      var myId = decoded.sub
       console.log("들어가기전 셋팅 값 확인")
       console.log( this.settings.mic)
       console.log( this.settings.cam)
@@ -499,9 +501,10 @@ export default {
       // this.SET_ROOM_SETTIG_ISVIDIO(this.settings.cam);
       this.SET_ROOM_SETTING(this.settings)
       // 방 입장을 위한 셋팅
-      this.SET_ROOM_NAME(studyName);
-      this.SET_ROOM_URL(publicstudyroomId);
-      this.SET_PARTICIPANT(myId);
+      this.SET_ROOM_NAME(studyName)
+      this.SET_ROOM_URL(publicstudyroomId)
+      this.SET_PARTICIPANT(myId)
+      this.SET_STUDYRULE(studyRule)
 
       // this.$store.state.roomUrl = publicstudyroomId;
       // this.$store.state.roomName = studyName;
@@ -509,7 +512,7 @@ export default {
 
       // 강퇴된적 있는 유저면 입장 불가
       if (this.isBanned === true){
-        alert('입장이 불가능한 스터디입니다.');
+        alert('입장이 불가능한 스터디입니다.')
         return;
       } else {
         // 멤버로 추가

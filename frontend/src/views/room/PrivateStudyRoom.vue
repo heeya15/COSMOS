@@ -15,8 +15,8 @@
 								<tr>
 									<th>이름</th>
 									<th>Email</th>
-									<th>출석여부</th>
-									<th>공부시간</th>
+									<!-- <th>출석여부</th> -->
+									<!-- <th>공부시간</th> -->
 									<th>점수</th>
 								</tr>
 							</thead>
@@ -24,8 +24,8 @@
 								<tr>
 								<td>{{member.user_name}}</td>
 								<td>{{member.user_email}}</td>
-								<td>{{member.attendance}}</td>
-								<td>{{member.studytime}}</td>
+								<!-- <td>{{member.attendance}}</td> -->
+								<!-- <td>{{member.studytime}}</td> -->
 								<td style="width:75px;"><button class="score-btn1" @click="minusScore(member.score, member.studymember_no)">-</button><span class="ml-4">{{member.score}}</span><button class="score-btn2" @click="plusScore(member.score, member.studymember_no)">+</button></td>
 								</tr>
 							</tbody>
