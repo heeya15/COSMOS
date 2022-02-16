@@ -7,7 +7,7 @@
       <b-form-select class="mx-1" v-model="searchSelected" :options="searchOpt" style="width: 150px; height: 40px; font-size: 15px;" @change="headerSel()" ></b-form-select>
       <b-form-input b-form-input class="mr-2" style="width: 400px; height: 40px; font-size: 15px;" placeholder="검색할 제목,분류를 입력하세요." v-model="word" @keydown.enter="searchTitle()"></b-form-input>
       <b-button class="extraBtnTag mr-1" style="width: 40px padding: 0; height: 40px; font-size: 15px;" @click="searchTitle()">검색</b-button>
-      <b-button class="extraBtnTag" style="padding: 0; width: 60px; height: 40px; font-size: 15px;" @click="searchInit()">초기화</b-button>
+      <b-button class="resetSearchBtn" style="padding: 0; width: 60px; height: 40px; font-size: 15px;" @click="searchInit()">초기화</b-button>
     </div>
       <b-row>
         <b-col>
@@ -395,5 +395,9 @@ tbody:hover {
   background-color: #c8c1e4;
 }
 
+.resetSearchBtn {
+    background-color: #dc3545;
+    border: none;
+}
 
 </style>
