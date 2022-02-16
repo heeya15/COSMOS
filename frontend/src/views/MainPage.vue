@@ -1,5 +1,4 @@
 <template>
-
   <div id="main_page">
       <!-- 모달 시작-->
       <b-modal ref="my-modal" :id="infoModal.id" hide-footer centered hide-header>
@@ -190,12 +189,8 @@
               <th>🌼 분류 🌼</th>
             </thead>
             <tbody v-for="(board, idx) in boardList" :key="idx" @click="goBoardDetail(board.boardNo)">
-              <!-- <td><p class="mx-3">🌷 {{ board.contentTitle }} 🌷</p></td> -->
-              <!-- <td align="center"><p>🌷 {{ board.studytypeName }} 🌷</p></td> -->
                 <td><p class="mx-3 studyboard"> {{ board.contentTitle }} </p></td>
                 <td align="center"><p class="studyboard"> {{ board.studytypeName }} </p></td>
-                <!-- <td><p class="mx-3"> {{ board.contentTitle }} </p></td> -->
-                <!-- <td align="center"><p> {{ board.studytypeName }} </p></td> -->
               <p></p>
             </tbody>
           </table>
@@ -212,7 +207,6 @@
         <h1 class="text-center">오픈 스터디</h1>
         <div class="my-5 p-5" align="center">  
           <div v-if="publicStudyList.length >= 1" >
-        <!-- <VueSlickCarousel ref="slick" :options="slickOption"> -->
           <VueSlickCarousel ref="slick" 
             :arrows="true"
             :dots="true"
@@ -245,7 +239,7 @@
                 </template>
               </VueSlickCarousel>
             </div>
-          <div v-else><p id="nostudy">아직 가입한 스터디가 없습니다.</p></div>
+          <div v-else><p id="nostudy">아직 등록된 오픈 스터디가 없습니다.</p></div>
         </div>
       </div>
       <!-- 오픈(공개) 스터디 목록 End -->
@@ -472,9 +466,6 @@ export default {
       this.infoModal.numberOfMember = publicstudy.numberOfMember
       this.infoModal.studyRule = publicstudy.studyRule
       await this.getPublicStudyMemberCount(this.infoModal.publicstudyroomId) // 해당 스터디룸 멤버 참가자 수 들고옴.
-      // console.log("모달창 들어옴?")
-      // console.log(this.count)
-      // console.log(this.infoModal.numberOfMember)
       if(this.count == this.infoModal.numberOfMember){
           alert("현재 해당 공개 스터디룸에 최대 인원으로 가득 차 있습니다.");
         return;
@@ -497,8 +488,6 @@ export default {
       console.log( this.settings.mic)
       console.log( this.settings.cam)
       // 마이크 캠 셋팅
-      // this.SET_ROOM_SETTIG_ISAUDIO(this.settings.mic);
-      // this.SET_ROOM_SETTIG_ISVIDIO(this.settings.cam);
       this.SET_ROOM_SETTING(this.settings)
       // 방 입장을 위한 셋팅
       this.SET_ROOM_NAME(studyName)
@@ -506,9 +495,6 @@ export default {
       this.SET_PARTICIPANT(myId)
       this.SET_STUDYRULE(studyRule)
 
-      // this.$store.state.roomUrl = publicstudyroomId;
-      // this.$store.state.roomName = studyName;
-      // this.$store.state.participant = myId
 
       // 강퇴된적 있는 유저면 입장 불가
       if (this.isBanned === true){
