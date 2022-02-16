@@ -7,7 +7,9 @@
       <b-col cols="5"><b-form-input
         id="apply-member-form"
         class="mb-2 mr-sm-2 mb-sm-0"
-        placeholder="추가할 회원의 아이디를 입력하세요." v-model="newMemberId"
+        placeholder="추가할 회원의 아이디를 입력하세요." 
+        v-model="newMemberId"
+        autocomplete="off"
       ></b-form-input></b-col>
       <b-col cols="1"><button @click="addMember" class="memberBtn"><b-icon icon="person-plus-fill"></b-icon></button></b-col>
     </b-row>
@@ -17,7 +19,6 @@
         <tr>
           <th>이름</th>
           <th>Email</th>
-          <!-- <th>출석여부</th> -->
           <th>공부시간</th>
           <th>점수</th>
           <th>강퇴/권한</th>
@@ -29,7 +30,6 @@
         <td v-else-if="!member.leader && member.authority">🌸{{member.user_name}}({{member.user_id}})</td>
         <td v-else>{{member.user_name}}({{member.user_id}})</td>
         <td>{{member.user_email}}</td>
-        <!-- <td>{{member.attendance}}</td> -->
         <td>{{member.studytime}}</td>
         <td>{{member.score}}</td>
         <td v-if="member.user_id!==myId">
@@ -46,7 +46,6 @@
         <tr>
           <th>이름</th>
           <th>Email</th>
-          <!-- <th>출석여부</th> -->
           <th>공부시간</th>
           <th>점수</th>          
         </tr>
@@ -57,7 +56,6 @@
         <td v-else-if="!member.leader && member.authority">🌸{{member.user_name}}({{member.user_id}})</td>
         <td v-else>{{member.user_name}}({{member.user_id}})</td>
         <td>{{member.user_email}}</td>
-        <!-- <td>{{member.attendance}}</td> -->
         <td>{{member.studytime}}</td>
         <td>{{member.score}}</td>
         </tr>
