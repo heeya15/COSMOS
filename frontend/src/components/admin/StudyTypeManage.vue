@@ -35,7 +35,7 @@
                 </table>
                 </b-col>
             </b-row>
-            <!-- 목록 Start -->
+            <!-- 목록 End -->
 
             <b-modal ref="myModal" id="modal-lg" hide-header hide-footer size="lg">
                 <div style='font-family: "yg-jalnan";'>
@@ -158,7 +158,6 @@ export default ({
 
         // 스터디 분류명 추가
         createStudyType() {
-            console.log("이거 새로 추가할거야 -> ", this.createstudytypename)
             http({
                 method: 'POST',
                 url: `/studytype/register`,
@@ -184,7 +183,6 @@ export default ({
 
         // 스터디 분류명 수정
         updateStudyType() {
-            console.log("이걸로 변경할거야 -> ", this.updatestudytypename)
             http({
                 method: 'PUT',
                 url: `/studytype/update`,
@@ -205,7 +203,6 @@ export default ({
         // 스터디 분류명 삭제
         deleteStudyType(studyTypeName) {
             if(confirm('정말 삭제하시겠습니까?') == true) {
-                console.log("이거 삭제할거야 -> ", studyTypeName)
                 http({
                     method: 'DELETE',
                     url: `/studytype/remove/studyType`,

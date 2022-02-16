@@ -18,21 +18,23 @@
           <div class="mt-1 message" :class="{ completeCheck: idDuplicate }">{{ idMsg }}</div>
         </div>
         <div class="input-box mt-4">
-          <input id="password" type="text" ref="password" name="password" v-model="credentials.userPassword" placeholder="비밀번호" @keydown="resetpwdDouble" @blur="passwordRuleCheck" required/>
+          <input id="password" type="password" ref="password1" name="password" v-model="credentials.userPassword" placeholder="비밀번호" @keydown="resetpwdDouble" @blur="passwordRuleCheck" required/>
           <label for="password">비밀번호</label>
+          <b-icon icon="eye-slash-fill" id="pwdIcon" ref="pwdIcon" aria-hidden="true" @click="pwdPeek1"></b-icon>
           <div class="mt-1 message">{{ pwdMsg1 }}</div>
         </div>
         <div class="input-box mt-4">
-          <input id="passwordRule" type="password" name="passwordRule" v-model="passwordRule" placeholder="비밀번호 확인" @blur="doublePasswordCheck" required/>
+          <input id="passwordRule" type="password" ref="password2" name="passwordRule" v-model="passwordRule" placeholder="비밀번호 확인" @blur="doublePasswordCheck" required/>
           <label for="passwordRule">비밀번호 확인</label>
+          <b-icon icon="eye-slash-fill" id="pwdIcon" ref="pwdIcon" aria-hidden="true" @click="pwdPeek2"></b-icon>
           <div class="mt-1 message">{{ pwdMsg2 }}</div>
         </div>
         <div class="input-box mt-4">
           <b-row>
             <b-col cols="8">
-              <input id="email" type="text" name="email" :disabled="inputDisabled" v-model="credentials.userEmail" placeholder="이메일" required @blur="emailDuplicateCheck" />
+              <input id="email" type="text" name="email" :disabled="inputDisabled" v-model="credentials.userEmail" placeholder="이메일" required />
               <label for="useremailname" style="left: 15px;">이메일</label>
-              <div class="mt-1 message">{{ emailMsg }}</div>
+              <!-- <div class="mt-1 message">{{ emailMsg }}</div> -->
             </b-col>
             <b-col cols="4" class="pl-0"><b-button class="mt-3" @click="sendEmail" id="emailBtn">인증</b-button></b-col>
           </b-row>
@@ -188,6 +190,7 @@ export default {
         this.emailMsg = ''
       })
       .catch(err => {
+        this.emailDuplicate = false; 
         this.emailMsg = '사용할 수 없는 이메일 입니다.'
         console.log(err)
       })
@@ -211,8 +214,17 @@ export default {
     sendEmail() {
       this.emailRuleCheck();
       this.emailDuplicateCheck();
-
-      console.log(">>>>>>>>>>>>>>>> here/")
+      if(this.emailRule == false) {
+        alert("유효하지 않은 이메일 형식입니다. 다시 입력해주세요")
+        document.getElementById('email').value = ''
+        document.getElementById('email').focus()
+      } else if(this.emailDuplicate == false) {
+        alert('사용할 수 없는 이메일 입니다.')
+        document.getElementById('email').value = ''
+        document.getElementById('email').focus()
+      } else if(this.emailRule == true && this.emailDuplicate == true) {
+        alert("인증 이메일이 전송되었습니다. 인증번호를 확인해주세요!!")
+      }
 
       if(this.emailDuplicate == true && this.emailRule == true) {
         this.email = true;
@@ -242,6 +254,27 @@ export default {
         this.emailAuthMsg = '인증코드가 틀렸습니다.';
       }
     },
+
+    // 비밀번호 엿보기
+    pwdPeek1() {
+      if(this.$refs.password1.type == "password") {
+        this.$refs.password1.type = "text";
+        this.$refs.pwdIcon.icon = "eye-fill";
+      } else if(this.$refs.password1.type == "text") {
+        this.$refs.password1.type = "password";
+        this.$refs.pwdIcon.icon = "eye-fill";
+      } 
+    },
+
+    pwdPeek2() {
+      if(this.$refs.password2.type == "password" ) {
+        this.$refs.password2.type = "text";
+        this.$refs.pwdIcon.icon = "eye-fill";
+      } else {
+        this.$refs.password2.type = "password";
+        this.$refs.pwdIcon.icon = "eye-fill";
+      }
+    },
   },
 }
 </script>
@@ -260,7 +293,7 @@ p {
 }
 
 #signupBox {
-  height: 90%;
+  height: 80%;
   width: 600px;
   background-color: rgb(255, 255, 255);
   box-shadow: 10px 10px 10px rgb(235, 235, 235);
@@ -350,6 +383,13 @@ input:focus, input:not(:placeholder-shown){
 /* 중복 확인 성공 안내 메시지 */
 .completeCheck {
   color: #3C77C9;
+}
+
+#pwdIcon {
+  position: absolute;
+  cursor: pointer;
+  right: 5%;
+  top: 35%;
 }
 
 </style>

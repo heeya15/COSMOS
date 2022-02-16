@@ -1,22 +1,67 @@
 <template>
   <div id="app">
-    <NavBar v-if="$route.name !== 'Openvidu'"/>
-    <router-view style="margin-top: 100px;"/>
+    <NavBar v-if="($route.name !== 'PrivateStudyRoom') && ($route.name !== 'PublicStudyRoom')"/>
+    <router-view style="margin-top: 100px; min-height:100%"/>
+
+    <!-- 맨위로 가기 버튼 부분 -->
+      <!-- <div class="back-to-top pointer" @click="scrollToTop(); return false;"> -->
+        <!-- <img src="main_img5.png" alt="" class="top_icon"> -->
+        <!-- <b-icon class="top_icon" icon="arrow-up-circle-fill"></b-icon>
+      </div> -->
+      <!-- 맨위로 가기 버튼 부분 끝 -->
+      <div class="my-5"></div>
+      <Footer v-if="($route.name !== 'PrivateStudyRoom') && ($route.name !== 'PublicStudyRoom')
+        && ($route.name !== 'SignUp') && ($route.name !== 'LogIn') && ($route.name !== 'StudyRoomCreateForm')
+        && ($route.name !== 'MainPage')"/>
   </div>
 </template>
 
 <script>
 import NavBar from '@/views/NavBar.vue'
+import Footer from '@/views/Footer.vue'
 
 export default {
   name: 'App',
+  data() {
+    return {
+      timeOut: null,
+    }
+  },
   components:{
     NavBar,
+    Footer,
+  },
+  methods: {
+    scrollToTop() {
+      if (document.body.scrollTop!=0 || document.documentElement.scrollTop!=0){
+        window.scrollBy(0, -50000);
+        this.timeOut=setTimeout(10);
+      }
+      else clearTimeout(this.timeOut);
+    },
   }
 }
 </script>
 
 <style>
+/* 맨위로 가기 버튼 */
+/* .back-to-top {
+  position: fixed;
+  top: 92%;
+  right: 1.5%;
+}
+
+.top_icon {
+  width: 35px;
+  height: 35px;
+  color: #afa2dd;
+}
+
+.top_icon:hover {
+  cursor: pointer;
+  color: #9255AD;
+} */
+
 @font-face {
     font-family: 'IM_Hyemin-Bold';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2106@1.1/IM_Hyemin-Bold.woff2') format('woff');

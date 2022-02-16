@@ -14,7 +14,8 @@ import AdminPage from '@/views/admin/Admin.vue'
 import StudyTypeManage from '@/components/admin/StudyTypeManage.vue'
 import UserManage from '@/components/admin/UserManage.vue'
 
-import Openvidu from '@/views/Openvidu.vue'
+import PrivateStudyRoom from '@/views/room/PrivateStudyRoom.vue'
+import PublicStudyRoom from '@/views/room/PublicStudyRoom.vue'
 
 
 Vue.use(VueRouter)
@@ -26,9 +27,14 @@ const routes = [
     component: MainPage
   },
   {
-    path: '/openvidu',
-    name: 'Openvidu',
-    component: Openvidu
+    path: '/privateStudyRoom',
+    name: 'PrivateStudyRoom',
+    component: PrivateStudyRoom
+  },
+  {
+    path: '/publicStudyRoom',
+    name: 'PublicStudyRoom',
+    component: PublicStudyRoom
   },
   {
     path: '/signup',

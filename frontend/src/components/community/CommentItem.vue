@@ -1,62 +1,43 @@
 <template>
   <center>
-    <!-- <div class="comment_position">
-      <p>{{ comment.comment_no }}</p>
-      <b-form-input v-if="editButton === true" type="text" v-model="comment.content" @keyup.enter="updateComment"></b-form-input>
-      <p v-else style="text-align: left;">내용 : {{ comment.content }}</p>
-      <p>작성자 : {{ comment.user_id }}</p>
-      <p>작성 시간 : {{ makeDate(comment.created_at) }}</p>
-      <p>인덱스 확인 >> {{ idx }} // 뜨나?</p> -->
-
-      <!-- <div class="totalCard row mt-20 mb-20"> -->
-        <!-- visible 넣으면 그냥 보이게 -->
       <b-collapse id="collapse-2" visible>
-      <div class="container mt-3">
-        <div class="comment_body">
-            <div class="card">
-              <div class="comment-widgets">
-                  <!-- Comment Row -->
-                <div class="d-flex flex-row comment-row mt-3">
-                  <div class="comment-text w-100">
-                    <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-                      <b-form-input v-if="editButton === true" type="text" class=" d-block" style="text-align: left; font-size: 13px; height: 30px;" v-model="comment.content" @keyup.enter="updateComment"></b-form-input>
-                      <span v-else class=" d-block" style="text-align: left;"> {{ comment.content }}</span>
-                      <p class="font-medium" style="font-size: 10px; text-align: right;">작성자 : {{ comment.user_id }}</p>
-                    </div>
-                    <div class="comment-footer"> 
-                    <span class="text-muted float-right" style="font-size: 10px"> {{ makeDate(comment.created_at) }}</span>
-                      <div v-show="editButton === false" style="display: flex; justify-content: left;">
-                        <b-button variant="warning" class="button_tag" size="sm" v-if="userId === loginUserId" @click="editButtonChange"><b-icon icon="pencil"></b-icon></b-button>
-                        <b-button variant="danger" class="button_tag" size="sm" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash"></b-icon></b-button>
-                      </div>
-                      <div v-show="editButton === true" style="display: flex; justify-content: left;">
-                        <b-button variant="warning" class="button_tag" size="sm" v-if="userId === loginUserId" @click="updateComment"><b-icon icon="pencil-square"></b-icon>수정</b-button>
-                        <b-button variant="danger" class="button_tag" size="sm" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash-fill"></b-icon>삭제</b-button>
-                      </div>
-                    </div>
+        <div class="container">
+        <hr>
+          <div class="reply-list-area">
+            <div>
+              <div class="comment-body">
+                <div class="status float-base">
+                  <div class="column user-info">
+                    <span class="name">{{ comment.user_id }}</span>
                   </div>
+                  <div class="column date">
+                    <span>{{ makeDate(comment.created_at) }}</span>
+                  </div>
+                  <hr class="hrTag">
+                </div>
+                <div class="reply-content">
+                  <b-form-textarea v-if="editButton === true" type="text" class=" d-block" style="text-align: left; font-size: 20px; height: 90px;" v-model="comment.content" @keyup.enter="updateComment"></b-form-textarea>
+                    <span v-else class=" d-block" style="text-align: left;"> {{ comment.content }}</span>
+                </div>
+                <div class="button-tag" v-show="editButton === false">
+                  <b-button variant="warning" class="button_tag" v-if="userId === loginUserId" @click="editButtonChange"><b-icon icon="pencil"></b-icon></b-button>
+                  <b-button variant="danger" class="button_tag" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash"></b-icon></b-button>
+                </div>
+                <div v-show="editButton === true" class="button-tag">
+                  <b-button variant="warning" class="button_tag" v-if="userId === loginUserId" @click="updateComment"><b-icon icon="pencil-square"></b-icon></b-button>
+                  <b-button variant="danger" class="button_tag" v-if="userId === loginUserId" @click="deleteComment"><b-icon icon="trash-fill"></b-icon></b-button>
                 </div>
               </div>
             </div>
+          </div>
+        <hr>
         </div>
-      </div>
+
       </b-collapse>
-
-      <!-- <div v-show="editButton === false">
-        <b-button v-if="userId === loginUserId" @click="editButtonChange" style="background-color: #DAC7F9">수정</b-button>
-        <b-button v-if="userId === loginUserId" @click="deleteComment" style="background-color: #DAC7F9">삭제</b-button>
-      </div>
-      <div v-show="editButton === true">
-        <b-button v-if="userId === loginUserId" @click="updateComment" style="background-color: #DAC7F9">수정</b-button>
-        <b-button v-if="userId === loginUserId" @click="deleteComment" style="background-color: #DAC7F9">삭제</b-button>
-      </div> -->
-
-    <!-- </div> -->
   </center>
 </template>
 
 <script>
-// import http from 'http'
 import http from "@/util/http-common.js";
 import {mapState} from 'vuex'
 
@@ -65,7 +46,7 @@ export default {
   props: {
     comment: {
       type: Object,
-    }
+    },
   },
   data() {
     return {
@@ -75,6 +56,7 @@ export default {
       loginUserId: null,
       created_at: null,
       idx: null,
+      createdTime: [],
     }
   },
   methods: {
@@ -87,19 +69,16 @@ export default {
     },
     getComment() {
       this.$store.dispatch('getComment')
-      // this.$router.go()
-      console.log('댓글 가져오기')
     },
     deleteComment() {
       const commentIdx = this.$store.state.comments.indexOf(this.comment)
       this.$store.state.comments.splice(commentIdx, 1)
       http({
         method: 'delete',
-        url: `/comment/remove/${this.comment_no}`,
+        url: `/comment/remove/${this.comment_no}/${this.comment.board_no}/`,
         headers: this.getToken()
       })
-      .then((res) => {
-        console.log(res)
+      .then(() => {
         this.comment_no = this.comment.comment_no
       })
       .catch(err => {
@@ -111,7 +90,7 @@ export default {
     },
     updateComment() {
       const updateCommentItem = {
-        board_no: this.comment.boardNo,
+        board_no: this.comment.board_no,
         comment_no: this.comment.comment_no,
         content: this.comment.content,
       }
@@ -121,9 +100,7 @@ export default {
         data: updateCommentItem,
         headers: this.getToken(),
       })
-      .then(res => {
-        console.log('수정부분')
-        console.log(res.data)
+      .then(() => {
         this.editButton = false
         this.$router.go(this.$router.currentRoute)
       })
@@ -138,18 +115,15 @@ export default {
         headers: this.getToken()
       })
       .then(res =>{
-        // console.log(res.data)
         this.loginUserId=res.data['user_id']
-        // console.log('유저 확인')
-        // console.log(this.loginUserId)
       })
       .catch(err =>{
         console.log(err)
       })
     },
     makeDate(datetime) {
-      const old = ''+datetime
-      return old.substring(0, 10)
+      const old = datetime.replace("T", " ")
+      return old.substring(0, 19)
     },
   },
   created() {
@@ -166,15 +140,15 @@ export default {
 </script>
 
 <style scoped>
-.container {
+/* .container {
   width: 50%;
-}
+} */
 
 .card {
   display: flex;
   flex-wrap: wrap;
   /* background: linear-gradient(to left yellow 20%, #fcfc87 80%); */
-  background: linear-gradient(to left, #fcfc87 25%, #fcfc87 25% 50%, #fcfc87 50% 75%, yellow 90% );
+  background: #fff;
   /* background: linear-gradient(to left, #c8c1e4 25%, #c8c1e4 25% 50%, #c8c1e4 50% 75%, #afa2dd 90% ); */
   /* background-color: #fff; */
   border: none;
@@ -189,7 +163,7 @@ export default {
 /* 테스트 부분 */
 .comment_body {
   /* border: 5px solid transparent; */
-  background: linear-gradient(to left, #fcfc87 25%, #fcfc87 25% 50%, #fcfc87 50% 75%, yellow 90% );
+  background: #fff;
   /* background: linear-gradient(to left, #c8c1e4 25%, #c8c1e4 25% 50%, #c8c1e4 50% 75%, #afa2dd 90% ); */
   /* background: repeating-linear-gradient(-45deg, #f45384, #f45384 5px, #f8bfd1 5px, #f8bfd1 10px); */
   /* background-color: #afa2dd; */
@@ -230,14 +204,53 @@ export default {
   margin-bottom: 15px
 }
 
+.button-tag {
+  display: flex;
+  justify-content: right;
+}
 .button_tag {
   font-size: 10px;
   border: none;
+  margin-left: 2px;
+  margin-right: 2px;
 }
-
 
 .comment-widgets .comment-row:hover {
   background: rgba(0, 0, 0, 0.05)
+}
+
+.container {
+  width: 100%;
+  /* border: 1px dotted; */
+  background-color: #fafafa;
+}
+
+.user-info {
+  display: flex;
+  text-align: left;
+  margin-left: 3%;
+  font-size: 13px;
+}
+
+.date {
+  display: flex;
+  justify-content: left;
+  text-align: left;
+  margin-left: 3%;
+  font-size: 10px;
+}
+
+.reply-content {
+  display: flex;
+  justify-content: left;
+  text-align: left;
+  margin-left: 3%;
+  margin-top: 3px;
+  font-size: 20px;
+}
+
+.reply-content {
+  height: 100px;
 }
 
 </style>
