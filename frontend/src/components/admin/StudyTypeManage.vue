@@ -25,7 +25,7 @@
                     </tr>
                 </thead>
                 <tbody id="studyTypeTable" align="center" v-for="(studytype, idx) in paginatedItems" :key="idx">
-                    <td>{{ studytype.studytypeNo }}</td>
+                    <td>{{ 10*(currentPage-1)+(idx+1)}}</td>
                     <td>{{ studytype.studytypeName }}</td>
                     <td>
                         <b-button id="editBtn" @click="editModal(studytype)" v-b-modal.modal-lg>수정</b-button>
