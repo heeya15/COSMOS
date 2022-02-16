@@ -7,7 +7,8 @@
 			</p> -->
 			<div id="session-aside-left" v-if="session">
 				<p><img src="https://i.ibb.co/wrgGKpS/asideimg01.png" class="sideMenuImg" alt="settings" @click="outMemberModal=true"></p>
-
+				<p><img src="https://i.ibb.co/k94sKJ1/whiteboard.png" class="sideMenuImg" alt="studyrule" @click="studyRuleModal=true"></p>
+				
 				<!-- 권한기능 모달 -->
 				<div v-if="outMemberModal" class="black-bg">
 					<div class="white-bg">
@@ -32,6 +33,20 @@
 						</table>
 						<div class="d-flex justify-content-end">
 							<button @click="outMemberModal=false" class="btn btn-secondary">닫기</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- 권한기능 모달 -->
+				<div v-if="studyRuleModal" class="black-bg">
+					<div class="white-bg">
+						<h2>스터디 규칙 📖</h2>
+						<hr>						
+						<div>
+							<p>{{ this.studyRule }}</p>
+						</div>
+						<div class="d-flex justify-content-end">
+							<button @click="studyRuleModal=false" class="btn btn-secondary">닫기</button>
 						</div>
 					</div>
 				</div>
@@ -237,13 +252,17 @@ export default {
 			outMemberModal: false,
 			isLeader: null,
 
+			// 스터디 규칙 관련
+			studyRuleModal : false,
+
+
 			// 오른쪽 사이드 메뉴
 			asideRight: false,
 		}
 	},
 	computed:{
 		...mapState(meetingStore,["isaudio","isvideo"]),
-		...mapState(publicStudyStore,['roomName', 'roomUrl', 'participant',"roomStudyNo"])
+		...mapState(publicStudyStore,['roomName', 'roomUrl', 'participant',"roomStudyNo", "studyRule"])
 	},
 	created(){
 		// 초기 장치 셋팅
