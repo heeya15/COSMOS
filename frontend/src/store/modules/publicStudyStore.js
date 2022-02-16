@@ -4,6 +4,7 @@ const publicStudyStore = {
         roomName: "",
         roomUrl: "",
         participant: "",
+        studyRule: "",
         // roomStudyNo: 0,
     },
     mutations: {
@@ -16,10 +17,13 @@ const publicStudyStore = {
         SET_PARTICIPANT(state, par) {
             state.participant = par
         },
+        SET_STUDYRULE(state, rule) {
+            state.studyRule = rule
+        }
         // GET_ROOM_STUDY_NO(state, studyNO) {
         //     state.roomStudyNo = studyNO
         // },
     }
-  };
-  
-  export default publicStudyStore;
+};
+
+export default publicStudyStore;

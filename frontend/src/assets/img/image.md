@@ -103,7 +103,7 @@
 [마이크] <img src="https://i.ibb.co/4J7SH5Z/micimg.png" alt="micimg" border="0"> <br/>
 [비디오] <img src="https://i.ibb.co/JCSPVZv/videoimg.png" alt="videoimg" border="0"> <br/>
 [금지] <img src="https://i.ibb.co/X20qhKK/forbidden.png" alt="forbidden" border="0">
-
+[칠판_스터디룰] <img src="https://i.ibb.co/k94sKJ1/whiteboard.png" alt="whiteboard" border="0">
 
 # 그 외
 [고양이1] <img src="https://i.ibb.co/zNbb7tG/cat1.jpg" alt="" border="0"> <br/>

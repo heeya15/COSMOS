@@ -223,7 +223,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(publicStudyStore,["SET_ROOM_NAME", "SET_ROOM_URL","SET_PARTICIPANT","SET_ROOM_STUDY_NO"]),
+    ...mapMutations(publicStudyStore,["SET_ROOM_NAME", "SET_ROOM_URL","SET_PARTICIPANT","SET_ROOM_STUDY_NO", "SET_STUDYRULE"]),
     // 인원 수 제한
     recruitLimit() { 
       // 공개 일 때
@@ -345,6 +345,7 @@ export default {
       this.SET_ROOM_NAME(this.input.studyName);
       this.SET_ROOM_URL(this.input.url);
       this.SET_PARTICIPANT(myId);
+      this.SET_STUDYRULE(this.input.studyRule);
       // this.$store.state.roomName = this.input.studyName; // 방 이름
       // this.$store.state.roomUrl = this.input.url; // 스터디룸 아이디
       // this.$store.state.participant = myId; // 내 아뒤
