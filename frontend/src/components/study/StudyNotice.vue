@@ -7,8 +7,8 @@
     <div v-if="notice.studyManageNo">
       <div v-show="!notice.modify">
         <p style="text-align:right;">변경일: {{notice.createdAt}}</p>
-        <div class="noticeContainer" style="background-color:#c8c1e4;">
-          {{notice.studymanageNotice}}
+        <div class="noticeContainer" style="background-color:#ededed;">
+          <p id="notice">{{notice.studymanageNotice}}</p>
         </div>
         <!-- 스터디장만 수정,삭제 보이게 -->
         <b-button-group v-show="power.leader" class="m-2" style="float:right;">
@@ -16,10 +16,10 @@
           <button @click="deleteNotice" class="deleteBtn">삭제</button>
         </b-button-group>
       </div>
-        <div class="noticeContainer" v-show="power.leader && notice.modify">
-          <b-form-textarea id="textarea" v-model="notice.studymanageNotice" :placeholder=notice.studymanageNotice rows="3" max-rows="6"></b-form-textarea>
-          <button @click="modifyNotice" class="modifyBtn m-2">수정</button>
-        </div>
+      <div class="noticeContainer" v-show="power.leader && notice.modify">
+        <b-form-textarea id="textarea" v-model="notice.studymanageNotice" :placeholder=notice.studymanageNotice rows="3" max-rows="6"></b-form-textarea>
+        <button @click="modifyNotice" class="modifyBtn m-2">수정</button>
+      </div>
     </div>
 
     <!-- 등록된 공지사항이 없을 때 -->
@@ -28,7 +28,6 @@
       <button @click="registNotice" class="createBtn m-2">등록</button>
     </div>
     <div v-else-if="(!power.leader) && noNotice">등록된 공지사항이 없습니다.</div> 
-    
   </div>
   </center>
 </template>
@@ -148,22 +147,23 @@ export default {
 
 <style scoped>
 .noticeContainer {
-  width:1000px; 
-  height:100px; 
-  padding:10px;
+  width: 1000px; 
+  height: auto; 
+  padding: 30px;
 }
 
 /* 버튼 */
 .createBtn {
   border: none;
   border-radius: 8px;
-  background-color: #e4c3f1;
+  background-color: #afa2dd;
   height: 40px;
   width: 100px;
   float: right;
 }
 .createBtn:hover {
-  background-color: #ddaae6;
+  background-color: #c8c1e4;
+  color: white;
 }
 .modifyBtn {
   border: none;
@@ -186,5 +186,9 @@ export default {
 }
 .deleteBtn:hover {
   background-color: #be1e1e;
+}
+
+#notice {
+  white-space: pre-wrap;
 }
 </style>

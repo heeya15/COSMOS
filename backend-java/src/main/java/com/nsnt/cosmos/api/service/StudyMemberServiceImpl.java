@@ -62,4 +62,10 @@ public class StudyMemberServiceImpl implements StudyMemberService {
 		RecentStudyNorSearchDtoRes result = studyMemberRepository.findRecentStudyMember(user_id);
 		return result;
 	}
+	@Transactional
+	@Override
+	public StudyMember updateStudyMemberAttendance(StudyMember studymember, SaveStudyMemberDto saveStudyMemberDto) {
+		 studymember.updateAttendance(saveStudyMemberDto);
+	     return studymember;
+	}
 }

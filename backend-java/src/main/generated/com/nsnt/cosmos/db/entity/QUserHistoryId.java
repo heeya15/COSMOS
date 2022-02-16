@@ -22,11 +22,11 @@ public class QUserHistoryId extends BeanPath<UserHistoryId> {
 
     public static final QUserHistoryId userHistoryId = new QUserHistoryId("userHistoryId");
 
-    public final DateTimePath<java.time.LocalDateTime> date = createDateTime("date", java.time.LocalDateTime.class);
+    public final DatePath<java.time.LocalDate> history_date = createDate("history_date", java.time.LocalDate.class);
 
     public final QUser user;
 
-    public final NumberPath<Integer> userhistoryNo = createNumber("userhistoryNo", Integer.class);
+    public final NumberPath<Long> userhistoryNo = createNumber("userhistoryNo", Long.class);
 
     public QUserHistoryId(String variable) {
         this(UserHistoryId.class, forVariable(variable), INITS);

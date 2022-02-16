@@ -12,7 +12,7 @@
       <b-row>
         <b-col>
           <table  
-          class="table table-boarded table-hover"
+          class="table table-boarded"
           width="100%"
           >
             <thead>
@@ -24,6 +24,7 @@
                 <th>분류</th>
                 <th>작성자 (ID)</th>
                 <th>등록일</th>
+                <th>조회수</th>
               </tr>
             </thead>
             <tbody id="test-table" v-for="(boardItem, idx) in paginatedItems" :key="idx"  @click="goBoardDetail(boardItem.boardNo)" style="text-align: center;">
@@ -32,22 +33,25 @@
               <!-- <td >{{ 10*(currentPage-1)+(idx+1) }}</td> -->
 
               <!-- 역순 -->
-              <td >{{ boardItems.length-idx-10*(currentPage-1) }}</td>
+              <td class="boardnum_tag">{{ boardItems.length-idx-10*(currentPage-1) }}</td>
 
               <!-- 게시글 고유 번호 -->
               <!-- <td >{{ boardItem.boardNo }}</td> -->
 
 
-            <td style="width: 100px" v-if="boardItem.contentStatus === false"><span class="boardnum_tag" style="color: #d5648a;">[진행중]</span></td>
+            <td v-if="boardItem.contentStatus === false"><span class="boardnum_tag" style="color: #d5648a;">[진행중]</span></td>
             <td v-else><p class="boardnum_tag">[완료]</p></td>
 
-
-            <td style="width: 150px;" v-if="boardItem.header === false"><span  class="boardnum_tag" style="color: #d5648a;">[스터디원 구함]</span></td>
-            <td style="width: 150px;" v-else><span class="boardnum_tag" style="color: #afa2dd;">[스터디 구함]</span></td>
-            <td style="width: 300px;"><p class="content_title_tag">{{ boardItem.contentTitle }}</p></td>
-            <td style="width: 150px;"><p class="boardnum_tag">{{ boardItem.studytypeName }}</p></td>
+            <td v-if="boardItem.header === false"><span  class="boardnum_tag" style="color: #d5648a;">[스터디원 구함]</span></td>
+            <td v-else><span class="boardnum_tag" style="color: #afa2dd;">[스터디 구함]</span></td>
+            <td class="d-flex justify-content-between">
+              <p class="content_title_tag">{{ boardItem.contentTitle }}</p>
+              <span class="comment_count">[{{boardItem.replyCnt}}]</span>
+            </td>
+            <td><p class="boardnum_tag">{{ boardItem.studytypeName }}</p></td>
             <td><p class="boardnum_tag">{{ boardItem.user.userName }} ({{ boardItem.user.userId }})</p></td>
             <td><p class="boardnum_tag">{{ makeDate(boardItem.createdAt) }}</p></td>
+            <td><p>{{boardItem.hit}}</p></td>
             </tr>
             </tbody>
           </table>
@@ -60,18 +64,15 @@
 
     <b-pagination
       @page-click="pageClick"
-      
       v-model="currentPage"
       :total-rows="rowws"
       :per-page="perPage"
       aria-controls="test-table"
       align="center"
+      style="margin-bottom: 40px;"
     >
     </b-pagination>
-
-    
   </div>
-
 </template>
 
 <script>
@@ -328,15 +329,15 @@ export default {
 </script>
 
 <style scoped>
-/* ul .page-item{
-  width: 1100px;
-} */
+
+tbody:hover {
+  background-color: #c8c1e4;
+}
 
 .searchbar {
   display: flex;
   justify-content: center;
 }
-
 
 .create_boardform {
   display: flex;
@@ -346,7 +347,6 @@ export default {
 /* 게시판 폰트 */
 #test-table {
   font-family: BMJua;
-  /* font-weight: normal; */
   font-size: 17px;
 }
 
@@ -357,8 +357,13 @@ export default {
   white-space: nowrap;
   position: relative;
   left: 30px;
-  /* align-items: center; */
-  /* margin: 0; */
+}
+
+.comment_count{
+  /* font-size: 16px; */
+  color: #aaa;
+  margin-left: 13px;
+  line-height: 25px;
 }
 
 .content_title_tag:hover {

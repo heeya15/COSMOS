@@ -8,9 +8,16 @@ import jwtDecode from 'jwt-decode';
 
 Vue.use(Vuex)
 
+import publicStudyStore from './modules/publicStudyStore';
+import meetingStore from './modules/meetingStore';
 export default new Vuex.Store({
+  modules: {
+    publicStudyStore,
+    meetingStore
+  },
   plugins: [
-    createPersistedState()  // 새로고침 초기화 방지
+    // 브라우저 종료시 제거하기 위해 localStorage가 아닌 sessionStorage로 변경. (default: localStorage)
+    createPersistedState({ storage: window.sessionStorage })  // 새로고침 초기화 방지 
   ],
   state: {
     saveCurrentPage: null,
@@ -27,10 +34,11 @@ export default new Vuex.Store({
     userId: "",
 
     // 비공개 스터디룸 state
-    roomName: "",
-    roomUrl: "",
-    participant: "",
-    roomStudyNo: 0,
+    // roomName: "",
+    // roomUrl: "",
+    // participant: "",
+    // roomStudyNo: 0,
+
   },
   mutations: {
     SIGNUP(state, credentials){
@@ -83,6 +91,7 @@ export default new Vuex.Store({
         // console.log(res)
         if(res.status === 200) {
           commit('SIGNUP', res.data)
+          alert("🌸🌸 Welcome to COSMOS!! 🌸🌸")
           router.push({name:'LogIn'})
         }
       })
@@ -183,6 +192,5 @@ export default new Vuex.Store({
   //     return state.studyMembers
   //   }
   // },
-  modules: {
-  }
+  
 })

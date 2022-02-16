@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.nsnt.cosmos.api.request.PublicMemberRegisterDto;
 import com.nsnt.cosmos.api.request.PublicStudyRoomRegisterDto;
+import com.nsnt.cosmos.api.request.SavePublicStudyMemberDto;
 import com.nsnt.cosmos.db.entity.PublicMember;
 import com.nsnt.cosmos.db.entity.PublicStudyRoom;
 
@@ -27,4 +28,17 @@ public interface PublicRoomService {
     
     
     public List<PublicStudyRoom> findAllPublicStudyRoom();
+    
+    /** 해당 공개 스터디방으로부터 강퇴 당한 유저를 기록하기위한 createBannedUser 입니다. */
+    public void createBannedUser(String publicstudyroom_id, String user_id);
+    
+    /** 현재 유저에대해 해당 공개 스터디방으로부터 강퇴 당한지 여부를 체크하기위한 isBannedCheck 입니다. */
+    public boolean isBannedCheck(String publicstudyroom_id, String user_id);
+    
+    /** 스터디 멤버중 해당 publicmember_no 로 한 회원의 정보만 찾는 findOnePublicStudyMember 입니다.*/
+    public PublicMember findOnePublicStudyMember(int studymember_no);
+    
+	/** 공개 스터디 멤버중 스터디 장의 임시 역할을 하게 하거나 회수하는 권한을 수정하는 updatePublicStudyMemberAuthority 입니다.*/
+	public PublicMember updatePublicStudyMemberAuthority(PublicMember publicmember,
+										SavePublicStudyMemberDto savePublicStudyMemberDto);
 }

@@ -1,14 +1,17 @@
 package com.nsnt.cosmos.db.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
@@ -16,6 +19,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nsnt.cosmos.api.request.SaveBoardDto;
 
 import lombok.AllArgsConstructor;
@@ -73,6 +77,14 @@ public class Board{
 	@Column(name = "study_no")
 	Long studyNo; // 스터디 넘버 번호
 	
+	@Column(name = "hit", nullable = false)
+	@ColumnDefault("0")
+	int hit; // 조회수
+	
+	@Column(name ="reply_cnt", nullable = false)
+	@ColumnDefault("0")
+	int replyCnt; // 댓글 수
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")	
 	@OnDelete(action = OnDeleteAction.CASCADE)

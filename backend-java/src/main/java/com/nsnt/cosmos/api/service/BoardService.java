@@ -28,4 +28,5 @@ public interface BoardService {
     
     /** 해당 스터디 장이  만든 스터디 이름 조회하는 findSearchStudyName 입니다. **/
     public List<StudyNameSearchDtoRes> findSearchStudyName(String user_id);
+
 }

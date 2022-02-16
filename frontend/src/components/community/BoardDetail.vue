@@ -1,12 +1,12 @@
 <template>
   <div>
     <center>
-    <div class="total_body">
+    <div class="total_body" style="heigt: 100%"> 
       <h1>스터디 모집 게시판</h1>
       <hr class="titleHr_tag">
       <h3 v-if="editButton === true">글 수정</h3>
       <h3 v-else>상세보기</h3>
-      <!-- <img src="게시판보드.png" alt=""> -->
+
       <div class="memo">
         <p>함께해요!</p>
       </div>
@@ -25,46 +25,55 @@
       <div class="round_box2"></div>
       <div class="round_box3"></div>
       <div class="round_box4"></div>
-      <!-- <div class="line4"></div> -->
-      <!-- <div class="line5"></div> -->
-      
-        <div class="body_total p-5" style="width: 500px;">
-          <b-row class="content_rowTag">
-            <b-col cols="5" class="mt-3">
+
+      <div class="container" style="height: 100%">
+        <div class="body_total p-5" style="width: 630px; height: auto;">
+          <!-- <hr class="hrTag"> -->
+          <b-row class="content_rowTag mt-3">
+            <b-col cols="3" class="mt-3">
               <p>제목</p>
               <hr class="hrTag">
             </b-col>
-            <b-col cols="7" class="mt-3">
+            <b-col cols="9" class="mt-3">
               <b-form-input v-if="editButton === true" type="text" v-model="boardInfo.contentTitle" style="height: 35px; text-align: center;" maxlength="30"></b-form-input>
-              <p v-else>{{ boardInfo.contentTitle }}</p>
+              <p v-else class="inputs">{{ boardInfo.contentTitle }}</p>
               <hr class="hrTag">
             </b-col>
 
-              <b-col v-show="this.boardInfo.header === false" cols="5" class="mt-2">
+              <b-col v-show="this.boardInfo.header === false" cols="3" class="mt-2">
                 <p v-show="this.boardInfo.header === false" >스터디 이름</p>
                 <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
-              <b-col v-show="this.boardInfo.header === false" cols="7" class="mt-2">
-                <p>{{ boardInfo.studyName }}</p>
+              <b-col v-show="this.boardInfo.header === false" cols="9" class="mt-2">
+                <p class="inputs">{{ boardInfo.studyName }}</p>
                 <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
 
-              <b-col v-show="this.boardInfo.header === false" cols="5" class="mt-2">
-                <p v-show="this.boardInfo.header === false">스터디 인원</p>
+              <b-col v-show="this.boardInfo.header === false" cols="3" class="mt-2">
+                <p v-show="this.boardInfo.header === false">모집 인원</p>
                 <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
-              <b-col v-show="this.boardInfo.header === false" cols="7" class="mt-2" >
-                <b-form-input v-show="this.boardInfo.header === false" v-if="editButton === true" type="text" v-model="boardInfo.recruitNumber" style="height: 30px; text-align: center;"></b-form-input>
-                <p v-else v-show="this.boardInfo.header === false">{{ boardInfo.recruitNumber }}</p>
+              <b-col v-show="this.boardInfo.header === false" cols="9" class="mt-2" >
+                <b-form-input 
+                  class="recruit_input"
+                  v-show="this.boardInfo.header === false" 
+                  v-if="editButton === true" type="number" 
+                  v-model="boardInfo.recruitNumber" 
+                  style="height: 30px; text-align: center;"
+                  min="1" max="5"
+                  @keypress="recruitLimit"
+                  >
+                </b-form-input>
+                <p v-else v-show="this.boardInfo.header === false" class="inputs">{{ boardInfo.recruitNumber }}</p>
                 <hr class="hrTag" v-show="this.boardInfo.header === false">
               </b-col>
 
-            <b-col cols="5" class="mt-2">
+            <b-col cols="3" class="mt-2">
               <p>스터디 분류</p>
               <hr class="hrTag">
             </b-col>
-            <b-col cols="7" class="mt-2">
-              <p>{{ boardInfo.studytypeName }}</p>
+            <b-col cols="9" class="mt-2">
+              <p class="inputs">{{ boardInfo.studytypeName }}</p>
               <!-- 수정을 눌렀을 때 값 타입 가져오고 원래는 생성될때의 값 불러와야 함 -->
               <b-form-select v-if="editButton === true" v-show="this.boardInfo.header === true" v-model="studyTypeSelected" :options="options" id="studytype_name"></b-form-select>
               <hr class="hrTag" >
@@ -82,32 +91,31 @@
               </div>
             </b-col>
 
-            <b-col cols="5" class="mt-2">
+            <b-col cols="3" class="mt-3">
               <p>내용</p>
               <hr class="hrTag">
             </b-col>
-            <b-col cols="7" class="mt-2">
+            <b-col cols="9" class="mt-2">
               <b-textarea v-if="editButton === true" type="text" v-model="boardInfo.content" style="height: 80px;"></b-textarea>
-              <p v-else>{{ boardInfo.content }}</p>
+              <p v-else style="white-space: pre-wrap; text-align: justify;" class="inputs">{{ boardInfo.content }}</p>
               <hr class="hrTag">
             </b-col>
-            <!-- <p>여기 번호 : {{ studyInfo.studyNo }}</p> -->
           
         
             <!-- 작성자인 경우 수정을 보여주고 아니면 스터디 신청을 보여준다 -->
 
               <b-col cols="12" class="btnPart mt-2" v-show="this.boardInfo.header === false">
                 <div v-show="editButton === false">
-                  <b-button v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit">수정</b-button>
-                  <b-button v-else  @click="applyStudy" variant="warning" size="sm">스터디 신청</b-button>
-                  <b-button class="backListBtn" size="sm" @click="goBoardMain">목록</b-button>
-                  <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
+                  <b-button class="updateBtn" v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit" >수정</b-button>
+                  <b-button class="updateBtn" v-else  @click="applyStudy" variant="warning" size="sm">스터디 신청</b-button>
+                  <b-button class="backListBtn mx-1" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button class="deleteBtn" v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
                 <div v-show="editButton === true" cols="3" class="btnPart mt-2">
-                  <b-button v-if="editButton === true" variant="warning" size="sm" @click="updateForm">수정</b-button>
-                  <b-button class="backListBtn" size="sm" @click="goBoardMain">목록</b-button>
-                  <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
-                  <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
+                  <b-button class="updateBtn" v-if="editButton === true" variant="warning" size="sm" @click="updateForm">수정</b-button>
+                  <b-button class="backListBtn mx-1" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" size="sm" @click="updatedCancel" class="cancelBtn mr-1">취소</b-button>
+                  <b-button class="deleteBtn" v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
               </b-col>
 
@@ -115,19 +123,21 @@
           <!-- 스터디 구할 때 수정 부분 -->
               <b-col cols="12" class="btnPart mt-2" v-show="this.boardInfo.header !== false">
                 <div v-show="editButton === false">
-                  <b-button v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit">수정</b-button>
-                  <b-button class="backListBtn" size="sm" @click="goBoardMain">목록</b-button>
-                  <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
+                  <b-button class="updateBtn" v-if="userInfo.user_id === loginUserId" variant="warning" size="sm" @click="boardFormEdit">수정</b-button>
+                  <b-button class="backListBtn mx-1" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button class="deleteBtn" v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
                 <div v-show="editButton === true" class="btnPart mt-2">
-                  <b-button v-if="editButton === true" variant="warning" size="sm" @click="studyWantBoardFormEdit">수정</b-button>
-                  <b-button class="backListBtn" size="sm" @click="goBoardMain">목록</b-button>
-                  <b-button v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
-                  <!-- <b-button v-if="userInfo.user_id === loginUserId" style="background-color: #DAC7F9" @click="updateForm">취소</b-button> -->
+                  <b-button class="updateBtn" v-if="editButton === true" variant="warning" size="sm" @click="studyWantBoardFormEdit">수정</b-button>
+                  <b-button class="backListBtn mx-1" size="sm" @click="goBoardMain">목록</b-button>
+                  <b-button v-if="userInfo.user_id === loginUserId" size="sm" @click="updatedCancel" class="cancelBtn mr-1">취소</b-button>
+                  <b-button class="deleteBtn" v-if="userInfo.user_id === loginUserId" variant="danger" size="sm" @click="deleteBoardForm">삭제</b-button>
                 </div>
               </b-col>
             </b-row>
+          <!-- <hr> -->
           </div>
+      </div>
             <div style="height: 30px;">
               <p></p>
             </div>
@@ -138,9 +148,9 @@
 </template>
 
 <script>
-// import http from 'http'
 import http from "@/util/http-common.js";
 import Comment from '@/components/community/Comment.vue'
+import {mapState} from 'vuex'
 
 export default {
   name: 'BoardDetail',
@@ -149,6 +159,7 @@ export default {
   },
   data() {
     return {
+      timeOut: null,
       savePosition: this.$store.state.saveCurrentPage,
       studyTypeSelected: null,
       editButton: false,
@@ -173,17 +184,18 @@ export default {
         comment_no: null,
         content: null,
         created_at: null,
-        // user_id: null,
+
       },
       options: [],
-      // comments: null,
-      // 스터디 방 번호 값 받아와야 함
+
       studyInfo: {
         studyName: null,
         studyNo: null,
         studyType: null,
       },
       applyMembers: [],
+      studyTotalMember: null,
+      nowStudyMember: null,
     }
   },
   methods: {
@@ -195,42 +207,82 @@ export default {
       }
       return header
     },
-    
+
+    // 인원 수 제한
+    recruitLimit(event) {
+      console.log(event, '이벤트 확인')
+      if(event.key >= 0 && event.key <= 5) {
+        return true;
+      } alert('5명 까지 입력이 가능합니다');
+        this.getBoard()
+        return false;
+      },
+
+    // 게시판으로
     goBoardMain() {
       this.$router.push({name: 'MainBoard', query: {pageId: this.savePosition}})
       console.log(this.savePosition)
       // this.$router.go(this.savePosition);
     },
+
+    // 게시판 수정 버튼
     boardFormEdit() {
       this.editButton = true
     },
 
+    
+      
     // 스터디 신청
     applyStudy() {
-      console.log(this.applyMembers.length, "신청 확인")
-      for(var i=0; i < this.applyMembers.length; i++) {
-          if (this.applyMembers[i].user_id === this.loginUserId) {
-            alert('이미 신청한 스터디 입니다.')
-            return
+      console.log(this.studyTotalMember, "신청 확인")
+      console.log(this.nowStudyMember, '현재 멤버 수')
+      if (this.studyTotalMember <= this.nowStudyMember) {
+        alert('이미 인원이 가득찬 스터디입니다.')
+        return
+      }
+      if (this.applyMembers !== null) {
+        for(var i=0; i < this.applyMembers.length; i++) {
+            if (this.applyMembers[i].user_id === this.loginUserId) {
+              alert('이미 신청한 스터디 입니다.')
+              return
+            }
           }
-        }
+      }
       http({
         method: 'post',
         url: `/study/applyMember/register/${this.studyInfo.studyNo}`,
         headers: this.getToken(),
       })
-      .then((res) => {
-        console.log(this.applyMembers)
-        console.log(res)
+      .then(() => {
+        this.getApplyMember()
         // 스터디장이 만든 스터디 이름 조회
-        console.log(this.studyInfo.studyNo)
-        // this.boardInfo.studyName = res.data['studyName']
         alert('신청이 완료되었습니다.')
+        
         
       })
       .catch((err) => {
         console.log(err)
         console.log(this.studyInfo.studyNo)
+      })
+    },
+    // 스터디 멤버 확인
+    getStudyMembers() {
+      this.$store.dispatch('getStudyMembers', this.studyInfo.studyNo)
+    },
+
+    getStudyInfo() {
+      http({
+        method: 'GET',
+        url: `/study/search/${this.studyInfo.studyNo}`
+      })
+      .then(res => {
+        console.log(this.studyTotalMember, '멤버 확인')
+        this.studyTotalMember = res.data.totalMember
+        this.nowStudyMember = res.data.numberOfMember
+        console.log(this.nowStudyMember, '>>>>작동확인<<<<')        
+      })
+      .catch(err => {
+        console.log(err)
       })
     },
 
@@ -241,7 +293,7 @@ export default {
         url: `/study/applyMember/searchAll/${this.studyInfo.studyNo}`
       })
       .then(res =>{
-        console.log(res.data)
+        console.log(res.data, '신청 멤버 조회')
         if (res.data.length === 0) {
           this.applyMembers = null
         }
@@ -254,6 +306,12 @@ export default {
       })
     },
 
+    // 수정 취소
+    updatedCancel() {
+      this.getBoard()
+      this.editButton = false
+    },
+
     // 게시글 가져오기
     getBoard() {
       http({
@@ -261,7 +319,6 @@ export default {
         url: `/board/search/${this.board_no}`,
       })
       .then(res => {
-        console.log(res)
         this.boardInfo.boardNo = res.data['boardNo']
         this.boardInfo.contentStatus = res.data['contentStatus']
         this.boardInfo.contentTitle = res.data['contentTitle']
@@ -275,7 +332,9 @@ export default {
         this.userInfo.user_id = res.data.user['userId']
         this.studyInfo.studyNo = res.data['studyNo']
         if (this.boardInfo.header === false) {
+          this.getStudyInfo()
           this.getApplyMember()
+          this.getStudyMembers()
         }
       })
       .catch(err => {
@@ -290,8 +349,7 @@ export default {
         url: `/board/remove/${this.board_no}`,
         headers: this.getToken()
       })
-      .then((res) => {
-        console.log(res)
+      .then(() => {
         this.$router.push({name: 'MainBoard'})
       })
       .catch(err => {
@@ -307,8 +365,6 @@ export default {
         headers: this.getToken()
       })
       .then(res =>{
-        console.log('유저정보 확인')
-        console.log(res)
         this.loginUserId=res.data['user_id']
       })
       .catch(err =>{
@@ -337,8 +393,6 @@ export default {
       })
       .then(() => {
         this.getBoard()
-        console.log('상태 확인')
-        console.log(this.boardInfo.contentStatus)
         this.editButton = false
       })
       .catch(err => {
@@ -368,8 +422,6 @@ export default {
       })
       .then(() => {
         this.getBoard()
-        console.log('상태 확인')
-        console.log(this.boardInfo.contentStatus)
         this.editButton = false
       })
       .catch(err => {
@@ -385,7 +437,6 @@ export default {
         url: '/study/studyType'
       })
       .then(res => {
-        // console.log(res)
         res.data.forEach(element => {
           this.options.push({value: element.studytypeName, text:element.studytypeName})
         })
@@ -395,10 +446,18 @@ export default {
       })
     },
   },
+  computed: {
+      ...mapState([
+        'studyMembers',
+      ])
+    },
+
   created() {
     this.getBoard()
     this.getUserInfo()
     this.getStudyType()
+    // this.getStudyMembers()
+    // this.getStudyInfo()
   },
 }
 </script>
@@ -412,74 +471,85 @@ p {
 .titleHr_tag {
   width: 80%;
   background-color: #afa2dd ;
-  border: solid 2px #afa2dd;
+  border: solid 1px #afa2dd;
 }
 .hrTag {
   background-color: #afa2dd;
-  border: solid 1px #afa2dd;
+  border: solid 0.5px #afa2dd;
   width: 100%;
 }
 
 .content_rowTag {
-  height: 500px; 
-  /* background-color: rgb(252, 252, 252); */
+  height: auto; 
+}
+
+.detail-content {
+  display: flex; 
+  justify-content: left;
+  margin-top: 3%;
+  margin-left: 3%;
 }
 
 .memo {
-  width: 150px; 
-  height: 150px; 
-  background-color: rgb(252, 252, 135);
+  width: 10%; 
+  height: 20%; 
+  background-color: rgb(252, 252, 57);
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  left: 150px;
-  top: 250px;
-  /* bottom: 100px; */
+  left: 220px;
+  top: 330px;
+  border-radius: 4px;
+  box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
 
 .memo1 {
-  width: 200px; 
-  height: 200px; 
+  width: 13%; 
+  height: 25%; 
   background-color: #f19cb0;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  right: 150px;
-  top: 550px;
-  /* bottom: 100px; */
+  right: 180px;
+  top: 470px;
+  border-radius: 4px;
+  box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
 
-.memo2 {
-  width: 300px; 
-  height: 300px; 
+/* .memo2 {
+  width: 17%; 
+  height: 33%; 
   background-color: #75cff3;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  left: 120px;
-  top: 470px;
-  /* bottom: 100px; */
-}
+  left: 170px;
+  top: 570px;
+  border-radius: 4px;
+  box-shadow: 3px 2px 2px 1px #a8a8a8;
+} */
 
 .memo3 {
-  width: 250px; 
-  height: 250px; 
+  width: 15%; 
+  height: 25%; 
   background-color: #caff08;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  right: 150px;
+  right: 200px;
   top: 220px;
-  /* bottom: 100px; */
+  border-radius: 4px;
+  box-shadow: 3px 2px 2px 1px #a8a8a8;
 }
+
 
 .round_box {
   width: 15px;
@@ -488,9 +558,10 @@ p {
   overflow: hidden;
   background-color: rgb(255, 141, 10);
   position: absolute;
-  left: 220px;
-  top: 260px;
+  left: 290px;
+  top: 340px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
+
 }
 
 .round_box1 {
@@ -501,7 +572,7 @@ p {
   background-color: rgb(248, 64, 64);
   position: absolute;
   left: 50%;
-  top: 260px;
+  top: 300px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
   z-index: 1;
 }
@@ -513,22 +584,22 @@ p {
   overflow: hidden;
   background-color: rgb(3, 184, 3);
   position: absolute;
-  right: 240px;
-  top: 560px;
+  right: 275px;
+  top: 490px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
-.round_box3 {
+/* .round_box3 {
   width: 18px;
   height: 18px; 
   border-radius: 70%;
   overflow: hidden;
   background-color: yellow;
   position: absolute;
-  left: 260px;
-  top: 480px;
+  left: 300px;
+  bottom: 320px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
-}
+} */
 
 .round_box4 {
   width: 18px;
@@ -537,31 +608,17 @@ p {
   overflow: hidden;
   background-color: rgb(198, 82, 252);
   position: absolute;
-  right: 270px;
+  right: 310px;
   top: 240px;
   box-shadow: 2px 2px 1px 1px rgb(215, 218, 218);
 }
 
-.line4 {
-  position: absolute;
-  width: 30px;
-  height: 120px;
-  background-color: rgb(250, 171, 92);
-  transform: rotate(-45deg);
-  right: 38%;
-  top: 220px;
-  z-index: 1;
-}
-
-.line5 {
-  position: absolute;
-  width: 30px;
-  height: 120px;
-  background-color: rgb(250, 171, 92);
-  transform: rotate(45deg);
-  left: 38%;
-  top: 220px;
-  z-index: 1;
+.container {
+  width: 70%;
+  /* background-color: #fafafa; */
+  /* border: 10px solid #afa2dd; */
+  /* box-shadow: 3px 3px 1px 1px #afa2ddd0; */
+  /* margin-top: 30px; */
 }
 
 .backListBtn {
@@ -569,8 +626,8 @@ p {
   height: 31px;
   background-color: #f45384 !important;
   border: none;
-  margin-left: 3px;
-  margin-right: 3px;
+  /* color: black; */
+  color: white;
 }
 
 .backListBtn:hover {
@@ -578,23 +635,18 @@ p {
 }
 
 .body_total {
-  /* background: repeating-linear-gradient(-45deg, #B96BC6, #B96BC6 10px, #e4c3f1 10px, #e4c3f1 40px); */
-  /* background-image: url('https://thumb.ac-illust.com/72/72acde4a88378f62cf580ed7024d7a0d_t.jpeg');
-  background-repeat: no-repeat;
-  background-size: cover; */
-  /* width: 800px; */
-  /* font-size: 13px; */
   position: relative;
   background: rgb(249, 250, 250);
+  border-radius: 4px;
+  box-shadow: 2px 2px 2px 2px #a8a8a8;
 }
 
 .total_body {
-  /* background-image: url('https://thumb.ac-illust.com/72/72acde4a88378f62cf580ed7024d7a0d_t.jpeg');
-  background-repeat: no-repeat;
-  background-size: cover; */
   border: 30px solid;
   border-color: #afa2dd;
   background-color: #c8c1e4;
+  width: 90%;
+  height: 100%;
 }
 
 .btnPart{
@@ -602,5 +654,38 @@ p {
   justify-content: right;
   align-items: flex-end;
   border: none;
+}
+
+.cancelBtn {
+  width: 47px;
+  height: 31px;
+  background-color: rgb(71, 166, 255);
+  border: none;
+  /* color: black; */
+  color: white;
+}
+
+.cancelBtn:hover {
+  width: 47px;
+  height: 31px;
+  background-color: rgb(112, 184, 252);
+}
+
+.deleteBtn {
+  /* color: black; */
+  color: white;
+}
+
+.updateBtn {
+  color: white;
+}
+
+.updateBtn:hover {
+  color: white;
+}
+
+.inputs {
+  font-size: 12pt;
+  font-family: "BMJua";
 }
 </style>

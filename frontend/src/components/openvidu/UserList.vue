@@ -1,7 +1,6 @@
 <template>
 <div v-if="streamManager">
 	<div class="list">
-
 		<div class="list_clientName" v-if="this.streamManager.stream.connection.role=='PUBLISHER'">
 			<p class="publisher_id">{{ clientData }}</p>
 			<p>(나)</p>
@@ -12,31 +11,11 @@
 	</div>
 </div>
 </template>
-
-<style scope>
-
-.list_clientName{
-	/* display: inline-block; */
-	/* width: 1001px; */
-	font-size: 16px;
-}
-
-.list_clientName p{
-	display: inline-block;
-}
-
-.publisher_id{
-	margin-right: 5px;
-}
-
-</style>
-
 <script>
+import "@/assets/style/StudyRoom/userList.css"
 
 export default {
 	name: 'UserList',
-
-	
 
 	props: {
 		streamManager: Object,

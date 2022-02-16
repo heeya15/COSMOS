@@ -22,9 +22,7 @@ public class QPublicMember extends EntityPathBase<PublicMember> {
 
     public static final QPublicMember publicMember = new QPublicMember("publicMember");
 
-    public final BooleanPath attenacne = createBoolean("attenacne");
-
-    public final NumberPath<Integer> memberScore = createNumber("memberScore", Integer.class);
+    public final BooleanPath leader = createBoolean("leader");
 
     public final NumberPath<Integer> publicmemberNo = createNumber("publicmemberNo", Integer.class);
 

@@ -11,35 +11,39 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.nsnt.cosmos.api.request.SaveStudyMemberDto;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
-@ToString
 public class PublicMember {
 	@Id
-	@Column(name = "publicmemeber_no")
+	@Column(name = "publicmember_no", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)		// 해당 속성에 auto_increment 제약조건 추가
 	private int publicmemberNo;
 	
-	@Column(name = "attendance")
+	@Column(name = "leader")
 	@ColumnDefault("0")
-	private boolean attenacne;
-	
-	@Column(name = "member_score")
-	private int memberScore;
+	private boolean leader;
 
 	@ManyToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JoinColumn(name = "publicstudyroom_id")
 	private PublicStudyRoom publicStudyRoom;
 
 	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name = "user_id", referencedColumnName = "user_id")
-	})
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JoinColumn(name = "user_id")
 	private User user;
+	
+	
+	public void updateLeader(boolean leader){  
+	    this.leader = leader;
+	}
 }

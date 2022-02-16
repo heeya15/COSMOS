@@ -10,7 +10,8 @@
         </b-col>
         <b-col cols="3" class="mt-3">
           <b-button class="btnTag" @click="createComment">작성</b-button>
-          <b-button v-b-toggle.collapse-2 class="getCommetTag m-1" @click="visible = !visible">댓글 접기</b-button>
+          <b-button v-if="visible === true" v-b-toggle.collapse-2 class="getCommetTag m-1" @click="visible = !visible">댓글 접기</b-button>
+          <b-button v-else v-b-toggle.collapse-2 class="getCommetTag m-1" @click="visible = !visible">댓글 보기</b-button>
         </b-col>
       </b-row>
     </center>

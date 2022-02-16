@@ -45,7 +45,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor /** Cannot construct instance of~ error를 해결해주었다.  파라미터가 없는 생성자 만들어줌* */ 
 public class Study {
-
 	@Id
 	@Column(name = "study_no")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -54,7 +53,7 @@ public class Study {
 	@Column(name="study_name",length = 100)
 	String studyName;
 	
-	@Column(name="url", length = 100)
+	@Column(name="url")
 	String url;
 	
 	

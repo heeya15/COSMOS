@@ -1,6 +1,7 @@
 package com.nsnt.cosmos.api.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nsnt.cosmos.api.request.PublicMemberRegisterDto;
 import com.nsnt.cosmos.api.request.PublicStudyRoomRegisterDto;
+import com.nsnt.cosmos.api.request.SavePublicStudyMemberDto;
 import com.nsnt.cosmos.api.service.PublicRoomService;
 import com.nsnt.cosmos.common.auth.SsafyUserDetails;
 import com.nsnt.cosmos.common.model.response.BaseResponseBody;
@@ -69,7 +72,7 @@ public class PublicRoomController {
 	}
 	
 	@PostMapping("/register/publicMember")
-	@ApiOperation(value="공개 스터디 참가자 등록 (token)(param)", notes="<strong>공개 스터디 참가자  등록</strong>시켜줍니다.")
+	@ApiOperation(value="공개 스터디 참가자 등록 (token)", notes="<strong>공개 스터디 참가자  등록</strong>시켜줍니다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "원하는 정보 없음"), 
@@ -114,15 +117,13 @@ public class PublicRoomController {
 	}
 		
 	/** 해당 공개 스터디 참가자 명단 삭제 **/
-	@ApiOperation(value = "해당 공개 스터디 참가자가 방에서 나갈경우 명단 삭제(param)", notes = "해당 공개 스터디 참가자가 방에서 나갈경우 명단 삭제")
+	@ApiOperation(value = "해당 공개 스터디 참가자명단에서 해당 유저 삭제(param)", notes = "해당 공개 스터디 참가자명단에서 해당 유저 삭제")
 	@ApiResponses({ @ApiResponse(code = 200, message = "해당 비공개 스터디 참가자 명단 삭제 성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "해당 회원 없음")})
 	@DeleteMapping("/remove/publicMember")
-	public ResponseEntity<String> removePublicMember(@RequestParam String publicstudyroom_id,  @ApiIgnore Authentication authentication) throws Exception {	
-		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-		String user_id = userDetails.getUsername();
+	public ResponseEntity<String> removePublicMember(@RequestParam String publicstudyroom_id, @RequestParam String user_id) throws Exception {	
 		try {	
 			publicRoomService.deletePublicMember(publicstudyroom_id, user_id);
 		}catch(Exception e ) {
@@ -151,5 +152,67 @@ public class PublicRoomController {
 		}
 		logger.debug("해당 공개 스터디 참가자 명단에서 해당 user 삭제 성공");
 		return ResponseEntity.status(200).body("방에  남은 인원이 없어 "+ publicstudyroom_id +" 공개 스터디 방 삭제 함"+SUCCESS);
+	}
+	
+	/** 공개 스터디방 강퇴 유저 히스토리 **/
+	@PostMapping("/register/bannedUser")
+	@ApiOperation(value="강퇴 유저 히스토리 등록 (token)(param)", notes="<strong>해당 공개 스터디방으로부터 강퇴 당한 유저를 히스토리</strong>에 추가시켜줍니다.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "원하는 정보 없음"), 
+					@ApiResponse(code = 500, message = "서버 오류")})
+	public ResponseEntity<? extends BaseResponseBody> bannedUserRegister(@RequestParam String publicstudyroom_id, @RequestParam String user_id) {
+		try {
+			publicRoomService.createBannedUser(publicstudyroom_id, user_id);
+		}catch(Exception E) {
+			E.printStackTrace();
+			System.out.println("강퇴 유저 추가 실패");
+			return  ResponseEntity.status(500).body(BaseResponseBody.of(500, FAIL));
+		}
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, SUCCESS));
+	}
+	
+	/** 현재 유저에 대해서 해당 공개 스터디 강퇴 여부 **/
+	@GetMapping("/bannedCheck")
+	@ApiOperation(value = "회원 강퇴 여부 체크(token)(param)", notes = "회원 오픈 채팅방 입장시 이전 강퇴 여부 체크. 해당 오픈 채팅에 대해 강퇴된 유저라면 true, 아니라면 false를 리턴한다.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"),
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 500, message = "서버 오류") 
+					})
+	public ResponseEntity<Boolean> bannedCheck(@RequestParam("publicstudyroom_id") String publicstudyroom_id, @ApiIgnore Authentication authentication) throws Exception {	
+		if(authentication==null) return  ResponseEntity.status(401).body(false);
+		
+		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+		String user_id = userDetails.getUsername();
+		
+		boolean isBanned = publicRoomService.isBannedCheck(publicstudyroom_id, user_id);
+		
+		if (isBanned == true) {
+			System.out.println("이전에 강퇴된 유저입니다. 해당 채팅방에 들어갈 수 없습니다.");
+		} else {
+			System.out.println("이전에 강퇴된 기록이 없습니다. 해당 채팅방에 들어갈 수 있습니다.");
+		}
+		return ResponseEntity.status(200).body(isBanned);
+	}
+	
+	
+	@ApiOperation(value = "해당 공개 스터디 멤버에게 강퇴 임시 권한 수정 기능 (publicmember_no, leader)2개  인자 (param)", notes = "해당 공개 스터디 멤버에게 강퇴 임시 권한  수정 기능")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
+					@ApiResponse(code = 401, message = "인증 실패"),
+					@ApiResponse(code = 404, message = "사용자 없음"),
+					@ApiResponse(code = 500, message = "서버 오류") })
+	@PutMapping("/updateAuthority")
+	public ResponseEntity<String> updateAuthority(@RequestBody SavePublicStudyMemberDto savePublicStudyMemberDto) throws Exception {
+		PublicMember publicstudymember;
+	
+		try {
+			publicstudymember = publicRoomService.findOnePublicStudyMember(savePublicStudyMemberDto.getPublicmember_no());
+		} catch (NoSuchElementException E) {
+			return ResponseEntity.status(500).body("공개 스터디 멤버 권한 수정 실패");
+		}
+		PublicMember updateStudyMember = publicRoomService.updatePublicStudyMemberAuthority(publicstudymember, savePublicStudyMemberDto);
+		System.out.println("업데이트 됨");
+		return new ResponseEntity<String>(SUCCESS + "\n" + updateStudyMember.toString(), HttpStatus.OK);
 	}
 }

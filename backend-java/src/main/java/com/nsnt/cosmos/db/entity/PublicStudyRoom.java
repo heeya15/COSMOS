@@ -53,10 +53,8 @@ public class PublicStudyRoom {
 	
 	@Column(name = "study_rule")
 	String studyRule;
-	
+
 	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name = "studytype_no", referencedColumnName = "studytype_no")
-	})
+	@JoinColumn(name = "studytype_no", referencedColumnName = "studytype_no")
 	private StudyType studyType;
 }
