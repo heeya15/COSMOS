@@ -332,7 +332,6 @@ export default {
 
   methods: {
     ...mapMutations(publicStudyStore,["SET_ROOM_NAME", "SET_ROOM_URL","SET_PARTICIPANT","SET_ROOM_STUDY_NO","SET_STUDYRULE"]),
-    // ...mapMutations(meetingStore,["SET_ROOM_SETTIG_ISAUDIO", "SET_ROOM_SETTIG_ISVIDIO"]),
     ...mapMutations(meetingStore,["SET_ROOM_SETTING"]),
     getHeader(){
       const token = localStorage.getItem('jwt')
@@ -369,14 +368,12 @@ export default {
       })
       .then(res => {
         this.boardItems = res.data
-        console.log(res.data);
         this.boardItems = res.data.sort(function(a, b) {
           return b.boardNo - a.boardNo;
         })
 
-        console.log(">>>>>> 전달 받은 리스트 : ", this.boardItems);
+        // console.log(">>>>>> 전달 받은 리스트 : ", this.boardItems);
 
-        // var len = this.boardItems.length > 5 ? 5 : this.boardItems.length;
         for(var i=0; i<this.boardItems.length; i++) {
           if (this.boardItems[i].header === false) {
             this.boardList.push(this.boardItems[i]);
@@ -398,7 +395,7 @@ export default {
         url: '/publicroom/search/searchAll/publicRoom',
       })
       .then(res => {
-        console.log(">>>>>>>>>>>>>", res.data);
+        // console.log(">>>>>>>>>>>>>", res.data);
         this.publicStudyList = res.data
         for(var i=0; i<this.publicStudyList.length; i++) {
         // 오픈 스터디 객체 배열을 탐색하면서 스터디 현재 인원 파악
@@ -445,7 +442,7 @@ export default {
         headers: this.getHeader()
       })
       .then(res => {
-        console.log('checkbanned 되는지 확인!!!', res)
+        // console.log('checkbanned 되는지 확인!!!', res)
         this.isBanned = res.data
       })
       .catch(err => {
@@ -476,17 +473,11 @@ export default {
       this.$refs["my-modal"].hide()
     },
    // 공개 방 가기(가면 공개방 멤버로 추가)
-    async goStudyRoom(publicstudyroomId, studyName, studyRule ) {
-    
-      console.log("공개방 가기 버튼 클릭.")
-      console.log(publicstudyroomId, studyName, studyRule)
-    
+    async goStudyRoom(publicstudyroomId, studyName, studyRule ) {    
       var token = localStorage.getItem('jwt')
       var decoded = JwtDecode(token)
       var myId = decoded.sub
-      console.log("들어가기전 셋팅 값 확인")
-      console.log( this.settings.mic)
-      console.log( this.settings.cam)
+      
       // 마이크 캠 셋팅
       this.SET_ROOM_SETTING(this.settings)
       // 방 입장을 위한 셋팅
@@ -508,8 +499,8 @@ export default {
           data: {leader : false, publicstudyroomId: publicstudyroomId},
           headers: this.getHeader()
         })
-        .then(res => {
-          console.log('>>>>>>>>>>>>>>>>>>>>>>메인에서 공개스터디입장axios',res.data)
+        .then(() => {
+          // console.log('>>>>>>>>>>>>>>>>>>>>>>메인에서 공개스터디입장axios',res.data)
           this.$router.push({name: 'PublicStudyRoom'})
         })
         .catch(err => {
@@ -576,8 +567,6 @@ export default {
         url: '/history/searchAll/week',
       })
       .then(res => {
-        // this.weekdate = res.data[0].userHistoryWeekId.week_date
-
         // 이번주 월요일
         var today = new Date();
         var day = today.getDay();
@@ -835,7 +824,6 @@ export default {
 }
 
 th, td {   
-  /* text-align: center; */
   vertical-align : middle !important;
 }
 

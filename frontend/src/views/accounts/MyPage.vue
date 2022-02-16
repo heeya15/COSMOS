@@ -43,10 +43,8 @@
           </b-row>
         </div>
 
-      <!-- <hr class="mt-5 mx-4"> -->
       <div class="score">
         <b-row class="mt-4" style="height:200px; margin-left: 0px;">
-          <!-- <b-col cols="1"></b-col> -->
           <b-col cols="4" id="level">
             <div class="d-flex justify-content-center">
               <div class="mt-2" align="center" style="font-size: 15pt;">My 등급</div>
@@ -200,7 +198,6 @@
             </b-modal>
             <img id="mycosmos" :src="myCosmos[myInfoIdx]"/>
           </b-col>
-          <!-- <b-col cols="1"></b-col> -->
         </b-row>
       </div>
 
@@ -424,8 +421,6 @@ export default {
 
         this.userRank = []   // 이전 데이터 비우기
         this.userRank = res.data
-
-        
         
         // 내 랭킹 저장   
         for(var i=0; i<res.data.length; i++) {
@@ -449,14 +444,13 @@ export default {
     },
     
     async getUserTotalTime() {
-      console.log("here!!")
       http({
         method: 'GET',
         url: '/history/totalTime',
         headers: this.getToken(),
       })
       .then(res =>{
-        console.log(res.data)
+        // console.log(res.data)
         var day = parseInt(res.data/86400);
         var time = res.data - day * 86400
         var hour = parseInt(time/3600);
