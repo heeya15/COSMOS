@@ -147,6 +147,7 @@ export default ({
                 this.src = res.data
                 this.rowws = res.data.length
                 this.items = res.data
+                this.currentPage = 1
                 if(this.studytypes) {
                     this.paginate(10, 0)
                 }
