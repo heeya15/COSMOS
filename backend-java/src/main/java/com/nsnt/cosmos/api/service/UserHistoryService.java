@@ -2,10 +2,10 @@ package com.nsnt.cosmos.api.service;
 
 import java.util.List;
 
+import com.nsnt.cosmos.api.response.UserHistoryWeekDtoRes;
 import com.nsnt.cosmos.db.entity.UserHistory;
 import com.nsnt.cosmos.db.entity.UserHistoryDay;
 import com.nsnt.cosmos.db.entity.UserHistoryMonth;
-import com.nsnt.cosmos.db.entity.UserHistoryWeek;
 
 /**
  * 히스토리 관련 비즈니스 로직 처리를 위한 서비스 인터페이스 정의.
@@ -23,7 +23,7 @@ public interface UserHistoryService {
 	List<UserHistoryDay> getDailyUserHistory();
 	
 	/** 주별 랭킹 정보 조회 */
-	List<UserHistoryWeek> getWeeklyUserHistory();
+	List<UserHistoryWeekDtoRes> getWeeklyUserHistory();
 	
 	/** 월별 랭킹 정보 조회 */
 	List<UserHistoryMonth> getMonthlyUserHistory();
