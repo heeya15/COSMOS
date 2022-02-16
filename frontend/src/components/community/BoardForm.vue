@@ -226,11 +226,9 @@ export default {
     // 진행중, 완료일 때
     trueHearder() {
       this.input.header = true
-      console.log(this.input.header)
     },
     falseHearder() {
       this.input.header = false
-      console.log(this.input.header)
       this.$router.go()
     },
 
@@ -241,7 +239,6 @@ export default {
         url: '/study/studyType'
       })
       .then(res => {
-        // console.log(res)
         res.data.forEach(element => {
           this.options.push({value: element.studytypeName, text:element.studytypeName})
         })
@@ -253,7 +250,6 @@ export default {
   },
   created(){
     this.getToken()
-    // this.getStudyInfo()
     this.getStudyName()
     this.getStudyType()
   },

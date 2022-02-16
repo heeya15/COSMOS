@@ -120,8 +120,7 @@ export default {
         url: '/studymember/register',
         data: memberInfo
       })
-      .then(res => {
-        console.log(res)
+      .then(() => {
         alert(`${memberInfo.user_id}님이 스터디 멤버로 추가되었습니다.`)
         this.newMemberId = ''
         this.getStudyMembers()
@@ -136,7 +135,6 @@ export default {
         url: `/studymember/remove/${studymember_no}`
       })
       .then(() => {
-        // console.log(res)
         this.getStudyMembers()
       })
       .catch(err => {
@@ -155,7 +153,6 @@ export default {
         data: {studymember_no: studymember_no, authority: memberAuthority}
       })
       .then(() => {
-        // console.log(res)
         this.getStudyMembers()
       })
       .catch(err => {

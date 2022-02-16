@@ -45,13 +45,10 @@ export default new Vuex.Store({
       state.userInfo = credentials
     },
     LOGIN(state){
-      // console.log( '로그인됨!!!!')
       state.isLogin = true
       state.userId = jwtDecode(localStorage.getItem('jwt')).sub;
     },
     GET_BOARD_NO(state, boardNumber){
-      console.log(state)
-      console.log('번호 확인')
       state.boardNo = boardNumber
     },
     LOGOUT(state){
@@ -62,9 +59,6 @@ export default new Vuex.Store({
       state.comments = commentData
     },
     GET_STUDY_TYPE(state, studyTypeData) {
-      console.log('스터디타입확인')
-      console.log(state.studyOptions)
-      console.log('여기까지 확인')
       state.studyOptions = studyTypeData
     },
     GET_STUDY_MEMBERS(state, memberInfo) {
@@ -75,20 +69,17 @@ export default new Vuex.Store({
       state.power.authority = leaderInfo.authority
     },
     PAGE_CLICK(state, currentPage) {
-      console.log(state, '페이지 번호 확인 스토어')
       state.saveCurrentPage = currentPage
     }
   },
   actions: {
     signUp({commit}, credentials) {
-      // console.log(credentials)
       http({
         method: 'POST',
         url: '/user/signup',
         data: credentials
       })
       .then(res => {
-        // console.log(res)
         if(res.status === 200) {
           commit('SIGNUP', res.data)
           alert("🌸🌸 Welcome to COSMOS!! 🌸🌸")
@@ -142,8 +133,6 @@ export default new Vuex.Store({
         url: '/study/studyType'
       })
       .then(res => {
-        // console.log('res 확인')
-        // console.log(res.data)
         commit('GET_STUDY_TYPE', res.data)
       })
       .catch(err => {
@@ -156,7 +145,6 @@ export default new Vuex.Store({
         url: `/studymember/search/${studyNo}`,
       })
       .then(res => {
-        // console.log(res.data)
         commit('GET_STUDY_MEMBERS', res.data)
       })
       .catch(err => {
@@ -176,7 +164,6 @@ export default new Vuex.Store({
         params: {study_no: studyNo},
       })
       .then(res => {
-        // console.log(res)
         commit('IS_LEADER', res.data)
       })
       .catch(err => {

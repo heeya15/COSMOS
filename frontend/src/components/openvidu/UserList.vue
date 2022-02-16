@@ -31,8 +31,6 @@ export default {
 	methods: {
 		getConnectionData () {
 			const { connection } = this.streamManager.stream;
-			console.log("😀😀😀😀")
-			console.log(this.streamManager.stream.connection.role);
 			return JSON.parse(connection.data);
 		},
 	},

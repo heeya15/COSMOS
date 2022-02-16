@@ -53,10 +53,7 @@ export default {
         headers: this.getToken()
 
       })
-      .then(res => {
-        console.log('댓글부분')
-        console.log(res)
-        console.log('댓글')
+      .then(() => {
         // 작성하고 바로 뜨게 새로고침
         this.$router.go(this.$router.currentRoute)
       })
