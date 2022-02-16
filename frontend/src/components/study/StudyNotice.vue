@@ -59,7 +59,6 @@ export default {
         url: `/studyManage/search/${this.studyNo}`,
       })
       .then(res => {
-        // console.log(res)
         if (!res.data) {
           this.noNotice = true
         } else {
@@ -86,7 +85,6 @@ export default {
         data: updateFormdata,
       })
       .then(() => {
-        // console.log(res)
         this.notice.modify = false
         this.noNotice = false
         this.showStudyNotice()
@@ -107,7 +105,6 @@ export default {
         data: updateFormdata,
       })
       .then(() => {
-        // console.log(res)
         this.notice.modify = false
         this.noNotice = false
         this.showStudyNotice()

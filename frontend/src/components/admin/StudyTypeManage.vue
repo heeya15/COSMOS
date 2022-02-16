@@ -127,13 +127,10 @@ export default ({
     methods: {
         paginate (page_size, page_number) {
             let itemsToParse = this.studytypes
-            console.log(itemsToParse.slice(0, 5))
-            console.log(page_number * page_size, (page_number + 1) * page_size)
             this.paginatedItems = itemsToParse.slice(page_number * page_size, (page_number + 1) * page_size);
         },
         
         onPageChanged() {
-            console.log(this.currentPage)
             this.paginate(10, this.currentPage - 1)
         },
 
@@ -179,7 +176,6 @@ export default ({
         editModal(item) {
             this.currentItem.studytypeno = item.studytypeNo;
             this.currentItem.studytypename = item.studytypeName;
-            console.log(this.currentItem);
         },
 
         // 스터디 분류명 수정

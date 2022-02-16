@@ -102,9 +102,6 @@ export default {
 
 		startTimer() {
 			this.start_time = this.hours+":" +this.minutes +":"+this.seconds;
-			console.log(typeof(this.start_time));
-			console.log("타이머 눌러짐?");
-			console.log(this.start_time);
 			// 방에 들어온 시간 측정을 위해 rest 요청. // params로 보내주면됨
 			http({
 				method: 'POST',
@@ -113,9 +110,7 @@ export default {
 				params:{start_time:this.start_time},
 			})
 			.then( res => {
-				console.log(res);
 				this.userhistory_no = res.data.userhistoryNo;
-				console.log(this.userhistory_no);
 			})
 			.catch(err => {
 				console.log(err)
@@ -128,9 +123,6 @@ export default {
 		},
 		stopTimer: function() {
 			this.finish_time = this.hours+":" +this.minutes +":"+this.seconds;
-			console.log(typeof(this.finish_time));
-			console.log("타이머 중지 됨?");
-			console.log(this.finish_time);
 			// 방에 들어온 시간 측정을 위해 rest 요청. // params로 보내주면됨
 			http({
 				method: 'POST',
@@ -138,8 +130,7 @@ export default {
 				headers: this.getUserToken(),
 				params:{finish_time:this.finish_time, userhistory_no: this.userhistory_no},
 			})
-			.then( res => {
-				console.log(res);
+			.then(() => {
 			})
 			.catch(err => {
 				console.log(err)
@@ -164,7 +155,6 @@ export default {
 				type: 'study-timer',
 			})
 			.then(() => {
-				console.log("timer send");
 			})
 			.catch(error => {
 				console.error(error);

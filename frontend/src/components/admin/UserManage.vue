@@ -115,8 +115,7 @@ export default {
                     method: 'get',
                     url: `/admin/remove/${deleteUserId}`,
                 })
-                .then(res => {
-                    console.log(res)
+                .then(() => {
                     this.$router.go();
                 })
                 .catch(err => {
