@@ -1,10 +1,6 @@
 <template>
 	<div id="main">
 		<div id="main-container" class="d-flex">
-			<!-- <p>
-				<img v-if="!asideRight" src="@/assets/img/openvidu/menu.png" class="rightMenuImg" alt="menu" @click="asideRight=true">
-				<img v-else src="@/assets/img/openvidu/close.png" class="rightMenuImg" alt="menu" @click="asideRight=false">
-			</p> -->
 			<div id="session-aside-left" v-if="session">
 				<p><img src="https://i.ibb.co/wrgGKpS/asideimg01.png" class="sideMenuImg" alt="settings" @click="outMemberModal=true"></p>
 				<p><img src="https://i.ibb.co/k94sKJ1/whiteboard.png" class="sideMenuImg" alt="studyrule" @click="studyRuleModal=true"></p>
@@ -25,7 +21,6 @@
 								<tr>
 								<td>{{member.user.userName}}({{member.user.userId}})</td>
 								<td v-if="isLeader">
-									<!-- <b-button v-if="member.user.userId!==userId" variant="danger" @click="outMember(member.user.userId)">강퇴</b-button> -->
 									<b-button v-if=" member.leader === false && member.user.userId!==userId" variant="info" @click="giveAuthority(member.publicmemberNo, member.leader, member.user.userId)">권한</b-button>
 								</td>
 								</tr>
@@ -59,9 +54,6 @@
 					</div>
 					
 					<div>
-						<!-- <div id="main-video" class="col-md-6">
-							<user-video :stream-manager="mainStreamManager"/>
-						</div> -->
 						<div v-if="isLeader" id="video-container" class="d-flex flex-wrap row"> <!-- 참가자 화면 -->
 							<user-video :session="session" class="col-md-4" :stream-manager= "publisher" @click.native="updateMainVideoStreamManager(publisher)"/> <!--자기 -->
 							<user-video-publisher :session="session" class="col-md-4" v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click.native="updateMainVideoStreamManager(sub), outUser(sub)"/> <!-- 다른 참가자 -->
@@ -94,7 +86,6 @@
 
 							<!-- video 버튼 설정 -->
 							<div v-if="video === true" class="buttomMenu">
-								<!-- <input class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" :value="video" @click="muteVideo()"> 비디오 on/off 버튼 -->
 								<button class="btn btn-large btn-default footerBtn" type="button" id="buttonLeaveSession" @click="muteVideo()"> 
 									<b-icon icon="camera-video-fill" class="buttomMenuIcon" aria-hidden="true"></b-icon>
 									<span class="footerBtnText">{{ videoMsg }}</span>
@@ -144,18 +135,12 @@
 				</div>
 
 				<!-- 채팅 기능 시작 -->
-				<!-- <p @click="showChat">채팅</p> -->
-					<!-- <div class="chat" v-show="isChatVisible"> -->
 				<div class="user_chat">
 					<div class="right_label">
 						<span>채팅</span>
 					</div>
 					<div class="chat">
 						<div class="messages" v-html="messages" ref="messages">
-							<!-- <div class="messageLoop" v-for="(message, idx) in messages" :key="idx"> -->
-								<!-- <div class="text-left" >{{ userId }} 님의 메시지:</div> -->
-								<!-- <div class="text-left message__bubble">{{ message }}</div> -->
-							<!-- </div> -->
 						</div>
 
 						<form class="chatFooter" onsubmit="return false">
@@ -254,6 +239,7 @@ export default {
 
 			// 스터디 규칙 관련
 			studyRuleModal : false,
+			roomRule: null,
 
 
 			// 오른쪽 사이드 메뉴
@@ -287,7 +273,6 @@ export default {
           })
         .then((res) => {
             this.userAuthority = res.data.authority;
-			// console.log("😉😉")
 			// console.log(res);
           })
           .catch(err => {
@@ -298,8 +283,6 @@ export default {
 		this.myUserName = this.participant;
 		this.joinSession();
 		
-		console.log("😀😀😀😀😀")
-		console.log(this.myUserName)
 
 		// 텍스트 채팅에서 사용하기위한 유저 아이디(임시)
 		this.userId = jwt_decode(localStorage.getItem("jwt")).sub;
@@ -341,7 +324,7 @@ export default {
 				params: { publicstudyroom_id: publicstudyroomid }
 			})
 			.then(res => {
-				console.log(res)
+				// console.log(res)
 				this.publicStudyMembers = res.data
 				this.publicStudyMembers.forEach(element => {
 					if (this.userId === element.user.userId){
@@ -368,7 +351,6 @@ export default {
 			// 	.catch(err => {
 			// 		console.log(err)
 			// 	})
-			console.log("🥵🥵🥵")
 			const { connection } = memberId.stream;
 			const {clientData} = JSON.parse(connection.data);
 			console.log(clientData);
@@ -412,7 +394,6 @@ export default {
 				data: {publicmember_no: publicmember_no, leader: memberLeader}
 			})
 			.then( async (res) => {
-				// console.log("😎😋😋😎😋😊")
 				// console.log(memberId)
 				console.log(res)
 				await this.getPublicStudyMembers(this.roomUrl)
@@ -428,7 +409,6 @@ export default {
 	},	
 		async joinSession () {
 			await this.getPublicStudyMembers(this.roomUrl)
-			console.log("😜😜😜😜😜😜😜😜😜😜😜😜")
 			console.log(this.publicStudyMembers)
 
 			// --- Get an OpenVidu object ---
@@ -475,14 +455,13 @@ export default {
 
 			// 권한 넘기는 시그널
 			this.session.on("signal:leader", async (event) => {
-				console.log("😁😁😁😁😁😁😁😁")
 				console.log(event.data)
 				console.log(this.userId)
-				if(event.data==this.userId){
-					alert("스터디장 권한을 받았습니다.")
-				}
-        		await this.getPublicStudyMembers(this.roomUrl)
-      		})
+				// if(event.data==this.userId){
+				// 	alert("스터디장 권한을 받았습니다.")
+				// }
+				await this.getPublicStudyMembers(this.roomUrl)
+			})
 
 			// 같은 session 내에서 텍스트 채팅을 위한 signal
 			this.session.on('signal:my-chat', (event) => {
@@ -559,8 +538,6 @@ export default {
 		},
 		async removePublicRoom(){
 				this.getPublicStudyMembers(this.roomUrl)
-				console.log("😎😎😎😎😎😎")
-				console.log(this.publicStudyMembers.length)
 				if(this.publicStudyMembers.length === 0){
 					await http({
 						method: 'DELETE',
@@ -596,8 +573,6 @@ export default {
 			})
 			.then(async () => {
 				await this.getPublicStudyMembers(this.roomUrl)
-				console.log("🤑🤑🤑🤑🤑🤑")
-				console.log(this.publicStudyMembers)
 				await this.removePublicRoom()
 				this.$router.push({name:'MainPage'})
 			})
@@ -643,8 +618,6 @@ export default {
 			this.video = !this.video;
 			if(this.video == true) this.videoMsg = "비디오 OFF";
 			else this.videoMsg = "비디오 ON";
-			// if(this.video == '비디오 ON') this.video = '비디오 OFF';
-			// else this.video = '비디오 ON';
 			this.publisher.publishVideo(this.videoEnabled);
 		},
 
@@ -653,10 +626,6 @@ export default {
 			this.audio = !this.audio;
 			if(this.audio == true) this.audioMsg = "마이크 OFF";
 			else this.audioMsg = "마이크 ON";
-			// if(this.audioMsg == '마이크 ON') this.audioMsg = '마이크 OFF';
-			// else this.audioMsg = '마이크 ON';
-			// if(this.mic == 'mic-fill') this.mic = 'mic-mute-fill';
-			// else this.mic = 'mic-fill';
 			this.publisher.publishAudio(this.audioEnabled);
 		},
 		
