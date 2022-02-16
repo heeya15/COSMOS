@@ -25,7 +25,7 @@
 								<td>{{member.user.userName}}({{member.user.userId}})</td>
 								<td v-if="isLeader">
 									<!-- <b-button v-if="member.user.userId!==userId" variant="danger" @click="outMember(member.user.userId)">강퇴</b-button> -->
-									<b-button v-if=" member.leader === false && member.user.userId!==userId" variant="info" @click="giveAuthority(member.publicmemberNo, member.leader)">권한</b-button>
+									<b-button v-if=" member.leader === false && member.user.userId!==userId" variant="info" @click="giveAuthority(member.publicmemberNo, member.leader, member.user.userId)">권한</b-button>
 								</td>
 								</tr>
 							</tbody>
@@ -381,7 +381,7 @@ export default {
     // },
 
 		// 권한부여 기능
-	async giveAuthority(publicmember_no,leader) {
+	async giveAuthority(publicmember_no,leader, memberId) {
 			if (leader === true){
 				var memberLeader = false
 			} else {
@@ -393,6 +393,8 @@ export default {
 				data: {publicmember_no: publicmember_no, leader: memberLeader}
 			})
 			.then( async (res) => {
+				// console.log("😎😋😋😎😋😊")
+				// console.log(memberId)
 				console.log(res)
 				await this.getPublicStudyMembers(this.roomUrl)
 			})
@@ -400,7 +402,7 @@ export default {
 				console.log(err)
 			})
 			this.publisher.session.signal({
-                data: '',
+                data: memberId,
                 to: [],
                 type: "leader"
             })
@@ -453,9 +455,15 @@ export default {
 			})
 
 			// 권한 넘기는 시그널
-			this.session.on("signal:leader", async() => {
-        await this.getPublicStudyMembers(this.roomUrl)
-      })
+			this.session.on("signal:leader", async (event) => {
+				console.log("😁😁😁😁😁😁😁😁")
+				console.log(event.data)
+				console.log(this.userId)
+				if(event.data==this.userId){
+					alert("스터디장 권한을 받았습니다.")
+				}
+        		await this.getPublicStudyMembers(this.roomUrl)
+      		})
 
 			// 같은 session 내에서 텍스트 채팅을 위한 signal
 			this.session.on('signal:my-chat', (event) => {
