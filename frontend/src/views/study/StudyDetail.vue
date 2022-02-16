@@ -49,7 +49,6 @@
       <div class="studyContainer my-2 py-5">
         <b-row class="mx-5">
           <b-col cols="5">
-            <!-- <img src="@/assets/img/nophoto.png" alt="이미지없음" class="studyImg" v-if="studyInfo.image.length<24"> -->
             <img src="https://bootstrapious.com/i/snippets/sn-img-hover/hoverSet-3.jpg" alt="이미지없음" class="studyImg" v-if="studyInfo.image.length<24">
             <img :src="studyInfo.image" alt="스터디 이미지" class="studyImg" v-else>
           </b-col>
@@ -243,11 +242,6 @@ export default {
       studyInfo: {
         studyType:{},
         image:'',
-        // studyName: null,
-        // url: null,
-        // image: null,
-        // totalMember: null,
-        // numberOfMember: null, //현재 참여중인 스터디 인원
       },
       modifyInfo: {
         studyName : '',
@@ -356,7 +350,7 @@ export default {
         url: `/study/search/${this.studyNo}`
       })
       .then(res => {        
-        console.log(res.data)
+        // console.log(res.data)
         this.studyInfo = res.data
         this.modifyInfo.studyNo = res.data.studyNo
         this.modifyInfo.studyName = res.data.studyName
@@ -408,28 +402,18 @@ export default {
         // 마이크 캠 셋팅
         this.$store.state.audio = this.settings.mic;
         this.$store.state.video = this.settings.cam;
-        console.log("디버깅>>>>>>>>>>>>>>>>>>>>>>>")
-        console.log(this.$store.state.audio);
-        console.log(this.$store.state.video);
+        // console.log("디버깅>>>>>>>>>>>>>>>>>>>>>>>")
+        // console.log(this.$store.state.audio);
+        // console.log(this.$store.state.video);
         this.$store.state.roomName = this.studyInfo.studyName;
 
         var str = this.studyInfo.url;
         var url =  str.split('/')[3];
-        
-
-        // console.log(str);
-        // console.log(urlLen);
-        // console.log(url);
 
         this.$store.state.roomUrl = url;
         this.$store.state.roomStudyNo = this.studyNo;
         this.$store.state.participant = myId;
 
-        // console.log(this.roomName);
-        console.log(this.roomUrl);
-        // console.log(this.roomStudyNo);
-        // console.log(this.participant);
-        console.log("😃");
        // 비밀번호 치고 방 입장 성공 시 비공개 스터디 참가자 등록 시킴
         http({
             method: 'POST',
@@ -521,18 +505,7 @@ export default {
         console.log(err)
       })
     }
-
-    // preventNav(event) {
-    //   event.preventDefault()
-    //   event.returnValue = ""
-    // },
   },
-  // beforeMount() {
-  //   window.addEventListener("beforeunload", this.preventNav)
-  // },
-  // beforeDestroy() {
-  //   window.removeEventListener("beforeunload", this.preventNav);
-  // },
   computed:{
     ...mapState([
       'power', 'roomName', 'roomUrl', 'participant', 'roomStudyNo', 'studyMembers', 'audio', 'video'
@@ -562,7 +535,6 @@ export default {
   width: 250px;
   box-shadow: 4px 4px 4px 2px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
-  /* border: 3px solid #c8c1e4; */
 }
 .imgBtn {
   outline-width: 5px;

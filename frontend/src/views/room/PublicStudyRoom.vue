@@ -32,7 +32,7 @@
 					</div>
 				</div>
 
-				<!-- 권한기능 모달 -->
+				<!-- 스터디규칙 모달 -->
 				<div v-if="studyRuleModal" class="black-bg">
 					<div class="white-bg">
 						<h2>스터디 규칙 📖</h2>
@@ -226,9 +226,6 @@ export default {
 			// 타이머
 			timer: null,
 			time: 0,
-
-			// 권한 여부
-			userAuthority: false,
 			
 			// 공개스터디 참가자 목록
 			publicStudyMembers: [],
@@ -263,21 +260,7 @@ export default {
 
 		if(this.audio == true) this.audioMsg = "마이크 OFF";
 		else this.audioMsg = "마이크 ON";
-		// 권한 여부 확인
-		http({
-            method: 'GET',
-            url: `/user/leader`,
-            headers: this.getUserToken(),
-			params: {study_no: this.roomStudyNo},
-			// params: {study_no: 25},
-          })
-        .then((res) => {
-            this.userAuthority = res.data.authority;
-			// console.log(res);
-          })
-          .catch(err => {
-            console.log(err)
-		});  
+
 
 		this.mySessionId = this.roomUrl;
 		this.myUserName = this.participant;
@@ -286,12 +269,12 @@ export default {
 
 		// 텍스트 채팅에서 사용하기위한 유저 아이디(임시)
 		this.userId = jwt_decode(localStorage.getItem("jwt")).sub;
-		console.log(">>>>>>>>>>>>>>>>>>>> userId : ", this.userId);
+		// console.log(">>>>>>>>>>>>>>>>>>>> userId : ", this.userId);
 
 		// 강퇴기능위해 공개스터디멤버 불러오기
 		this.getPublicStudyMembers(this.roomUrl)
-		console.log(this.roomUrl)
-		// this.getLeave()
+		// console.log(this.roomUrl)
+
 
 		
 	},
@@ -353,7 +336,6 @@ export default {
 			// 	})
 			const { connection } = memberId.stream;
 			const {clientData} = JSON.parse(connection.data);
-			console.log(clientData);
 			
 			this.publisher.session.signal({
 				data: clientData,
@@ -367,19 +349,13 @@ export default {
 				url: 'publicroom/register/bannedUser',
 				params: { publicstudyroom_id: this.roomUrl,user_id: clientData}
 			})
-			.then(res => {
-				console.log(res)
+			.then(() => {
+				// console.log(res)
 			})
 			.catch(err => {
 				console.log(err)
 			})
     },
-
-    // getLeave() {
-    //   this.session.on("signal:out", () => {
-    //     this.leaveSession();
-    //   })
-    // },
 
 		// 권한부여 기능
 	async giveAuthority(publicmember_no,leader, memberId) {
@@ -393,9 +369,9 @@ export default {
 				url: 'publicroom/updateAuthority',
 				data: {publicmember_no: publicmember_no, leader: memberLeader}
 			})
-			.then( async (res) => {
+			.then( async () => {
 				// console.log(memberId)
-				console.log(res)
+				// console.log(res)
 				await this.getPublicStudyMembers(this.roomUrl)
 			})
 			.catch(err => {
@@ -409,8 +385,6 @@ export default {
 	},	
 		async joinSession () {
 			await this.getPublicStudyMembers(this.roomUrl)
-			console.log(this.publicStudyMembers)
-
 			// --- Get an OpenVidu object ---
 			this.OV = new OpenVidu();
 
@@ -445,7 +419,7 @@ export default {
 			// receive 강퇴 시그널
 			this.session.on("signal:out", async (event) => {
 				var id = event.data;
-				console.log(this.userid);
+
 				if(id == this.myUserName){
 					await this.leaveSession();
 					alert("방에서 추방당하셨습니다.")
@@ -454,9 +428,9 @@ export default {
 			})
 
 			// 권한 넘기는 시그널
-			this.session.on("signal:leader", async (event) => {
-				console.log(event.data)
-				console.log(this.userId)
+			this.session.on("signal:leader", async () => {
+				// console.log(event.data)
+				// console.log(this.userId)
 				// if(event.data==this.userId){
 				// 	alert("스터디장 권한을 받았습니다.")
 				// }
@@ -471,8 +445,6 @@ export default {
 				if(message == "") {
 					this.messages += '';
 				} else {
-					// console.log(">>>>>>>>>>>>>>>>>>> ", message[0]);
-					// this.messages.push(message[0]);
 					console.log("저장된 : ", this.$store.state.userId, "현재 : ", message[0]);
 					if(this.$store.state.userId == message[0]) {
 						console.log("내가 쓴 메시지");
@@ -521,7 +493,6 @@ export default {
 						// --- Publish your stream ---
 
 						this.session.publish(this.publisher);
-						console.log("Dasdasdasdasdasdasdasdasdasdasdasdasdqwrqwrqw");
 						console.log(this.session)
 					})
 					.catch(error => {
