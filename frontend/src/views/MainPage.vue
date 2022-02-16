@@ -59,7 +59,7 @@
               <b-dropdown-item id="weekTab" @click="changeTab('weekTab')" href="#">주 (Week)</b-dropdown-item>
               <b-dropdown-item id="monthTab" @click="changeTab('monthTab')" href="#">월 (Month)</b-dropdown-item>
             </b-dropdown>
-            <p class="mt-3" style="font-family: BMJual; color: #828282;">{{ date }} 06:00 AM UPDATED</p>
+            <p class="mt-3" style="font-family: BMJual; color: #828282;">{{ date }} UPDATED</p>
           </div>
 
           <!-- 랭킹 슬라이드 -->
@@ -558,8 +558,13 @@ export default {
         // this.date = year + "-" + month + "-" + date
         // this.day = today.toString().substring(0,3)
 
-        this.date = res.data[0].userhistoryDayId.day_date.substring(0,10)
+        // this.date = res.data[0].userhistoryDayId.day_date.substring(0,10)
+        var today = new Date()
+        var month = (today.getMonth()+1)
+        var day = today.getDate()
+        this.date = today.getFullYear()+'-'+(month<10?'0'+month : month)+'-'+(day<10?'0'+day : day)
         console.log(">>>>>>>>>>>>>>>>>> 일별 랭킹 : ", res.data)
+        console.log(">>>>>>>>>>>> 오늘 : ", this.date)
 
         this.dailyRank = []   // 이전 데이터 비우기
         this.dailyRank = res.data   
