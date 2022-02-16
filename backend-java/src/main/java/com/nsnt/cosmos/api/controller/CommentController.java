@@ -45,7 +45,7 @@ public class CommentController {
 	@Autowired
 	CommentService commentService;
 	
-	/** 댓글 등록 입니다. */
+	/** 댓글 등록 시 댓글 수 증가하기입니다. */
 	@PostMapping("/register")
 	@ApiOperation(value="댓글 등록 (token)", notes="<strong>댓글을 등록</strong>시켜줍니다. create_at은 빈 괄호(\"\")를 입력하여 주세요. ")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
@@ -102,18 +102,18 @@ public class CommentController {
 		return new ResponseEntity<String>(SUCCESS+"\n"+updateComment.toString(), HttpStatus.OK);
 	}
 	
-	/** 댓글 삭제 입니다. */
-	@ApiOperation(value = "해당 댓글 삭제", notes = "해당 댓글 삭제")
+	/** 댓글 삭제및 해당 게시글 댓글 수 삭제 입니다. */
+	@ApiOperation(value = "[해당 댓글] 삭제및, [해당 게시글 댓글 수] 삭제(comment_no, board_no) ", notes = "[해당 댓글] 삭제및, [해당 게시글 댓글 수] 삭제")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"), 
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "댓글 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	@DeleteMapping("/remove/{comment_no}")
-	public ResponseEntity<String> boarddelete(@PathVariable("comment_no") int comment_no) throws Exception {	
+	@DeleteMapping("/remove/{comment_no}/{board_no}")
+	public ResponseEntity<String> boarddelete(@PathVariable("comment_no") int comment_no, @PathVariable("board_no") Long board_no) throws Exception {	
 		Comment comment;
 		try {
 			comment = commentService.findByCommentNo(comment_no);
-			commentService.deleteComment(comment);
+			commentService.deleteComment(comment, board_no);
 		}catch(Exception e ) {
 			e.printStackTrace();
 			return  ResponseEntity.status(500).body("해당 댓글이 없어 삭제 "+FAIL);

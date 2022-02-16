@@ -54,7 +54,7 @@ public class PrivateRoomController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	public ResponseEntity Boardregister(@RequestParam String privatestudyroom_id , @ApiIgnore Authentication authentication)
+	public ResponseEntity PrivateRoomRegister(@RequestParam String privatestudyroom_id , @ApiIgnore Authentication authentication)
 	{
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		String user_id = userDetails.getUsername();
@@ -70,7 +70,6 @@ public class PrivateRoomController {
 		System.out.println("잘 됨?"+ pvmember.toString());
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
-	
 	
 	 /** 해당 비공개 스터디 참가자 전체 조회 입니다. */
 	@ApiOperation(value="해당 비공개 스터디 참가자 전체 조회(param)", notes="<strong>해당 비공개 스터디 참가자  전체 조회를</strong>시켜줍니다.")
@@ -91,8 +90,8 @@ public class PrivateRoomController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "해당 회원 없음")})
-	@DeleteMapping("/removePrivateMember")
-	public ResponseEntity<String> boarddelete(@RequestParam String privatestudyroom_id,  @ApiIgnore Authentication authentication) throws Exception {	
+	@DeleteMapping("/remove/privateMember")
+	public ResponseEntity<String> removePrivateMember(@RequestParam String privatestudyroom_id,  @ApiIgnore Authentication authentication) throws Exception {	
 		SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 		String user_id = userDetails.getUsername();
 		try {	

@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nsnt.cosmos.api.request.StudyPostReq;
@@ -101,17 +103,17 @@ public class StudyController {
 		
 	}
 	
-	// 스터디 url 중복 검사
-	@GetMapping("/urlcheck/{url}")
-	@ApiOperation(value = "스터디 url 중복 체크", notes = "스터디 생성 시 스터디 url 중복 체크 검사(true면 중복, false면 중복아님)")
+	// 스터디 방 생성시 url 중복 검사
+	@GetMapping("/urlcheck")
+	@ApiOperation(value = "스터디 방 생성시 url 중복 체크(param)", notes = "스터디 방 생성 시 스터디 url 중복 체크 검사(true면 중복, false면 중복아님)")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공"),
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "url 없음"),
 					@ApiResponse(code = 500, message = "서버 오류") 
 					})
-	public ResponseEntity<Boolean> checkUrlDuplicate(@PathVariable String url) {
+	public ResponseEntity<Boolean> checkUrlDuplicate(@RequestParam String url) {
+		System.out.println("들어옴?");
 		return ResponseEntity.ok(studyService.checkUrlDuplicate(url));
-		
 	}
 	
 	// 스터디 상세 조회

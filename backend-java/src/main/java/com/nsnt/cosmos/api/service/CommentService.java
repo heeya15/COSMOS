@@ -23,5 +23,5 @@ public interface CommentService {
 	public Comment updateComment(Comment comment, CommentReq commentReq);
 	
 	/** 댓글 삭제를 위한 deleteComment 입니다. */
-	public void deleteComment(Comment comment);
+	public void deleteComment(Comment comment, Long board_no);
 }

@@ -9,6 +9,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +22,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Builder
 public class BannedUser {
 	@Id
 	@Column(name = "banneduser_no", nullable = false)
@@ -28,8 +33,8 @@ public class BannedUser {
 	String userId;
 	
 	@OneToOne
-	@JoinColumns({
-		@JoinColumn(name = "publicstudyroom_id", referencedColumnName = "publicstudyroom_id")
-	})
+	@JoinColumn(name = "publicstudyroom_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private PublicStudyRoom publicStudyRoom;
+	
 }

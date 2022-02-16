@@ -16,6 +16,7 @@ import com.nsnt.cosmos.db.entity.StudyMember;
 import com.nsnt.cosmos.db.entity.StudyType;
 import com.nsnt.cosmos.db.entity.User;
 import com.nsnt.cosmos.db.repository.PrivateStudyRoomRepository;
+import com.nsnt.cosmos.db.repository.PublicStudyRoomRepository;
 import com.nsnt.cosmos.db.repository.StudyMemberRepository;
 import com.nsnt.cosmos.db.repository.StudyRepository;
 import com.nsnt.cosmos.db.repository.StudyTypeRepository;
@@ -38,6 +39,8 @@ public class StudyServiceImpl implements StudyService {
 	@Autowired
 	PrivateStudyRoomRepository privateStudyRoomRepository;
 	
+	@Autowired
+	PublicStudyRoomRepository publicStudyRoomRepository;
 	/** 스터디를 생성하는 createStudy 메소드입니다. */
 	@Transactional
 	@Override
@@ -56,7 +59,8 @@ public class StudyServiceImpl implements StudyService {
 		study.setStudyPassword(studyRegisterInfo.getStudyPassword());
 		StudyType studyType = new StudyType();
 		studyType.setStudytypeNo(studyRegisterInfo.getStudytypeNo());
-		study.setStudyType(studyType);
+		study.setStudyType(studyType); // 스터디 분류
+		System.out.println(study.toString());
 		studyRepository.save(study); // 1. 스터디 생성
 		
 		StudyMember studyMember = new StudyMember();
@@ -91,7 +95,16 @@ public class StudyServiceImpl implements StudyService {
 	/** 스터디 url을 중복검사하는 checkUrlDuplicate 메소드입니다. */
 	@Override
 	public boolean checkUrlDuplicate(String url) {
-		return studyRepository.existsByUrl(url);
+		boolean public_result = publicStudyRoomRepository.existsByUrl(url);
+		boolean private_result = studyRepository.existsByUrl(url);
+		
+		System.out.println("공개방 중복 여부"+public_result);
+		System.out.println("비공개방 중복 여부"+private_result);
+		boolean result;
+		if(public_result==true || private_result == true) {
+			result = true; // 중복
+		}else result =false;
+		return result;
 	}
 
 	/** 스터디 번호에 해당하는 스터디를 찾는 findByStudyNo 메소드입니다. */

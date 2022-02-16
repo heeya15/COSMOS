@@ -32,6 +32,5 @@ public class UserRegisterPostReq {
 	int totalTime;
 	
 	int totalAttendance;
-	
-//	Timestamp joinDate;
+
 }

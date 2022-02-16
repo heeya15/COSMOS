@@ -42,6 +42,7 @@ public class BoardController {
 
 	@Autowired
 	BoardService boardService;
+	
 	@Autowired
 	StudyService studyService;
 	@PostMapping("/register")

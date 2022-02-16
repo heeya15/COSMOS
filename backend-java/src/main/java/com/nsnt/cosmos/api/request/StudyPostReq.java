@@ -23,20 +23,20 @@ public class StudyPostReq {
 	@ApiModelProperty(name="스터디 url", example="")
 	String url;
 	
+	@ApiModelProperty(name="스터디 분류", example="1")
+	int studytypeNo;
+	
 	@ApiModelProperty(name="대표 이미지", example="")
 	String image;
 
 	@ApiModelProperty(name="스터디 총 인원", example="10")
 	int totalMember; 	// 총 인원
 
-	@ApiModelProperty(name="스터디 규칙", example="")
-	String studyRule; // 스터디 규칙
-	
 	@ApiModelProperty(name="스터디 비밀번호", example="")
 	String studyPassword;
 	
-	@ApiModelProperty(name="스터디 분류", example="1")
-	int studytypeNo;
+	@ApiModelProperty(name="스터디 규칙", example="")
+	String studyRule; // 스터디 규칙
 	
 	@ApiModelProperty(name="유저 아이디", example="")
 	String userId;

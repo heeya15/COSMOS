@@ -24,7 +24,7 @@ import lombok.ToString;
 @ToString
 public class PrivateStudyRoom {
 	@Id
-	@Column(name = "privatestudyroom_id", length= 10,  nullable = false)
+	@Column(name = "privatestudyroom_id",  nullable = false)
 	private String privatestudyroomId;
 	
 	@OneToOne

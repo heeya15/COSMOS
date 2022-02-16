@@ -1,17 +1,18 @@
 package com.nsnt.cosmos.db.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,22 +24,17 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class UserHistoryId implements Serializable{
 	
-	
-//	private long userhistoryNo;
-//	private User user;
-//	private LocalDateTime date; 
-	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "userhistory_no")
-	int userhistoryNo;
+	long userhistoryNo;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name="user_id")
 	private User user;
 	
-	@Column(name = "date", columnDefinition = "TIMESTAMP")
-	@CreationTimestamp
-	private LocalDateTime date;
-	
+	@Column(name = "history_date")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Seoul")
+	private LocalDate history_date;
 	
 }
