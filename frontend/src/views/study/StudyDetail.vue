@@ -30,6 +30,7 @@
                   placeholder="비밀번호"
                   v-model="pwd"
                   @keydown.enter="pwdCheck()"
+                  autocomplete="off"
                 />
               </td>
             </tr>
@@ -80,7 +81,7 @@
                           <label for="studyName" class="mt-2">스터디 이름</label>
                         </b-col>
                         <b-col>
-                          <b-form-input id="studyName" v-model="modifyInfo.studyName"></b-form-input>
+                          <b-form-input id="studyName" v-model="modifyInfo.studyName" autocomplete="off"></b-form-input>
                         </b-col>
                       </b-row>
                       <hr class="mt-3">
@@ -137,7 +138,7 @@
                           <label for="studyPassword" class="mt-2">스터디 비밀번호</label>
                         </b-col>
                         <b-col cols="4">
-                          <b-form-input id="studyPassword" v-model="modifyInfo.studyPassword"></b-form-input>
+                          <b-form-input id="studyPassword" v-model="modifyInfo.studyPassword" autocomplete="off"></b-form-input>
                         </b-col>
                       </b-row>
                       <hr class="mt-3">
@@ -157,7 +158,7 @@
                           <label for="totalMember" class="mt-2">스터디 총 인원</label>
                         </b-col>
                         <b-col cols="4">
-                          <b-form-input id="totalMember" v-model="modifyInfo.totalMember" @keyup="recruitLimit" type="number" max="10" min="2"></b-form-input>
+                          <b-form-input id="totalMember" v-model="modifyInfo.totalMember" @keyup="recruitLimit" type="number" max="10" min="2" autocomplete="off"></b-form-input>
                         </b-col>
                       </b-row>
                       <hr class="mt-3">
