@@ -320,7 +320,7 @@ export default {
         method: 'DELETE',
         url: `/user/remove/${this.user_id}`,
       })
-      .then(res => {
+      .then(() => {
         // console.log(res)
         this.$store.dispatch('logOut')
         this.$router.push({ name:'SignUp' })
