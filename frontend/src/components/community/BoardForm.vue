@@ -57,7 +57,7 @@
           
           <!-- 스터디 구할 때 -->
           <b-col v-show="this.input.header !== false" cols="9" class="mt-2">
-            <b-form-select class="studyTypeTag" v-model="studyTypeSelected" :options="options" style="width: 100%; height: 35px; line-height: 35px; font-size: 15px;" id="studytype_name"></b-form-select>
+            <b-form-select class="studyTypeTag" v-model="studyTypeSelected" :options="options" style="width: 100%; height: 40px; line-height: 24px; font-size: 15px;" id="studytype_name"></b-form-select>
           </b-col>
 
 
