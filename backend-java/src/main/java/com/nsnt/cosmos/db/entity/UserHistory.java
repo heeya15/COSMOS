@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -51,6 +53,7 @@ public class UserHistory implements Serializable{
 	
 	@ManyToOne
 	@JoinColumn(name="user_id")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
 	
 	@Column(name = "user_start_time", columnDefinition = "TIMESTAMP")
