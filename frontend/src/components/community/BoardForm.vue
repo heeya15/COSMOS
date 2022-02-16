@@ -77,12 +77,12 @@
           <!-- 스터디원 구함 -->
           <b-col v-show="this.input.header == false">
             <b-button class="btnTag mx-2 mt-4" @click="createBoardForm">게시글 생성</b-button>
-            <b-button class="btnTag mx-2 mt-4" @click="backBoardMain">취소</b-button>
+            <b-button class="resetSearchBtn mx-2 mt-4" @click="backBoardMain">취소</b-button>
           </b-col>
           <!-- 스터디 구함 -->
           <b-col v-show="this.input.header !== false">
             <b-button class="btnTag mx-2 mt-4" @click="studyWantCreateBoardForm">게시글 생성</b-button>
-            <b-button class="btnTag mx-2 mt-4" @click="backBoardMain">취소</b-button>
+            <b-button class="resetSearchBtn mx-2 mt-4" @click="backBoardMain">취소</b-button>
           </b-col>
         </b-row>
       </div>
@@ -307,6 +307,7 @@ marquee {
 
 .btnTag {
   background-color: #afa2dd;
+  color: #000;
   border: none;
 }
 
@@ -418,6 +419,11 @@ marquee {
   animation-duration: 3s;
   animation-iteration-count: infinite;
   animation-delay: 1s;
+}
+
+.resetSearchBtn {
+    background-color: #dc3545;
+    border: none;
 }
     
 @keyframes shake{
