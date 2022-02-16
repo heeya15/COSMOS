@@ -103,12 +103,13 @@ export default {
       // , this.emailDuplicate, ' && 이메일 인증여부 : ', this.emailAuth);
       
       if(this.idRule && this.idDuplicate && this.pwdRule && this.pwdDouble && this.emailRule && this.emailDuplicate && this.emailAuth) {
+        this.resultMsg = ''
         this.$store.dispatch('signUp',this.credentials)
       } else {
         if(!this.idDuplicate) {
-          this.resultMsg = '아이디 중복 검사를 해주세요.';
+          this.resultMsg = '아이디 중복 검사를 해주세요.'
         } else if(!this.emailAuth) {
-          this.resultMsg = '이메일 인증을 해주세요.';
+          this.resultMsg = '이메일 인증을 해주세요.'
         }
       }
     },
@@ -210,6 +211,8 @@ export default {
 
     // 이메일 전송
     async sendEmail() {
+      if(this.resultMsg == '이메일 인증을 해주세요.') this.resultMsg = ''
+      
       this.emailRuleCheck();
       await this.emailDuplicateCheck();
       if(this.emailRule == false) {

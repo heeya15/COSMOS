@@ -117,7 +117,7 @@
           </div>
 
           <!-- 주별 랭킹 -->
-          <div v-if="weekTab" class="rankTable">
+          <div v-if="weekTab" class="rankTable scroll-area tableheader">
             <table class="table border table-hover scrollTable">
               <tbody v-for="(data, idx) in weeklyRank" :key="idx" class="tbl-list">
                 <tr>
@@ -133,7 +133,7 @@
                   <div v-if="idx > 2">
                     <td class="col-2" style="text-align: center;"><p class="table-content ml-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
                   </div> 
-                  <td class="col-4" style="text-align: center;"><p class="table-content ml-5"> {{ data.userHistoryWeekId.user_id }} </p></td>
+                  <td class="col-4" style="text-align: center;"><p class="table-content ml-5"> {{ data.user_id }} </p></td>
                   <td class="col-4" style="text-align: center;"><p class="table-content ml-5"> {{ userTime[idx] }} </p></td>
                   <td class="col-1" style="text-align: center;"></td>
                 </tr>
@@ -142,7 +142,7 @@
           </div>
 
           <!-- 월별 랭킹 -->
-          <div v-if="monthTab" class="rankTable">
+          <div v-if="monthTab" class="rankTable scroll-area tableheader">
             <table class="table border table-hover scrollTable">
               <tbody v-for="(data, idx) in monthlyRank" :key="idx" class="tbl-list">
                 <tr>
@@ -506,7 +506,7 @@ export default {
         .catch(err => {
           console.log(err)
         })
-        console.log(">>>>>>>>>>> ",publicstudyroomId)
+        // console.log(">>>>>>>>>>> ",publicstudyroomId)
       }    
     },
 
@@ -543,8 +543,8 @@ export default {
         var month = (today.getMonth()+1)
         var day = today.getDate()
         this.date = today.getFullYear()+'-'+(month<10?'0'+month : month)+'-'+(day<10?'0'+day : day)
-        console.log(">>>>>>>>>>>>>>>>>> 일별 랭킹 : ", res.data)
-        console.log(">>>>>>>>>>>> 오늘 : ", this.date)
+        // console.log(">>>>>>>>>>>>>>>>>> 일별 랭킹 : ", res.data)
+        // console.log(">>>>>>>>>>>> 오늘 : ", this.date)
 
         this.dailyRank = []   // 이전 데이터 비우기
         this.dailyRank = res.data   
@@ -560,6 +560,7 @@ export default {
       })
     },
 
+    
     // 주별 랭킹
     getWeeklyRank() {
       http({
@@ -567,6 +568,9 @@ export default {
         url: '/history/searchAll/week',
       })
       .then(res => {
+        // this.weekdate = res.data[0].userHistoryWeekId.week_date
+        // console.log(">>>>>>>>>>>>>> week : ", res.data)
+
         // 이번주 월요일
         var today = new Date();
         var day = today.getDay();
@@ -577,10 +581,15 @@ export default {
         this.weeklyRank = res.data 
         this.userTime = []
         for(var i=0; i<res.data.length; i++) {
-          var sec = res.data[i].totalTime
-          var time = new Date(sec * 1000).toISOString().slice(11, 19)
+          var d = parseInt(res.data[i].total_time/86400)
+          var time = res.data[i].total_time - d * 86400
+          var hour = parseInt(time/3600);
+          var min = parseInt((time%3600)/60);
+          var sec = time%60;
 
-          this.userTime[i] = time
+          this.userTime[i] = d + "일 " + (hour < 10 ? "0" + hour : hour) + ":" + (min < 10 ? "0" + min : min) 
+                            + ":" + (sec < 10 ? "0" + sec : sec)
+
         }  
       })
       .catch(err => {
@@ -606,10 +615,14 @@ export default {
         
         this.userTime = []
         for(var i=0; i<res.data.length; i++) {
-          var sec = res.data[i].totalTime
-          var time = new Date(sec * 1000).toISOString().slice(11, 19)
+          var d = parseInt(res.data[i].totalTime/86400)
+          var time = res.data[i].totalTime - d * 86400
+          var hour = parseInt(time/3600);
+          var min = parseInt((time%3600)/60);
+          var sec = time%60;
 
-          this.userTime[i] = time
+          this.userTime[i] = d + "일 " + (hour < 10 ? "0" + hour : hour) + ":" + (min < 10 ? "0" + min : min) 
+                            + ":" + (sec < 10 ? "0" + sec : sec)
         }  
       })
       .catch(err => {
@@ -1233,7 +1246,7 @@ thead {
 
 .scroll-area { 
   width: 100%; 
-  max-height: 24vh; 
+  max-height: 50vh; 
   overflow-y: scroll; 
   -ms-overflow-style: none; 
   /* IE and Edge */ 
