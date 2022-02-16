@@ -22,7 +22,7 @@
 
           <!-- 관리자인 경우 -->
           <b-nav-item v-if="this.$store.state.userId == 'admin'">
-            <router-link :to="{ name:'AdminPage' }" class="nav-text text-decoration-none mx-1 px-2">회원관리</router-link>
+            <router-link :to="{ name:'AdminPage' }" class="nav-text text-decoration-none mx-1 px-2">관리자</router-link>
           </b-nav-item>
 
           <b-nav-item v-else>
