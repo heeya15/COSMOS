@@ -4,7 +4,7 @@
             <!-- 검색 Start -->
             <div class="searchbar mb-4 d-flex justify-content-center">
                 <b-form-select class="mx-1" id="selectSearchOption" v-model="searchSelected" :options="searchOpt" @change="headerSel()" ></b-form-select>
-                <b-form-input class="mr-2" id="inputSearchOption" placeholder="검색할 키워드를 입력하세요." v-model="word" @keydown.enter="search"></b-form-input>
+                <b-form-input class="mr-2" id="inputSearchOption" placeholder="검색할 키워드를 입력하세요." v-model="word" @keydown.enter="search" autocomplete="off"></b-form-input>
                 <b-button class="mr-1" id="studyTypeSearchBtn" @click="search">검색</b-button>
                 <b-button id="resetSearchBtn" @click="searchInit()">초기화</b-button>
             </div>
@@ -45,12 +45,12 @@
                     
                     <div class="d-flex justify-content-around" align="center">
                         <span id="modalinput">{{currentItem.studytypeno}}</span>
-                        <input style="width: 50%;" v-model="updatestudytypename" id="modalinput" placeholder="수정할 스터디 분류명을 입력해주세요...."/>
+                        <input style="width: 50%;" v-model="updatestudytypename" id="modalinput" placeholder="수정할 스터디 분류명을 입력해주세요...." autocomplete="off" />
                     </div>
                     
                     <hr>
                     
-                    <div class="justify-content-center" align="right">
+                    <div class="justify-content-center" align="right"> 
                         <b-button class="m-2" variant="success" @click="updateStudyType">수정</b-button>
                         <b-button class="m-2" @click="$bvModal.hide('modal-lg')">취소</b-button>
                     </div>
@@ -67,7 +67,7 @@
                 <hr>
                 
                 <div align="center">
-                    <input style="width: 50%;" v-model="createstudytypename" id="modalinput" placeholder="추가할 스터디 분류명을 입력해주세요...."/>
+                    <input autocomplete="off" style="width: 50%;" v-model="createstudytypename" id="modalinput" placeholder="추가할 스터디 분류명을 입력해주세요...."/>
                 </div>
                 
                 <hr>
