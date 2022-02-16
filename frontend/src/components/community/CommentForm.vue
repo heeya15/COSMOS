@@ -6,7 +6,7 @@
           <p>댓글</p>
         </b-col>
         <b-col cols="6" class="mt-3">
-          <b-form-input v-model="commentInput.content" @keyup.enter="createComment"></b-form-input>
+          <b-form-input v-model="commentInput.content" @keyup.enter="createComment" autocomplete="off"></b-form-input>
         </b-col>
         <b-col cols="3" class="mt-3">
           <b-button class="btnTag" @click="createComment">작성</b-button>
