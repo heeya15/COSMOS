@@ -179,8 +179,8 @@ export default {
     },
 
     // 이메일 중복 검사
-    emailDuplicateCheck() {
-      http({
+    async emailDuplicateCheck() {
+      await http({
         method: 'GET',
         url: `/email/emailcheck/${this.credentials.userEmail}`,
       })
@@ -211,9 +211,9 @@ export default {
     },
 
     // 이메일 전송
-    sendEmail() {
+    async sendEmail() {
       this.emailRuleCheck();
-      this.emailDuplicateCheck();
+      await this.emailDuplicateCheck();
       if(this.emailRule == false) {
         alert("유효하지 않은 이메일 형식입니다. 다시 입력해주세요")
         document.getElementById('email').value = ''
