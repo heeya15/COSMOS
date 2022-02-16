@@ -319,10 +319,9 @@ export default {
       http({
         method: 'DELETE',
         url: `/user/remove/${this.user_id}`,
-        headers: this.getToken()
       })
       .then(res => {
-        console.log(res)
+        // console.log(res)
         this.$store.dispatch('logOut')
         this.$router.push({ name:'SignUp' })
         alert('COSMOS에서 회원탈퇴완료')
