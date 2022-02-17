@@ -37,8 +37,9 @@ public interface UserRepository extends JpaRepository<User, String> { // 제네�
  			, nativeQuery = true)
  	int findByUserEmail(@Param("user_email") String user_email);
  	
- 	@Query(value="select * \r\n" + 
- 			" 	from user"
+ 	@Query(value="select * from user\r\n" + 
+ 			"where user_id <> \"admin\"\r\n" + 
+ 			"order by join_date desc;"
  			, nativeQuery = true)
- 	List<UserDtoRes> findAllUser();
+ 	List<User> findAllUserJoinDateDesc();
 }

@@ -84,9 +84,9 @@ public class UserServiceImpl implements UserService {
 		
 		return userRepository.isLeader(user_id, study_no);
 	}
-	
+	// 관리자 아이디를 제외한 모든 user 가입날짜 기준 내림차순으로 조회 하는 함수.
 	@Override
 	public List<User> findAll() {
-		return userRepository.findAll();
+		return userRepository.findAllUserJoinDateDesc();
 	}
 }
