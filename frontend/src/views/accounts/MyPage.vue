@@ -60,7 +60,7 @@
             </div>
             <b-modal ref="myModal" id="modal-level" hide-header hide-footer size="m">
               <div class="pt-2 px-3 d-flex justify-content-between" style='font-family: "yg-jalnan";'>
-                <h3>스터디 분류 수정</h3>
+                <h3>등급 정보</h3>
                 <img id="exitBtn" src="https://i.ibb.co/GWXqhqv/close.png" alt="close" border="0" @click="$bvModal.hide('modal-level')">
               </div>
               
