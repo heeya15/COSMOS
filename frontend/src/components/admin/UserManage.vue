@@ -27,8 +27,8 @@
                     </tr>
                 </thead>
                 <tbody id="userTable" v-for="(user, idx) in paginatedItems" :key="idx">
-                    <tr align="center" v-if="user.userId != 'admin'">
-                        <td>{{ 10*(currentPage-1)+(idx) }}</td>
+                    <tr align="center">
+                        <td>{{ 10*(currentPage-1)+(idx+1) }}</td>
                         <td><p>{{ user.userName }}</p></td>
                         <td><p>{{ user.userId }}</p></td>
                         <td><p>{{ user.userEmail }}</p></td>
