@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nsnt.cosmos.api.response.UserHistoryWeekDtoRes;
 import com.nsnt.cosmos.api.service.UserHistoryService;
 import com.nsnt.cosmos.common.auth.SsafyUserDetails;
 import com.nsnt.cosmos.common.model.response.BaseResponseBody;
 import com.nsnt.cosmos.db.entity.UserHistory;
 import com.nsnt.cosmos.db.entity.UserHistoryDay;
 import com.nsnt.cosmos.db.entity.UserHistoryMonth;
-import com.nsnt.cosmos.db.entity.UserHistoryWeek;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -125,10 +125,10 @@ public class UserHistoryController {
 					@ApiResponse(code = 401, message = "인증 실패"),
 					@ApiResponse(code = 404, message = "사용자 없음"), 
 					@ApiResponse(code = 500, message = "서버 오류")})
-	public ResponseEntity<List<UserHistoryWeek>> getWeeklyUserHistory() {
+	public ResponseEntity<List<UserHistoryWeekDtoRes>> getWeeklyUserHistory() {
 
-		List<UserHistoryWeek> userhistoryweek = historyService.getWeeklyUserHistory();
-		return new ResponseEntity<List<UserHistoryWeek>>(userhistoryweek,HttpStatus.OK);
+		List<UserHistoryWeekDtoRes> userhistoryweek = historyService.getWeeklyUserHistory();
+		return new ResponseEntity<List<UserHistoryWeekDtoRes>>(userhistoryweek,HttpStatus.OK);
 	}
 	
 	/** 월별 랭킹 검색 */

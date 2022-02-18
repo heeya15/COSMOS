@@ -3,16 +3,17 @@ package com.nsnt.cosmos.api.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nsnt.cosmos.api.response.UserHistoryWeekDtoRes;
 import com.nsnt.cosmos.db.entity.User;
 import com.nsnt.cosmos.db.entity.UserHistory;
 import com.nsnt.cosmos.db.entity.UserHistoryDay;
 import com.nsnt.cosmos.db.entity.UserHistoryMonth;
-import com.nsnt.cosmos.db.entity.UserHistoryWeek;
 import com.nsnt.cosmos.db.repository.UserHistoryDayRepository;
 import com.nsnt.cosmos.db.repository.UserHistoryMonthRepository;
 import com.nsnt.cosmos.db.repository.UserHistoryRepository;
@@ -103,15 +104,24 @@ public class UserHistoryServiceImpl implements UserHistoryService {
 	}
 	
 	/** 주별 기록 조회 */
-	public List<UserHistoryWeek> getWeeklyUserHistory() {
+	public List<UserHistoryWeekDtoRes> getWeeklyUserHistory() {
 		LocalDateTime now = LocalDateTime.now();
-		List<UserHistoryWeek> userhistoryweek = userhistoryWeekRepository.findAllWeekUserHistory(now);
+		List<Object[]> userhistoryweek = userhistoryWeekRepository.findAllWeekUserHistory(now);
+		List<UserHistoryWeekDtoRes> result = new ArrayList<UserHistoryWeekDtoRes>();
 		
 		for(int i=0; i<userhistoryweek.size(); i++) {
-			System.out.println(userhistoryweek.get(i).toString());
+			
+			Object userId = userhistoryweek.get(i)[0];
+			Object totalTime = userhistoryweek.get(i)[1]; 
+			UserHistoryWeekDtoRes week = new UserHistoryWeekDtoRes();
+			
+			week.setTotal_time(totalTime);
+			week.setUser_id(userId);
+			
+			result.add(week);
 		}
 		
-		return userhistoryweek;
+		return result;
 	} 
 	
 	/** 월별 기록 조회 */
