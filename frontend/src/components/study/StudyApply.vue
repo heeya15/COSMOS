@@ -3,8 +3,6 @@
     <h3>가입 요청 회원</h3>
     <div v-show="applyMembers===null" class="m-5">가입 요청한 회원이 없습니다.</div>
     <b-row v-for="member in applyMembers" :key="member.id" class="m-5 align-items-center">    
-      <!-- <b-col style="background-color:#D3D0D2; height: 50px; line-height:50px;">{{ member.user_name }}</b-col>
-      <b-col style="background-color:#D3D0D2; height: 50px; line-height:50px;">{{ member.user_id }}</b-col> -->
       <b-col cols="2"></b-col>
       <b-col cols="4" style="background-color: #ededed; height: 50px; line-height:50px; border-radius:8px;">{{ member.user_name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;({{ member.user_id }})</b-col>
       <b-col cols="4" v-if="power.leader">
@@ -58,8 +56,7 @@ export default {
         url: '/studymember/register',
         data: memberInfo
       })
-      .then(res => {
-        console.log(res)
+      .then(() => {
         alert(`${memberInfo.user_id}님이 스터디 멤버로 추가되었습니다.`)
         this.deleteApplyMember(member.applymember_no)
       })
@@ -72,8 +69,7 @@ export default {
         method: 'DELETE',
         url: `/study/applyMember/remove/${applymember_no}`
       })
-      .then(res => {
-        console.log(res)
+      .then(() => {
         // alert(`${this.memberInfo.userName}님이 스터디 신청 멤버에서 삭제되었습니다.`)
         this.showApplyMember()
         this.$store.dispatch('getStudyMembers', this.studyNo)

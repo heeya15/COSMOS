@@ -1,5 +1,4 @@
 <template>
-
   <div id="main_page">
       <!-- 모달 시작-->
       <b-modal ref="my-modal" :id="infoModal.id" hide-footer centered hide-header>
@@ -18,7 +17,7 @@
         </b-row>
         <div class="text-center">
           <button @click="hideModal" class="cancelBtn ml-3 float-right" >취소</button>
-          <button @click="goStudyRoom(infoModal.publicstudyroomId, infoModal.studyName , infoModal.numberOfMember )" type="submit" class="enterBtn ml-3 float-right" >입장</button>
+          <button @click="goStudyRoom(infoModal.publicstudyroomId, infoModal.studyName , infoModal.studyRule )" type="submit" class="enterBtn ml-3 float-right" >입장</button>
         </div>
       </b-modal>
       <!-- 모달 끝 -->
@@ -59,7 +58,7 @@
               <b-dropdown-item id="weekTab" @click="changeTab('weekTab')" href="#">주 (Week)</b-dropdown-item>
               <b-dropdown-item id="monthTab" @click="changeTab('monthTab')" href="#">월 (Month)</b-dropdown-item>
             </b-dropdown>
-            <p class="mt-3" style="font-family: BMJual; color: #828282;">{{ date }} 06:00 AM UPDATED</p>
+            <p class="mt-3" style="font-family: BMJual; color: #828282;">{{ date }} UPDATED</p>
           </div>
 
           <!-- 랭킹 슬라이드 -->
@@ -118,7 +117,7 @@
           </div>
 
           <!-- 주별 랭킹 -->
-          <div v-if="weekTab" class="rankTable">
+          <div v-if="weekTab" class="rankTable scroll-area tableheader">
             <table class="table border table-hover scrollTable">
               <tbody v-for="(data, idx) in weeklyRank" :key="idx" class="tbl-list">
                 <tr>
@@ -134,7 +133,7 @@
                   <div v-if="idx > 2">
                     <td class="col-2" style="text-align: center;"><p class="table-content ml-3" style="font-size: 20px;"> {{ idx+1 }} </p></td>
                   </div> 
-                  <td class="col-4" style="text-align: center;"><p class="table-content ml-5"> {{ data.userHistoryWeekId.user_id }} </p></td>
+                  <td class="col-4" style="text-align: center;"><p class="table-content ml-5"> {{ data.user_id }} </p></td>
                   <td class="col-4" style="text-align: center;"><p class="table-content ml-5"> {{ userTime[idx] }} </p></td>
                   <td class="col-1" style="text-align: center;"></td>
                 </tr>
@@ -143,7 +142,7 @@
           </div>
 
           <!-- 월별 랭킹 -->
-          <div v-if="monthTab" class="rankTable">
+          <div v-if="monthTab" class="rankTable scroll-area tableheader">
             <table class="table border table-hover scrollTable">
               <tbody v-for="(data, idx) in monthlyRank" :key="idx" class="tbl-list">
                 <tr>
@@ -190,12 +189,8 @@
               <th>🌼 분류 🌼</th>
             </thead>
             <tbody v-for="(board, idx) in boardList" :key="idx" @click="goBoardDetail(board.boardNo)">
-              <!-- <td><p class="mx-3">🌷 {{ board.contentTitle }} 🌷</p></td> -->
-              <!-- <td align="center"><p>🌷 {{ board.studytypeName }} 🌷</p></td> -->
                 <td><p class="mx-3 studyboard"> {{ board.contentTitle }} </p></td>
                 <td align="center"><p class="studyboard"> {{ board.studytypeName }} </p></td>
-                <!-- <td><p class="mx-3"> {{ board.contentTitle }} </p></td> -->
-                <!-- <td align="center"><p> {{ board.studytypeName }} </p></td> -->
               <p></p>
             </tbody>
           </table>
@@ -212,7 +207,6 @@
         <h1 class="text-center">오픈 스터디</h1>
         <div class="my-5 p-5" align="center">  
           <div v-if="publicStudyList.length >= 1" >
-        <!-- <VueSlickCarousel ref="slick" :options="slickOption"> -->
           <VueSlickCarousel ref="slick" 
             :arrows="true"
             :dots="true"
@@ -245,7 +239,7 @@
                 </template>
               </VueSlickCarousel>
             </div>
-          <div v-else><p id="nostudy">아직 가입한 스터디가 없습니다.</p></div>
+          <div v-else><p id="nostudy">아직 등록된 오픈 스터디가 없습니다.</p></div>
         </div>
       </div>
       <!-- 오픈(공개) 스터디 목록 End -->
@@ -310,7 +304,8 @@ export default {
         id: "info-modal",
         publicstudyroomId:"",
         studyName:"",
-        numberOfMember:""
+        numberOfMember:"",
+        studyRule: "",
       },
 
       slickOption: {
@@ -336,8 +331,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(publicStudyStore,["SET_ROOM_NAME", "SET_ROOM_URL","SET_PARTICIPANT","SET_ROOM_STUDY_NO"]),
-    // ...mapMutations(meetingStore,["SET_ROOM_SETTIG_ISAUDIO", "SET_ROOM_SETTIG_ISVIDIO"]),
+    ...mapMutations(publicStudyStore,["SET_ROOM_NAME", "SET_ROOM_URL","SET_PARTICIPANT","SET_ROOM_STUDY_NO","SET_STUDYRULE"]),
     ...mapMutations(meetingStore,["SET_ROOM_SETTING"]),
     getHeader(){
       const token = localStorage.getItem('jwt')
@@ -374,14 +368,12 @@ export default {
       })
       .then(res => {
         this.boardItems = res.data
-        console.log(res.data);
         this.boardItems = res.data.sort(function(a, b) {
           return b.boardNo - a.boardNo;
         })
 
-        console.log(">>>>>> 전달 받은 리스트 : ", this.boardItems);
+        // console.log(">>>>>> 전달 받은 리스트 : ", this.boardItems);
 
-        // var len = this.boardItems.length > 5 ? 5 : this.boardItems.length;
         for(var i=0; i<this.boardItems.length; i++) {
           if (this.boardItems[i].header === false) {
             this.boardList.push(this.boardItems[i]);
@@ -403,7 +395,7 @@ export default {
         url: '/publicroom/search/searchAll/publicRoom',
       })
       .then(res => {
-        console.log(">>>>>>>>>>>>>", res.data);
+        // console.log(">>>>>>>>>>>>>", res.data);
         this.publicStudyList = res.data
         for(var i=0; i<this.publicStudyList.length; i++) {
         // 오픈 스터디 객체 배열을 탐색하면서 스터디 현재 인원 파악
@@ -450,7 +442,7 @@ export default {
         headers: this.getHeader()
       })
       .then(res => {
-        console.log('checkbanned 되는지 확인!!!', res)
+        // console.log('checkbanned 되는지 확인!!!', res)
         this.isBanned = res.data
       })
       .catch(err => {
@@ -466,13 +458,11 @@ export default {
         return
       }
       this.checkBanned(publicstudy.publicstudyroomId)
-      this.infoModal.publicstudyroomId = publicstudy.publicstudyroomId;
-      this.infoModal.studyName = publicstudy.studyName;
-      this.infoModal.numberOfMember = publicstudy.numberOfMember; 
-      await this.getPublicStudyMemberCount(this.infoModal.publicstudyroomId); // 해당 스터디룸 멤버 참가자 수 들고옴.
-      console.log("모달창 들어옴?")
-      console.log(this.count);
-      console.log(this.infoModal.numberOfMember);
+      this.infoModal.publicstudyroomId = publicstudy.publicstudyroomId
+      this.infoModal.studyName = publicstudy.studyName
+      this.infoModal.numberOfMember = publicstudy.numberOfMember
+      this.infoModal.studyRule = publicstudy.studyRule
+      await this.getPublicStudyMemberCount(this.infoModal.publicstudyroomId) // 해당 스터디룸 멤버 참가자 수 들고옴.
       if(this.count == this.infoModal.numberOfMember){
           alert("현재 해당 공개 스터디룸에 최대 인원으로 가득 차 있습니다.");
         return;
@@ -480,36 +470,26 @@ export default {
       this.$root.$emit("bv::show::modal", this.infoModal.id, button);
     },
     hideModal() {
-      this.$refs["my-modal"].hide();
+      this.$refs["my-modal"].hide()
     },
    // 공개 방 가기(가면 공개방 멤버로 추가)
-    async goStudyRoom(publicstudyroomId, studyName ) {
-    
-      console.log("공개방 가기 버튼 클릭.")
-      console.log(publicstudyroomId, studyName);
-    
+    async goStudyRoom(publicstudyroomId, studyName, studyRule ) {    
       var token = localStorage.getItem('jwt')
-      var decoded = JwtDecode(token);
-      var myId = decoded.sub;
-      console.log("들어가기전 셋팅 값 확인")
-      console.log( this.settings.mic)
-      console.log( this.settings.cam)
+      var decoded = JwtDecode(token)
+      var myId = decoded.sub
+      
       // 마이크 캠 셋팅
-      // this.SET_ROOM_SETTIG_ISAUDIO(this.settings.mic);
-      // this.SET_ROOM_SETTIG_ISVIDIO(this.settings.cam);
       this.SET_ROOM_SETTING(this.settings)
       // 방 입장을 위한 셋팅
-      this.SET_ROOM_NAME(studyName);
-      this.SET_ROOM_URL(publicstudyroomId);
-      this.SET_PARTICIPANT(myId);
+      this.SET_ROOM_NAME(studyName)
+      this.SET_ROOM_URL(publicstudyroomId)
+      this.SET_PARTICIPANT(myId)
+      this.SET_STUDYRULE(studyRule)
 
-      // this.$store.state.roomUrl = publicstudyroomId;
-      // this.$store.state.roomName = studyName;
-      // this.$store.state.participant = myId
 
       // 강퇴된적 있는 유저면 입장 불가
       if (this.isBanned === true){
-        alert('입장이 불가능한 스터디입니다.');
+        alert('입장이 불가능한 스터디입니다.')
         return;
       } else {
         // 멤버로 추가
@@ -519,14 +499,14 @@ export default {
           data: {leader : false, publicstudyroomId: publicstudyroomId},
           headers: this.getHeader()
         })
-        .then(res => {
-          console.log('>>>>>>>>>>>>>>>>>>>>>>메인에서 공개스터디입장axios',res.data)
+        .then(() => {
+          // console.log('>>>>>>>>>>>>>>>>>>>>>>메인에서 공개스터디입장axios',res.data)
           this.$router.push({name: 'PublicStudyRoom'})
         })
         .catch(err => {
           console.log(err)
         })
-        console.log(">>>>>>>>>>> ",publicstudyroomId)
+        // console.log(">>>>>>>>>>> ",publicstudyroomId)
       }    
     },
 
@@ -558,8 +538,13 @@ export default {
         // this.date = year + "-" + month + "-" + date
         // this.day = today.toString().substring(0,3)
 
-        this.date = res.data[0].userhistoryDayId.day_date.substring(0,10)
-        console.log(">>>>>>>>>>>>>>>>>> 일별 랭킹 : ", res.data)
+        // this.date = res.data[0].userhistoryDayId.day_date.substring(0,10)
+        var today = new Date()
+        var month = (today.getMonth()+1)
+        var day = today.getDate()
+        this.date = today.getFullYear()+'-'+(month<10?'0'+month : month)+'-'+(day<10?'0'+day : day)
+        // console.log(">>>>>>>>>>>>>>>>>> 일별 랭킹 : ", res.data)
+        // console.log(">>>>>>>>>>>> 오늘 : ", this.date)
 
         this.dailyRank = []   // 이전 데이터 비우기
         this.dailyRank = res.data   
@@ -575,6 +560,7 @@ export default {
       })
     },
 
+    
     // 주별 랭킹
     getWeeklyRank() {
       http({
@@ -583,6 +569,7 @@ export default {
       })
       .then(res => {
         // this.weekdate = res.data[0].userHistoryWeekId.week_date
+        // console.log(">>>>>>>>>>>>>> week : ", res.data)
 
         // 이번주 월요일
         var today = new Date();
@@ -594,10 +581,15 @@ export default {
         this.weeklyRank = res.data 
         this.userTime = []
         for(var i=0; i<res.data.length; i++) {
-          var sec = res.data[i].totalTime
-          var time = new Date(sec * 1000).toISOString().slice(11, 19)
+          var d = parseInt(res.data[i].total_time/86400)
+          var time = res.data[i].total_time - d * 86400
+          var hour = parseInt(time/3600);
+          var min = parseInt((time%3600)/60);
+          var sec = time%60;
 
-          this.userTime[i] = time
+          this.userTime[i] = d + "일 " + (hour < 10 ? "0" + hour : hour) + ":" + (min < 10 ? "0" + min : min) 
+                            + ":" + (sec < 10 ? "0" + sec : sec)
+
         }  
       })
       .catch(err => {
@@ -623,10 +615,14 @@ export default {
         
         this.userTime = []
         for(var i=0; i<res.data.length; i++) {
-          var sec = res.data[i].totalTime
-          var time = new Date(sec * 1000).toISOString().slice(11, 19)
+          var d = parseInt(res.data[i].totalTime/86400)
+          var time = res.data[i].totalTime - d * 86400
+          var hour = parseInt(time/3600);
+          var min = parseInt((time%3600)/60);
+          var sec = time%60;
 
-          this.userTime[i] = time
+          this.userTime[i] = d + "일 " + (hour < 10 ? "0" + hour : hour) + ":" + (min < 10 ? "0" + min : min) 
+                            + ":" + (sec < 10 ? "0" + sec : sec)
         }  
       })
       .catch(err => {
@@ -841,7 +837,6 @@ export default {
 }
 
 th, td {   
-  /* text-align: center; */
   vertical-align : middle !important;
 }
 
@@ -1251,7 +1246,7 @@ thead {
 
 .scroll-area { 
   width: 100%; 
-  max-height: 24vh; 
+  max-height: 50vh; 
   overflow-y: scroll; 
   -ms-overflow-style: none; 
   /* IE and Edge */ 

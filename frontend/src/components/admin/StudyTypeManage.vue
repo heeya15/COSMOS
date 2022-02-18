@@ -4,7 +4,7 @@
             <!-- 검색 Start -->
             <div class="searchbar mb-4 d-flex justify-content-center">
                 <b-form-select class="mx-1" id="selectSearchOption" v-model="searchSelected" :options="searchOpt" @change="headerSel()" ></b-form-select>
-                <b-form-input class="mr-2" id="inputSearchOption" placeholder="검색할 키워드를 입력하세요." v-model="word" @keydown.enter="search"></b-form-input>
+                <b-form-input class="mr-2" id="inputSearchOption" placeholder="검색할 키워드를 입력하세요." v-model="word" @keydown.enter="search" autocomplete="off"></b-form-input>
                 <b-button class="mr-1" id="studyTypeSearchBtn" @click="search">검색</b-button>
                 <b-button id="resetSearchBtn" @click="searchInit()">초기화</b-button>
             </div>
@@ -25,7 +25,7 @@
                     </tr>
                 </thead>
                 <tbody id="studyTypeTable" align="center" v-for="(studytype, idx) in paginatedItems" :key="idx">
-                    <td>{{ studytype.studytypeNo }}</td>
+                    <td>{{ 10*(currentPage-1)+(idx+1)}}</td>
                     <td>{{ studytype.studytypeName }}</td>
                     <td>
                         <b-button id="editBtn" @click="editModal(studytype)" v-b-modal.modal-lg>수정</b-button>
@@ -45,12 +45,12 @@
                     
                     <div class="d-flex justify-content-around" align="center">
                         <span id="modalinput">{{currentItem.studytypeno}}</span>
-                        <input style="width: 50%;" v-model="updatestudytypename" id="modalinput" placeholder="수정할 스터디 분류명을 입력해주세요...."/>
+                        <input style="width: 50%;" v-model="updatestudytypename" id="modalinput" placeholder="수정할 스터디 분류명을 입력해주세요...." autocomplete="off" />
                     </div>
                     
                     <hr>
                     
-                    <div class="justify-content-center" align="right">
+                    <div class="justify-content-center" align="right"> 
                         <b-button class="m-2" variant="success" @click="updateStudyType">수정</b-button>
                         <b-button class="m-2" @click="$bvModal.hide('modal-lg')">취소</b-button>
                     </div>
@@ -67,7 +67,7 @@
                 <hr>
                 
                 <div align="center">
-                    <input style="width: 50%;" v-model="createstudytypename" id="modalinput" placeholder="추가할 스터디 분류명을 입력해주세요...."/>
+                    <input autocomplete="off" style="width: 50%;" v-model="createstudytypename" id="modalinput" placeholder="추가할 스터디 분류명을 입력해주세요...."/>
                 </div>
                 
                 <hr>
@@ -127,13 +127,10 @@ export default ({
     methods: {
         paginate (page_size, page_number) {
             let itemsToParse = this.studytypes
-            console.log(itemsToParse.slice(0, 5))
-            console.log(page_number * page_size, (page_number + 1) * page_size)
             this.paginatedItems = itemsToParse.slice(page_number * page_size, (page_number + 1) * page_size);
         },
         
         onPageChanged() {
-            console.log(this.currentPage)
             this.paginate(10, this.currentPage - 1)
         },
 
@@ -147,6 +144,7 @@ export default ({
                 this.src = res.data
                 this.rowws = res.data.length
                 this.items = res.data
+                this.currentPage = 1
                 if(this.studytypes) {
                     this.paginate(10, 0)
                 }
@@ -178,7 +176,6 @@ export default ({
         editModal(item) {
             this.currentItem.studytypeno = item.studytypeNo;
             this.currentItem.studytypename = item.studytypeName;
-            console.log(this.currentItem);
         },
 
         // 스터디 분류명 수정

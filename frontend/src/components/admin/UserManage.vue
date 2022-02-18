@@ -4,7 +4,7 @@
             <!-- 검색 -->
             <div class="searchbar mb-4 d-flex justify-content-center">
                 <b-form-select class="mx-1" id="selectSearchOption" v-model="searchSelected" :options="searchOpt" @change="headerSel()" ></b-form-select>
-                <b-form-input class="mr-2" id="inputSearchOption" placeholder="검색할 키워드를 입력하세요." v-model="word" @keydown.enter="search"></b-form-input>
+                <b-form-input class="mr-2" id="inputSearchOption" placeholder="검색할 키워드를 입력하세요." v-model="word" @keydown.enter="search" autocomplete="off"></b-form-input>
                 <b-button class="mr-1" id="userSearchBtn" @click="search">검색</b-button>
                 <b-button id="resetSearchBtn" @click="searchInit()">초기화</b-button>
             </div>
@@ -27,8 +27,8 @@
                     </tr>
                 </thead>
                 <tbody id="userTable" v-for="(user, idx) in paginatedItems" :key="idx">
-                    <tr align="center" v-if="user.userId != 'admin'">
-                        <td>{{ 10*(currentPage-1)+(idx) }}</td>
+                    <tr align="center">
+                        <td>{{ 10*(currentPage-1)+(idx+1) }}</td>
                         <td><p>{{ user.userName }}</p></td>
                         <td><p>{{ user.userId }}</p></td>
                         <td><p>{{ user.userEmail }}</p></td>
@@ -115,8 +115,7 @@ export default {
                     method: 'get',
                     url: `/admin/remove/${deleteUserId}`,
                 })
-                .then(res => {
-                    console.log(res)
+                .then(() => {
                     this.$router.go();
                 })
                 .catch(err => {

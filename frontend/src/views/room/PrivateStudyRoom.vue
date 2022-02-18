@@ -2,7 +2,6 @@
 	<div id="main">
 		<div id="main-container" class="d-flex">
 			<div id="session-aside-left" v-if="session">
-				<!-- <p><img src="https://i.ibb.co/wrgGKpS/asideimg01.png" class="sideMenuImg" alt="settings"></p> -->
 				<p v-if="power.leader"><img src="https://i.ibb.co/x2JRqqX/asideimg02.png" class="sideMenuImg" alt="score" @click="scoreModal=true"></p>
 				
 				<!-- 상벌점기능 모달 -->
@@ -15,8 +14,6 @@
 								<tr>
 									<th>이름</th>
 									<th>Email</th>
-									<th>출석여부</th>
-									<th>공부시간</th>
 									<th>점수</th>
 								</tr>
 							</thead>
@@ -24,8 +21,6 @@
 								<tr>
 								<td>{{member.user_name}}</td>
 								<td>{{member.user_email}}</td>
-								<td>{{member.attendance}}</td>
-								<td>{{member.studytime}}</td>
 								<td style="width:75px;"><button class="score-btn1" @click="minusScore(member.score, member.studymember_no)">-</button><span class="ml-4">{{member.score}}</span><button class="score-btn2" @click="plusScore(member.score, member.studymember_no)">+</button></td>
 								</tr>
 							</tbody>
@@ -35,8 +30,6 @@
 						</div>
 					</div>
 				</div>
-
-				<!-- <p v-if="power.authority"><img src="https://i.ibb.co/nBMF7Vb/asideimg03.png" class="sideMenuImg" alt="calendar"></p> -->
 			</div>
 			
 			<div id="session-center">
@@ -282,7 +275,6 @@ export default {
 			return this.padTime(hours)
 		},
 		minutes() {
-			// const minutes = Math.floor(this.time / 60)
 			const minutes = Math.floor((this.time - (this.hours * 3600)) / 60)
 			return this.padTime(minutes)
 		},
@@ -303,9 +295,6 @@ export default {
 
 		if(this.audio == true) this.audioMsg = "마이크 OFF";
 		else this.audioMsg = "마이크 ON";
-		// this.muteVideo();
-		// this.muteAudio();
-		
 
 		this.mySessionId = this.roomUrl;
 		this.myUserName = this.participant;
@@ -342,10 +331,9 @@ export default {
 			if(!this.inputHour && !this.inputMin && !this.inputSec){
 				alert("시간을 설정해주세요.")
 			} else{
-			//1000ms = 1 second
-			this.timer = setInterval(() => this.countdown(), 1000)
-			this.resetButton = true
-			this.edit = false
+				this.timer = setInterval(() => this.countdown(), 1000)
+				this.resetButton = true
+				this.edit = false
 			}
 		},
 		stopTimer: function() {
@@ -433,7 +421,7 @@ export default {
 				headers: this.getUserToken(),
 			})
 			.then( res => {
-				console.log(res);
+				// console.log(res);
 				this.userhistoryNo = res.data.userhistoryNo;
 			})
 			.catch(err => {
@@ -470,16 +458,16 @@ export default {
 			// 같은 session 내에서 텍스트 채팅을 위한 signal
 			this.session.on('signal:my-chat', (event) => {
 				var message = event.data.split("&$");
-				console.log(">>>>>>>>>>>>>> message : ", message);
+				// console.log(">>>>>>>>>>>>>> message : ", message);
 
 				if(message == "") {
 					this.messages += '';
 				} else {
 					// console.log(">>>>>>>>>>>>>>>>>>> ", message[0]);
 					// this.messages.push(message[0]);
-					console.log("저장된 : ", this.$store.state.userId, "현재 : ", message[0]);
+					// console.log("저장된 : ", this.$store.state.userId, "현재 : ", message[0]);
 					if(this.$store.state.userId == message[0]) {
-						console.log("내가 쓴 메시지");
+						// console.log("내가 쓴 메시지");
 						this.messages += '<div align="right">' 
 										+ 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #fff; border-radius: 10px; word-wrap: break-word;">'
 										+  		'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
@@ -487,7 +475,7 @@ export default {
 										+  	'</div>'
 										+ '</div>';
 					} else {
-						console.log('니가 쓴 메시지');
+						// console.log('니가 쓴 메시지');
 						this.messages += '<div align="left">' 
 										+ 	'<div style="padding: 10px; margin-bottom: 10px; width: 60%; background-color: #6363bf; color: #fff; border-radius: 10px; word-wrap: break-word;">'
 										+  	'<div style="font-weight: 900;">' + message[0] + ' 님의 메시지: </div>'
@@ -574,9 +562,9 @@ export default {
 				headers: this.getUserToken(),
 				params: {userhistory_no: this.userhistoryNo}
 				})
-			.then(res => {
-				console.log("현재 까지 공부하고 방 떠남")
-				console.log(res);
+			.then(() => {
+				// console.log("현재 까지 공부하고 방 떠남")
+				// console.log(res);
 			})
 			.catch(err => {
 				console.log(err)
@@ -615,9 +603,7 @@ export default {
 		sendMessage() {
 			var message = document.getElementById("msg").value;
 			if(message != "") {
-				console.log("message " , message)
-				
-				
+				// console.log("message " , message)
 				this.session.signal({
 					data: this.myUserName+ "&$" +message,
 					to: [],
@@ -638,8 +624,6 @@ export default {
 			this.video = !this.video;
 			if(this.video == true) this.videoMsg = "비디오 OFF";
 			else this.videoMsg = "비디오 ON";
-			// if(this.video == '비디오 ON') this.video = '비디오 OFF';
-			// else this.video = '비디오 ON';
 			this.publisher.publishVideo(this.videoEnabled);
 		},
 
@@ -648,10 +632,7 @@ export default {
 			this.audio = !this.audio;
 			if(this.audio == true) this.audioMsg = "마이크 OFF";
 			else this.audioMsg = "마이크 ON";
-			// if(this.audioMsg == '마이크 ON') this.audioMsg = '마이크 OFF';
-			// else this.audioMsg = '마이크 ON';
-			// if(this.mic == 'mic-fill') this.mic = 'mic-mute-fill';
-			// else this.mic = 'mic-fill';
+
 			this.publisher.publishAudio(this.audioEnabled);
 		},
 		
@@ -659,10 +640,6 @@ export default {
 			this.mainOnOff = true;
 			if (this.mainStreamManager === stream) return;
 			this.mainStreamManager = stream;
-				// this.mainStreamManager.stream.videoDimensions = {
-				// 	width:2000,
-				// 	height:2000
-				// };
 		},
 		deleteMainVideoStreamManager() { // 해당 화면 크게 한거 지우기.
 			this.mainOnOff = false;
@@ -738,7 +715,7 @@ export default {
 				this.sessionForScreenShare.connect(token, { clientData: this.myUserName  })
 				.then(() => {
 					this.spublisher = this.OVForScreenShare.initPublisher(undefined, {
-						audioSource: false,
+						audioSource: true,
 						videoSource: "screen",      
             publishVideo: true,  
 						resolution: "1280x720",
@@ -746,22 +723,17 @@ export default {
             insertMode: 'APPEND',    
             mirror: false        
 					});
-					console.log("publisher",this.spublisher);
+					// console.log("publisher",this.spublisher);
 					this.spublisher.once('accessAllowed', () => {
 						try {
 							console.log("subscriber >>>>> ", this.subscribers);
 							this.isScreenShared=true;
 							this.session.unpublish(this.publisher); // 송출하고 있는거 중단 (안하면 에러) -- 세션을 없앤다는 뜻.
 							
-							this.mainStreamManager = undefined;
-							// this.publisher = undefined;
-							
-							this.OV = undefined;	
-							
+							this.mainStreamManager = undefined;							
+							this.OV = undefined;								
 							this.sharing = !this.sharing; // 화면 공유 버튼에서 중지 버튼으로 change toggle
-							// console.log("session 확인용");
-							// 	console.log(this.session)
-							// 	this.publisher(this.spublisher);
+
 							const constraints = {
 								width: {min: 640, ideal: 1280},
 								height: {min: 480, ideal: 720},
@@ -797,10 +769,8 @@ export default {
 		leaveSessionForScreenSharing () { // 화면 공유 중지
 			this.sharing = !this.sharing; // 화면 공유 버튼에서 중지 버튼으로 change toggle
       this.isScreenShared=false;
-			console.log("🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻🍻")
 		
 			var mySessionId = this.mySessionId;
-			console.log("dsaaaaaaaaadwqerwqeqweqwdsadsadas")
 			console.log(mySessionId); // 제대로있고.
 		  this.sessionForScreenShare.unpublish(this.spublisher); // 송출하고 있는거 중단 (안하면 에러)
 			//  if (this.sessionForScreenShare) this.sessionForScreenShare.disconnect();
@@ -811,12 +781,9 @@ export default {
       this.OVForScreenShare = undefined;
 			
 			this.session.publish(this.publisher).then(() => {  // 송출하기 
-				//this.mainStreamManager(publisher);  // 스타 publisher 정보 바꾸기 
-				
-			this.publisher(this.publisher);
+				this.publisher(this.publisher);
 			});
-			// this.joinSession();
-			// this.session.publish(this.session);
+
 			window.removeEventListener('beforeunload', this.leaveSessionForScreenSharing);
 		
 		},

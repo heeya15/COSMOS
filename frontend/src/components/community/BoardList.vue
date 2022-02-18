@@ -5,7 +5,7 @@
       <b-form-select class="mx-1" v-model="stateSelected" :options="stateOpt" style="width: 150px; height: 40px; font-size: 15px;" @change="stateSel()" ></b-form-select>
       <b-form-select class="mr-3" v-model="headerSelected" :options="headerOpt" style="width: 170px; height: 40px; font-size: 15px;" @change="headerSel()" ></b-form-select>
       <b-form-select class="mx-1" v-model="searchSelected" :options="searchOpt" style="width: 150px; height: 40px; font-size: 15px;" @change="headerSel()" ></b-form-select>
-      <b-form-input b-form-input class="mr-2" style="width: 400px; height: 40px; font-size: 15px;" placeholder="검색할 제목,분류를 입력하세요." v-model="word" @keydown.enter="searchTitle()"></b-form-input>
+      <b-form-input b-form-input class="mr-2" style="width: 400px; height: 40px; font-size: 15px;" placeholder="검색할 제목,분류를 입력하세요." v-model="word" @keydown.enter="searchTitle()" autocomplete="off"></b-form-input>
       <b-button class="extraBtnTag mr-1" style="width: 40px padding: 0; height: 40px; font-size: 15px;" @click="searchTitle()">검색</b-button>
       <b-button class="resetSearchBtn" style="padding: 0; width: 60px; height: 40px; font-size: 15px;" @click="searchInit()">초기화</b-button>
     </div>
@@ -121,15 +121,11 @@ export default {
     paginate (page_size, page_number) {
     
     let itemsToParse = this.boardItems
-    console.log(itemsToParse.slice(0, 5))
-    console.log(page_number * page_size, (page_number + 1) * page_size)
     this.paginatedItems = itemsToParse.slice(page_number * page_size, (page_number + 1) * page_size);
 
     },
     pageClick: function (button, page){
       this.currentPage = page;
-      // this.getNoticeListByPage(page);
-      console.log(button, '새함수')
       this.paginate(10, this.currentPage - 1)
       this.$store.dispatch('pageClick', this.currentPage)
     },
@@ -149,8 +145,6 @@ export default {
         this.src = res.data
         this.rowws = res.data.length
         this.items = res.data
-        console.log('번호 확인용')
-        console.log(res.data)
         if (this.boardItems) {
             this.paginate(10, 0)
         }
@@ -166,7 +160,6 @@ export default {
 
     // 상세보기로
     goBoardDetail(boardItemsIdx) {
-      console.log(boardItemsIdx)
       this.$store.dispatch('getBoardNo', boardItemsIdx)
       this.$router.push({ name: 'BoardDetail', query: { pageId: this.currentPage }})
     },
@@ -283,7 +276,6 @@ export default {
           if(this.headerSelected == null && this.stateSelected == null){
             this.boardItems = this.src.filter((boardItem) => {
               if(boardItem.studytypeName!=null && boardItem.studytypeName.toLowerCase().includes(this.word.toLowerCase())){
-                console.log(boardItem.studytypeName)
                 return boardItem
               }
             });

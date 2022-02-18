@@ -43,10 +43,8 @@
           </b-row>
         </div>
 
-      <!-- <hr class="mt-5 mx-4"> -->
       <div class="score">
         <b-row class="mt-4" style="height:200px; margin-left: 0px;">
-          <!-- <b-col cols="1"></b-col> -->
           <b-col cols="4" id="level">
             <div class="d-flex justify-content-center">
               <div class="mt-2" align="center" style="font-size: 15pt;">My 등급</div>
@@ -62,7 +60,7 @@
             </div>
             <b-modal ref="myModal" id="modal-level" hide-header hide-footer size="m">
               <div class="pt-2 px-3 d-flex justify-content-between" style='font-family: "yg-jalnan";'>
-                <h3>스터디 분류 수정</h3>
+                <h3>등급 정보</h3>
                 <img id="exitBtn" src="https://i.ibb.co/GWXqhqv/close.png" alt="close" border="0" @click="$bvModal.hide('modal-level')">
               </div>
               
@@ -200,7 +198,6 @@
             </b-modal>
             <img id="mycosmos" :src="myCosmos[myInfoIdx]"/>
           </b-col>
-          <!-- <b-col cols="1"></b-col> -->
         </b-row>
       </div>
 
@@ -253,7 +250,7 @@ export default {
       user_password2: null,
 
       userRank: [],
-      myInfoIdx: 0,
+      myInfoIdx: 6,
       myRank: -1,
       myScore: 0,
       myTotalTime: '',
@@ -319,10 +316,9 @@ export default {
       http({
         method: 'DELETE',
         url: `/user/remove/${this.user_id}`,
-        headers: this.getToken()
       })
-      .then(res => {
-        console.log(res)
+      .then(() => {
+        // console.log(res)
         this.$store.dispatch('logOut')
         this.$router.push({ name:'SignUp' })
         alert('COSMOS에서 회원탈퇴완료')
@@ -425,8 +421,6 @@ export default {
 
         this.userRank = []   // 이전 데이터 비우기
         this.userRank = res.data
-
-        
         
         // 내 랭킹 저장   
         for(var i=0; i<res.data.length; i++) {
@@ -450,14 +444,13 @@ export default {
     },
     
     async getUserTotalTime() {
-      console.log("here!!")
       http({
         method: 'GET',
         url: '/history/totalTime',
         headers: this.getToken(),
       })
       .then(res =>{
-        console.log(res.data)
+        // console.log(res.data)
         var day = parseInt(res.data/86400);
         var time = res.data - day * 86400
         var hour = parseInt(time/3600);

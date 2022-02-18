@@ -2,13 +2,6 @@
   <div id="app">
     <NavBar v-if="($route.name !== 'PrivateStudyRoom') && ($route.name !== 'PublicStudyRoom')"/>
     <router-view style="margin-top: 100px; min-height:100%"/>
-
-    <!-- 맨위로 가기 버튼 부분 -->
-      <!-- <div class="back-to-top pointer" @click="scrollToTop(); return false;"> -->
-        <!-- <img src="main_img5.png" alt="" class="top_icon"> -->
-        <!-- <b-icon class="top_icon" icon="arrow-up-circle-fill"></b-icon>
-      </div> -->
-      <!-- 맨위로 가기 버튼 부분 끝 -->
       <div class="my-5"></div>
       <Footer v-if="($route.name !== 'PrivateStudyRoom') && ($route.name !== 'PublicStudyRoom')
         && ($route.name !== 'SignUp') && ($route.name !== 'LogIn') && ($route.name !== 'StudyRoomCreateForm')
@@ -44,23 +37,6 @@ export default {
 </script>
 
 <style>
-/* 맨위로 가기 버튼 */
-/* .back-to-top {
-  position: fixed;
-  top: 92%;
-  right: 1.5%;
-}
-
-.top_icon {
-  width: 35px;
-  height: 35px;
-  color: #afa2dd;
-}
-
-.top_icon:hover {
-  cursor: pointer;
-  color: #9255AD;
-} */
 
 @font-face {
     font-family: 'IM_Hyemin-Bold';

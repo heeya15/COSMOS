@@ -6,7 +6,7 @@
           <p>댓글</p>
         </b-col>
         <b-col cols="6" class="mt-3">
-          <b-form-input v-model="commentInput.content" @keyup.enter="createComment"></b-form-input>
+          <b-form-input v-model="commentInput.content" @keyup.enter="createComment" autocomplete="off"></b-form-input>
         </b-col>
         <b-col cols="3" class="mt-3">
           <b-button class="btnTag" @click="createComment">작성</b-button>
@@ -53,10 +53,7 @@ export default {
         headers: this.getToken()
 
       })
-      .then(res => {
-        console.log('댓글부분')
-        console.log(res)
-        console.log('댓글')
+      .then(() => {
         // 작성하고 바로 뜨게 새로고침
         this.$router.go(this.$router.currentRoute)
       })

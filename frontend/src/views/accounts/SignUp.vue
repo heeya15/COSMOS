@@ -34,7 +34,6 @@
             <b-col cols="8">
               <input id="email" type="text" name="email" :disabled="inputDisabled" v-model="credentials.userEmail" placeholder="이메일" required />
               <label for="useremailname" style="left: 15px;">이메일</label>
-              <!-- <div class="mt-1 message">{{ emailMsg }}</div> -->
             </b-col>
             <b-col cols="4" class="pl-0"><b-button class="mt-3" @click="sendEmail" id="emailBtn">인증</b-button></b-col>
           </b-row>
@@ -59,7 +58,6 @@
 </template>
 
 <script>
-// import http from 'http'
 import http from "@/util/http-common.js";
 
 export default {
@@ -99,18 +97,19 @@ export default {
 
   methods: {
     signUp() {
-      console.log('아이디 유효성 검사여부 : ', this.idRule, ' && 아이디 중복 검사 : ', this.idDuplicate, 
-      '&& 비밀번호 유효성 검사 여부 : ', this.pwdRule, ' && 비밀번호 확인 : ', this.pwdDouble,
-      '&& 이메일 유효성 검사여부 : ', this.emailRule, '&& 이메일 중복 검사여부 : '
-      , this.emailDuplicate, ' && 이메일 인증여부 : ', this.emailAuth);
+      // console.log('아이디 유효성 검사여부 : ', this.idRule, ' && 아이디 중복 검사 : ', this.idDuplicate, 
+      // '&& 비밀번호 유효성 검사 여부 : ', this.pwdRule, ' && 비밀번호 확인 : ', this.pwdDouble,
+      // '&& 이메일 유효성 검사여부 : ', this.emailRule, '&& 이메일 중복 검사여부 : '
+      // , this.emailDuplicate, ' && 이메일 인증여부 : ', this.emailAuth);
       
       if(this.idRule && this.idDuplicate && this.pwdRule && this.pwdDouble && this.emailRule && this.emailDuplicate && this.emailAuth) {
+        this.resultMsg = ''
         this.$store.dispatch('signUp',this.credentials)
       } else {
         if(!this.idDuplicate) {
-          this.resultMsg = '아이디 중복 검사를 해주세요.';
+          this.resultMsg = '아이디 중복 검사를 해주세요.'
         } else if(!this.emailAuth) {
-          this.resultMsg = '이메일 인증을 해주세요.';
+          this.resultMsg = '이메일 인증을 해주세요.'
         }
       }
     },
@@ -120,8 +119,8 @@ export default {
         method: 'GET',
         url: `/user/idcheck/${this.credentials.userId}`,
       })
-      .then(res => {
-        console.log(res);
+      .then(() => {
+        // console.log(res);
         this.toggleIdCheck = true
         this.idDuplicate = true;
         this.idMsg = '사용가능한 아이디입니다.';
@@ -179,13 +178,13 @@ export default {
     },
 
     // 이메일 중복 검사
-    emailDuplicateCheck() {
-      http({
+    async emailDuplicateCheck() {
+      await http({
         method: 'GET',
         url: `/email/emailcheck/${this.credentials.userEmail}`,
       })
-      .then(res => {
-        console.log(res.data)
+      .then(() => {
+        // console.log(res.data)
         this.emailDuplicate = true; 
         this.emailMsg = ''
       })
@@ -211,9 +210,11 @@ export default {
     },
 
     // 이메일 전송
-    sendEmail() {
+    async sendEmail() {
+      if(this.resultMsg == '이메일 인증을 해주세요.') this.resultMsg = ''
+      
       this.emailRuleCheck();
-      this.emailDuplicateCheck();
+      await this.emailDuplicateCheck();
       if(this.emailRule == false) {
         alert("유효하지 않은 이메일 형식입니다. 다시 입력해주세요")
         document.getElementById('email').value = ''
@@ -235,7 +236,7 @@ export default {
           url: `/email/send/${this.credentials.userEmail}`,
         })
         .then(res => {
-          console.log(res);
+          // console.log(res);
           this.emailAuthCode = res.data;
         })
         .catch(err => {
@@ -286,7 +287,6 @@ p {
 }
 
 #signupPage {
-  /* padding: 100px 0; */
   height: 120%;
   position: relative;
   background-color: #DAC7F9;

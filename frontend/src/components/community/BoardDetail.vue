@@ -210,7 +210,6 @@ export default {
 
     // 인원 수 제한
     recruitLimit(event) {
-      console.log(event, '이벤트 확인')
       if(event.key >= 0 && event.key <= 5) {
         return true;
       } alert('5명 까지 입력이 가능합니다');
@@ -221,7 +220,6 @@ export default {
     // 게시판으로
     goBoardMain() {
       this.$router.push({name: 'MainBoard', query: {pageId: this.savePosition}})
-      console.log(this.savePosition)
       // this.$router.go(this.savePosition);
     },
 
@@ -234,8 +232,6 @@ export default {
       
     // 스터디 신청
     applyStudy() {
-      console.log(this.studyTotalMember, "신청 확인")
-      console.log(this.nowStudyMember, '현재 멤버 수')
       if (this.studyTotalMember <= this.nowStudyMember) {
         alert('이미 인원이 가득찬 스터디입니다.')
         return
@@ -262,7 +258,6 @@ export default {
       })
       .catch((err) => {
         console.log(err)
-        console.log(this.studyInfo.studyNo)
       })
     },
     // 스터디 멤버 확인
@@ -276,10 +271,8 @@ export default {
         url: `/study/search/${this.studyInfo.studyNo}`
       })
       .then(res => {
-        console.log(this.studyTotalMember, '멤버 확인')
         this.studyTotalMember = res.data.totalMember
-        this.nowStudyMember = res.data.numberOfMember
-        console.log(this.nowStudyMember, '>>>>작동확인<<<<')        
+        this.nowStudyMember = res.data.numberOfMember     
       })
       .catch(err => {
         console.log(err)
@@ -293,7 +286,6 @@ export default {
         url: `/study/applyMember/searchAll/${this.studyInfo.studyNo}`
       })
       .then(res =>{
-        console.log(res.data, '신청 멤버 조회')
         if (res.data.length === 0) {
           this.applyMembers = null
         }
@@ -456,8 +448,6 @@ export default {
     this.getBoard()
     this.getUserInfo()
     this.getStudyType()
-    // this.getStudyMembers()
-    // this.getStudyInfo()
   },
 }
 </script>

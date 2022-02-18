@@ -7,7 +7,10 @@
       <b-col cols="5"><b-form-input
         id="apply-member-form"
         class="mb-2 mr-sm-2 mb-sm-0"
-        placeholder="추가할 회원의 아이디를 입력하세요." v-model="newMemberId"
+        placeholder="추가할 회원의 아이디를 입력하세요." 
+        v-model="newMemberId"
+        @keydown.enter="addMember"
+        autocomplete="off"
       ></b-form-input></b-col>
       <b-col cols="1"><button @click="addMember" class="memberBtn"><b-icon icon="person-plus-fill"></b-icon></button></b-col>
     </b-row>
@@ -17,8 +20,7 @@
         <tr>
           <th>이름</th>
           <th>Email</th>
-          <!-- <th>출석여부</th> -->
-          <th>공부시간</th>
+          <!-- <th>공부시간</th> -->
           <th>점수</th>
           <th>강퇴/권한</th>
         </tr>
@@ -29,8 +31,7 @@
         <td v-else-if="!member.leader && member.authority">🌸{{member.user_name}}({{member.user_id}})</td>
         <td v-else>{{member.user_name}}({{member.user_id}})</td>
         <td>{{member.user_email}}</td>
-        <!-- <td>{{member.attendance}}</td> -->
-        <td>{{member.studytime}}</td>
+        <!-- <td>{{member.studytime}}</td> -->
         <td>{{member.score}}</td>
         <td v-if="member.user_id!==myId">
           <b-button class="me-3 mr-1" variant="danger" @click="deleteMember(member.studymember_no)">강퇴</b-button>
@@ -46,8 +47,7 @@
         <tr>
           <th>이름</th>
           <th>Email</th>
-          <!-- <th>출석여부</th> -->
-          <th>공부시간</th>
+          <!-- <th>공부시간</th> -->
           <th>점수</th>          
         </tr>
       </thead>
@@ -57,8 +57,7 @@
         <td v-else-if="!member.leader && member.authority">🌸{{member.user_name}}({{member.user_id}})</td>
         <td v-else>{{member.user_name}}({{member.user_id}})</td>
         <td>{{member.user_email}}</td>
-        <!-- <td>{{member.attendance}}</td> -->
-        <td>{{member.studytime}}</td>
+        <!-- <td>{{member.studytime}}</td> -->
         <td>{{member.score}}</td>
         </tr>
 			</tbody>
@@ -121,8 +120,7 @@ export default {
         url: '/studymember/register',
         data: memberInfo
       })
-      .then(res => {
-        console.log(res)
+      .then(() => {
         alert(`${memberInfo.user_id}님이 스터디 멤버로 추가되었습니다.`)
         this.newMemberId = ''
         this.getStudyMembers()
@@ -137,7 +135,6 @@ export default {
         url: `/studymember/remove/${studymember_no}`
       })
       .then(() => {
-        // console.log(res)
         this.getStudyMembers()
       })
       .catch(err => {
@@ -156,7 +153,6 @@ export default {
         data: {studymember_no: studymember_no, authority: memberAuthority}
       })
       .then(() => {
-        // console.log(res)
         this.getStudyMembers()
       })
       .catch(err => {
