@@ -6,7 +6,7 @@
 
 
 ## 🤼‍♂️ 팀원 소개
-![image-20220218015429409](C:\Users\multicampus\Desktop\공통프로젝트2\exec\산출물\팀원소개.png)
+![image-20220218015429409](./exec/산출물/팀원소개.png)
 
 ##  🕹Git 컨벤션 개요
 
@@ -104,9 +104,9 @@ master
 
 - **🗺와이어프레임**(figma)
 
-  ![필수기능_figma](C:\Users\multicampus\Desktop\공통프로젝트2\exec\산출물\필수기능_figma.png)
+  ![필수기능_figma](./exec/산출물/필수기능_figma.png)
 
-  ![image-20220218015011885](C:\Users\multicampus\Desktop\공통프로젝트2\exec\산출물\필수기능2_figma.png)
+  ![image-20220218015011885](./exec/산출물/필수기능2_figma.png)
 
 
 
@@ -146,7 +146,7 @@ master
 
   - 강퇴 기능
 
-  ![강퇴시연](./exec/산출물/강퇴시연)
+  ![강퇴시연](./exec/산출물/강퇴시연.gif)
 
   
 
@@ -162,7 +162,7 @@ master
 
 - 타이머(모든 사람이 같은 타이머를 보고 )
 
-  ![타이머종료](C:\Users\multicampus\Desktop\공통프로젝트2\exec\산출물\타이머종료.gif)
+  ![타이머종료](./exec/산출물/타이머종료.gif)
 
   
 
