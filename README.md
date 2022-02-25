@@ -225,6 +225,7 @@ master
 
 
 ## 🎞 최종산출물
-
 <!-- [시연영상](./exec/공통PJT_부울경_1반_E103_시연영상.mp4) -->
-[![시연영상](./exec/산출물/youtube.JPG)](https://www.youtube.com/watch?v=Jvk24oxQxCo)
+시연영상 Youtube 👇👇👇
+
+[![시연영상]( https://img.youtube.com/vi/Jvk24oxQxCo/0.jpg)](https://www.youtube.com/watch?v=Jvk24oxQxCo)
