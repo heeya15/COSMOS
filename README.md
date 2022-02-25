@@ -5,7 +5,7 @@
 
 
 ## 👪 팀원 소개
-![image-20220218015429409](./exec/산출물/팀원소개.png)
+![image-20220218015429409](./exec/산출물/팀원소개.JPG)
 
 ##  🕹Git 컨벤션 개요
 
@@ -226,5 +226,5 @@ master
 
 ## 🎞 최종산출물
 
-[시연영상](./exec/공통PJT_부울경_1반_E103_시연영상.mp4)
-
+<!-- [시연영상](./exec/공통PJT_부울경_1반_E103_시연영상.mp4) -->
+[![시연영상](./exec/산출물/youtube.JPG)](https://www.youtube.com/watch?v=Jvk24oxQxCo)
