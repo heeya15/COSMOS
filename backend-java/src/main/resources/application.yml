@@ -44,7 +44,7 @@ server:
     key-store-password: ssafy1234
 spring:
   mail:
-    username: noreply.nsnt.cosmos@gmail.com
+    username: [smtp를 사용할 이메일]
     port: '587'
     properties:
       mail:
@@ -54,7 +54,7 @@ spring:
           auth: 'true'
           timeout: '5000'
     host: smtp.gmail.com
-    password: hpndeyhvhmgigtga
+    password: [발급받은비밀번호]
   jpa:
     hibernate:
       naming:
